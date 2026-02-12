@@ -1,7 +1,7 @@
 import { VideoData, PURCHASE_URL } from "@/data/videos";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, ExternalLink, Languages } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronUp, ExternalLink, Languages, Minimize2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 interface VideoSectionProps {
   video: VideoData & {transcriptHe?: string;};
