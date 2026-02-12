@@ -1,17 +1,20 @@
 import { VideoData, PURCHASE_URL } from "@/data/videos";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Languages } from "lucide-react";
 import { useState } from "react";
 
 interface VideoSectionProps {
-  video: VideoData;
+  video: VideoData & { transcriptHe?: string };
   isLast: boolean;
   onNext: () => void;
 }
 
 const VideoSection = ({ video, isLast, onNext }: VideoSectionProps) => {
-  const [transcriptOpen, setTranscriptOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [lang, setLang] = useState<"he" | "en">("he");
+
+  const transcript = lang === "he" && video.transcriptHe ? video.transcriptHe : video.transcript;
+  const maxCollapsedHeight = "200px";
 
   return (
     <div className="animate-fade-in-up">
@@ -32,19 +35,56 @@ const VideoSection = ({ video, isLast, onNext }: VideoSectionProps) => {
         </div>
 
         {/* Transcript */}
-        <Collapsible open={transcriptOpen} onOpenChange={setTranscriptOpen}>
-          <CollapsibleTrigger asChild>
-            <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mx-auto mb-4 font-body text-sm">
-              <ChevronDown className={`h-4 w-4 transition-transform ${transcriptOpen ? 'rotate-180' : ''}`} />
-              {transcriptOpen ? 'הסתר טרנסקריפט' : 'הצג טרנסקריפט'}
-            </button>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <div className="bg-card border border-border rounded-lg p-6 mb-6 text-sm leading-relaxed text-muted-foreground font-body whitespace-pre-line">
-              {video.transcript}
+        <div className="bg-card border border-border rounded-lg mb-6">
+          {/* Transcript header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <span className="text-sm font-bold text-foreground font-body">טרנסקריפט</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setLang(lang === "he" ? "en" : "he")}
+                className="flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-foreground transition-colors bg-muted px-3 py-1.5 rounded-full"
+              >
+                <Languages className="h-3.5 w-3.5" />
+                {lang === "he" ? "English" : "עברית"}
+              </button>
             </div>
-          </CollapsibleContent>
-        </Collapsible>
+          </div>
+
+          {/* Transcript body */}
+          <div className="relative">
+            <div
+              className={`px-6 py-4 text-sm leading-relaxed text-muted-foreground font-body whitespace-pre-line overflow-hidden transition-all duration-300 ${lang === "en" ? "text-left" : ""}`}
+              dir={lang === "en" ? "ltr" : "rtl"}
+              style={{ maxHeight: expanded ? "none" : maxCollapsedHeight }}
+            >
+              {transcript}
+            </div>
+            {/* Fade overlay when collapsed */}
+            {!expanded && (
+              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+            )}
+          </div>
+
+          {/* Expand/collapse button */}
+          <div className="flex justify-center border-t border-border py-2">
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors font-body px-4 py-1"
+            >
+              {expanded ? (
+                <>
+                  <ChevronUp className="h-4 w-4" />
+                  הסתר
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-4 w-4" />
+                  הצג עוד
+                </>
+              )}
+            </button>
+          </div>
+        </div>
 
         {/* CTA Button */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
