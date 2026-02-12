@@ -1,8 +1,8 @@
 export interface VideoData {
   id: number;
   title: string;
-  youtubeId: string; // placeholder - user will provide
-  transcript: string; // placeholder - user will provide
+  youtubeId: string;
+  transcript: string;
 }
 
 export const PURCHASE_URL = "https://maitreya.org.il/he/our_events/lg26-the-path-of-buddhist-healing-retreat-he-1/";
@@ -10,38 +10,38 @@ export const PURCHASE_URL = "https://maitreya.org.il/he/our_events/lg26-the-path
 export const videos: VideoData[] = [
   {
     id: 1,
-    title: "מבוא לריפוי בודהיסטי טנטרי",
-    youtubeId: "PLACEHOLDER_1",
+    title: "מבוא לריפוי דרך מדיטציה, מנטרה וטיפול בצבע",
+    youtubeId: "_yRuzXTL5p4",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 1",
   },
   {
     id: 2,
-    title: "עקרונות הריפוי במסורת הטנטרית",
-    youtubeId: "PLACEHOLDER_2",
+    title: "ריפוי דרך מדיטציה, מנטרה וטיפול בצבע – חלק 2",
+    youtubeId: "yxHQECOp-IU",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 2",
   },
   {
     id: 3,
-    title: "הגוף האנרגטי וערוצי הריפוי",
-    youtubeId: "PLACEHOLDER_3",
+    title: "ריפוי דרך מדיטציה, מנטרה וטיפול בצבע – חלק 3",
+    youtubeId: "e9tZn0rssHc",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 3",
   },
   {
     id: 4,
-    title: "מדיטציה וויזואליזציה לריפוי",
-    youtubeId: "PLACEHOLDER_4",
+    title: "ריפוי דרך מדיטציה, מנטרה וטיפול בצבע – חלק 4",
+    youtubeId: "RDUQ5XP_bU8",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 4",
   },
   {
     id: 5,
-    title: "מנטרות וצלילי ריפוי",
-    youtubeId: "PLACEHOLDER_5",
+    title: "ריפוי דרך מדיטציה, מנטרה וטיפול בצבע – חלק 5",
+    youtubeId: "o3uB14XMSGs",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 5",
   },
   {
     id: 6,
-    title: "שילוב הריפוי בחיי היום-יום",
-    youtubeId: "PLACEHOLDER_6",
+    title: "ריפוי דרך מדיטציה, מנטרה וטיפול בצבע – חלק 6",
+    youtubeId: "b7aW1fy4bZ0",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 6",
   },
 ];
