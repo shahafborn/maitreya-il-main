@@ -74,8 +74,8 @@ const VideoSection = ({ video, isLast, onNext }: VideoSectionProps) => {
 
         {/* Transcript */}
         <div className="bg-card border border-border rounded-lg mb-6">
-          {/* Transcript header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+          {/* Transcript header - sticky when expanded */}
+          <div className={`flex items-center justify-between px-4 py-3 border-b border-border bg-card rounded-t-lg ${expanded ? "sticky top-14 z-30" : ""}`}>
             <span className="text-sm font-bold text-foreground font-body">תקציר</span>
             <div className="flex items-center gap-2">
               {expanded && (
