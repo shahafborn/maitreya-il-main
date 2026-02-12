@@ -10,7 +10,7 @@ export const PURCHASE_URL = "https://maitreya.org.il/he/our_events/lg26-the-path
 export const videos: VideoData[] = [
   {
     id: 1,
-    title: "מבוא לריפוי דרך מדיטציה, מנטרה וטיפול בצבע",
+    title: "מנטרה וצבע",
     youtubeId: "_yRuzXTL5p4",
     transcript: "הטרנסקריפט יתווסף כאן – סרטון 1",
   },
