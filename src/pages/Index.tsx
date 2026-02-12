@@ -80,7 +80,7 @@ const Index = () => {
         <div className="container mx-auto max-w-3xl">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-body text-muted-foreground">התקדמות</span>
-            <span className="text-sm font-bold text-primary font-body">{unlockedCount} / {videos.length}</span>
+            <span className="text-sm font-bold text-primary font-body">{unlockedCount} מתוך {videos.length}</span>
           </div>
           <Progress value={progressPercent} className="h-2" />
         </div>
