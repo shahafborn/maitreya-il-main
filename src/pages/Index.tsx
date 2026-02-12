@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { videos, PURCHASE_URL } from "@/data/videos";
+import { loadTranscripts } from "@/data/loadTranscripts";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ExternalLink } from "lucide-react";
@@ -8,18 +9,27 @@ import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const Index = () => {
   const [unlockedCount, setUnlockedCount] = useState(1);
+  const [transcripts, setTranscripts] = useState<string[]>([]);
+
+  useEffect(() => {
+    loadTranscripts().then(setTranscripts);
+  }, []);
 
   const handleNext = (currentIndex: number) => {
     if (currentIndex + 1 >= unlockedCount) {
       setUnlockedCount(currentIndex + 2);
     }
-    // Scroll to next section
     setTimeout(() => {
       document.getElementById(`video-${currentIndex + 2}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
 
   const progressPercent = (unlockedCount / videos.length) * 100;
+
+  const videosWithTranscripts = videos.map((video, i) => ({
+    ...video,
+    transcript: transcripts[i] || video.transcript,
+  }));
 
   return (
     <div dir="rtl" className="min-h-screen bg-background font-body">
@@ -60,7 +70,7 @@ const Index = () => {
       {/* Video Sections */}
       <main className="container mx-auto px-6 py-12">
         <div className="space-y-16">
-          {videos.map((video, index) => {
+          {videosWithTranscripts.map((video, index) => {
             if (index >= unlockedCount) return null;
             return (
               <section
