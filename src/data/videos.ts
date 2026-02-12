@@ -5,7 +5,7 @@ export interface VideoData {
   transcript: string;
 }
 
-export const PURCHASE_URL = "https://maitreya.org.il/he/our_events/lg26-the-path-of-buddhist-healing-retreat-he-1/";
+export const PURCHASE_URL = "https://maitreya.org.il/he/our_events/lg26-the-path-of-buddhist-healing-retreat-he-1/#tickets";
 
 export const videos: VideoData[] = [
   {
