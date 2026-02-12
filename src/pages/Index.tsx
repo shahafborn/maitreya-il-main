@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { videos, PURCHASE_URL } from "@/data/videos";
-import { loadTranscripts } from "@/data/loadTranscripts";
+import { loadTranscripts, loadTranscriptsHe } from "@/data/loadTranscripts";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ExternalLink } from "lucide-react";
@@ -9,10 +10,27 @@ import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const Index = () => {
   const [unlockedCount, setUnlockedCount] = useState(1);
-  const [transcripts, setTranscripts] = useState<string[]>([]);
+  const [transcriptsEn, setTranscriptsEn] = useState<string[]>([]);
+  const [transcriptsHe, setTranscriptsHe] = useState<string[]>([]);
 
   useEffect(() => {
-    loadTranscripts().then(setTranscripts);
+    // Try DB first, fallback to static files
+    const loadFromDb = async () => {
+      const { data } = await supabase
+        .from("transcripts")
+        .select("part_number, content_en, content_he")
+        .order("part_number");
+      
+      if (data && data.some(t => t.content_he || t.content_en)) {
+        setTranscriptsEn(data.map(t => t.content_en));
+        setTranscriptsHe(data.map(t => t.content_he));
+      } else {
+        // Fallback to static files
+        loadTranscripts().then(setTranscriptsEn);
+        loadTranscriptsHe().then(setTranscriptsHe);
+      }
+    };
+    loadFromDb();
   }, []);
 
   const handleNext = (currentIndex: number) => {
@@ -28,7 +46,8 @@ const Index = () => {
 
   const videosWithTranscripts = videos.map((video, i) => ({
     ...video,
-    transcript: transcripts[i] || video.transcript,
+    transcript: transcriptsEn[i] || video.transcript,
+    transcriptHe: transcriptsHe[i] || "",
   }));
 
   return (
