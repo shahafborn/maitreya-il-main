@@ -47,7 +47,7 @@ const Admin = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const isOAuthCallback = window.location.search.includes('__lovable_token');
+    let hasReceivedSession = false;
 
     const checkAdminRole = async (userId: string) => {
       try {
@@ -64,27 +64,32 @@ const Admin = () => {
       if (isMounted) setLoading(false);
     };
 
-    // Single source of truth for auth state
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         if (!isMounted) return;
         const currentUser = session?.user ?? null;
         setUser(currentUser);
+
         if (currentUser) {
+          hasReceivedSession = true;
           setTimeout(() => checkAdminRole(currentUser.id), 0);
         } else {
           setIsAdmin(false);
-          if (!isOAuthCallback) {
-            setLoading(false);
-          }
+          // Wait briefly before showing login form -- the auth bridge
+          // may deliver a session shortly after the initial null
+          setTimeout(() => {
+            if (isMounted && !hasReceivedSession) {
+              setLoading(false);
+            }
+          }, 1500);
         }
       }
     );
 
-    // Safety timeout: always clear loading after 5 seconds
+    // Safety timeout
     const timeout = setTimeout(() => {
       if (isMounted) setLoading(false);
-    }, 5000);
+    }, 8000);
 
     return () => {
       isMounted = false;
