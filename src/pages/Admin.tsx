@@ -144,7 +144,7 @@ const Admin = () => {
   };
 
   const handleGoogleSignIn = async () => {
-    const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + '/admin' });
     if (error) toast({ title: "שגיאת התחברות עם Google", description: String(error), variant: "destructive" });
   };
 
