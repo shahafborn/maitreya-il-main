@@ -1,34 +1,42 @@
 
-# דף נחיתה – ריפוי בודהיסטי טנטרי עם לאמה גלן מולין
 
-## כיוון עיצובי
-- עיצוב RTL (עברית) מודרני ורוחני, בהשראת האתר של מאיטרייה סנגהה
-- צבעוניות: כחול כהה, זהב/חום חם, רקע בהיר – בהתאם לאתר maitreya.org.il
-- הלוגו של מאיטרייה סנגהה ישראל בראש הדף
-- טיפוגרפיה נקייה ומזמינה, אווירה רוחנית ומקצועית
+## Fix: RLS Policies Blocking All Data Access
 
-## מבנה הדף
+### Problem
+All RLS policies on `transcripts`, `site_content`, and `user_roles` tables are set as **RESTRICTIVE**. PostgreSQL requires at least one PERMISSIVE policy to grant initial access -- RESTRICTIVE policies can only further narrow access. With zero PERMISSIVE policies, all queries return empty results, causing:
 
-### 1. Hero Section – כותרת מושכת
-- כותרת ראשית מושכת על ריפוי טנטרי בודהיסטי לפי לאמה גלן מולין
-- תת-כותרת קצרה שמסבירה מה הולכים לגלות ב-6 הסרטונים
-- עיצוב אטמוספרי עם תמונת רקע/גרדיאנט בסגנון רוחני
+- **Main page**: Blank for seconds because `transcripts` and `site_content` SELECT returns nothing
+- **Admin page**: Stuck on "Loading..." because `user_roles` SELECT returns nothing, so admin status is never resolved
 
-### 2. סקציית 6 הווידאוים – מבנה שלב-אחרי-שלב
-- כל וידאו מוצג בסקציה נפרדת עם:
-  - **וידאו YouTube מוטמע** (embed)
-  - **טרנסקריפט** מתחת לווידאו (ניתן לפתיחה/סגירה)
-  - **כפתור CTA לרכישת כרטיסים** – לינק ישיר לעמוד ההרשמה באתר מאיטרייה
-- **מנגנון התקדמות**: רק הווידאו הראשון גלוי בהתחלה. כפתור "לווידאו הבא" מופיע מתחת לכל סקציה ופותח את הווידאו הבא
-- מחוון התקדמות (progress bar או מספור 1/6, 2/6...) כדי שהיוזר ידע איפה הוא
-- הקליקים על "לווידאו הבא" ניתנים למעקב (אפשר לראות מי הגיע לאיזה שלב)
+### Solution
+Create a database migration that drops the existing RESTRICTIVE policies and recreates them as PERMISSIVE for the following:
 
-### 3. CTA סופי
-- בסוף כל הווידאוים – סקציה מסכמת עם כפתור בולט להרשמה לריטריט
-- פרטים על הריטריט (תאריכים, מיקום) כפי שמופיע באתר
+1. **`site_content`** table:
+   - SELECT policy "Anyone can read site content" -- change to PERMISSIVE
+   - UPDATE policy "Admins can update site content" -- change to PERMISSIVE
 
-## פונקציונליות
-- הדף הוא frontend בלבד, ללא צורך בבקאנד
-- הווידאוים, הטרנסקריפטים, וה-URL לרכישה יוכנסו ישירות בקוד
-- מנגנון ה"פתיחה" של וידאוים עוקבים מנוהל ב-state מקומי (React state)
-- אתה תספק את לינקי היוטיוב, הטרנסקריפטים, ולינק הרכישה אחרי שהדף ייבנה
+2. **`transcripts`** table:
+   - SELECT policy "Anyone can read transcripts" -- change to PERMISSIVE
+   - UPDATE policy "Admins can update transcripts" -- change to PERMISSIVE
+
+3. **`user_roles`** table:
+   - SELECT policy "Users can read own roles" -- change to PERMISSIVE
+
+The INSERT/DELETE deny policies (using `false`) can stay RESTRICTIVE since they're intentionally blocking all access.
+
+### Technical Details
+
+A single SQL migration will:
+
+```text
+For each table:
+  DROP the existing RESTRICTIVE policy
+  CREATE the same policy as PERMISSIVE (default)
+```
+
+No code changes are needed -- only the database policies need updating.
+
+### Expected Result
+- Main page loads instantly with all video and content data
+- Admin page correctly resolves admin role and shows the management interface
+
