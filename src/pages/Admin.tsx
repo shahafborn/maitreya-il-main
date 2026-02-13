@@ -47,6 +47,7 @@ const Admin = () => {
 
   useEffect(() => {
     let isMounted = true;
+    const isOAuthCallback = window.location.search.includes('__lovable_token');
 
     const checkAdminRole = async (userId: string) => {
       try {
@@ -60,55 +61,30 @@ const Admin = () => {
       } catch {
         if (isMounted) setIsAdmin(false);
       }
+      if (isMounted) setLoading(false);
     };
 
-    // Set up listener FIRST (Supabase recommended order)
+    // Single source of truth for auth state
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
         if (!isMounted) return;
         const currentUser = session?.user ?? null;
         setUser(currentUser);
         if (currentUser) {
           setTimeout(() => checkAdminRole(currentUser.id), 0);
-          setLoading(false); // Clear loading when auth bridge delivers the session
         } else {
           setIsAdmin(false);
+          if (!isOAuthCallback) {
+            setLoading(false);
+          }
         }
       }
     );
 
-    // Then fetch initial session with error protection
-    const initializeAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!isMounted) return;
-
-        if (session?.user) {
-          setUser(session.user);
-          await checkAdminRole(session.user.id);
-        } else {
-          // If there's a lovable token in the URL, wait for auth bridge to process it
-          const hasToken = window.location.search.includes('__lovable_token');
-          if (hasToken) {
-            setTimeout(() => {
-              if (isMounted && !user) setLoading(false);
-            }, 3000);
-            return; // Skip the finally block's setLoading(false)
-          }
-        }
-      } catch (error) {
-        console.error("Auth initialization error:", error);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    // Safety timeout - show login form after 5s no matter what
+    // Safety timeout: always clear loading after 5 seconds
     const timeout = setTimeout(() => {
       if (isMounted) setLoading(false);
     }, 5000);
-
-    initializeAuth().then(() => clearTimeout(timeout));
 
     return () => {
       isMounted = false;
