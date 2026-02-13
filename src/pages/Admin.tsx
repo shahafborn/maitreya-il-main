@@ -86,10 +86,30 @@ const Admin = () => {
       }
     );
 
-    // Safety timeout
-    const timeout = setTimeout(() => {
-      if (isMounted) setLoading(false);
-    }, 8000);
+  // Handle OAuth tokens in URL hash fragment (published URL flow)
+  const hash = window.location.hash;
+  if (hash && hash.includes('access_token=')) {
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+
+    if (accessToken && refreshToken) {
+      window.history.replaceState(null, '', window.location.pathname);
+
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      }).catch((error) => {
+        console.error('Failed to set session from URL tokens:', error);
+        if (isMounted) setLoading(false);
+      });
+    }
+  }
+
+  // Safety timeout
+  const timeout = setTimeout(() => {
+    if (isMounted) setLoading(false);
+  }, 8000);
 
     return () => {
       isMounted = false;
