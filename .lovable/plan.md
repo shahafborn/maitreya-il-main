@@ -1,42 +1,67 @@
 
 
-## Fix: RLS Policies Blocking All Data Access
+## Fix: Admin Page Stuck on "Loading..."
 
-### Problem
-All RLS policies on `transcripts`, `site_content`, and `user_roles` tables are set as **RESTRICTIVE**. PostgreSQL requires at least one PERMISSIVE policy to grant initial access -- RESTRICTIVE policies can only further narrow access. With zero PERMISSIVE policies, all queries return empty results, causing:
-
-- **Main page**: Blank for seconds because `transcripts` and `site_content` SELECT returns nothing
-- **Admin page**: Stuck on "Loading..." because `user_roles` SELECT returns nothing, so admin status is never resolved
+### Root Cause
+The Admin component relies entirely on `supabase.auth.onAuthStateChange()` to set `loading` to `false`. The `getSession()` call is made *after* setting up the listener, but in certain scenarios (Supabase JS v2.95+), the INITIAL_SESSION event from `onAuthStateChange` may not fire reliably, causing `setLoading(false)` to never execute. The page remains stuck on the "Loading..." screen.
 
 ### Solution
-Create a database migration that drops the existing RESTRICTIVE policies and recreates them as PERMISSIVE for the following:
+Restructure the auth initialization in `Admin.tsx` to:
 
-1. **`site_content`** table:
-   - SELECT policy "Anyone can read site content" -- change to PERMISSIVE
-   - UPDATE policy "Admins can update site content" -- change to PERMISSIVE
+1. Call `getSession()` explicitly and handle its result directly (set user, check admin role, set loading=false)
+2. Keep `onAuthStateChange` only for **subsequent** auth state changes (sign-in, sign-out, token refresh)
+3. This guarantees `setLoading(false)` is always called regardless of event listener behavior
 
-2. **`transcripts`** table:
-   - SELECT policy "Anyone can read transcripts" -- change to PERMISSIVE
-   - UPDATE policy "Admins can update transcripts" -- change to PERMISSIVE
+### Technical Changes
 
-3. **`user_roles`** table:
-   - SELECT policy "Users can read own roles" -- change to PERMISSIVE
+**File: `src/pages/Admin.tsx`**
 
-The INSERT/DELETE deny policies (using `false`) can stay RESTRICTIVE since they're intentionally blocking all access.
+Replace the `useEffect` that handles auth (lines ~51-69) with:
 
-### Technical Details
+```typescript
+useEffect(() => {
+  const checkSession = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const currentUser = session?.user ?? null;
+    setUser(currentUser);
+    if (currentUser) {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", currentUser.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      setIsAdmin(!!data);
+    }
+    setLoading(false);
+  };
 
-A single SQL migration will:
+  checkSession();
 
-```text
-For each table:
-  DROP the existing RESTRICTIVE policy
-  CREATE the same policy as PERMISSIVE (default)
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    async (_event, session) => {
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      if (currentUser) {
+        const { data } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", currentUser.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        setIsAdmin(!!data);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+  );
+
+  return () => subscription.unsubscribe();
+}, []);
 ```
 
-No code changes are needed -- only the database policies need updating.
-
-### Expected Result
-- Main page loads instantly with all video and content data
-- Admin page correctly resolves admin role and shows the management interface
+Key differences:
+- `getSession()` result is handled directly via `await`, guaranteeing `setLoading(false)` runs
+- `onAuthStateChange` listener remains for live updates (logout, token refresh) but does not control the loading state
+- No behavioral changes to the rest of the component
 
