@@ -70,6 +70,7 @@ const Admin = () => {
         setUser(currentUser);
         if (currentUser) {
           setTimeout(() => checkAdminRole(currentUser.id), 0);
+          setLoading(false); // Clear loading when auth bridge delivers the session
         } else {
           setIsAdmin(false);
         }
@@ -81,10 +82,19 @@ const Admin = () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!isMounted) return;
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        if (currentUser) {
-          await checkAdminRole(currentUser.id);
+
+        if (session?.user) {
+          setUser(session.user);
+          await checkAdminRole(session.user.id);
+        } else {
+          // If there's a lovable token in the URL, wait for auth bridge to process it
+          const hasToken = window.location.search.includes('__lovable_token');
+          if (hasToken) {
+            setTimeout(() => {
+              if (isMounted && !user) setLoading(false);
+            }, 3000);
+            return; // Skip the finally block's setLoading(false)
+          }
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
