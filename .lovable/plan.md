@@ -1,56 +1,39 @@
 
 
-## Add Console Logging to Debug OAuth Hash Parsing
+## Fix: Write OAuth Tokens Directly to localStorage
 
-Add detailed `console.log` statements throughout the hash parsing logic in `src/main.tsx` so we can see exactly what's happening on the published URL after Google OAuth redirect.
+The root cause is that `supabase.auth.setSession()` uses Web Locks internally, which conflicts with the client's own initialization lock -- causing `AbortError` every time. No amount of delaying fixes this.
 
-### Changes to `src/main.tsx`
+### New Strategy
 
-Add logs at every decision point:
+Instead of calling `setSession()`, we write the tokens directly into localStorage in the format the Supabase client expects. When the client initializes, it finds an existing session and uses it -- no lock conflicts.
 
+### Changes
+
+**1. `index.html` -- Enhanced inline script**
+
+The inline script will now:
+- Extract ALL token parameters from the hash (access_token, refresh_token, expires_in, expires_at, token_type)
+- Write them directly to localStorage under the key `sb-wdvnesawgmaujdkfppad-auth-token` (the key the Supabase client uses)
+- Clear the hash from the URL
+- No longer use sessionStorage at all
+
+**2. `src/main.tsx` -- Simplify back to basic**
+
+Remove all manual token handling. Just render the app:
 ```typescript
-const hash = window.location.hash;
-console.log("[AUTH DEBUG] Hash fragment:", hash ? hash.substring(0, 50) + "..." : "(empty)");
-console.log("[AUTH DEBUG] Full URL:", window.location.href.substring(0, 100) + "...");
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
 
-if (hash && hash.includes("access_token=")) {
-  console.log("[AUTH DEBUG] Found access_token in hash, parsing...");
-  const params = new URLSearchParams(hash.substring(1));
-  const accessToken = params.get("access_token");
-  const refreshToken = params.get("refresh_token");
-  console.log("[AUTH DEBUG] Access token found:", !!accessToken);
-  console.log("[AUTH DEBUG] Refresh token found:", !!refreshToken);
-
-  if (accessToken && refreshToken) {
-    window.history.replaceState(null, "", window.location.pathname);
-    console.log("[AUTH DEBUG] Calling setSession...");
-
-    supabase.auth
-      .setSession({ access_token: accessToken, refresh_token: refreshToken })
-      .then((result) => {
-        console.log("[AUTH DEBUG] setSession SUCCESS:", result.data?.session ? "session established" : "no session returned");
-        console.log("[AUTH DEBUG] setSession error:", result.error);
-        createRoot(document.getElementById("root")!).render(<App />);
-      })
-      .catch((err) => {
-        console.error("[AUTH DEBUG] setSession EXCEPTION:", err);
-        createRoot(document.getElementById("root")!).render(<App />);
-      });
-  } else {
-    console.log("[AUTH DEBUG] Missing tokens, rendering without session");
-    createRoot(document.getElementById("root")!).render(<App />);
-  }
-} else {
-  console.log("[AUTH DEBUG] No hash tokens found, normal render");
-  createRoot(document.getElementById("root")!).render(<App />);
-}
+createRoot(document.getElementById("root")!).render(<App />);
 ```
 
-### After publishing, please:
-1. Go to `maitreya-il.lovable.app/admin`
-2. Click Google login
-3. After redirect, open DevTools (F12 or right-click > Inspect > Console)
-4. Copy/paste all lines starting with `[AUTH DEBUG]` and share them here
+### Why This Works
 
-This will tell us exactly where the flow breaks.
+The Supabase client is configured with `storage: localStorage` and `persistSession: true`. During initialization, it checks localStorage for an existing session before doing anything else. By placing the tokens there before the client loads, it simply resumes the session as if the user had logged in previously -- no `setSession()` call needed, no Web Locks conflict.
+
+### Technical Details
+
+The localStorage key format is `sb-{project-ref}-auth-token` and the value is a JSON object with `access_token`, `refresh_token`, `token_type`, `expires_in`, and `expires_at`.
 
