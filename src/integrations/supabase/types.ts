@@ -14,27 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      site_content: {
+        Row: {
+          id: number
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          id?: number
+          key: string
+          updated_at?: string
+          value?: string
+        }
+        Update: {
+          id?: number
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       transcripts: {
         Row: {
           content_en: string
           content_he: string
           id: number
           part_number: number
+          title: string
           updated_at: string
+          youtube_id: string
         }
         Insert: {
           content_en?: string
           content_he?: string
           id?: number
           part_number: number
+          title?: string
           updated_at?: string
+          youtube_id?: string
         }
         Update: {
           content_en?: string
           content_he?: string
           id?: number
           part_number?: number
+          title?: string
           updated_at?: string
+          youtube_id?: string
         }
         Relationships: []
       }
