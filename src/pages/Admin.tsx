@@ -46,7 +46,8 @@ const Admin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       if (currentUser) {
@@ -57,12 +58,30 @@ const Admin = () => {
           .eq("role", "admin")
           .maybeSingle();
         setIsAdmin(!!data);
-      } else {
-        setIsAdmin(false);
       }
       setLoading(false);
-    });
-    supabase.auth.getSession();
+    };
+
+    checkSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        if (currentUser) {
+          const { data } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", currentUser.id)
+            .eq("role", "admin")
+            .maybeSingle();
+          setIsAdmin(!!data);
+        } else {
+          setIsAdmin(false);
+        }
+      }
+    );
+
     return () => subscription.unsubscribe();
   }, []);
 
