@@ -46,43 +46,65 @@ const Admin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      if (currentUser) {
+    let isMounted = true;
+
+    const checkAdminRole = async (userId: string) => {
+      try {
         const { data } = await supabase
           .from("user_roles")
           .select("role")
-          .eq("user_id", currentUser.id)
+          .eq("user_id", userId)
           .eq("role", "admin")
           .maybeSingle();
-        setIsAdmin(!!data);
+        if (isMounted) setIsAdmin(!!data);
+      } catch {
+        if (isMounted) setIsAdmin(false);
       }
-      setLoading(false);
     };
 
-    checkSession();
-
+    // Set up listener FIRST (Supabase recommended order)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (!isMounted) return;
         const currentUser = session?.user ?? null;
         setUser(currentUser);
         if (currentUser) {
-          const { data } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", currentUser.id)
-            .eq("role", "admin")
-            .maybeSingle();
-          setIsAdmin(!!data);
+          setTimeout(() => checkAdminRole(currentUser.id), 0);
         } else {
           setIsAdmin(false);
         }
       }
     );
 
-    return () => subscription.unsubscribe();
+    // Then fetch initial session with error protection
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!isMounted) return;
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        if (currentUser) {
+          await checkAdminRole(currentUser.id);
+        }
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    // Safety timeout - show login form after 5s no matter what
+    const timeout = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 5000);
+
+    initializeAuth().then(() => clearTimeout(timeout));
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
