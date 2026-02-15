@@ -1,39 +1,34 @@
 
+# דף נחיתה – ריפוי בודהיסטי טנטרי עם לאמה גלן מולין
 
-## Fix: Write OAuth Tokens Directly to localStorage
+## כיוון עיצובי
+- עיצוב RTL (עברית) מודרני ורוחני, בהשראת האתר של מאיטרייה סנגהה
+- צבעוניות: כחול כהה, זהב/חום חם, רקע בהיר – בהתאם לאתר maitreya.org.il
+- הלוגו של מאיטרייה סנגהה ישראל בראש הדף
+- טיפוגרפיה נקייה ומזמינה, אווירה רוחנית ומקצועית
 
-The root cause is that `supabase.auth.setSession()` uses Web Locks internally, which conflicts with the client's own initialization lock -- causing `AbortError` every time. No amount of delaying fixes this.
+## מבנה הדף
 
-### New Strategy
+### 1. Hero Section – כותרת מושכת
+- כותרת ראשית מושכת על ריפוי טנטרי בודהיסטי לפי לאמה גלן מולין
+- תת-כותרת קצרה שמסבירה מה הולכים לגלות ב-6 הסרטונים
+- עיצוב אטמוספרי עם תמונת רקע/גרדיאנט בסגנון רוחני
 
-Instead of calling `setSession()`, we write the tokens directly into localStorage in the format the Supabase client expects. When the client initializes, it finds an existing session and uses it -- no lock conflicts.
+### 2. סקציית 6 הווידאוים – מבנה שלב-אחרי-שלב
+- כל וידאו מוצג בסקציה נפרדת עם:
+  - **וידאו YouTube מוטמע** (embed)
+  - **טרנסקריפט** מתחת לווידאו (ניתן לפתיחה/סגירה)
+  - **כפתור CTA לרכישת כרטיסים** – לינק ישיר לעמוד ההרשמה באתר מאיטרייה
+- **מנגנון התקדמות**: רק הווידאו הראשון גלוי בהתחלה. כפתור "לווידאו הבא" מופיע מתחת לכל סקציה ופותח את הווידאו הבא
+- מחוון התקדמות (progress bar או מספור 1/6, 2/6...) כדי שהיוזר ידע איפה הוא
+- הקליקים על "לווידאו הבא" ניתנים למעקב (אפשר לראות מי הגיע לאיזה שלב)
 
-### Changes
+### 3. CTA סופי
+- בסוף כל הווידאוים – סקציה מסכמת עם כפתור בולט להרשמה לריטריט
+- פרטים על הריטריט (תאריכים, מיקום) כפי שמופיע באתר
 
-**1. `index.html` -- Enhanced inline script**
-
-The inline script will now:
-- Extract ALL token parameters from the hash (access_token, refresh_token, expires_in, expires_at, token_type)
-- Write them directly to localStorage under the key `sb-wdvnesawgmaujdkfppad-auth-token` (the key the Supabase client uses)
-- Clear the hash from the URL
-- No longer use sessionStorage at all
-
-**2. `src/main.tsx` -- Simplify back to basic**
-
-Remove all manual token handling. Just render the app:
-```typescript
-import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-
-createRoot(document.getElementById("root")!).render(<App />);
-```
-
-### Why This Works
-
-The Supabase client is configured with `storage: localStorage` and `persistSession: true`. During initialization, it checks localStorage for an existing session before doing anything else. By placing the tokens there before the client loads, it simply resumes the session as if the user had logged in previously -- no `setSession()` call needed, no Web Locks conflict.
-
-### Technical Details
-
-The localStorage key format is `sb-{project-ref}-auth-token` and the value is a JSON object with `access_token`, `refresh_token`, `token_type`, `expires_in`, and `expires_at`.
-
+## פונקציונליות
+- הדף הוא frontend בלבד, ללא צורך בבקאנד
+- הווידאוים, הטרנסקריפטים, וה-URL לרכישה יוכנסו ישירות בקוד
+- מנגנון ה"פתיחה" של וידאוים עוקבים מנוהל ב-state מקומי (React state)
+- אתה תספק את לינקי היוטיוב, הטרנסקריפטים, ולינק הרכישה אחרי שהדף ייבנה
