@@ -1,11 +1,13 @@
+const BASE = import.meta.env.BASE_URL;
+
 export async function loadTranscripts(): Promise<string[]> {
-  const res = await fetch("/transcripts.txt");
+  const res = await fetch(`${BASE}content/healing-online-course/transcripts.txt`);
   const text = await res.text();
   return splitTranscripts(text);
 }
 
 export async function loadTranscriptsHe(): Promise<string[]> {
-  const res = await fetch("/transcripts-he.txt");
+  const res = await fetch(`${BASE}content/healing-online-course/transcripts-he.txt`);
   const text = await res.text();
   return splitTranscripts(text);
 }

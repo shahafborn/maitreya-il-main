@@ -1,42 +1,45 @@
 import { useState, useEffect } from "react";
 import { videos, PURCHASE_URL } from "@/data/videos";
 import { loadTranscripts, loadTranscriptsHe } from "@/data/loadTranscripts";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, LogOut } from "lucide-react";
 import VideoSection from "@/components/VideoSection";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const Index = () => {
+  const { signOut, user } = useAuth();
   const [unlockedCount, setUnlockedCount] = useState(1);
   const [transcriptsEn, setTranscriptsEn] = useState<string[]>([]);
   const [transcriptsHe, setTranscriptsHe] = useState<string[]>([]);
 
   useEffect(() => {
-    // Try DB first, fallback to static files
-    const loadFromDb = async () => {
-      const { data } = await supabase
-        .from("transcripts")
-        .select("part_number, content_en, content_he")
-        .order("part_number");
-      
-      if (data && data.some(t => t.content_he || t.content_en)) {
-        setTranscriptsEn(data.map(t => t.content_en));
-        setTranscriptsHe(data.map(t => t.content_he));
-      } else {
-        // Fallback to static files
-        loadTranscripts().then(setTranscriptsEn);
-        loadTranscriptsHe().then(setTranscriptsHe);
-      }
-    };
-    loadFromDb();
+    loadTranscripts().then(setTranscriptsEn);
+    loadTranscriptsHe().then(setTranscriptsHe);
   }, []);
+
+  // Track video view in database (fire-and-forget, deduplicated by unique constraint)
+  const trackView = (videoId: number) => {
+    if (!user) return;
+    supabase
+      .from("video_views")
+      .upsert({ user_id: user.id, video_id: videoId }, { onConflict: "user_id,video_id" })
+      .then();
+  };
+
+  // Track first video on mount (user always sees video 1)
+  useEffect(() => {
+    trackView(1);
+  }, [user]);
 
   const handleNext = (currentIndex: number) => {
     if (currentIndex + 1 >= unlockedCount) {
       setUnlockedCount(currentIndex + 2);
     }
+    // Track the next video being unlocked
+    trackView(currentIndex + 2);
     setTimeout(() => {
       document.getElementById(`video-${currentIndex + 2}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
@@ -53,8 +56,16 @@ const Index = () => {
   return (
     <div dir="rtl" className="min-h-screen bg-background font-body">
       {/* Header with logo */}
-      <header className="py-4 px-6 flex justify-center border-b border-border bg-card">
+      <header className="py-4 px-6 flex items-center justify-between border-b border-border bg-card">
+        <div className="w-10" />
         <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-12 md:h-16 object-contain" />
+        <button
+          onClick={signOut}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          title="התנתקות"
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
       </header>
 
       {/* Hero Section */}
@@ -130,8 +141,8 @@ const Index = () => {
             </p>
             <a href={PURCHASE_URL} target="_blank" rel="noopener noreferrer">
               <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-12 py-4 text-lg rounded-full shadow-lg transition-transform hover:scale-105">
-                <ExternalLink className="h-5 w-5 ml-2" />
                 להרשמה לריטריט
+                <ExternalLink className="h-5 w-5 mr-2 -scale-x-100" />
               </Button>
             </a>
           </div>

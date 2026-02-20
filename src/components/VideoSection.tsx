@@ -132,8 +132,8 @@ const VideoSection = ({ video, isLast, onNext }: VideoSectionProps) => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
           <a href={PURCHASE_URL} target="_blank" rel="noopener noreferrer">
             <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-8 py-3 text-base rounded-full shadow-md">
-              <ExternalLink className="h-4 w-4 ml-2" />
               הרשמה לריטריט הריפוי
+              <ExternalLink className="h-4 w-4 mr-2 -scale-x-100" />
             </Button>
           </a>
         </div>
