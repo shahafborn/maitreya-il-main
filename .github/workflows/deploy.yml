@@ -35,13 +35,14 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Deploy via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          port: ${{ secrets.SFTP_PORT }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          ssh_private_key: ${{ secrets.SFTP_KEY }}
-          local_path: ./dist/*
-          remote_path: /home/u247580727/public_html/p/
-          sftp_only: true
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          lftp -u "$SFTP_USERNAME","$SFTP_PASSWORD" \
+            -p "$SFTP_PORT" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror -R --verbose dist/ /home/u247580727/public_html/p/; quit" \
+            sftp://"$SFTP_HOST"
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
