@@ -132,7 +132,7 @@ describe("Register flow", () => {
     renderApp();
 
     await waitFor(() => {
-      expect(screen.getByText("הרשמה לצפייה בסרטונים")).toBeInTheDocument();
+      expect(screen.getByText("הרשמה לצפייה בקורס")).toBeInTheDocument();
     });
 
     expect(screen.getByLabelText("אימייל")).toBeInTheDocument();
