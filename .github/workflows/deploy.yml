@@ -35,11 +35,12 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Deploy via SFTP
+        timeout-minutes: 3
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp
           lftp -u "$SFTP_USERNAME","$SFTP_PASSWORD" \
             -p "$SFTP_PORT" \
-            -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror -R --overwrite --delete --verbose --exclude .htaccess dist/ $SFTP_REMOTE_PATH; quit" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; set net:reconnect-interval-base 5; mirror -R --overwrite --verbose --exclude .htaccess dist/ $SFTP_REMOTE_PATH; quit" \
             sftp://"$SFTP_HOST"
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
