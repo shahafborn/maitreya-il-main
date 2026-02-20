@@ -1,13 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import type { User, Session } from "@supabase/supabase-js";
+import type { User, Session, AuthResponse } from "@supabase/supabase-js";
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ data: any; error: any }>;
-  signIn: (email: string, password: string) => Promise<{ data: any; error: any }>;
+  signUp: (email: string, password: string) => Promise<AuthResponse>;
+  signIn: (email: string, password: string) => Promise<AuthResponse>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }

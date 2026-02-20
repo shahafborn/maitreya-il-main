@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- **CI/CD** — GitHub Actions workflow: test → build → SFTP deploy to Hostinger on push to `main` (`.github/workflows/deploy.yml`)
 - **Auth gate** — video library requires registration/login (`src/App.tsx`)
 - **Registration page** — Hebrew intro, email/password form, login/signup toggle (`src/pages/Register.tsx`)
 - **Google OAuth** — "Sign in with Google" button on registration page
@@ -21,6 +22,10 @@
 - Admin page (`src/pages/Admin.tsx`)
 - `.env` file (replaced by gitignored `.env.local`)
 - Full name field from registration (email + password only)
+
+### Fixed
+- E2E test no longer crashes in CI — `createClient` moved inside `beforeAll` so it only runs when `RUN_E2E=1` is set
+- `useAuth` return types use `AuthResponse` instead of `any`
 
 ### Changed
 - `src/App.tsx` — routes updated to `/heb/healing-online-course`, wrapped in `AuthProvider`

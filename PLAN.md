@@ -1,6 +1,6 @@
 # Maitreya IL — Implementation Plan
 
-**Overall Progress:** `80%`
+**Overall Progress:** `95%`
 
 ## TLDR
 Deploy the React app under `/p/` on the WordPress domain, then add Supabase auth (email/password + Google) to gate the video library behind a registration page. On signup, sync users to MailChimp with a specific tag. Track which videos each user views.
@@ -24,19 +24,20 @@ Deploy the React app under `/p/` on the WordPress domain, then add Supabase auth
   - [x] 🟩 Update route to `/heb/healing-online-course`
 
 - [x] 🟩 **Step 2: CI/CD — GitHub Actions SFTP deploy**
-  - [x] 🟩 Create `.github/workflows/deploy.yml` (SFTP, Node 22, concurrency group)
-  - [ ] 🟥 (Manual) Enable SSH on Hostinger: Hosting → Advanced → SSH Access
-  - [ ] 🟥 (Manual) Add GitHub Secrets: `SFTP_HOST`, `SFTP_USERNAME`, `SFTP_PASSWORD` or `SFTP_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+  - [x] 🟩 Create `.github/workflows/deploy.yml` (SFTP via lftp, Node 22, concurrency group)
+  - [x] 🟩 Enable SSH on Hostinger: Hosting → Advanced → SSH Access
+  - [x] 🟩 Add GitHub Secrets: `SFTP_HOST`, `SFTP_PORT`, `SFTP_USERNAME`, `SFTP_PASSWORD`, `SFTP_REMOTE_PATH`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 
-- [ ] 🟥 **Step 3: Hostinger `.htaccess` for `/p/`**
-  - [ ] 🟥 (Manual) Backup current `.htaccess`
-  - [ ] 🟥 (Manual) Add scoped SPA rewrite: `/p/*` → `/p/index.html` (non-file requests only)
-  - [ ] 🟥 (Manual) Add cache headers: no-cache `index.html`, long-term cache `assets/*`
+- [x] 🟩 **Step 3: Hostinger `.htaccess` for `/p/`**
+  - [x] 🟩 Backup current `.htaccess` (`.htaccess.bak` on server)
+  - [x] 🟩 Add SPA rewrite rules in root `.htaccess` (domain doc root, not `~/public_html`)
+  - [x] 🟩 Add cache headers in `/p/.htaccess`: no-cache `index.html`, long-term cache `assets/*`
+  - Note: Document root is `~/domains/maitreya.org.il/public_html/`, not `~/public_html/`
 
 - [x] 🟩 **Step 4: Verify build**
   - [x] 🟩 `npm run build` succeeds locally
-  - [ ] 🟥 `npm run preview` loads at `localhost:4173/p/heb/healing-online-course/`
-  - [ ] 🟥 Push → GitHub Actions deploys → live on domain
+  - [x] 🟩 Push → GitHub Actions deploys → live on domain
+  - [x] 🟩 `maitreya.org.il/p/heb/healing-online-course/` loads correctly (HTTP 200)
 
 ---
 

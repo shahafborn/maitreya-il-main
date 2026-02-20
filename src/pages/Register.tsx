@@ -60,7 +60,9 @@ const Register = () => {
     <div dir="rtl" className="min-h-screen bg-background font-body">
       {/* Header */}
       <header className="py-4 px-6 flex justify-center border-b border-border bg-card">
-        <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-12 md:h-16 object-contain" />
+        <a href="https://maitreya.org.il/">
+          <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-12 md:h-16 object-contain" />
+        </a>
       </header>
 
       {/* Hero Intro */}
@@ -73,7 +75,7 @@ const Register = () => {
             הדרך לריפוי והילינג בודהיסטי
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed mb-3">
-            6 סרטונים בחינם עם לאמה גלן מולין
+            קורס של שש שעות מוקלטות עם לאמה גלן מולין
             <br />
             שיפתחו לכם את הדלת לעולם הריפוי הטנטרי הבודהיסטי
           </p>
@@ -86,7 +88,7 @@ const Register = () => {
         <div className="container mx-auto px-6 max-w-md">
           <div className="bg-card border border-border rounded-xl p-8 shadow-lg">
             <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-              {isLogin ? "כניסה לחשבון" : "הרשמה לצפייה בסרטונים"}
+              {isLogin ? "כניסה לחשבון" : "הרשמה לצפייה בקורס"}
             </h2>
             <p className="text-sm text-muted-foreground text-center mb-6">
               {isLogin ? "ברוכים השבים!" : "הירשמו בחינם וקבלו גישה מיידית"}

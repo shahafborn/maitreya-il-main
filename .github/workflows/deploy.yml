@@ -39,10 +39,11 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp
           lftp -u "$SFTP_USERNAME","$SFTP_PASSWORD" \
             -p "$SFTP_PORT" \
-            -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror -R --verbose dist/ /home/u247580727/domains/maitreya.org.il/public_html/p/; quit" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror -R --verbose dist/ $SFTP_REMOTE_PATH; quit" \
             sftp://"$SFTP_HOST"
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}

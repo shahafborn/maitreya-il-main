@@ -58,7 +58,9 @@ const Index = () => {
       {/* Header with logo */}
       <header className="py-4 px-6 flex items-center justify-between border-b border-border bg-card">
         <div className="w-10" />
-        <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-12 md:h-16 object-contain" />
+        <a href="https://maitreya.org.il/">
+          <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-12 md:h-16 object-contain" />
+        </a>
         <button
           onClick={signOut}
           className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
