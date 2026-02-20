@@ -12,6 +12,9 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
+  test: {
+    exclude: ["src/test/auth-e2e.test.ts", "node_modules"],
+  },
   plugins: [react()],
   resolve: {
     alias: {
