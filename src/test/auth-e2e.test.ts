@@ -8,35 +8,33 @@
  * Gated: only runs when RUN_E2E=1 is set.
  * Cleanup: only deletes users matching the test-e2e-* pattern.
  */
-import { describe, it, expect, afterAll } from "vitest";
+import { describe, it, expect, afterAll, beforeAll } from "vitest";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
-const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? "";
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-
-// Unique test email to avoid collisions
-const TEST_EMAIL = `test-e2e-${Date.now()}@test.local`;
-const TEST_PASSWORD = "TestPass123!";
-
-// Client for normal auth operations (anon key)
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: false },
-});
-
-// Admin client for cleanup (service role key)
-const adminClient = SERVICE_ROLE_KEY
-  ? createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
-  : null;
-
-// Track user ID for cleanup
-let testUserId: string | null = null;
-
 describe.skipIf(!process.env.RUN_E2E)("Auth E2E (real Supabase)", () => {
+  const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
+  const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? "";
+  const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+
+  const TEST_EMAIL = `test-e2e-${Date.now()}@test.local`;
+  const TEST_PASSWORD = "TestPass123!";
+
+  let supabase: ReturnType<typeof createClient>;
+  let adminClient: ReturnType<typeof createClient> | null;
+  let testUserId: string | null = null;
+
+  beforeAll(() => {
+    supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false },
+    });
+    adminClient = SERVICE_ROLE_KEY
+      ? createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+          auth: { persistSession: false, autoRefreshToken: false },
+        })
+      : null;
+  });
+
   afterAll(async () => {
-    // Safety: only delete users matching our test pattern
     if (!testUserId || !adminClient) return;
     if (!TEST_EMAIL.startsWith("test-e2e-") || !TEST_EMAIL.endsWith("@test.local")) {
       console.warn("Refusing to delete user — email doesn't match test pattern");
