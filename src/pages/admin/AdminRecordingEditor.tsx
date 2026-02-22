@@ -15,6 +15,14 @@ import {
 import VideoEmbed from "@/components/course/VideoEmbed";
 
 const EMBED_TYPES = ["bunny", "youtube", "iframe"] as const;
+
+/** Extract src URL from an HTML embed/iframe snippet, or return as-is if already a URL. */
+function extractEmbedUrl(input: string): string {
+  const trimmed = input.trim();
+  if (trimmed.startsWith("http")) return trimmed;
+  const match = trimmed.match(/src=["']([^"']+)["']/);
+  return match ? match[1] : trimmed;
+}
 const SESSION_TYPES = [
   { value: "main", label: "Main Teaching" },
   { value: "clarification", label: "Clarification" },
@@ -142,8 +150,8 @@ function RecordingRow({
           </Select>
         </div>
         <div className="col-span-3">
-          <Label className="text-xs">Embed URL</Label>
-          <Input value={form.embed_url} onChange={(e) => set("embed_url", e.target.value)} />
+          <Label className="text-xs">Embed URL (or paste embed code)</Label>
+          <Input value={form.embed_url} onChange={(e) => set("embed_url", extractEmbedUrl(e.target.value))} />
         </div>
       </div>
 
@@ -212,8 +220,8 @@ function NewRecordingForm({ courseId, sortOrder }: { courseId: string; sortOrder
         </Select>
       </div>
       <div className="flex-1">
-        <Label className="text-xs">Embed URL</Label>
-        <Input value={embedUrl} onChange={(e) => setEmbedUrl(e.target.value)} placeholder="https://..." />
+        <Label className="text-xs">Embed URL (or paste embed code)</Label>
+        <Input value={embedUrl} onChange={(e) => setEmbedUrl(extractEmbedUrl(e.target.value))} placeholder="https://... or paste embed code" />
       </div>
       <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !title || !embedUrl}>
         Add
