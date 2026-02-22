@@ -77,7 +77,7 @@ const Register = () => {
           <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed mb-3">
             קורס של שש שעות מוקלטות עם לאמה גלן מולין
             <br />
-            שיפתחו לכם את הדלת לעולם הריפוי הטנטרי הבודהיסטי
+            מבוא לעולם הריפוי הטנטרי הבודהיסטי
           </p>
           <div className="w-16 h-1 bg-accent mx-auto mt-6 rounded-full" />
         </div>
