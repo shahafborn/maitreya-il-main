@@ -310,7 +310,7 @@ describe("Register flow", () => {
       expect(mockSignInWithOAuth).toHaveBeenCalledWith({
         provider: "google",
         options: {
-          redirectTo: expect.stringContaining("/p/heb/healing-online-course"),
+          redirectTo: expect.stringContaining("/p/auth/callback"),
         },
       });
     });
