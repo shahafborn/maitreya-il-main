@@ -20,7 +20,7 @@ interface CoursePageProps {
 }
 
 const CoursePage = ({ course }: CoursePageProps) => {
-  useDocumentTitle(`${course.title} | מאיטרייה`);
+  useDocumentTitle(`${course.title} | Maitreya Sangha Israel`);
   const { signOut } = useAuth();
   const { data: meetings = [] } = useCourseMeetings(course.id);
   const { data: contentBlocks = [] } = useCourseContentBlocks(course.id);

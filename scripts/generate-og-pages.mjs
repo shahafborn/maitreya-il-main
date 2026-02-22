@@ -22,7 +22,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   process.exit(1);
 }
 
-const SITE_NAME = "מאיטרייה סנגהה ישראל";
+const SITE_NAME = "Maitreya Sangha Israel";
 
 async function fetchCourses() {
   const res = await fetch(

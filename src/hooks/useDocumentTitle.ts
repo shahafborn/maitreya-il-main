@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const DEFAULT_TITLE = "מאיטרייה סנגהה ישראל";
+const DEFAULT_TITLE = "Maitreya Sangha Israel";
 
 export function useDocumentTitle(title: string) {
   useEffect(() => {

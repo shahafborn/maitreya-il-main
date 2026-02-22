@@ -15,7 +15,7 @@ const CourseRegister = () => {
   const { user, signUp, signIn, signInWithGoogle } = useAuth();
   const { data: course, isLoading: courseLoading } = useCourse(slug);
   useDocumentTitle(
-    course?.title ? `${course.title} | מאיטרייה` : "מאיטרייה"
+    course?.title ? `${course.title} | Maitreya Sangha Israel` : "Maitreya Sangha Israel"
   );
   const { isEnrolled, isLoading: enrollmentLoading } = useCourseEnrollment(course?.id);
   const enrollMutation = useEnrollInCourse();

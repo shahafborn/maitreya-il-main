@@ -11,7 +11,7 @@ import { supabase } from "@/lib/supabase";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const Index = () => {
-  useDocumentTitle("ספריית וידאו | מאיטרייה");
+  useDocumentTitle("Video Library | Maitreya Sangha Israel");
   const { signOut, user } = useAuth();
   const [unlockedCount, setUnlockedCount] = useState(1);
   const [transcriptsEn, setTranscriptsEn] = useState<string[]>([]);
