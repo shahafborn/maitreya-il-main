@@ -15,7 +15,7 @@ const CourseContentBlock = ({ block }: CourseContentBlockProps) => (
           {block.title}
         </h2>
       )}
-      <div className="prose prose-neutral max-w-none text-foreground leading-relaxed whitespace-pre-wrap">
+      <div className="prose prose-lg prose-neutral max-w-none text-foreground leading-relaxed whitespace-pre-wrap">
         {block.body}
       </div>
     </div>

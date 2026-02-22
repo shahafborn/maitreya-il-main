@@ -31,7 +31,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
   const files = resources.filter((r) => r.resource_type === "pdf");
 
   return (
-    <div dir={course.default_dir} className="min-h-screen bg-background font-body">
+    <div dir={course.default_dir} className="min-h-screen bg-background font-body overflow-x-hidden">
       {/* Header */}
       <header className="py-4 px-6 flex items-center justify-between border-b border-border bg-card">
         <a href="https://maitreya.org.il/">

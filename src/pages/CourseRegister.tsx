@@ -140,7 +140,9 @@ const CourseRegister = () => {
               onClick={isLogin ? () => signInWithGoogle(`/courses/${slug}/register`) : handleGoogleSignIn}
               variant="outline"
               className={`w-full py-3 text-base rounded-full font-bold mb-4 transition-all duration-300 ${
-                !isLogin && !consent ? "opacity-50" : ""
+                !isLogin && !consent
+                  ? "opacity-50"
+                  : "border-accent bg-accent/10 hover:bg-accent/20"
               }`}
             >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
