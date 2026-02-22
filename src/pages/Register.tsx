@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const Register = () => {
+  useDocumentTitle("הרשמה | מאיטרייה");
   const { signUp, signIn, signInWithGoogle } = useAuth();
   const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState("");

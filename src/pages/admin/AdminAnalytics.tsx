@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import {
   BarChart,
   Bar,
@@ -39,6 +40,7 @@ const SummaryCard = ({ label, value, loading }: { label: string; value: number; 
 );
 
 const AdminAnalytics = () => {
+  useDocumentTitle("Analytics | Admin | Maitreya");
   const [range, setRange] = useState<DateRange>("30d");
 
   const totalUsers = useTotalUsers();

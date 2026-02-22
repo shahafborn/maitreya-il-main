@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
@@ -95,6 +96,7 @@ function useEnrollmentCounts() {
 }
 
 const AdminUserList = () => {
+  useDocumentTitle("Users | Admin | Maitreya");
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
 

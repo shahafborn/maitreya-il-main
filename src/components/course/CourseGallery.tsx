@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import type { CourseResource } from "@/hooks/useCourseContent";
 import { getSignedUrl, triggerDownload } from "@/lib/storage";
 import { trackResourceDownload } from "@/lib/analytics";
+import { friendlyTitle, looksLikeRawFilename } from "@/lib/utils";
 
 interface CourseGalleryProps {
   photos: CourseResource[];
@@ -83,7 +84,9 @@ const CourseGallery = ({ photos, courseId }: CourseGalleryProps) => {
                   </div>
                   {photo.title && (
                     <p className="text-xs text-muted-foreground text-center mt-1 truncate">
-                      {photo.title}
+                      {looksLikeRawFilename(photo.title)
+                        ? friendlyTitle(photo.title)
+                        : photo.title}
                     </p>
                   )}
                 </div>

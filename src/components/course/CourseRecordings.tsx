@@ -51,7 +51,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
           Recordings
         </h2>
 
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="multiple" defaultValue={weeks.map((w) => String(w))} className="w-full">
           {weeks.map((week) => {
             const recs = grouped.get(week)!;
             const label =

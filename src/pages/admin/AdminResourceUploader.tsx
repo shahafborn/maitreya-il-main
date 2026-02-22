@@ -6,6 +6,7 @@ import { uploadFile, deleteFile } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { friendlyTitle } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -168,7 +169,7 @@ function UploadForm({ courseId, sortOrder }: { courseId: string; sortOrder: numb
       const { error: dbError } = await supabase.from("course_resources").insert({
         course_id: courseId,
         resource_type: resourceType,
-        title: file.name,
+        title: friendlyTitle(file.name),
         storage_path: storagePath,
         mime_type: file.type,
         file_size: file.size,

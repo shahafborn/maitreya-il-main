@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AdminCourseList from "./AdminCourseList";
 import AdminCourseEditor from "./AdminCourseEditor";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const AdminAnalytics = lazy(() => import("./AdminAnalytics"));
 const AdminUserList = lazy(() => import("./AdminUserList"));
@@ -104,6 +105,7 @@ const LazyFallback = () => (
 );
 
 const AdminDashboard = () => {
+  useDocumentTitle("Admin | Maitreya");
   const { user, loading: authLoading, signOut } = useAuth();
   const { isAdmin, isAdminOrAbove, isSuperAdmin, loading: adminLoading } = useAdmin();
   const location = useLocation();

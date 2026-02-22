@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { useCourse } from "@/hooks/useCourse";
 import { useCourseEnrollment, useEnrollInCourse } from "@/hooks/useCourseEnrollment";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const CourseRegister = () => {
@@ -13,20 +14,20 @@ const CourseRegister = () => {
   const navigate = useNavigate();
   const { user, signUp, signIn, signInWithGoogle } = useAuth();
   const { data: course, isLoading: courseLoading } = useCourse(slug);
+  useDocumentTitle(
+    course?.title ? `${course.title} | מאיטרייה` : "מאיטרייה"
+  );
   const { isEnrolled, isLoading: enrollmentLoading } = useCourseEnrollment(course?.id);
   const enrollMutation = useEnrollInCourse();
 
   const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [accessCode, setAccessCode] = useState("");
   const [consent, setConsent] = useState(false);
   const [consentHighlight, setConsentHighlight] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const consentRef = useRef<HTMLLabelElement>(null);
-
-  const requiresCode = !!course?.access_code;
 
   // If user is already enrolled, redirect to the course page
   useEffect(() => {
@@ -44,18 +45,10 @@ const CourseRegister = () => {
   // Attempt enrollment after auth succeeds
   const attemptEnroll = async (courseId: string) => {
     try {
-      await enrollMutation.mutateAsync({
-        courseId,
-        accessCode: requiresCode ? accessCode : undefined,
-      });
+      await enrollMutation.mutateAsync({ courseId });
       navigate(`/courses/${slug}`, { replace: true });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Enrollment failed";
-      if (msg.includes("Invalid access code")) {
-        setError("Invalid access code. Please check and try again.");
-      } else {
-        setError(msg);
-      }
+      setError(err instanceof Error ? err.message : "Enrollment failed");
     }
   };
 
@@ -80,7 +73,7 @@ const CourseRegister = () => {
         return;
       }
 
-      // After successful auth, enroll in the course
+      // Auto-enroll immediately after auth
       if (data?.user && course) {
         await attemptEnroll(course.id);
       }
@@ -97,24 +90,13 @@ const CourseRegister = () => {
       nudgeConsent();
       return;
     }
-    // Store slug + access code so post-OAuth flow can enroll
-    if (requiresCode && accessCode) {
-      localStorage.setItem("pending_access_code", accessCode);
-    }
     signInWithGoogle(`/courses/${slug}/register`);
   };
 
-  // After Google OAuth redirect back here, auto-enroll if user is now logged in
+  // After Google OAuth redirect back here, auto-enroll
   useEffect(() => {
     if (!user || !course || isEnrolled || enrollmentLoading) return;
-
-    const pendingCode = localStorage.getItem("pending_access_code");
-    localStorage.removeItem("pending_access_code");
-
-    // Auto-enroll: if no access code required, or code was stored pre-OAuth
-    if (!requiresCode || pendingCode) {
-      attemptEnroll(course.id);
-    }
+    attemptEnroll(course.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, course, isEnrolled, enrollmentLoading]);
 
@@ -134,59 +116,7 @@ const CourseRegister = () => {
     );
   }
 
-  // If user is logged in but not enrolled, show simplified enrollment form
-  if (user && !isEnrolled && !enrollmentLoading) {
-    return (
-      <div dir={course.default_dir} className="min-h-screen bg-background font-body">
-        <Header />
-        <HeroSection title={course.title} description={course.description} />
-
-        <section className="py-12 md:py-16">
-          <div className="container mx-auto px-6 max-w-md">
-            <div className="bg-card border border-border rounded-xl p-8 shadow-lg">
-              <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-                Enroll in This Course
-              </h2>
-              <p className="text-sm text-muted-foreground text-center mb-6">
-                You're signed in as {user.email}. Complete enrollment below.
-              </p>
-
-              {requiresCode && (
-                <div className="space-y-2 mb-4">
-                  <Label htmlFor="access-code">Access Code</Label>
-                  <Input
-                    id="access-code"
-                    type="text"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value)}
-                    placeholder="Enter your access code"
-                    dir="ltr"
-                    className="text-left"
-                  />
-                </div>
-              )}
-
-              {error && (
-                <p className="text-sm text-destructive text-center mb-4">{error}</p>
-              )}
-
-              <Button
-                onClick={() => attemptEnroll(course.id)}
-                disabled={enrollMutation.isPending || (requiresCode && !accessCode)}
-                className="w-full font-bold py-3 text-base rounded-full bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
-              >
-                {enrollMutation.isPending ? "Enrolling..." : "Enroll Now"}
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        <Footer />
-      </div>
-    );
-  }
-
-  // Full registration form (not logged in)
+  // Full registration form (not logged in — logged-in users auto-enroll via useEffect above)
   return (
     <div dir={course.default_dir} className="min-h-screen bg-background font-body">
       <Header />
@@ -196,14 +126,12 @@ const CourseRegister = () => {
         <div className="container mx-auto px-6 max-w-md">
           <div className="bg-card border border-border rounded-xl p-8 shadow-lg">
             <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-              {isLogin ? "Sign In" : "Register for This Course"}
+              {isLogin ? "Sign In" : "Access the Resources for This Course"}
             </h2>
             <p className="text-sm text-muted-foreground text-center mb-6">
               {isLogin
                 ? "Welcome back!"
-                : requiresCode
-                  ? "Create an account and enter your access code"
-                  : "Create a free account to access the course"}
+                : "Create a free account to access the course resources"}
             </p>
 
             {/* Google OAuth */}
@@ -263,21 +191,6 @@ const CourseRegister = () => {
                 />
               </div>
 
-              {requiresCode && (
-                <div className="space-y-2">
-                  <Label htmlFor="access-code">Access Code</Label>
-                  <Input
-                    id="access-code"
-                    type="text"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value)}
-                    placeholder="Enter your access code"
-                    dir="ltr"
-                    className="text-left"
-                  />
-                </div>
-              )}
-
               {!isLogin && (
                 <>
                   <label
@@ -329,18 +242,18 @@ const CourseRegister = () => {
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setError("");
-                }}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
+            <div className="mt-6 pt-6 border-t border-border text-center">
+              <p className="text-sm text-muted-foreground mb-3">
+                {isLogin ? "New here?" : "Already have an account?"}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => { setIsLogin(!isLogin); setError(""); }}
+                className="w-full py-3 text-base rounded-full font-bold"
               >
-                {isLogin
-                  ? "Don't have an account? Register here"
-                  : "Already have an account? Sign in"}
-              </button>
+                {isLogin ? "Create an Account" : "Sign In to Your Account"}
+              </Button>
             </div>
           </div>
         </div>

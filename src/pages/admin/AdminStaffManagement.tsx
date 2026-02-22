@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -108,6 +109,7 @@ function useSuperAdminCount() {
 }
 
 const AdminStaffManagement = () => {
+  useDocumentTitle("Staff | Admin | Maitreya");
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { data: staff = [], isLoading } = useStaffList();

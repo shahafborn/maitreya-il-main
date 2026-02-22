@@ -6,6 +6,7 @@ import {
   useCourseRecordings,
 } from "@/hooks/useCourseContent";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import CourseHeader from "@/components/course/CourseHeader";
 import CourseSchedule from "@/components/course/CourseSchedule";
 import CourseContentBlock from "@/components/course/CourseContentBlock";
@@ -19,6 +20,7 @@ interface CoursePageProps {
 }
 
 const CoursePage = ({ course }: CoursePageProps) => {
+  useDocumentTitle(`${course.title} | מאיטרייה`);
   const { signOut } = useAuth();
   const { data: meetings = [] } = useCourseMeetings(course.id);
   const { data: contentBlocks = [] } = useCourseContentBlocks(course.id);

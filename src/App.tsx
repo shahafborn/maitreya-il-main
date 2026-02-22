@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import CourseEnrollmentGate from "./components/CourseEnrollmentGate";
+import { usePageTracking } from "@/hooks/usePageTracking";
 
 // Lazy-load course registration + admin (code-split)
 const CourseRegister = lazy(() => import("./pages/CourseRegister"));
@@ -24,6 +25,7 @@ const Loading = () => (
 );
 
 const AuthGate = () => {
+  usePageTracking();
   const { user, loading } = useAuth();
 
   if (loading) {

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import type { CourseResource } from "@/hooks/useCourseContent";
 import { triggerDownload } from "@/lib/storage";
 import { trackResourceDownload } from "@/lib/analytics";
+import { friendlyTitle, looksLikeRawFilename } from "@/lib/utils";
 
 interface CourseFilesProps {
   files: CourseResource[];
@@ -39,7 +40,9 @@ const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
             >
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-foreground truncate">
-                  {file.title}
+                  {file.title && looksLikeRawFilename(file.title)
+                    ? friendlyTitle(file.title)
+                    : file.title}
                 </p>
                 {file.description && (
                   <p className="text-sm text-muted-foreground truncate">

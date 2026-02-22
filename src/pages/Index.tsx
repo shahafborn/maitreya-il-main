@@ -6,10 +6,12 @@ import { Progress } from "@/components/ui/progress";
 import { ExternalLink, LogOut } from "lucide-react";
 import VideoSection from "@/components/VideoSection";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { supabase } from "@/lib/supabase";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const Index = () => {
+  useDocumentTitle("ספריית וידאו | מאיטרייה");
   const { signOut, user } = useAuth();
   const [unlockedCount, setUnlockedCount] = useState(1);
   const [transcriptsEn, setTranscriptsEn] = useState<string[]>([]);
