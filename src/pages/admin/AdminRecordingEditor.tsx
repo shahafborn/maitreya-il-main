@@ -80,7 +80,7 @@ function RecordingRow({
   const [form, setForm] = useState({
     title: rec.title,
     week_number: rec.week_number !== null ? String(rec.week_number) : "",
-    session_type: rec.session_type ?? "",
+    session_type: rec.session_type ?? "none",
     embed_type: rec.embed_type,
     embed_url: rec.embed_url,
     sort_order: String(rec.sort_order),
@@ -94,7 +94,7 @@ function RecordingRow({
         .update({
           title: form.title,
           week_number: form.week_number ? Number(form.week_number) : null,
-          session_type: form.session_type || null,
+          session_type: form.session_type === "none" ? null : form.session_type || null,
           embed_type: form.embed_type,
           embed_url: form.embed_url,
           sort_order: Number(form.sort_order),
@@ -124,7 +124,7 @@ function RecordingRow({
           <Select value={form.session_type} onValueChange={(v) => set("session_type", v)}>
             <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
+              <SelectItem value="none">None</SelectItem>
               {SESSION_TYPES.map((st) => (
                 <SelectItem key={st.value} value={st.value}>{st.label}</SelectItem>
               ))}
@@ -181,6 +181,8 @@ function RecordingRow({
 function NewRecordingForm({ courseId, sortOrder }: { courseId: string; sortOrder: number }) {
   const queryClient = useQueryClient();
   const [title, setTitle] = useState("");
+  const [weekNumber, setWeekNumber] = useState("");
+  const [sessionType, setSessionType] = useState("none");
   const [embedType, setEmbedType] = useState("bunny");
   const [embedUrl, setEmbedUrl] = useState("");
 
@@ -189,6 +191,8 @@ function NewRecordingForm({ courseId, sortOrder }: { courseId: string; sortOrder
       const { error } = await supabase.from("course_recordings").insert({
         course_id: courseId,
         title,
+        week_number: weekNumber ? Number(weekNumber) : null,
+        session_type: sessionType === "none" ? null : sessionType || null,
         embed_type: embedType,
         embed_url: embedUrl,
         sort_order: sortOrder,
@@ -198,33 +202,54 @@ function NewRecordingForm({ courseId, sortOrder }: { courseId: string; sortOrder
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["course-recordings", courseId] });
       setTitle("");
+      setWeekNumber("");
+      setSessionType("none");
       setEmbedUrl("");
     },
   });
 
   return (
-    <div className="flex items-end gap-3 pt-4 border-t border-border">
-      <div className="flex-1">
-        <Label className="text-xs">Title</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Week 1 — Main Teaching" />
+    <div className="space-y-3 pt-4 border-t border-border">
+      <h4 className="text-sm font-medium text-muted-foreground">Add New Recording</h4>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="md:col-span-2">
+          <Label className="text-xs">Title</Label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Week 1 — Main Teaching" />
+        </div>
+        <div>
+          <Label className="text-xs">Week #</Label>
+          <Input type="number" value={weekNumber} onChange={(e) => setWeekNumber(e.target.value)} placeholder="—" />
+        </div>
+        <div>
+          <Label className="text-xs">Session Type</Label>
+          <Select value={sessionType} onValueChange={setSessionType}>
+            <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              {SESSION_TYPES.map((st) => (
+                <SelectItem key={st.value} value={st.value}>{st.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label className="text-xs">Embed Type</Label>
+          <Select value={embedType} onValueChange={setEmbedType}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {EMBED_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>{t}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <div>
-        <Label className="text-xs">Type</Label>
-        <Select value={embedType} onValueChange={setEmbedType}>
-          <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            {EMBED_TYPES.map((t) => (
-              <SelectItem key={t} value={t}>{t}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex-1">
         <Label className="text-xs">Embed URL (or paste embed code)</Label>
         <Input value={embedUrl} onChange={(e) => setEmbedUrl(extractEmbedUrl(e.target.value))} placeholder="https://... or paste embed code" />
       </div>
       <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !title || !embedUrl}>
-        Add
+        {createMutation.isPending ? "Adding..." : "Add Recording"}
       </Button>
     </div>
   );
