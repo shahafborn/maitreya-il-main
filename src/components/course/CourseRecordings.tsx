@@ -37,11 +37,11 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
     grouped.get(key)!.push(rec);
   }
 
-  // Sort week keys (null last)
+  // Sort week keys descending (latest week first, null last)
   const weeks = [...grouped.keys()].sort((a, b) => {
     if (a === null) return 1;
     if (b === null) return -1;
-    return a - b;
+    return b - a;
   });
 
   return (
