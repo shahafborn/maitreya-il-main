@@ -7,8 +7,8 @@ interface CoursePromoSectionProps {
 }
 
 const i18n = {
-  he: { heading: "קורסים קרובים", register: "להרשמה" },
-  en: { heading: "Upcoming Courses", register: "Register Now" },
+  he: { heading: "קורסים קרובים", cta: "לפרטים נוספים" },
+  en: { heading: "Upcoming Courses", cta: "More Details" },
 };
 
 function usePromoImageUrls(promotions: Promotion[]) {
@@ -161,7 +161,7 @@ const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
                     rel="noopener noreferrer"
                     className="inline-block mt-1 px-8 py-3 rounded-full bg-accent text-accent-foreground font-bold hover:bg-accent/90 transition-colors shadow-sm"
                   >
-                    {texts.register}
+                    {texts.cta}
                   </a>
                 </div>
               </div>
