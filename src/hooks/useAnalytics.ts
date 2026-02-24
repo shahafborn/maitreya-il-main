@@ -46,11 +46,13 @@ export function useSignInsByCountry(range: DateRange) {
       const { data, error } = await q;
       if (error) throw error;
 
+      const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
       const byCountry = new Map<string, Set<string>>();
       for (const row of data ?? []) {
         const cc = row.country_code || "Unknown";
-        if (!byCountry.has(cc)) byCountry.set(cc, new Set());
-        byCountry.get(cc)!.add(row.user_id);
+        const label = cc === "Unknown" ? "Unknown" : (regionNames.of(cc) ?? cc);
+        if (!byCountry.has(label)) byCountry.set(label, new Set());
+        byCountry.get(label)!.add(row.user_id);
       }
       return [...byCountry.entries()]
         .map(([name, users]) => ({ name, count: users.size }))
