@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { User, Session, AuthResponse } from "@supabase/supabase-js";
+import { getCountryCode } from "@/hooks/useCountryCode";
 
 interface AuthContextType {
   user: User | null;
@@ -18,6 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const trackedSessionRef = useRef<string | null>(null);
 
   useEffect(() => {
     // Read session from localStorage / URL hash before listening for changes
@@ -32,13 +34,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Sync Google OAuth signups to MailChimp (first login only)
-        if (event === "SIGNED_IN" && session?.user?.app_metadata?.provider === "google") {
-          const created = new Date(session.user.created_at).getTime();
-          const now = Date.now();
-          // If account was created in the last 60 seconds, treat as new signup
-          if (now - created < 60_000 && session.user.email) {
-            syncToMailChimp(session.user.email);
+        if (event === "SIGNED_IN" && session) {
+          // Track sign-in event (once per session to avoid duplicates on token refresh)
+          if (trackedSessionRef.current !== session.access_token) {
+            trackedSessionRef.current = session.access_token;
+            trackSignIn();
+          }
+
+          // Sync Google OAuth signups to MailChimp (first login only)
+          if (session.user?.app_metadata?.provider === "google") {
+            const created = new Date(session.user.created_at).getTime();
+            const now = Date.now();
+            if (now - created < 60_000 && session.user.email) {
+              syncToMailChimp(session.user.email);
+            }
           }
         }
       }
@@ -46,6 +55,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const trackSignIn = () => {
+    getCountryCode()
+      .then((code) => supabase.rpc("track_sign_in", { _country_code: code }))
+      .catch((err) => console.warn("Sign-in tracking failed (non-blocking):", err));
+  };
 
   const syncToMailChimp = (email: string) => {
     supabase.functions.invoke("mailchimp-sync", {

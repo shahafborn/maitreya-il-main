@@ -17,6 +17,8 @@ import {
   useTotalEnrollments,
   useTotalViews,
   useTotalDownloads,
+  useSignInTrend,
+  useSignInsByCountry,
   useSignupTrend,
   useEnrollmentsPerCourse,
   useViewsPerRecording,
@@ -47,6 +49,8 @@ const AdminAnalytics = () => {
   const totalEnrollments = useTotalEnrollments();
   const totalViews = useTotalViews(range);
   const totalDownloads = useTotalDownloads(range);
+  const signInTrend = useSignInTrend(range);
+  const signInsByCountry = useSignInsByCountry(range);
   const signupTrend = useSignupTrend(range);
   const enrollmentsPerCourse = useEnrollmentsPerCourse();
   const viewsPerRecording = useViewsPerRecording(range);
@@ -79,6 +83,42 @@ const AdminAnalytics = () => {
         <SummaryCard label="Enrollments" value={totalEnrollments.data ?? 0} loading={totalEnrollments.isLoading} />
         <SummaryCard label="Video Views" value={totalViews.data ?? 0} loading={totalViews.isLoading} />
         <SummaryCard label="Downloads" value={totalDownloads.data ?? 0} loading={totalDownloads.isLoading} />
+      </div>
+
+      {/* Daily sign-ins */}
+      <div className="bg-card border border-border rounded-lg p-5 mb-6">
+        <h3 className="font-heading text-lg font-semibold mb-4">Daily Sign-ins</h3>
+        {(signInTrend.data?.length ?? 0) > 0 ? (
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={signInTrend.data}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Line type="monotone" dataKey="count" stroke="hsl(var(--accent))" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-8">No data yet</p>
+        )}
+      </div>
+
+      {/* Sign-ins by location */}
+      <div className="bg-card border border-border rounded-lg p-5 mb-6">
+        <h3 className="font-heading text-lg font-semibold mb-4">Sign-ins by Location</h3>
+        {(signInsByCountry.data?.length ?? 0) > 0 ? (
+          <ResponsiveContainer width="100%" height={Math.max(200, (signInsByCountry.data?.length ?? 0) * 32)}>
+            <BarChart data={signInsByCountry.data} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12 }} />
+              <YAxis dataKey="name" type="category" width={80} tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Bar dataKey="count" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-8">No data yet</p>
+        )}
       </div>
 
       {/* Signup trend */}

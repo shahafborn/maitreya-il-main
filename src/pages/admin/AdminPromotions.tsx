@@ -57,6 +57,45 @@ function formToPayload(form: PromoForm) {
   };
 }
 
+// ---- Image resize helper ----
+
+const MAX_IMAGE_WIDTH = 1024;
+const JPEG_QUALITY = 0.85;
+
+/** Resize an image file if it exceeds MAX_IMAGE_WIDTH, returns JPEG. */
+function resizeImage(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(img.src);
+      if (img.width <= MAX_IMAGE_WIDTH) {
+        resolve(file);
+        return;
+      }
+      const scale = MAX_IMAGE_WIDTH / img.width;
+      const canvas = document.createElement("canvas");
+      canvas.width = MAX_IMAGE_WIDTH;
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error("Failed to resize image."));
+            return;
+          }
+          const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+          resolve(new File([blob], name, { type: "image/jpeg" }));
+        },
+        "image/jpeg",
+        JPEG_QUALITY,
+      );
+    };
+    img.onerror = () => reject(new Error("Failed to load image for resizing."));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 // ---- Image drop zone ----
 
 function ImageUploader({
@@ -82,8 +121,9 @@ function ImageUploader({
       setError("");
       setUploading(true);
       try {
-        const path = `promotions/${Date.now()}_${file.name}`;
-        await uploadFile(path, file);
+        const optimized = await resizeImage(file);
+        const path = `promotions/${Date.now()}_${optimized.name}`;
+        await uploadFile(path, optimized);
         onUploaded(path);
       } catch (err) {
         setError((err as Error).message);

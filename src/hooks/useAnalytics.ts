@@ -11,6 +11,52 @@ function getStartDate(range: DateRange): string | null {
   return d.toISOString().slice(0, 10);
 }
 
+/** Daily sign-in trend */
+export function useSignInTrend(range: DateRange) {
+  const start = getStartDate(range);
+  return useQuery({
+    queryKey: ["analytics-signin-trend", range],
+    queryFn: async () => {
+      let q = supabase.from("sign_in_events").select("signed_in_at").order("signed_in_at");
+      if (start) q = q.gte("signed_in_at", start);
+      const { data, error } = await q;
+      if (error) throw error;
+
+      const byDay = new Map<string, number>();
+      for (const row of data ?? []) {
+        const day = row.signed_in_at.slice(0, 10);
+        byDay.set(day, (byDay.get(day) ?? 0) + 1);
+      }
+      return [...byDay.entries()]
+        .map(([date, count]) => ({ date, count }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+    },
+  });
+}
+
+/** Sign-ins grouped by country */
+export function useSignInsByCountry(range: DateRange) {
+  const start = getStartDate(range);
+  return useQuery({
+    queryKey: ["analytics-signins-by-country", range],
+    queryFn: async () => {
+      let q = supabase.from("sign_in_events").select("country_code");
+      if (start) q = q.gte("signed_in_at", start);
+      const { data, error } = await q;
+      if (error) throw error;
+
+      const counts = new Map<string, number>();
+      for (const row of data ?? []) {
+        const cc = row.country_code || "Unknown";
+        counts.set(cc, (counts.get(cc) ?? 0) + 1);
+      }
+      return [...counts.entries()]
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count);
+    },
+  });
+}
+
 /** Total user count */
 export function useTotalUsers() {
   return useQuery({
