@@ -11,47 +11,49 @@ function getStartDate(range: DateRange): string | null {
   return d.toISOString().slice(0, 10);
 }
 
-/** Daily sign-in trend */
+/** Daily sign-in trend (unique users per day) */
 export function useSignInTrend(range: DateRange) {
   const start = getStartDate(range);
   return useQuery({
     queryKey: ["analytics-signin-trend", range],
     queryFn: async () => {
-      let q = supabase.from("sign_in_events").select("signed_in_at").order("signed_in_at");
+      let q = supabase.from("sign_in_events").select("user_id, signed_in_at").order("signed_in_at");
       if (start) q = q.gte("signed_in_at", start);
       const { data, error } = await q;
       if (error) throw error;
 
-      const byDay = new Map<string, number>();
+      const byDay = new Map<string, Set<string>>();
       for (const row of data ?? []) {
         const day = row.signed_in_at.slice(0, 10);
-        byDay.set(day, (byDay.get(day) ?? 0) + 1);
+        if (!byDay.has(day)) byDay.set(day, new Set());
+        byDay.get(day)!.add(row.user_id);
       }
       return [...byDay.entries()]
-        .map(([date, count]) => ({ date, count }))
+        .map(([date, users]) => ({ date, count: users.size }))
         .sort((a, b) => a.date.localeCompare(b.date));
     },
   });
 }
 
-/** Sign-ins grouped by country */
+/** Sign-ins grouped by country (unique users per country) */
 export function useSignInsByCountry(range: DateRange) {
   const start = getStartDate(range);
   return useQuery({
     queryKey: ["analytics-signins-by-country", range],
     queryFn: async () => {
-      let q = supabase.from("sign_in_events").select("country_code");
+      let q = supabase.from("sign_in_events").select("user_id, country_code");
       if (start) q = q.gte("signed_in_at", start);
       const { data, error } = await q;
       if (error) throw error;
 
-      const counts = new Map<string, number>();
+      const byCountry = new Map<string, Set<string>>();
       for (const row of data ?? []) {
         const cc = row.country_code || "Unknown";
-        counts.set(cc, (counts.get(cc) ?? 0) + 1);
+        if (!byCountry.has(cc)) byCountry.set(cc, new Set());
+        byCountry.get(cc)!.add(row.user_id);
       }
-      return [...counts.entries()]
-        .map(([name, count]) => ({ name, count }))
+      return [...byCountry.entries()]
+        .map(([name, users]) => ({ name, count: users.size }))
         .sort((a, b) => b.count - a.count);
     },
   });
