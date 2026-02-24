@@ -39,11 +39,14 @@ const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
               className="flex items-center justify-between bg-card border border-border rounded-lg p-4"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-foreground truncate">
+                <button
+                  className="font-medium text-foreground truncate hover:text-accent transition-colors text-left"
+                  onClick={() => handleDownload(file)}
+                >
                   {file.title && looksLikeRawFilename(file.title)
                     ? friendlyTitle(file.title)
                     : file.title}
-                </p>
+                </button>
                 {file.description && (
                   <p className="text-sm text-muted-foreground truncate">
                     {file.description}
