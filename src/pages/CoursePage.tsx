@@ -13,6 +13,8 @@ import CourseContentBlock from "@/components/course/CourseContentBlock";
 import CourseGallery from "@/components/course/CourseGallery";
 import CourseFiles from "@/components/course/CourseFiles";
 import CourseRecordings from "@/components/course/CourseRecordings";
+import CoursePromoSection from "@/components/course/CoursePromoSection";
+import { useActivePromotions } from "@/hooks/usePromotions";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 interface CoursePageProps {
@@ -26,6 +28,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
   const { data: contentBlocks = [] } = useCourseContentBlocks(course.id);
   const { data: resources = [] } = useCourseResources(course.id);
   const { data: recordings = [] } = useCourseRecordings(course.id);
+  const { data: promotions = [] } = useActivePromotions();
 
   const photos = resources.filter((r) => r.resource_type === "photo");
   const files = resources.filter((r) => r.resource_type === "pdf");
@@ -61,6 +64,9 @@ const CoursePage = ({ course }: CoursePageProps) => {
 
       {/* Schedule */}
       {meetings.length > 0 && <CourseSchedule meetings={meetings} />}
+
+      {/* Promotions */}
+      <CoursePromoSection promotions={promotions} />
 
       {/* Content blocks (practice section) */}
       {contentBlocks

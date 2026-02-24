@@ -12,6 +12,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 const AdminAnalytics = lazy(() => import("./AdminAnalytics"));
 const AdminUserList = lazy(() => import("./AdminUserList"));
 const AdminStaffManagement = lazy(() => import("./AdminStaffManagement"));
+const AdminPromotions = lazy(() => import("./AdminPromotions"));
 
 const AdminLogin = () => {
   const { signIn, signInWithGoogle } = useAuth();
@@ -156,6 +157,7 @@ const AdminDashboard = () => {
           <h1 className="font-heading text-lg font-bold text-primary">Admin</h1>
           <nav className="flex gap-4 text-sm">
             {navLink("/admin/courses", "Courses")}
+            {navLink("/admin/promotions", "Promotions")}
             {isAdminOrAbove && navLink("/admin/analytics", "Analytics")}
             {isAdminOrAbove && navLink("/admin/users", "Users")}
             {isSuperAdmin && navLink("/admin/staff", "Staff")}
@@ -176,6 +178,7 @@ const AdminDashboard = () => {
             <Route index element={<Navigate to="courses" replace />} />
             <Route path="courses" element={<AdminCourseList />} />
             <Route path="courses/:courseId" element={<AdminCourseEditor />} />
+            <Route path="promotions" element={<AdminPromotions />} />
             {isAdminOrAbove && (
               <Route path="analytics" element={<AdminAnalytics />} />
             )}
