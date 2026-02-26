@@ -21,9 +21,9 @@ const AuthCallback = () => {
       navigate(redirect, { replace: true });
     } else if (user) {
       // Fallback: if no stored redirect, go to the healing course (legacy default)
-      navigate("/heb/healing-online-course", { replace: true });
+      navigate("/discover/healing-retreat", { replace: true });
     } else {
-      navigate("/", { replace: true });
+      navigate("/discover/healing-retreat", { replace: true });
     }
   }, [user, loading, navigate]);
 

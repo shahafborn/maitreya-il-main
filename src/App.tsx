@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
@@ -17,6 +17,11 @@ const CourseRegister = lazy(() => import("./pages/CourseRegister"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 
 const queryClient = new QueryClient();
+
+const ExternalRedirect = ({ url }: { url: string }) => {
+  window.location.replace(url);
+  return null;
+};
 
 const Loading = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
@@ -39,12 +44,15 @@ const AuthGate = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        {/* Existing Healing Course routes (unchanged) */}
+        {/* Healing Retreat — canonical path */}
         <Route
-          path="/heb/healing-online-course"
+          path="/discover/healing-retreat"
           element={user ? <Index /> : <Register />}
         />
-        <Route path="/" element={user ? <Index /> : <Register />} />
+        {/* Legacy URL → redirect */}
+        <Route path="/heb/healing-online-course" element={<Navigate to="/discover/healing-retreat" replace />} />
+        {/* Root → external main site */}
+        <Route path="/" element={<ExternalRedirect url="https://maitreya.org.il" />} />
 
         {/* OAuth callback */}
         <Route path="/auth/callback" element={<AuthCallback />} />
@@ -56,7 +64,7 @@ const AuthGate = () => {
         {/* Admin CMS */}
         <Route path="/admin/*" element={<AdminDashboard />} />
 
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<ExternalRedirect url="https://maitreya.org.il" />} />
       </Routes>
     </Suspense>
   );
