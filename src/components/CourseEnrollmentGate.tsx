@@ -1,24 +1,27 @@
 import { Navigate, useParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 import { useCourse } from "@/hooks/useCourse";
 import { useCourseEnrollment } from "@/hooks/useCourseEnrollment";
 import CoursePage from "@/pages/CoursePage";
+import CourseRegister from "@/pages/CourseRegister";
 
 /**
  * Gate component for course pages:
- * - Not logged in → redirect to /courses/:slug/register
- * - Logged in but not enrolled → redirect to /courses/:slug/register
- * - Enrolled → render CoursePage
+ * - Not logged in → show auth/register form (inline, no redirect)
+ * - Logged in but not enrolled (and not admin) → show auth/register form
+ * - Enrolled OR admin → render CoursePage
  */
 const CourseEnrollmentGate = () => {
   const { slug } = useParams<{ slug: string }>();
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdmin();
   const { data: course, isLoading: courseLoading } = useCourse(slug);
   const { isEnrolled, isLoading: enrollmentLoading } = useCourseEnrollment(
     course?.id
   );
 
-  const loading = authLoading || courseLoading || (user && enrollmentLoading);
+  const loading = authLoading || courseLoading || (user && (enrollmentLoading || adminLoading));
 
   if (loading) {
     return (
@@ -30,14 +33,18 @@ const CourseEnrollmentGate = () => {
     );
   }
 
-  // Course not found or not published
+  // Course not found or not published (unless admin)
+  if (!course && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
   if (!course) {
     return <Navigate to="/" replace />;
   }
 
-  // Not authenticated or not enrolled → register page
-  if (!user || !isEnrolled) {
-    return <Navigate to={`/courses/${slug}/register`} replace />;
+  // Not authenticated or (not enrolled and not admin) → show register/login inline
+  if (!user || (!isEnrolled && !isAdmin)) {
+    return <CourseRegister />;
   }
 
   return <CoursePage course={course} />;
