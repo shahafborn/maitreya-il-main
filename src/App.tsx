@@ -15,6 +15,7 @@ import { usePageTracking } from "@/hooks/usePageTracking";
 // Lazy-load course registration + admin (code-split)
 const CourseRegister = lazy(() => import("./pages/CourseRegister"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,9 @@ const AuthGate = () => {
 
         {/* OAuth callback */}
         <Route path="/auth/callback" element={<AuthCallback />} />
+
+        {/* Password reset */}
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Course resource pages (template-driven by :slug) */}
         <Route path="/courses/:slug/register" element={<CourseRegister />} />

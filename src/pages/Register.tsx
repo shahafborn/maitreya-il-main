@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +10,7 @@ import maitreyaLogo from "@/assets/maitreya-logo.png";
 const Register = () => {
   useDocumentTitle("Register | Maitreya Sangha Israel");
   const { signUp, signIn, signInWithGoogle } = useAuth();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [consent, setConsent] = useState(false);
@@ -151,6 +152,17 @@ const Register = () => {
                   className="text-left"
                 />
               </div>
+
+              {isLogin && (
+                <div className="text-left">
+                  <Link
+                    to="/reset-password"
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    שכחתם סיסמה?
+                  </Link>
+                </div>
+              )}
 
               {!isLogin && (<>
                 <label
