@@ -10,7 +10,7 @@ import maitreyaLogo from "@/assets/maitreya-logo.png";
 const Register = () => {
   useDocumentTitle("Register | Maitreya Sangha Israel");
   const { signUp, signIn, signInWithGoogle } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [consent, setConsent] = useState(false);

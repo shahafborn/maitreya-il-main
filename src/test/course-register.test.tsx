@@ -115,16 +115,16 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 
 describe("CourseRegister", () => {
-  it("defaults to register mode with prominent sign-in button and no access code field", () => {
+  it("defaults to login mode with prominent register button and no access code field", () => {
     renderComponent();
 
-    expect(screen.getByText("Access the Resources for This Course")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Sign In" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.queryByLabelText("Access Code")).not.toBeInTheDocument();
 
-    // Prominent sign-in button is visible
-    expect(screen.getByRole("button", { name: "Sign In to Your Account" })).toBeInTheDocument();
+    // Prominent register button is visible
+    expect(screen.getByRole("button", { name: "Create an Account" })).toBeInTheDocument();
   });
 
   it("logged-in user auto-enrolls without showing a separate enrollment form", async () => {

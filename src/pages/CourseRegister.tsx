@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +20,7 @@ const CourseRegister = () => {
   const { isEnrolled, isLoading: enrollmentLoading } = useCourseEnrollment(course?.id);
   const enrollMutation = useEnrollInCourse();
 
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [consent, setConsent] = useState(false);
@@ -192,6 +192,17 @@ const CourseRegister = () => {
                   className="text-left"
                 />
               </div>
+
+              {isLogin && (
+                <div className="text-right">
+                  <Link
+                    to="/reset-password"
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+              )}
 
               {!isLogin && (
                 <>

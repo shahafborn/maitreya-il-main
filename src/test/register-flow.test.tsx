@@ -128,28 +128,24 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 
 describe("Register flow", () => {
-  it("renders the login form by default", async () => {
+  it("renders the registration form with all fields", async () => {
     renderApp();
 
     await waitFor(() => {
-      expect(screen.getByText("כניסה לחשבון")).toBeInTheDocument();
+      expect(screen.getByText("הרשמה לצפייה בקורס")).toBeInTheDocument();
     });
 
     expect(screen.getByLabelText("אימייל")).toBeInTheDocument();
     expect(screen.getByLabelText("סיסמה")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^כניסה$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /הרשמה חינם/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /google/i })).toBeInTheDocument();
-    // Consent checkbox should not be visible in login mode
-    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 
   it("blocks form submit when consent is not checked", async () => {
     mockSignUp.mockResolvedValue({ data: { user: mockUser }, error: null });
     renderApp();
 
-    // Switch to registration mode
-    await waitFor(() => screen.getByText("אין לכם חשבון? הירשמו כאן"));
-    fireEvent.click(screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    await waitFor(() => screen.getByLabelText("אימייל"));
 
     fireEvent.change(screen.getByLabelText("אימייל"), { target: { value: "test@test.com" } });
     fireEvent.change(screen.getByLabelText("סיסמה"), { target: { value: "password123" } });
@@ -162,9 +158,7 @@ describe("Register flow", () => {
   it("blocks Google sign-in when consent is not checked", async () => {
     renderApp();
 
-    // Switch to registration mode
-    await waitFor(() => screen.getByText("אין לכם חשבון? הירשמו כאן"));
-    fireEvent.click(screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    await waitFor(() => screen.getByRole("button", { name: /google/i }));
 
     fireEvent.click(screen.getByRole("button", { name: /google/i }));
 
@@ -184,9 +178,7 @@ describe("Register flow", () => {
 
     renderApp();
 
-    // Switch to registration mode
-    await waitFor(() => screen.getByText("אין לכם חשבון? הירשמו כאן"));
-    fireEvent.click(screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    await waitFor(() => screen.getByLabelText("אימייל"));
 
     // Check consent
     const consentCheckbox = screen.getByRole("checkbox");
@@ -220,9 +212,7 @@ describe("Register flow", () => {
 
     renderApp();
 
-    // Switch to registration mode
-    await waitFor(() => screen.getByText("אין לכם חשבון? הירשמו כאן"));
-    fireEvent.click(screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    await waitFor(() => screen.getByLabelText("אימייל"));
 
     fireEvent.click(screen.getByRole("checkbox"));
     fireEvent.change(screen.getByLabelText("אימייל"), { target: { value: "test@test.com" } });
@@ -234,17 +224,17 @@ describe("Register flow", () => {
     });
   });
 
-  it("switches to registration mode", async () => {
+  it("switches to login mode", async () => {
     renderApp();
 
-    await waitFor(() => screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    await waitFor(() => screen.getByText("כבר רשומים? התחברו כאן"));
 
-    fireEvent.click(screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    fireEvent.click(screen.getByText("כבר רשומים? התחברו כאן"));
 
-    expect(screen.getByText("הרשמה לצפייה בקורס")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /הרשמה חינם/i })).toBeInTheDocument();
-    // Consent checkbox should be visible in registration mode
-    expect(screen.getByRole("checkbox")).toBeInTheDocument();
+    expect(screen.getByText("כניסה לחשבון")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^כניסה$/i })).toBeInTheDocument();
+    // Consent checkbox should not be visible in login mode
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 
   it("calls signIn and transitions to video library on successful login", async () => {
@@ -259,7 +249,10 @@ describe("Register flow", () => {
 
     renderApp();
 
-    await waitFor(() => screen.getByText("כניסה לחשבון"));
+    await waitFor(() => screen.getByText("כבר רשומים? התחברו כאן"));
+
+    // Switch to login mode
+    fireEvent.click(screen.getByText("כבר רשומים? התחברו כאן"));
 
     // Fill form
     fireEvent.change(screen.getByLabelText("אימייל"), { target: { value: "test@test.com" } });
@@ -288,7 +281,9 @@ describe("Register flow", () => {
 
     renderApp();
 
-    await waitFor(() => screen.getByText("כניסה לחשבון"));
+    await waitFor(() => screen.getByText("כבר רשומים? התחברו כאן"));
+
+    fireEvent.click(screen.getByText("כבר רשומים? התחברו כאן"));
 
     fireEvent.change(screen.getByLabelText("אימייל"), { target: { value: "test@test.com" } });
     fireEvent.change(screen.getByLabelText("סיסמה"), { target: { value: "wrong" } });
@@ -303,9 +298,7 @@ describe("Register flow", () => {
     mockSignInWithOAuth.mockResolvedValue({ data: {}, error: null });
     renderApp();
 
-    // Switch to registration mode
-    await waitFor(() => screen.getByText("אין לכם חשבון? הירשמו כאן"));
-    fireEvent.click(screen.getByText("אין לכם חשבון? הירשמו כאן"));
+    await waitFor(() => screen.getByRole("button", { name: /google/i }));
 
     // Check consent first
     fireEvent.click(screen.getByRole("checkbox"));
