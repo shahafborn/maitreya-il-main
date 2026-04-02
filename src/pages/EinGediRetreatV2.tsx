@@ -1,0 +1,599 @@
+import { useState, useEffect, useCallback } from "react";
+import { X, ChevronRight, ChevronLeft, ChevronDown, Mail } from "lucide-react";
+import maitreyaLogo from "@/assets/maitreya-logo.png";
+import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
+import threeDeities from "@/assets/retreat/three-deities.jpg";
+import lamaGlennPhoto from "@/assets/retreat/lama-glenn-big.jpg";
+import druponPhoto from "@/assets/retreat/drupon-chongwol.png";
+import venuePhoto1 from "@/assets/retreat/venue-eingedi-1.jpg";
+import venuePhoto2 from "@/assets/retreat/venue-eingedi-2.jpg";
+import venuePhoto3 from "@/assets/retreat/venue-eingedi-3.jpg";
+import venuePhoto4 from "@/assets/retreat/venue-eingedi.jpg";
+import gallery1 from "@/assets/retreat/gallery-1.jpg";
+import gallery2 from "@/assets/retreat/gallery-2.jpg";
+import gallery3 from "@/assets/retreat/gallery-3.jpg";
+import gallery4 from "@/assets/retreat/gallery-4.jpg";
+import gallery5 from "@/assets/retreat/gallery-5.jpg";
+import gallery6 from "@/assets/retreat/gallery-6.jpg";
+import gallery7 from "@/assets/retreat/gallery-7.jpg";
+import gallery8 from "@/assets/retreat/gallery-8.jpg";
+import gallery9 from "@/assets/retreat/gallery-9.jpg";
+import gallery10 from "@/assets/retreat/gallery-10.jpg";
+import gallery11 from "@/assets/retreat/gallery-11.jpg";
+import gallery12 from "@/assets/retreat/gallery-12.jpg";
+import gallery13 from "@/assets/retreat/gallery-13.jpg";
+import gallery14 from "@/assets/retreat/gallery-14.jpg";
+import gallery15 from "@/assets/retreat/gallery-15.jpg";
+
+const REGISTRATION_URL = "#";
+
+const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7, gallery5, gallery6, gallery11, gallery12, gallery13, gallery14, gallery15];
+
+/* ============================================================
+   Esalen-inspired design:
+   - Off-white/cream background
+   - Gold accent color (#C9A961)
+   - Single-column, generous whitespace
+   - Full-width hero image (not background)
+   - Circular teacher photos
+   - Elegant serif-like headings
+   - Gold lotus bullet points
+   - Multiple CTA touchpoints
+   - Calm, premium, unhurried feel
+   ============================================================ */
+
+const GOLD = "#C9A961";
+const DARK = "#1A1A1A";
+const CREAM = "#FAF8F5";
+const WARM_GRAY = "#6B635A";
+
+const GoldDot = () => (
+  <span className="inline-block w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: GOLD }} />
+);
+
+const CTAButton = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <a href={REGISTRATION_URL} target="_blank" rel="noopener noreferrer">
+    <button
+      className={`px-10 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] ${className}`}
+      style={{ backgroundColor: GOLD }}
+    >
+      {children}
+    </button>
+  </a>
+);
+
+const EinGediRetreatV2 = () => {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const visibleCount = 3;
+  const maxIndex = galleryImages.length - visibleCount;
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [openSchedule, setOpenSchedule] = useState<number | null>(null);
+
+  const nextSlide = useCallback(() => {
+    setCarouselIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  }, [maxIndex]);
+
+  const prevSlide = useCallback(() => {
+    setCarouselIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+  }, [maxIndex]);
+
+  useEffect(() => {
+    if (isPaused || lightboxIndex !== null) return;
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [isPaused, lightboxIndex, nextSlide]);
+
+  useEffect(() => {
+    document.title = "ריטריט הילינג בעין גדי | מאיטרייה סנגהה ישראל";
+  }, []);
+
+  return (
+    <div dir="rtl" style={{ backgroundColor: CREAM, color: DARK, fontFamily: "'Open Sans', 'Heebo', sans-serif" }} className="min-h-screen">
+
+      {/* ── Nav Bar ── */}
+      <nav className="sticky top-0 z-40 backdrop-blur-md bg-white/90 border-b border-stone-200">
+        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+          <a href="https://maitreya.org.il/">
+            <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-8 object-contain" />
+          </a>
+          <CTAButton className="!py-2.5 !px-6 !text-base">להרשמה</CTAButton>
+        </div>
+      </nav>
+
+      {/* ── Hero Image (full-width, not background) ── */}
+      <section className="relative">
+        <img
+          src={heroImage}
+          alt="נוף ים המלח"
+          className="w-full h-[50vh] md:h-[65vh] object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+              דרך הריפוי וההילינג הבודהיסטי
+            </h1>
+            <p className="text-base md:text-xl text-white/80 mb-4 max-w-2xl">
+              שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי
+            </p>
+            <p className="text-lg md:text-xl text-white/70">
+              1-6 ביוני 2026 | בית ספר שדה עין גדי
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Key info strip (visual break between two photo stripes) ── */}
+      <div className="py-12 md:py-16" style={{ backgroundColor: CREAM }}>
+        <div className="max-w-3xl mx-auto px-6">
+          <p className="text-lg md:text-xl leading-[1.8] text-center mb-8" style={{ color: "#3D3830" }}>
+            המסורת הבודהיסטית עתיקת היומין מביאה אמצעים רבי עוצמה לריפוי והארה. בריטריט מיוחד זה נלמד מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - תרגולים עתיקים ורבי עוצמה לריפוי, לאיזון, להארכת חיים ולהעמקה בדרך הרוחנית.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+            <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>6 ימים, 5 לילות</span>
+            <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>כולל לינה וארוחות</span>
+            <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>3 חניכות</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── About (photo background + frosted glass panel) ── */}
+      <section className="relative py-20 md:py-32">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto1})` }} />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <div className="bg-white/85 backdrop-blur-md rounded-lg p-10 md:p-16 shadow-xl max-w-3xl mx-auto">
+            <h2 className="text-sm font-bold tracking-[0.2em] uppercase mb-8" style={{ color: WARM_GRAY, letterSpacing: "0.2em" }}>
+              אודות הריטריט
+            </h2>
+            <div className="space-y-6 text-lg leading-[1.8]" style={{ color: "#3D3830" }}>
+              <p>
+                בריטריט מיוחד זה נלמד מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - מדיסין בודהא (בודהא הריפוי), טארה הלבנה, וצ׳אקרסמוורה הלבן.
+              </p>
+              <p>
+                תרגולים אלו נובעים מלב המסורת הבודהיסטית הטנטרית, והועברו בשושלות רציפות במשך למעלה מאלף שנים על ידי מאסטרים טנטריים בהודו, בטיבט וברחבי אסיה. הם משמשים מזה דורות מרפאים, רופאים, מתרגלים רוחניים ואנשים מן השורה - לריפוי עצמי, ריפוי אחרים, ולהתקדמות בדרך הרוחנית.
+              </p>
+              <p>
+                התרגולים עובדים עם התודעה, הנשימה, הגוף והצליל (מנטרה) כדי לגשת אל הרמות העמוקות ביותר של ההוויה שלנו, ולגעת ישירות בכל מה שזקוק לריפוי.
+              </p>
+              <p>
+                גישה עוצמתית זו פועלת על שורש חוסר האיזון כפי שהוא מתבטא במחלה ובקשיים, ומתמירה אותו לבריאות, שמחה, ובסופו של דבר - להארה מלאה.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Teachers ── */}
+      <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-16" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            המורים
+          </h2>
+
+          {/* Lama Glenn */}
+          <div className="text-center mb-16">
+            <img
+              src={lamaGlennPhoto}
+              alt="לאמה גלן מולין"
+              className="w-40 h-40 md:w-52 md:h-52 rounded-full object-cover mx-auto mb-6 shadow-lg"
+              style={{ border: `3px solid ${GOLD}` }}
+            />
+            <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+              לאמה גלן מולין
+            </h3>
+            <p className="text-base leading-[1.8] max-w-lg mx-auto" style={{ color: WARM_GRAY }}>
+              לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
+              הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
+              הם לינג רינפוצ׳ה השישי וטריג׳נג רינפוצ׳ה - מורי השורש האישיים של
+              הדלאי לאמה ה-14. לאמה גלן מלמד בודהיזם טיבטי מעל שלושים שנה
+              לאלפי תלמידים בכל רחבי העולם.
+            </p>
+          </div>
+
+          {/* Drupon */}
+          <div className="text-center">
+            <img
+              src={druponPhoto}
+              alt="דרופון צ׳ונגוואל-לה"
+              className="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover mx-auto mb-6 shadow-lg"
+              style={{ border: `3px solid ${GOLD}` }}
+            />
+            <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+              דרופון צ׳ונגוואל-לה
+            </h3>
+            <p className="text-base leading-[1.8] max-w-lg mx-auto" style={{ color: WARM_GRAY }}>
+              דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
+              לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
+              כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה
+              בהדרכת מורה השורש שלו, לאמה גלן. דרופון צ׳ונגוואל-לה מלמד
+              תלמידים ברחבי העולם - בקוריאה, ארה״ב, רוסיה, ישראל, דרום אמריקה
+              ועוד.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Three Practices ── */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            שלושת התרגולים
+          </h2>
+          <p className="text-center mb-12" style={{ color: WARM_GRAY }}>
+            שלושה תרגולי ליבה ממסורת הבודהיזם הטנטרי הטיבטי, כולל חניכות
+          </p>
+
+          <div className="max-w-2xl mx-auto mb-12">
+            <img
+              src={threeDeities}
+              alt="שלושת אלוהויות הריפוי"
+              className="w-full rounded-lg shadow-md"
+            />
+          </div>
+
+          <div className="space-y-8 max-w-2xl mx-auto">
+            {[
+              {
+                title: "טארה הלבנה",
+                subtitle: "הגלגל מגשים המשאלות",
+                description: "הגלגל מגשים המשאלות, היא בודהה נשית המגלמת את חמש הפעילויות המוארות של התודעה הערה: השקטה, משיכה (זימון), העשרה, פעולה עוצמתית והגנה. תרגולה עוצמתי במיוחד להארכת חיים, לריפוי, ולהסרת מכשולים פנימיים וחיצוניים.",
+              },
+              {
+                title: "מדיסין בודהא",
+                subtitle: "הבודהא של הרפואה",
+                description: "הבודהא של הרפואה, המכונה לעיתים קרובות הרופא הראשון, הוא דמות מרכזית במסורות הריפוי הבודהיסטיות. תרגול זה מאפשר למתרגלים להפעיל ולחזק את כוחות הריפוי הפנימיים והטבעיים שלהם, ולהעצים את הכוחות המגינים של שדה האנרגיה האנושי.",
+              },
+              {
+                title: "צ׳אקרסמוורה הלבן",
+                subtitle: "אנרגיית החיים הארוכים",
+                description: "תרגול של טנטרה יוגית עליונה (אנוטרה יוגה טנטרה), אשר בנוסף להיותו דרך שלמה להארה, כולל שיטות ייחודיות להארכת חיים. התרגול כולל עבודות אנרגיה פנימיות מיוחדות (טומו), הפועלות ישירות עם ערוצי האנרגיה והצ׳קרות - לריפוי, לפתיחת חסימות אנרגטיות, לחיזוק החיוניות ולהארכת החיים.",
+              },
+            ].map((practice) => (
+              <div key={practice.title} className="flex gap-4">
+                <GoldDot />
+                <div>
+                  <h3 className="text-xl font-bold mb-1" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+                    {practice.title}
+                  </h3>
+                  <p className="text-sm font-medium mb-2" style={{ color: GOLD }}>{practice.subtitle}</p>
+                  <p className="leading-[1.8]" style={{ color: WARM_GRAY }}>{practice.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Schedule (alternating image + text, Esalen-style) ── */}
+      <section className="py-16 md:py-24" style={{ backgroundColor: CREAM }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-center mb-16" style={{ color: WARM_GRAY, letterSpacing: "0.2em" }}>
+            מבנה הריטריט
+          </h2>
+
+          {/* Arrival & logistics */}
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-20">
+            <div>
+              <h3 className="text-sm font-bold tracking-[0.15em] uppercase mb-4" style={{ color: WARM_GRAY, letterSpacing: "0.15em" }}>
+                הגעה ולוגיסטיקה
+              </h3>
+              <div className="space-y-4 leading-[1.8]" style={{ color: "#3D3830" }}>
+                <p>הריטריט מתחיל ביום שני, 1 ביוני בשעה 14:00, ומסתיים ביום שבת, 6 ביוני 2026 בשעה 15:00.</p>
+              </div>
+              <h3 className="text-sm font-bold tracking-[0.15em] uppercase mt-8 mb-4" style={{ color: WARM_GRAY, letterSpacing: "0.15em" }}>
+                ארוחות
+              </h3>
+              <div className="leading-[1.8]" style={{ color: "#3D3830" }}>
+                <p>ארוחת בוקר: 8:00-9:15</p>
+                <p>ארוחת צהריים: 12:30-13:30</p>
+                <p>ארוחת ערב: 18:30-19:30</p>
+              </div>
+            </div>
+            <img
+              src={venuePhoto4}
+              alt="בית ספר שדה עין גדי"
+              className="w-full h-64 md:h-80 object-cover rounded-lg shadow-md"
+            />
+          </div>
+
+          {/* Workshop hours - alternating direction */}
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-20">
+            <img
+              src={gallery14}
+              alt="מתוך ריטריט קודם"
+              className="w-full h-64 md:h-80 object-cover rounded-lg shadow-md order-2 md:order-1"
+            />
+            <div className="order-1 md:order-2">
+              <h3 className="text-sm font-bold tracking-[0.15em] uppercase mb-6" style={{ color: WARM_GRAY, letterSpacing: "0.15em" }}>
+                שעות התרגול
+              </h3>
+              <div className="space-y-6">
+                {[
+                  { days: "ימים 1-2 (שני-שלישי)", practice: "טארה הלבנה", times: "בוקר: 9:30-12:30 | אחה״צ: 14:30-18:15" },
+                  { days: "ימים 3-4 (רביעי-חמישי)", practice: "מדיסין בודהא", times: "בוקר: 9:30-12:30 | אחה״צ: 14:30-18:15" },
+                  { days: "ימים 5-6 (שישי-שבת)", practice: "צ׳אקרסמוורה הלבן", times: "בוקר: 9:30-12:30 | אחה״צ: 14:30-18:15" },
+                ].map((block, i) => (
+                  <div key={i} className="border-r-2 pr-4" style={{ borderColor: GOLD }}>
+                    <p className="font-bold text-sm mb-0.5">{block.days}</p>
+                    <p className="font-bold" style={{ color: GOLD }}>{block.practice}</p>
+                    <p className="text-sm mt-1" style={{ color: WARM_GRAY }}>{block.times}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm mt-6" style={{ color: WARM_GRAY }}>
+                היום הראשון מתחיל ב-14:00. היום האחרון מסתיים ב-15:00.
+              </p>
+              <p className="text-sm mt-4" style={{ color: WARM_GRAY }}>
+                כל יום יכלול הוראה, חניכה, תרגול מודרך, יוגה ומדיטציה.
+              </p>
+              <p className="text-sm mt-2" style={{ color: WARM_GRAY }}>
+                למעוניינים: מדיטציה בשעות הבוקר המוקדמות ופעילויות ערב.
+              </p>
+            </div>
+          </div>
+
+          <p className="text-center text-sm" style={{ color: WARM_GRAY }}>
+            הריטריט מתאים למתרגלים מתחילים ומתקדמים וילווה בתרגום לעברית.
+          </p>
+          <p className="text-center text-xs mt-4" style={{ color: WARM_GRAY }}>
+            * לוח הזמנים המוצג הוא משוער. לוח הזמנים הסופי יישלח למשתתפים לפני הריטריט.
+          </p>
+        </div>
+      </section>
+
+      {/* ── What's Included (photo background stripe) ── */}
+      <section className="relative py-20 md:py-28">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto3})` }} />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-center text-white/90 mb-14" style={{ letterSpacing: "0.2em" }}>
+            מה כולל הריטריט
+          </h2>
+          <div className="grid md:grid-cols-2 gap-x-20 gap-y-5 max-w-3xl mx-auto">
+            {[
+              "השתתפות בכל ההוראות והתרגולים",
+              "שלוש חניכות מלאות",
+              "לינה ל-5 לילות",
+              "ארוחות מלאות (בוקר, צהריים, ערב)",
+              "תרגום לעברית לאורך כל הריטריט",
+              "שיעורי יוגה ומדיטציה",
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3 py-1">
+                <span className="text-lg" style={{ color: GOLD }}>&#10047;</span>
+                <span className="text-base text-white/90">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing Cards ── */}
+      <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            מחירון
+          </h2>
+          <p className="text-center text-sm mb-12" style={{ color: WARM_GRAY }}>
+            כל המחירים כוללים לינה, ארוחות מלאות והשתתפות בכל ההוראות והתרגולים
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { type: "3 בחדר", price: "3,350", note: "חדר משותף לשלושה" },
+              { type: "2 בחדר", price: "3,850", note: "חדר משותף לשניים", featured: true },
+              { type: "חדר ליחיד", price: "4,500", note: "חדר פרטי" },
+            ].map((option) => (
+              <div
+                key={option.type}
+                className={`bg-white rounded-lg p-8 text-center transition-shadow flex flex-col ${
+                  option.featured ? "shadow-lg ring-2" : "shadow-sm hover:shadow-md"
+                }`}
+                style={option.featured ? { ringColor: GOLD, borderColor: GOLD } : {}}
+              >
+                {/* Badge area - fixed height so content below aligns */}
+                <div className="h-8 mb-2 flex items-center justify-center">
+                  {option.featured && (
+                    <span className="inline-block px-3 py-1 text-xs font-bold text-white rounded-full" style={{ backgroundColor: GOLD }}>
+                      הנבחר ביותר
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+                  {option.type}
+                </h3>
+                <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>{option.note}</p>
+                <p className="text-4xl font-bold mb-1">
+                  {option.price}
+                  <span className="text-lg font-normal mr-1">₪</span>
+                </p>
+                <p className="text-xs mb-6" style={{ color: WARM_GRAY }}>הכל כלול</p>
+                <div className="mt-auto">
+                  <CTAButton className="!text-base !px-8 !py-3 w-full">להרשמה</CTAButton>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Venue (photo background + text overlay, Esalen "Campus Features" style) ── */}
+      <section className="relative py-20 md:py-28">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto2})` }} />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-white/90 mb-10" style={{ letterSpacing: "0.2em" }}>
+            בית ספר שדה עין גדי
+          </h2>
+          <p className="text-lg md:text-xl text-white/85 leading-[1.8] max-w-2xl mx-auto mb-6">
+            מתחם שקט ויפה הפונה לים המלח עם נוף ישיר לים ולהרי מואב.
+            חמש דקות נסיעה מקיבוץ עין גדי, קרוב לשמורת הטבע ולמצוקי דרגות.
+          </p>
+          <p className="text-base text-white/70 leading-[1.8] max-w-2xl mx-auto">
+            החדרים שופצו בשנים האחרונות - פשוטים, יפים ונוחים. כל חדר כולל
+            שירותים ומקלחת, מזגן ופינת קפה. המתחם כולל אולמות ממוזגים, חדר
+            אוכל עם ארוחות מלאות, ושטחי חוץ ירוקים ונעימים.
+          </p>
+        </div>
+      </section>
+
+      {/* Venue photo grid */}
+      <section className="py-16 md:py-20" style={{ backgroundColor: CREAM }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="grid grid-cols-2 gap-3 rounded-lg overflow-hidden">
+            <img src={venuePhoto1} alt="נוף עין גדי" className="col-span-2 w-full h-48 md:h-72 object-cover rounded-lg" />
+            <img src={venuePhoto4} alt="דקלים ומדשאות" className="w-full h-40 md:h-52 object-cover rounded-lg" />
+            <img src={venuePhoto3} alt="שטחי החוץ" className="w-full h-40 md:h-52 object-cover rounded-lg" />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Gallery Carousel ── */}
+      <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            מהריטריטים שלנו
+          </h2>
+          <div
+            className="relative"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            <div className="overflow-hidden rounded-lg" style={{ margin: "0 -10px" }} dir="ltr">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(${carouselIndex * (-100 / 3)}%)` }}
+              >
+                {galleryImages.map((src, i) => (
+                  <div key={i} className="shrink-0 px-[10px]" style={{ width: `${100 / 3}%` }}>
+                    <div
+                      onClick={() => setLightboxIndex(i)}
+                      className="cursor-pointer rounded-lg overflow-hidden"
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <img
+                        src={src}
+                        alt="מריטריטים קודמים של מאיטרייה סנגהה"
+                        className="w-full aspect-square object-cover transition-all duration-300 hover:scale-105"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={prevSlide}
+              className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur shadow-md hover:bg-white rounded-full p-2 transition-colors"
+            >
+              <ChevronRight className="h-5 w-5" style={{ color: DARK }} />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute -left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur shadow-md hover:bg-white rounded-full p-2 transition-colors"
+            >
+              <ChevronLeft className="h-5 w-5" style={{ color: DARK }} />
+            </button>
+
+            <div className="flex justify-center gap-1.5 mt-8">
+              {galleryImages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCarouselIndex(i)}
+                  className="w-2 h-2 rounded-full transition-colors"
+                  style={{ backgroundColor: i === carouselIndex ? GOLD : "#D4CFC7" }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Lightbox ── */}
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          onClick={() => setLightboxIndex(null)}
+        >
+          <button className="absolute top-4 left-4 text-white/80 hover:text-white p-2" onClick={() => setLightboxIndex(null)}>
+            <X className="h-8 w-8" />
+          </button>
+          <button
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2"
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + galleryImages.length) % galleryImages.length); }}
+          >
+            <ChevronRight className="h-10 w-10" />
+          </button>
+          <button
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2"
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % galleryImages.length); }}
+          >
+            <ChevronLeft className="h-10 w-10" />
+          </button>
+          <img
+            src={galleryImages[lightboxIndex]}
+            alt="מריטריטים קודמים של מאיטרייה סנגהה"
+            className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
+      {/* ── Final CTA ── */}
+      <section className="py-20 md:py-28 text-center" style={{ background: `linear-gradient(135deg, ${DARK} 0%, #2C2620 100%)` }}>
+        <div className="max-w-2xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            הצטרפו לריטריט
+          </h2>
+          <p className="text-lg text-white/70 mb-10 leading-relaxed">
+            שישה ימים של חניכות ותרגולי ריפוי עומק, על שפת ים המלח, עם לאמה גלן
+            ודרופון צ׳ונגוואל-לה
+          </p>
+          <CTAButton>להרשמה לריטריט</CTAButton>
+          <p className="text-sm text-white/40 mt-8">מספר המקומות מוגבל</p>
+        </div>
+      </section>
+
+      {/* ── Info Footer (cancellation, scholarships, contact) ── */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-3xl mx-auto px-6 space-y-10">
+          <div>
+            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>מדיניות ביטול</h3>
+            <ul className="space-y-2" style={{ color: WARM_GRAY }}>
+              <li className="flex items-start gap-3"><GoldDot /><span>ביטול עד 30 יום לפני הריטריט - החזר מלא</span></li>
+              <li className="flex items-start gap-3"><GoldDot /><span>ביטול 14-30 יום לפני - החזר של 50%</span></li>
+              <li className="flex items-start gap-3"><GoldDot /><span>ביטול פחות מ-14 יום לפני - ללא החזר</span></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>מלגות</h3>
+            <p style={{ color: WARM_GRAY }} className="leading-[1.8]">
+              מאיטרייה סנגהה ישראל מעניקה מספר מלגות חלקיות למשתתפים שזקוקים
+              לסיוע כלכלי. לפרטים ולהגשת בקשה, צרו קשר בדוא״ל.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>צרו קשר</h3>
+            <p style={{ color: WARM_GRAY }}>
+              לשאלות, בירורים והרשמה:{" "}
+              <a href="mailto:info@maitreya.org.il" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
+                info@maitreya.org.il
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="py-8 text-center text-sm border-t border-stone-200" style={{ color: WARM_GRAY }}>
+        <p>© {new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.</p>
+      </footer>
+    </div>
+  );
+};
+
+export default EinGediRetreatV2;

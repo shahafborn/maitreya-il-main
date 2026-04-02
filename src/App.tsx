@@ -17,6 +17,7 @@ const CourseRegister = lazy(() => import("./pages/CourseRegister"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const EinGediRetreat = lazy(() => import("./pages/EinGediRetreat"));
+const EinGediRetreatV2 = lazy(() => import("./pages/EinGediRetreatV2"));
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ const AppRoutes = () => (
     <Routes>
       {/* Public event pages — no auth required */}
       <Route path="/events/ein-gedi-healing-retreat" element={<EinGediRetreat />} />
+      <Route path="/events/ein-gedi-v2" element={<EinGediRetreatV2 />} />
 
       {/* Everything else goes through AuthGate */}
       <Route path="/*" element={<AuthGate />} />
