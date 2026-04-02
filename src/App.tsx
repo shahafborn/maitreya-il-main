@@ -80,7 +80,8 @@ const AppRoutes = () => (
   <Suspense fallback={<Loading />}>
     <Routes>
       {/* Public event pages — no auth required */}
-      <Route path="/events/ein-gedi-healing-retreat" element={<EinGediRetreat />} />
+      <Route path="/events/ein-gedi-healing-retreat" element={<EinGediRetreatV2 />} />
+      <Route path="/events/ein-gedi-v1" element={<EinGediRetreat />} />
       <Route path="/events/ein-gedi-v2" element={<EinGediRetreatV2 />} />
 
       {/* Everything else goes through AuthGate */}

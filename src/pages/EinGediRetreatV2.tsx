@@ -108,14 +108,17 @@ const EinGediRetreatV2 = () => {
           alt="נוף ים המלח"
           className="w-full h-[50vh] md:h-[65vh] object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/35 to-transparent" />
         <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
               דרך הריפוי וההילינג הבודהיסטי
             </h1>
-            <p className="text-base md:text-xl text-white/80 mb-4 max-w-2xl">
-              שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי - עם לאמה גלן מולין
+            <p className="text-lg md:text-2xl text-white/90 mb-2 max-w-2xl">
+              שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי
+            </p>
+            <p className="text-lg md:text-2xl font-semibold mb-4" style={{ color: GOLD }}>
+              עם לאמה גלן מולין
             </p>
             <p className="text-lg md:text-xl text-white/70">
               1-6 ביוני 2026 | בית ספר שדה עין גדי
@@ -127,14 +130,9 @@ const EinGediRetreatV2 = () => {
       {/* ── Key info strip (visual break between two photo stripes) ── */}
       <div className="py-12 md:py-16" style={{ backgroundColor: CREAM }}>
         <div className="max-w-3xl mx-auto px-6">
-          <p className="text-lg md:text-xl leading-[1.8] text-center mb-8" style={{ color: "#3D3830" }}>
+          <p className="text-lg md:text-xl leading-[1.8] text-center" style={{ color: "#3D3830" }}>
             המסורת הבודהיסטית עתיקת היומין מביאה אמצעים רבי עוצמה לריפוי והארה. בריטריט מיוחד זה נלמד עם לאמה גלן מולין, תלמידו האישי של הדלאי לאמה, מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - תרגולים עתיקים ורבי עוצמה לריפוי, לאיזון, להארכת חיים ולהעמקה בדרך הרוחנית.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
-            <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>6 ימים, 5 לילות</span>
-            <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>כולל לינה וארוחות</span>
-            <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>3 חניכות</span>
-          </div>
         </div>
       </div>
 
@@ -149,7 +147,7 @@ const EinGediRetreatV2 = () => {
             </h2>
             <div className="space-y-6 text-lg leading-[1.8]" style={{ color: "#3D3830" }}>
               <p>
-                בריטריט מיוחד זה נלמד מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - מדיסין בודהא (בודהא הריפוי), טארה הלבנה, וצ׳אקרסמוורה הלבן.
+                בריטריט מיוחד זה נלמד מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - <strong>מדיסין בודהא (בודהא הריפוי), טארה הלבנה, וצ׳אקרסמוורה הלבן</strong>.
               </p>
               <p>
                 תרגולים אלו נובעים מלב המסורת הבודהיסטית הטנטרית, והועברו בשושלות רציפות במשך למעלה מאלף שנים על ידי מאסטרים טנטריים בהודו, בטיבט וברחבי אסיה. הם משמשים מזה דורות מרפאים, רופאים, מתרגלים רוחניים ואנשים מן השורה - לריפוי עצמי, ריפוי אחרים, ולהתקדמות בדרך הרוחנית.
@@ -167,50 +165,64 @@ const EinGediRetreatV2 = () => {
 
       {/* ── Teachers ── */}
       <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
-        <div className="max-w-3xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-16" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
             המורים
           </h2>
 
-          {/* Lama Glenn */}
-          <div className="text-center mb-16">
-            <img
-              src={lamaGlennPhoto}
-              alt="לאמה גלן מולין"
-              className="w-40 h-40 md:w-52 md:h-52 rounded-full object-cover mx-auto mb-6 shadow-lg"
-              style={{ border: `3px solid ${GOLD}` }}
-            />
-            <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-              לאמה גלן מולין
-            </h3>
-            <p className="text-base leading-[1.8] max-w-lg mx-auto" style={{ color: WARM_GRAY }}>
-              לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
-              הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
-              הם לינג רינפוצ׳ה השישי וטריג׳נג רינפוצ׳ה - מורי השורש האישיים של
-              הדלאי לאמה ה-14. לאמה גלן מלמד בודהיזם טיבטי מעל שלושים שנה
-              לאלפי תלמידים בכל רחבי העולם.
-            </p>
+          {/* Lama Glenn - photo right, text left (RTL: photo on right visually) */}
+          <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12 mb-20">
+            <div className="flex-shrink-0">
+              <img
+                src={lamaGlennPhoto}
+                alt="לאמה גלן מולין"
+                className="w-64 h-72 md:w-80 md:h-96 rounded-lg object-cover shadow-xl"
+              />
+            </div>
+            <div className="text-center md:text-start flex-1">
+              <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+                לאמה גלן מולין
+              </h3>
+              <p className="text-sm font-medium mb-5" style={{ color: GOLD }}>
+                מורה בכיר לטנטרה בודהיסטית וטומו
+              </p>
+              <p className="text-base leading-[1.9]" style={{ color: WARM_GRAY }}>
+                לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
+                הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
+                הם לינג רינפוצ׳ה השישי וטריג׳נג רינפוצ׳ה - מורי השורש האישיים של
+                הדלאי לאמה ה-14. לאמה גלן מלמד בודהיזם טיבטי מעל שלושים שנה
+                לאלפי תלמידים בכל רחבי העולם. הוא חוקר, סופר, ומתרגם ידוע - שכתב
+                מעל 30 ספרים בנושאי בודהיזם טיבטי וטנטרה בודהיסטית שפורסמו בכל
+                רחבי העולם.
+              </p>
+            </div>
           </div>
 
-          {/* Drupon */}
-          <div className="text-center">
-            <img
-              src={druponPhoto}
-              alt="דרופון צ׳ונגוואל-לה"
-              className="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover mx-auto mb-6 shadow-lg"
-              style={{ border: `3px solid ${GOLD}` }}
-            />
-            <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-              דרופון צ׳ונגוואל-לה
-            </h3>
-            <p className="text-base leading-[1.8] max-w-lg mx-auto" style={{ color: WARM_GRAY }}>
-              דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
-              לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
-              כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה
-              בהדרכת מורה השורש שלו, לאמה גלן. דרופון צ׳ונגוואל-לה מלמד
-              תלמידים ברחבי העולם - בקוריאה, ארה״ב, רוסיה, ישראל, דרום אמריקה
-              ועוד.
-            </p>
+          {/* Drupon - flipped: photo left, text right (RTL: photo on left visually) */}
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex-shrink-0">
+              <img
+                src={druponPhoto}
+                alt="דרופון צ׳ונגוואל-לה"
+                className="w-52 h-60 md:w-64 md:h-80 rounded-lg object-cover shadow-xl"
+              />
+            </div>
+            <div className="text-center md:text-start flex-1">
+              <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+                דרופון צ׳ונגוואל-לה
+              </h3>
+              <p className="text-sm font-medium mb-5" style={{ color: GOLD }}>
+                מדריך ריטריטים ומורה לטנטרה בודהיסטית
+              </p>
+              <p className="text-base leading-[1.9]" style={{ color: WARM_GRAY }}>
+                דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
+                לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
+                כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה
+                בהדרכת מורה השורש שלו, לאמה גלן. דרופון צ׳ונגוואל-לה מלמד
+                תלמידים ברחבי העולם - בקוריאה, ארה״ב, רוסיה, ישראל, דרום אמריקה
+                ועוד.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -238,7 +250,7 @@ const EinGediRetreatV2 = () => {
               {
                 title: "טארה הלבנה",
                 subtitle: "הגלגל מגשים המשאלות",
-                description: "הגלגל מגשים המשאלות, היא בודהה נשית המגלמת את חמש הפעילויות המוארות של התודעה הערה: השקטה, משיכה (זימון), העשרה, פעולה עוצמתית והגנה. תרגולה עוצמתי במיוחד להארכת חיים, לריפוי, ולהסרת מכשולים פנימיים וחיצוניים.",
+                description: "טארה הלבנה, היא בודהה נשית המגלמת את חמש הפעילויות המוארות של התודעה הערה: השקטה, משיכה (זימון), העשרה, פעולה עוצמתית והגנה. תרגולה עוצמתי במיוחד להארכת חיים, לריפוי, ולהסרת מכשולים פנימיים וחיצוניים.",
               },
               {
                 title: "מדיסין בודהא",
@@ -373,7 +385,7 @@ const EinGediRetreatV2 = () => {
       <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-            מחירון
+            עלות למשתתף
           </h2>
           <p className="text-center text-sm mb-12" style={{ color: WARM_GRAY }}>
             כל המחירים כוללים לינה, ארוחות מלאות והשתתפות בכל ההוראות והתרגולים
