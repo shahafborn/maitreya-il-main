@@ -115,7 +115,7 @@ const EinGediRetreatV2 = () => {
               דרך הריפוי וההילינג הבודהיסטי
             </h1>
             <p className="text-base md:text-xl text-white/80 mb-4 max-w-2xl">
-              שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי
+              שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי - עם לאמה גלן מולין
             </p>
             <p className="text-lg md:text-xl text-white/70">
               1-6 ביוני 2026 | בית ספר שדה עין גדי
@@ -128,7 +128,7 @@ const EinGediRetreatV2 = () => {
       <div className="py-12 md:py-16" style={{ backgroundColor: CREAM }}>
         <div className="max-w-3xl mx-auto px-6">
           <p className="text-lg md:text-xl leading-[1.8] text-center mb-8" style={{ color: "#3D3830" }}>
-            המסורת הבודהיסטית עתיקת היומין מביאה אמצעים רבי עוצמה לריפוי והארה. בריטריט מיוחד זה נלמד מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - תרגולים עתיקים ורבי עוצמה לריפוי, לאיזון, להארכת חיים ולהעמקה בדרך הרוחנית.
+            המסורת הבודהיסטית עתיקת היומין מביאה אמצעים רבי עוצמה לריפוי והארה. בריטריט מיוחד זה נלמד עם לאמה גלן מולין, תלמידו האישי של הדלאי לאמה, מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - תרגולים עתיקים ורבי עוצמה לריפוי, לאיזון, להארכת חיים ולהעמקה בדרך הרוחנית.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
             <span className="px-4 py-1.5 rounded-full border" style={{ borderColor: GOLD, color: GOLD }}>6 ימים, 5 לילות</span>
