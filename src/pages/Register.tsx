@@ -159,7 +159,7 @@ const Register = () => {
                     to="/reset-password"
                     className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    שכחתם סיסמה?
+                    Forgot your password?
                   </Link>
                 </div>
               )}

@@ -96,6 +96,14 @@ const AdminLogin = () => {
             {submitting ? "Signing in..." : "Sign In"}
           </Button>
         </form>
+        <div className="mt-4 text-center">
+          <Link
+            to="/reset-password"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Forgot your password?
+          </Link>
+        </div>
       </div>
     </div>
   );

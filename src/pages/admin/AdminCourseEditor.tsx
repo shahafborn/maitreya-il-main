@@ -40,8 +40,19 @@ const AdminCourseEditor = () => {
     enabled: !!courseId,
   });
 
-  if (isLoading || !course) {
+  if (isLoading) {
     return <div className="animate-pulse text-muted-foreground">Loading...</div>;
+  }
+
+  if (!course) {
+    return (
+      <div className="space-y-4">
+        <Link to="/admin/courses" className="text-sm text-muted-foreground hover:text-foreground">
+          &larr; Back to Courses
+        </Link>
+        <p className="text-destructive">Course not found or access denied.</p>
+      </div>
+    );
   }
 
   return (

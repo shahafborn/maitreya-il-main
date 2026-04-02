@@ -3,6 +3,26 @@
 ## Unreleased
 
 ### Added
+- **Course promotions** — admin-managed promo cards on course pages (`/admin/promotions`). Supports Hebrew/English with RTL, image upload (drag/drop/paste), date ranges, geo-targeting (Israel / international / all via IP geolocation), and external registration links.
+- **Sign-in analytics** — `sign_in_events` table tracks each sign-in with country code. Two new charts at top of analytics dashboard: Daily Sign-ins (unique users/day) and Sign-ins by Location (unique users/country, full country names).
+- **Per-course OG meta tags** — social media previews show course-specific title, description, and hero image.
+- **Client-side image resize** — promotion image uploads auto-resize to 1024px max width, JPEG @ 85% quality before upload.
+
+### Changed
+- **Resource file names** — clickable, triggers download on click (not just the Download button).
+- **Recordings order** — latest week shown first in course page to match admin order.
+- **Meta titles** — changed to English "Maitreya Sangha Israel".
+- **Mobile layout** — reduced padding, larger body text, fixed carousel overflow, highlighted Google sign-in button.
+- **GA tracking** — added `/p` prefix to page paths, normalized slashes, deferred title read for SPA accuracy.
+
+### Fixed
+- **Admin recording editor** — crash from empty SelectItem value when session type unset.
+
+---
+
+## Previous
+
+### Added
 - **Role hierarchy** — three-tier `super_admin` > `admin` > `editor` system. Editors can edit course content but not create courses or publish. Admins get full course management + analytics. Super admins can assign/revoke roles.
 - **Analytics tracking** — `daily_recording_views` and `daily_resource_downloads` tables with per-user/per-day upsert. Video views tracked on iframe load (deduplicated per session), resource downloads tracked on click.
 - **Analytics dashboard** (`/admin/analytics`) — summary cards (users, enrollments, views, downloads) + charts (signup trend, enrollments per course, views per recording, downloads per resource). Date range filter: 7d / 30d / 90d / all time.

@@ -12,10 +12,11 @@ import AuthCallback from "./pages/AuthCallback";
 import CourseEnrollmentGate from "./components/CourseEnrollmentGate";
 import { usePageTracking } from "@/hooks/usePageTracking";
 
-// Lazy-load course registration + admin (code-split)
+// Lazy-load course registration + admin + public event pages (code-split)
 const CourseRegister = lazy(() => import("./pages/CourseRegister"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const EinGediRetreat = lazy(() => import("./pages/EinGediRetreat"));
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,18 @@ const AuthGate = () => {
   );
 };
 
+const AppRoutes = () => (
+  <Suspense fallback={<Loading />}>
+    <Routes>
+      {/* Public event pages — no auth required */}
+      <Route path="/events/ein-gedi-healing-retreat" element={<EinGediRetreat />} />
+
+      {/* Everything else goes through AuthGate */}
+      <Route path="/*" element={<AuthGate />} />
+    </Routes>
+  </Suspense>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -81,7 +94,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter basename="/p">
         <AuthProvider>
-          <AuthGate />
+          <AppRoutes />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

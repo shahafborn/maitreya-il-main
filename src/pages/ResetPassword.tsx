@@ -10,7 +10,7 @@ import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 const ResetPassword = () => {
   useDocumentTitle("Reset Password | Maitreya Sangha Israel");
-  const { resetPassword } = useAuth();
+  const { resetPassword, isRecovery, clearRecovery } = useAuth();
 
   const [mode, setMode] = useState<"request" | "reset" | "success">("request");
   const [email, setEmail] = useState("");
@@ -20,7 +20,15 @@ const ResetPassword = () => {
   const [submitting, setSubmitting] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
-  // Listen for PASSWORD_RECOVERY event (user clicked the magic link)
+  // Use the context flag set by AuthProvider (catches early PASSWORD_RECOVERY events)
+  useEffect(() => {
+    if (isRecovery) {
+      setMode("reset");
+      setError("");
+    }
+  }, [isRecovery]);
+
+  // Backup: listen for PASSWORD_RECOVERY in case it fires after mount
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
@@ -29,6 +37,15 @@ const ResetPassword = () => {
       }
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Fallback: check URL hash for type=recovery
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes("type=recovery")) {
+      setMode("reset");
+      setError("");
+    }
   }, []);
 
   const handleRequestReset = async (e: React.FormEvent) => {
@@ -43,7 +60,7 @@ const ResetPassword = () => {
         setEmailSent(true);
       }
     } catch {
-      setError("שגיאת תקשורת. נסו שוב.");
+      setError("Connection error. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -54,7 +71,7 @@ const ResetPassword = () => {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("הסיסמאות אינן תואמות.");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -64,20 +81,21 @@ const ResetPassword = () => {
       if (error) {
         setError(error.message);
       } else {
+        clearRecovery();
         setMode("success");
       }
     } catch {
-      setError("שגיאת תקשורת. נסו שוב.");
+      setError("Connection error. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background font-body">
+    <div className="min-h-screen bg-background font-body">
       <header className="py-4 px-6 flex justify-center border-b border-border bg-card">
         <a href="https://maitreya.org.il/">
-          <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-12 md:h-16 object-contain" />
+          <img src={maitreyaLogo} alt="Maitreya Sangha Israel" className="h-12 md:h-16 object-contain" />
         </a>
       </header>
 
@@ -88,15 +106,15 @@ const ResetPassword = () => {
             {mode === "request" && !emailSent && (
               <>
                 <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-                  איפוס סיסמה
+                  Reset Password
                 </h2>
                 <p className="text-sm text-muted-foreground text-center mb-6">
-                  הזינו את כתובת האימייל שלכם ונשלח לכם קישור לאיפוס הסיסמה
+                  Enter your email address and we'll send you a reset link
                 </p>
 
                 <form onSubmit={handleRequestReset} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">אימייל</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -104,8 +122,6 @@ const ResetPassword = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="your@email.com"
-                      dir="ltr"
-                      className="text-left"
                     />
                   </div>
 
@@ -118,16 +134,16 @@ const ResetPassword = () => {
                     disabled={submitting}
                     className="w-full font-bold py-3 text-base rounded-full shadow-md bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
-                    {submitting ? "רגע..." : "שליחת קישור איפוס"}
+                    {submitting ? "Sending..." : "Send Reset Link"}
                   </Button>
                 </form>
 
                 <div className="mt-6 text-center">
                   <Link
-                    to="/discover/healing-retreat"
+                    to="/"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    חזרה לכניסה
+                    Back to login
                   </Link>
                 </div>
               </>
@@ -136,18 +152,18 @@ const ResetPassword = () => {
             {mode === "request" && emailSent && (
               <>
                 <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-                  בדקו את האימייל שלכם
+                  Check Your Email
                 </h2>
                 <p className="text-sm text-muted-foreground text-center mb-6">
-                  שלחנו קישור לאיפוס הסיסמה אל <span className="font-medium text-foreground" dir="ltr">{email}</span>
+                  We sent a password reset link to <span className="font-medium text-foreground">{email}</span>
                 </p>
                 <p className="text-xs text-muted-foreground text-center">
-                  לא קיבלתם? בדקו בתיקיית הספאם או{" "}
+                  Didn't receive it? Check your spam folder or{" "}
                   <button
                     onClick={() => setEmailSent(false)}
                     className="text-accent hover:underline"
                   >
-                    נסו שוב
+                    try again
                   </button>
                 </p>
               </>
@@ -156,15 +172,15 @@ const ResetPassword = () => {
             {mode === "reset" && (
               <>
                 <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-                  בחרו סיסמה חדשה
+                  Choose a New Password
                 </h2>
                 <p className="text-sm text-muted-foreground text-center mb-6">
-                  הזינו את הסיסמה החדשה שלכם
+                  Enter your new password below
                 </p>
 
                 <form onSubmit={handleUpdatePassword} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="new-password">סיסמה חדשה</Label>
+                    <Label htmlFor="new-password">New Password</Label>
                     <Input
                       id="new-password"
                       type="password"
@@ -172,14 +188,12 @@ const ResetPassword = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
-                      placeholder="לפחות 6 תווים"
-                      dir="ltr"
-                      className="text-left"
+                      placeholder="At least 6 characters"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">אימות סיסמה</Label>
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
                     <Input
                       id="confirm-password"
                       type="password"
@@ -187,9 +201,7 @@ const ResetPassword = () => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                       minLength={6}
-                      placeholder="הזינו שוב את הסיסמה"
-                      dir="ltr"
-                      className="text-left"
+                      placeholder="Re-enter your password"
                     />
                   </div>
 
@@ -202,7 +214,7 @@ const ResetPassword = () => {
                     disabled={submitting}
                     className="w-full font-bold py-3 text-base rounded-full shadow-md bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
-                    {submitting ? "רגע..." : "עדכון סיסמה"}
+                    {submitting ? "Updating..." : "Update Password"}
                   </Button>
                 </form>
               </>
@@ -211,14 +223,14 @@ const ResetPassword = () => {
             {mode === "success" && (
               <>
                 <h2 className="font-heading text-2xl font-bold text-primary text-center mb-2">
-                  הסיסמה עודכנה בהצלחה
+                  Password Updated Successfully
                 </h2>
                 <p className="text-sm text-muted-foreground text-center mb-6">
-                  כעת תוכלו להתחבר עם הסיסמה החדשה
+                  You can now sign in with your new password
                 </p>
-                <Link to="/discover/healing-retreat">
+                <Link to="/">
                   <Button className="w-full font-bold py-3 text-base rounded-full shadow-md bg-accent hover:bg-accent/90 text-accent-foreground">
-                    לכניסה
+                    Back to Login
                   </Button>
                 </Link>
               </>
@@ -229,7 +241,7 @@ const ResetPassword = () => {
       </section>
 
       <footer className="py-8 text-center text-sm text-muted-foreground border-t border-border">
-        <p>&copy; {new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.</p>
+        <p>&copy; {new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.</p>
       </footer>
     </div>
   );

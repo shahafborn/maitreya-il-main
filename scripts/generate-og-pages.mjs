@@ -84,6 +84,16 @@ function writeHtml(filePath, content) {
   fs.writeFileSync(filePath, content, "utf-8");
 }
 
+// Static event pages with hardcoded OG tags
+const STATIC_EVENTS = [
+  {
+    route: "events/ein-gedi-healing-retreat",
+    title: "ריטריט הילינג בעין גדי | מאיטרייה סנגהה ישראל",
+    description:
+      "ריטריט הילינג בעין גדי - דרך הריפוי וההילינג הבודהיסטי. שישה ימים של חניכות ותרגולי ריפוי עומק עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה. 1-6 ביוני 2026, בית ספר שדה עין גדי.",
+  },
+];
+
 async function main() {
   const template = fs.readFileSync(path.join(DIST, "index.html"), "utf-8");
   const courses = await fetchCourses();
@@ -113,6 +123,18 @@ async function main() {
     );
 
     console.log(`  ✓ ${course.slug}`);
+  }
+
+  // Generate OG pages for static event landing pages
+  console.log(`Generating OG pages for ${STATIC_EVENTS.length} event(s)...`);
+
+  for (const event of STATIC_EVENTS) {
+    const eventPage = injectOgTags(template, {
+      title: event.title,
+      description: event.description,
+    });
+    writeHtml(path.join(DIST, event.route, "index.html"), eventPage);
+    console.log(`  ✓ ${event.route}`);
   }
 
   console.log("Done.");
