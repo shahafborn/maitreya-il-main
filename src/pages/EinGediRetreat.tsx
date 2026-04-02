@@ -13,16 +13,23 @@ import gallery1 from "@/assets/retreat/gallery-1.jpg";
 import gallery2 from "@/assets/retreat/gallery-2.jpg";
 import gallery3 from "@/assets/retreat/gallery-3.jpg";
 import gallery4 from "@/assets/retreat/gallery-4.jpg";
+import gallery5 from "@/assets/retreat/gallery-5.jpg";
+import gallery6 from "@/assets/retreat/gallery-6.jpg";
 import gallery7 from "@/assets/retreat/gallery-7.jpg";
 import gallery8 from "@/assets/retreat/gallery-8.jpg";
 import gallery9 from "@/assets/retreat/gallery-9.jpg";
 import gallery10 from "@/assets/retreat/gallery-10.jpg";
+import gallery11 from "@/assets/retreat/gallery-11.jpg";
+import gallery12 from "@/assets/retreat/gallery-12.jpg";
+import gallery13 from "@/assets/retreat/gallery-13.jpg";
+import gallery14 from "@/assets/retreat/gallery-14.jpg";
+import gallery15 from "@/assets/retreat/gallery-15.jpg";
 import venuePhoto3 from "@/assets/retreat/venue-eingedi-3.jpg";
 import venuePhoto4 from "@/assets/retreat/venue-eingedi.jpg";
 
 const REGISTRATION_URL = "#"; // TODO: replace with actual registration link
 
-const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7];
+const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7, gallery5, gallery6, gallery11, gallery12, gallery13, gallery14, gallery15];
 
 const EinGediRetreat = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -71,7 +78,7 @@ const EinGediRetreat = () => {
             דרך הריפוי וההילינג הבודהיסטי
           </h1>
           <p className="text-xl md:text-2xl text-white/90 font-heading mb-4 drop-shadow-sm">
-            ריטריט הילינג על שפת ים המלח
+            שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי
           </p>
           <p className="text-lg md:text-xl text-white/80 mb-8 drop-shadow-sm">
             1-6 ביוני 2026 | בית ספר שדה עין גדי
