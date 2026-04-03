@@ -85,7 +85,6 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   const [gender, setGender] = useState("");
   const [foodPref, setFoodPref] = useState("");
   const [prevExp, setPrevExp] = useState("");
-  const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -124,7 +123,6 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
           gender,
           food_pref: foodPref,
           prev_exp: prevExp,
-          message,
         }),
       });
 
@@ -213,16 +211,26 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
           {/* Gender + Food Pref - two columns */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelClass}>מגדר *</label>
-              <select value={gender} onChange={(e) => setGender(e.target.value)} required className={selectClass}>
-                <option value="">בחרו</option>
-                <option value="male">גבר</option>
-                <option value="female">אישה</option>
-                <option value="other">אחר</option>
-              </select>
+              <label className={labelClass}>מגדר (לשיבוץ חדרים) *</label>
+              <div className="flex gap-4 mt-2">
+                {[{ value: "male", label: "גבר" }, { value: "female", label: "אישה" }].map((opt) => (
+                  <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value={opt.value}
+                      checked={gender === opt.value}
+                      onChange={(e) => setGender(e.target.value)}
+                      required
+                      className="h-4 w-4 accent-[#C9A961]"
+                    />
+                    <span className="text-sm">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
             <div>
-              <label className={labelClass}>העדפת אוכל *</label>
+              <label className={labelClass}>העדפות בחדר אוכל *</label>
               <select value={foodPref} onChange={(e) => setFoodPref(e.target.value)} required className={selectClass}>
                 <option value="">בחרו</option>
                 <option value="regular">רגיל</option>
@@ -234,26 +242,14 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
 
           {/* Previous Experience */}
           <div>
-            <label className={labelClass}>ניסיון קודם במדיטציה/בודהיזם</label>
-            <textarea
-              value={prevExp}
-              onChange={(e) => setPrevExp(e.target.value)}
-              className={`${inputClass} resize-none`}
-              rows={2}
-              placeholder="ספרו בקצרה על הרקע שלכם (לא חובה)"
-            />
-          </div>
-
-          {/* Additional Notes */}
-          <div>
-            <label className={labelClass}>הערות נוספות</label>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className={`${inputClass} resize-none`}
-              rows={2}
-              placeholder="אלרגיות, בקשות מיוחדות וכו׳ (לא חובה)"
-            />
+            <label className={labelClass}>ניסיון קודם בלימודים בודהיסטים *</label>
+            <select value={prevExp} onChange={(e) => setPrevExp(e.target.value)} required className={selectClass}>
+              <option value="">בחרו</option>
+              <option value="extensive">רב</option>
+              <option value="intermediate">בינוני</option>
+              <option value="limited">מועט</option>
+              <option value="none">ללא</option>
+            </select>
           </div>
 
           {/* Confirmation */}
@@ -265,7 +261,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
               className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
             />
             <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
-              אני מאשר/ת שקראתי את מדיניות הביטול ומסכים/ה לתנאי ההרשמה. ההרשמה כוללת תשלום דרך אתר מאובטח.
+              אני מאשר/ת את תנאי הריטריט וההרשמה ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
             </span>
           </label>
 
@@ -287,7 +283,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
                 שולח...
               </>
             ) : (
-              "להמשך ותשלום"
+              "שליחה ומעבר לתשלום"
             )}
           </button>
 
