@@ -88,11 +88,19 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const roomRef = useRef<HTMLSelectElement>(null);
+  const confirmRef = useRef<HTMLLabelElement>(null);
 
   // Sync preselectedRoom when modal opens
   useEffect(() => {
     if (open) setRoomType(preselectedRoom);
   }, [open, preselectedRoom]);
+
+  const scrollToField = (el: HTMLElement | null) => {
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (el instanceof HTMLSelectElement || el instanceof HTMLInputElement) el.focus();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,10 +108,21 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
 
     if (!roomType) {
       setError("יש לבחור סוג חדר");
+      scrollToField(roomRef.current);
       return;
     }
+
+    // Let browser validate required fields and scroll to first invalid
+    if (formRef.current && !formRef.current.checkValidity()) {
+      const firstInvalid = formRef.current.querySelector(":invalid") as HTMLElement;
+      scrollToField(firstInvalid);
+      formRef.current.reportValidity();
+      return;
+    }
+
     if (!confirmed) {
       setError("יש לאשר את התנאים");
+      scrollToField(confirmRef.current);
       return;
     }
 
@@ -172,12 +191,13 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <form ref={formRef} onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {/* Room Type */}
           <div>
             <label className={labelClass}>סוג חדר *</label>
             <SelectWrapper>
               <select
+                ref={roomRef}
                 value={roomType}
                 onChange={(e) => setRoomType(e.target.value as RoomType)}
                 required
@@ -266,7 +286,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
           </div>
 
           {/* Confirmation */}
-          <label className="flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors">
+          <label ref={confirmRef} className="flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors">
             <input
               type="checkbox"
               checked={confirmed}
