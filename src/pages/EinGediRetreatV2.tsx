@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { X, ChevronRight, ChevronLeft, ChevronDown, Mail } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
 import threeDeities from "@/assets/retreat/three-deities.jpg";
@@ -25,7 +27,15 @@ import gallery13 from "@/assets/retreat/gallery-13.jpg";
 import gallery14 from "@/assets/retreat/gallery-14.jpg";
 import gallery15 from "@/assets/retreat/gallery-15.jpg";
 
-const REGISTRATION_URL = "#";
+const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EinGedi_Register";
+
+type RoomType = "EinGedi_Healing_Triple" | "EinGedi_Healing_Double" | "EinGedi_Healing_Single" | "";
+
+const ROOM_OPTIONS: { value: RoomType; label: string; price: string }[] = [
+  { value: "EinGedi_Healing_Triple", label: "3 בחדר", price: "3,350₪" },
+  { value: "EinGedi_Healing_Double", label: "2 בחדר", price: "3,850₪" },
+  { value: "EinGedi_Healing_Single", label: "חדר ליחיד", price: "4,500₪" },
+];
 
 const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7, gallery5, gallery6, gallery11, gallery12, gallery13, gallery14, gallery15];
 
@@ -51,18 +61,324 @@ const GoldDot = () => (
   <span className="inline-block w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: GOLD }} />
 );
 
-const CTAButton = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <a href={REGISTRATION_URL} target="_blank" rel="noopener noreferrer">
-    <button
-      className={`px-10 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] ${className}`}
-      style={{ backgroundColor: GOLD }}
+const CTAButton = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
+  <button
+    onClick={onClick}
+    className={`px-10 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer ${className}`}
+    style={{ backgroundColor: GOLD }}
+  >
+    {children}
+  </button>
+);
+
+/* ── Registration Modal ── */
+const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  preselectedRoom: RoomType;
+}) => {
+  const [roomType, setRoomType] = useState<RoomType>(preselectedRoom);
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [foodPref, setFoodPref] = useState("");
+  const [prevExp, setPrevExp] = useState("");
+  const [message, setMessage] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  // Sync preselectedRoom when modal opens
+  useEffect(() => {
+    if (open) setRoomType(preselectedRoom);
+  }, [open, preselectedRoom]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!roomType) {
+      setError("יש לבחור סוג חדר");
+      return;
+    }
+    if (!confirmed) {
+      setError("יש לאשר את התנאים");
+      return;
+    }
+
+    setSubmitting(true);
+    const regToken = crypto.randomUUID();
+
+    try {
+      const res = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reg_token: regToken,
+          field_event: roomType,
+          full_name: `${fname} ${lname}`.trim(),
+          email,
+          phone,
+          gender,
+          food_pref: foodPref,
+          prev_exp: prevExp,
+          message,
+        }),
+      });
+
+      if (!res.ok) throw new Error("שגיאה בשרת, נסו שוב");
+
+      const data = await res.json();
+      if (data.cardcom_url) {
+        window.location.href = data.cardcom_url;
+      } else {
+        throw new Error("לא התקבל קישור לתשלום");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "שגיאה בשליחת הטופס");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-lg border border-stone-300 bg-white text-base focus:outline-none focus:ring-2 focus:ring-[#C9A961] focus:border-transparent transition-shadow";
+  const selectClass = `${inputClass} appearance-none`;
+  const labelClass = "block text-sm font-semibold mb-1.5 text-stone-700";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        dir="rtl"
+        className="max-w-lg max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-xl border-0"
+        style={{ fontFamily: "'Open Sans', 'Heebo', sans-serif" }}
+      >
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
+          <DialogHeader className="text-center sm:text-center">
+            <DialogTitle className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif", color: DARK }}>
+              הרשמה לריטריט
+            </DialogTitle>
+            <DialogDescription className="text-sm mt-1" style={{ color: WARM_GRAY }}>
+              ריטריט הילינג בעין גדי | 1-6 ביוני 2026
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+          {/* Room Type */}
+          <div>
+            <label className={labelClass}>סוג חדר *</label>
+            <select
+              value={roomType}
+              onChange={(e) => setRoomType(e.target.value as RoomType)}
+              required
+              className={selectClass}
+            >
+              <option value="">בחרו סוג חדר</option>
+              {ROOM_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label} - {opt.price}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Name fields - two columns */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelClass}>שם פרטי *</label>
+              <input type="text" value={fname} onChange={(e) => setFname(e.target.value)} required className={inputClass} placeholder="שם פרטי" />
+            </div>
+            <div>
+              <label className={labelClass}>שם משפחה *</label>
+              <input type="text" value={lname} onChange={(e) => setLname(e.target.value)} required className={inputClass} placeholder="שם משפחה" />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className={labelClass}>אימייל *</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} placeholder="your@email.com" dir="ltr" style={{ textAlign: "left" }} />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className={labelClass}>טלפון *</label>
+            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required className={inputClass} placeholder="050-1234567" dir="ltr" style={{ textAlign: "left" }} />
+          </div>
+
+          {/* Gender + Food Pref - two columns */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelClass}>מגדר *</label>
+              <select value={gender} onChange={(e) => setGender(e.target.value)} required className={selectClass}>
+                <option value="">בחרו</option>
+                <option value="male">גבר</option>
+                <option value="female">אישה</option>
+                <option value="other">אחר</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelClass}>העדפת אוכל *</label>
+              <select value={foodPref} onChange={(e) => setFoodPref(e.target.value)} required className={selectClass}>
+                <option value="">בחרו</option>
+                <option value="regular">רגיל</option>
+                <option value="vegetarian">צמחוני</option>
+                <option value="vegan">טבעוני</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Previous Experience */}
+          <div>
+            <label className={labelClass}>ניסיון קודם במדיטציה/בודהיזם</label>
+            <textarea
+              value={prevExp}
+              onChange={(e) => setPrevExp(e.target.value)}
+              className={`${inputClass} resize-none`}
+              rows={2}
+              placeholder="ספרו בקצרה על הרקע שלכם (לא חובה)"
+            />
+          </div>
+
+          {/* Additional Notes */}
+          <div>
+            <label className={labelClass}>הערות נוספות</label>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className={`${inputClass} resize-none`}
+              rows={2}
+              placeholder="אלרגיות, בקשות מיוחדות וכו׳ (לא חובה)"
+            />
+          </div>
+
+          {/* Confirmation */}
+          <label className="flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors">
+            <input
+              type="checkbox"
+              checked={confirmed}
+              onChange={(e) => setConfirmed(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
+            />
+            <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
+              אני מאשר/ת שקראתי את מדיניות הביטול ומסכים/ה לתנאי ההרשמה. ההרשמה כוללת תשלום דרך אתר מאובטח.
+            </span>
+          </label>
+
+          {/* Error */}
+          {error && (
+            <p className="text-sm text-red-600 text-center font-medium">{error}</p>
+          )}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-4 text-lg font-bold text-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] disabled:opacity-60 disabled:pointer-events-none flex items-center justify-center gap-2"
+            style={{ backgroundColor: GOLD }}
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                שולח...
+              </>
+            ) : (
+              "להמשך ותשלום"
+            )}
+          </button>
+
+          <p className="text-xs text-center" style={{ color: WARM_GRAY }}>
+            לאחר מילוי הטופס תועברו לדף תשלום מאובטח
+          </p>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+/* ── Payment Status Modal ── */
+const PaymentStatusModal = ({ status, onClose }: { status: "success" | "failed"; onClose: () => void }) => (
+  <Dialog open onOpenChange={onClose}>
+    <DialogContent
+      dir="rtl"
+      className="max-w-md rounded-xl border-0 text-center"
+      style={{ fontFamily: "'Open Sans', 'Heebo', sans-serif" }}
     >
-      {children}
-    </button>
-  </a>
+      <div className="py-6 space-y-4">
+        {status === "success" ? (
+          <>
+            <CheckCircle2 className="h-16 w-16 mx-auto" style={{ color: "#4CAF50" }} />
+            <DialogHeader className="text-center sm:text-center">
+              <DialogTitle className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif", color: DARK }}>
+                ההרשמה בוצעה בהצלחה!
+              </DialogTitle>
+              <DialogDescription className="text-base mt-3 leading-relaxed" style={{ color: WARM_GRAY }}>
+                תודה שנרשמתם לריטריט הילינג בעין גדי.
+                <br />
+                אישור הרשמה ופרטים נוספים יישלחו אליכם במייל.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="bg-stone-50 rounded-lg p-4 text-sm space-y-1" style={{ color: WARM_GRAY }}>
+              <p className="font-semibold" style={{ color: DARK }}>פרטי הריטריט</p>
+              <p>1-6 ביוני 2026</p>
+              <p>בית ספר שדה עין גדי</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <XCircle className="h-16 w-16 mx-auto text-red-500" />
+            <DialogHeader className="text-center sm:text-center">
+              <DialogTitle className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif", color: DARK }}>
+                אירעה שגיאה בתשלום
+              </DialogTitle>
+              <DialogDescription className="text-base mt-3 leading-relaxed" style={{ color: WARM_GRAY }}>
+                התשלום לא הושלם. ניתן לנסות שוב או ליצור קשר איתנו.
+              </DialogDescription>
+            </DialogHeader>
+          </>
+        )}
+        <div className="flex flex-col gap-3 pt-2">
+          <button
+            onClick={onClose}
+            className="w-full py-3 text-base font-bold text-white rounded-full shadow-md transition-all duration-300 hover:shadow-lg"
+            style={{ backgroundColor: GOLD }}
+          >
+            {status === "success" ? "סגור" : "חזרה לדף הריטריט"}
+          </button>
+          {status === "failed" && (
+            <a
+              href="mailto:info@maitreya.org.il"
+              className="text-sm underline underline-offset-4 transition-colors hover:text-[#C9A961]"
+              style={{ color: WARM_GRAY }}
+            >
+              צרו קשר: info@maitreya.org.il
+            </a>
+          )}
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
 );
 
 const EinGediRetreatV2 = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
+  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+
+  const openRegistration = (room: RoomType = "") => {
+    setPreselectedRoom(room);
+    setModalOpen(true);
+  };
+
+  const closePaymentStatus = () => {
+    setSearchParams({}, { replace: true });
+  };
+
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   // Repeat images enough times so the user never reaches an edge
@@ -130,7 +446,7 @@ const EinGediRetreatV2 = () => {
           <a href="https://maitreya.org.il/">
             <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-11 object-contain" />
           </a>
-          <CTAButton className="!py-2.5 !px-6 !text-base">להרשמה</CTAButton>
+          <CTAButton className="!py-2.5 !px-6 !text-base" onClick={() => openRegistration()}>להרשמה</CTAButton>
         </div>
       </nav>
 
@@ -426,9 +742,9 @@ const EinGediRetreatV2 = () => {
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { type: "3 בחדר", price: "3,350", note: "חדר משותף לשלושה" },
-              { type: "2 בחדר", price: "3,850", note: "חדר משותף לשניים", featured: true },
-              { type: "חדר ליחיד", price: "4,500", note: "חדר פרטי" },
+              { type: "3 בחדר", price: "3,350", note: "חדר משותף לשלושה", roomKey: "EinGedi_Healing_Triple" as RoomType },
+              { type: "2 בחדר", price: "3,850", note: "חדר משותף לשניים", featured: true, roomKey: "EinGedi_Healing_Double" as RoomType },
+              { type: "חדר ליחיד", price: "4,500", note: "חדר פרטי", roomKey: "EinGedi_Healing_Single" as RoomType },
             ].map((option) => (
               <div
                 key={option.type}
@@ -455,7 +771,7 @@ const EinGediRetreatV2 = () => {
                 </p>
                 <p className="text-xs mb-6" style={{ color: WARM_GRAY }}>הכל כלול</p>
                 <div className="mt-auto">
-                  <CTAButton className="!text-base !px-8 !py-3 w-full">להרשמה</CTAButton>
+                  <CTAButton className="!text-base !px-8 !py-3 w-full" onClick={() => openRegistration(option.roomKey)}>להרשמה</CTAButton>
                 </div>
               </div>
             ))}
@@ -613,7 +929,7 @@ const EinGediRetreatV2 = () => {
             שישה ימים של חניכות ותרגולי ריפוי עומק, על שפת ים המלח, עם לאמה גלן
             ודרופון צ׳ונגוואל-לה
           </p>
-          <CTAButton>להרשמה לריטריט</CTAButton>
+          <CTAButton onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
           <p className="text-sm text-white/40 mt-8">מספר המקומות מוגבל</p>
         </div>
       </section>
@@ -654,6 +970,12 @@ const EinGediRetreatV2 = () => {
       <footer className="py-8 text-center text-sm border-t border-stone-200" style={{ color: WARM_GRAY }}>
         <p>© {new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.</p>
       </footer>
+
+      {/* ── Registration Modal ── */}
+      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedRoom={preselectedRoom} />
+
+      {/* ── Payment Status Modal ── */}
+      {paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
     </div>
   );
 };
