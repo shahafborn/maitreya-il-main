@@ -66,8 +66,18 @@ const EinGediRetreatV2 = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const visibleCount = isMobile ? 1 : 3;
-  const maxIndex = galleryImages.length - visibleCount;
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const cloneCount = visibleCount;
+  const extendedImages = [
+    ...galleryImages.slice(-cloneCount),
+    ...galleryImages,
+    ...galleryImages.slice(0, cloneCount),
+  ];
+  const [carouselIndex, setCarouselIndex] = useState(cloneCount);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Map extended index back to real index for dots/lightbox
+  const realIndex = ((carouselIndex - cloneCount) % galleryImages.length + galleryImages.length) % galleryImages.length;
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -75,6 +85,34 @@ const EinGediRetreatV2 = () => {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  // Silently teleport when landing on a clone
+  useEffect(() => {
+    if (isTransitioning) return;
+    // Already handled by transitionend
+  }, [isTransitioning]);
+
+  const handleTransitionEnd = useCallback(() => {
+    if (carouselIndex >= galleryImages.length + cloneCount) {
+      setIsTransitioning(false);
+      setCarouselIndex(cloneCount);
+    } else if (carouselIndex < cloneCount) {
+      setIsTransitioning(false);
+      setCarouselIndex(galleryImages.length + cloneCount - 1);
+    }
+  }, [carouselIndex, cloneCount]);
+
+  // Re-enable transition after teleport
+  useEffect(() => {
+    if (!isTransitioning) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsTransitioning(true);
+        });
+      });
+    }
+  }, [isTransitioning]);
+
   const [isPaused, setIsPaused] = useState(false);
   const [openSchedule, setOpenSchedule] = useState<number | null>(null);
   const touchStartX = useRef<number | null>(null);
@@ -89,7 +127,6 @@ const EinGediRetreatV2 = () => {
     if (touchStartX.current === null || touchStartY.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
     const dy = e.changedTouches[0].clientY - touchStartY.current;
-    // Only swipe if horizontal movement is greater than vertical (avoid hijacking scroll)
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
       if (dx < 0) nextSlide();
       else prevSlide();
@@ -99,12 +136,12 @@ const EinGediRetreatV2 = () => {
   };
 
   const nextSlide = useCallback(() => {
-    setCarouselIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  }, [maxIndex]);
+    setCarouselIndex((prev) => prev + 1);
+  }, []);
 
   const prevSlide = useCallback(() => {
-    setCarouselIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  }, [maxIndex]);
+    setCarouselIndex((prev) => prev - 1);
+  }, []);
 
   useEffect(() => {
     if (isPaused || lightboxIndex !== null) return;
@@ -502,17 +539,19 @@ const EinGediRetreatV2 = () => {
           >
             <div className="overflow-hidden rounded-lg" style={{ margin: isMobile ? "0 -6px" : "0 -10px" }} dir="ltr" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
               <div
-                className="flex transition-transform duration-500 ease-in-out"
+                ref={trackRef}
+                className={`flex ${isTransitioning ? "transition-transform duration-500 ease-in-out" : ""}`}
                 style={{
                   transform: isMobile
                     ? `translateX(calc(${carouselIndex * -75}% + 12.5%))`
                     : `translateX(${carouselIndex * (-100 / 3)}%)`,
                 }}
+                onTransitionEnd={handleTransitionEnd}
               >
-                {galleryImages.map((src, i) => (
+                {extendedImages.map((src, i) => (
                   <div key={i} className="shrink-0" style={{ width: isMobile ? "75%" : `${100 / 3}%`, padding: isMobile ? "0 6px" : "0 10px" }}>
                     <div
-                      onClick={() => setLightboxIndex(i)}
+                      onClick={() => setLightboxIndex(((i - cloneCount) % galleryImages.length + galleryImages.length) % galleryImages.length)}
                       className="cursor-pointer rounded-lg overflow-hidden"
                       role="button"
                       tabIndex={0}
@@ -520,7 +559,7 @@ const EinGediRetreatV2 = () => {
                       <img
                         src={src}
                         alt="מריטריטים קודמים של מאיטרייה סנגהה"
-                        className="w-full aspect-square object-cover transition-all duration-300 hover:scale-105"
+                        className="w-full aspect-[3/4] md:aspect-square object-cover transition-all duration-300 hover:scale-105"
                       />
                     </div>
                   </div>
@@ -545,9 +584,9 @@ const EinGediRetreatV2 = () => {
               {galleryImages.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCarouselIndex(i)}
+                  onClick={() => setCarouselIndex(i + cloneCount)}
                   className="w-2 h-2 rounded-full transition-colors"
-                  style={{ backgroundColor: i === carouselIndex ? GOLD : "#D4CFC7" }}
+                  style={{ backgroundColor: i === realIndex ? GOLD : "#D4CFC7" }}
                 />
               ))}
             </div>
