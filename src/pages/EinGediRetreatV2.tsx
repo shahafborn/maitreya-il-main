@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail } from "lucide-react";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
@@ -64,11 +64,39 @@ const CTAButton = ({ children, className = "" }: { children: React.ReactNode; cl
 
 const EinGediRetreatV2 = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const visibleCount = 3;
+  const [isMobile, setIsMobile] = useState(false);
+  const visibleCount = isMobile ? 1 : 3;
   const maxIndex = galleryImages.length - visibleCount;
   const [carouselIndex, setCarouselIndex] = useState(0);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
   const [isPaused, setIsPaused] = useState(false);
   const [openSchedule, setOpenSchedule] = useState<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    // Only swipe if horizontal movement is greater than vertical (avoid hijacking scroll)
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) nextSlide();
+      else prevSlide();
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   const nextSlide = useCallback(() => {
     setCarouselIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
@@ -95,7 +123,7 @@ const EinGediRetreatV2 = () => {
       <nav className="sticky top-0 z-40 backdrop-blur-md bg-white/90 border-b border-stone-200">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
           <a href="https://maitreya.org.il/">
-            <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-8 object-contain" />
+            <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-11 object-contain" />
           </a>
           <CTAButton className="!py-2.5 !px-6 !text-base">להרשמה</CTAButton>
         </div>
@@ -110,14 +138,14 @@ const EinGediRetreatV2 = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/35 to-transparent" />
         <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
               דרך הריפוי וההילינג הבודהיסטי
             </h1>
             <p className="text-lg md:text-2xl text-white/90 mb-2 max-w-2xl">
               שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי
             </p>
-            <p className="text-lg md:text-2xl font-semibold mb-4" style={{ color: GOLD }}>
+            <p className="text-lg md:text-2xl font-semibold mb-4" style={{ color: GOLD, textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}>
               עם לאמה גלן מולין
             </p>
             <p className="text-lg md:text-xl text-white/70">
@@ -472,13 +500,17 @@ const EinGediRetreatV2 = () => {
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            <div className="overflow-hidden rounded-lg" style={{ margin: "0 -10px" }} dir="ltr">
+            <div className="overflow-hidden rounded-lg" style={{ margin: isMobile ? "0 -6px" : "0 -10px" }} dir="ltr" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
               <div
                 className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(${carouselIndex * (-100 / 3)}%)` }}
+                style={{
+                  transform: isMobile
+                    ? `translateX(calc(${carouselIndex * -75}% + 12.5%))`
+                    : `translateX(${carouselIndex * (-100 / 3)}%)`,
+                }}
               >
                 {galleryImages.map((src, i) => (
-                  <div key={i} className="shrink-0 px-[10px]" style={{ width: `${100 / 3}%` }}>
+                  <div key={i} className="shrink-0" style={{ width: isMobile ? "75%" : `${100 / 3}%`, padding: isMobile ? "0 6px" : "0 10px" }}>
                     <div
                       onClick={() => setLightboxIndex(i)}
                       className="cursor-pointer rounded-lg overflow-hidden"
