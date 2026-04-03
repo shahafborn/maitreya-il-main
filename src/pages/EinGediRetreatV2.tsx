@@ -112,13 +112,16 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
     }, 350);
   };
 
+  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const isValidPhone = (v: string) => /^0[2-9]\d{7,8}$/.test(v.replace(/[-\s]/g, ""));
+
   const validateAndScroll = (): boolean => {
-    const checks: { value: string; name: string; ref?: React.RefObject<HTMLElement | null>; selector?: string }[] = [
+    const checks: { value: string; name: string; ref?: React.RefObject<HTMLElement | null>; selector?: string; validate?: () => boolean; formatError?: string }[] = [
       { value: roomType, name: "יש לבחור סוג חדר", ref: roomRef },
       { value: fname, name: "יש למלא שם פרטי", selector: "input[placeholder='שם פרטי']" },
       { value: lname, name: "יש למלא שם משפחה", selector: "input[placeholder='שם משפחה']" },
-      { value: email, name: "יש למלא אימייל", selector: "input[type='email']" },
-      { value: phone, name: "יש למלא טלפון", selector: "input[type='tel']" },
+      { value: email, name: "יש למלא אימייל", selector: "input[type='email']", validate: () => isValidEmail(email), formatError: "כתובת אימייל לא תקינה" },
+      { value: phone, name: "יש למלא טלפון", selector: "input[type='tel']", validate: () => isValidPhone(phone), formatError: "מספר טלפון לא תקין (למשל 0501234567)" },
       { value: gender, name: "יש לבחור מגדר", selector: "input[name='gender']" },
       { value: foodPref, name: "יש לבחור העדפת אוכל", selector: "select:nth-of-type(2)" },
       { value: prevExp, name: "יש לבחור ניסיון קודם", selector: "select:nth-of-type(3)" },
@@ -128,6 +131,12 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
       if (!check.value.trim()) {
         setError(check.name);
         const el = check.ref?.current ?? formRef.current?.querySelector(check.selector!) as HTMLElement;
+        scrollToField(el);
+        return false;
+      }
+      if (check.validate && !check.validate()) {
+        setError(check.formatError!);
+        const el = formRef.current?.querySelector(check.selector!) as HTMLElement;
         scrollToField(el);
         return false;
       }
