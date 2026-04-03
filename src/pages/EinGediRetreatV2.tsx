@@ -104,37 +104,49 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
     if (container) {
       const containerRect = container.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();
-      const scrollTop = container.scrollTop + (elRect.top - containerRect.top) - containerRect.height / 3;
-      container.scrollTo({ top: scrollTop, behavior: "smooth" });
+      const offset = elRect.top - containerRect.top + container.scrollTop - containerRect.height / 3;
+      container.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
     }
     setTimeout(() => {
       if (el instanceof HTMLSelectElement || el instanceof HTMLInputElement) el.focus();
-    }, 300);
+    }, 350);
+  };
+
+  const validateAndScroll = (): boolean => {
+    const checks: { value: string; name: string; ref?: React.RefObject<HTMLElement | null>; selector?: string }[] = [
+      { value: roomType, name: "יש לבחור סוג חדר", ref: roomRef },
+      { value: fname, name: "יש למלא שם פרטי", selector: "input[placeholder='שם פרטי']" },
+      { value: lname, name: "יש למלא שם משפחה", selector: "input[placeholder='שם משפחה']" },
+      { value: email, name: "יש למלא אימייל", selector: "input[type='email']" },
+      { value: phone, name: "יש למלא טלפון", selector: "input[type='tel']" },
+      { value: gender, name: "יש לבחור מגדר", selector: "input[name='gender']" },
+      { value: foodPref, name: "יש לבחור העדפת אוכל", selector: "select:nth-of-type(2)" },
+      { value: prevExp, name: "יש לבחור ניסיון קודם", selector: "select:nth-of-type(3)" },
+    ];
+
+    for (const check of checks) {
+      if (!check.value.trim()) {
+        setError(check.name);
+        const el = check.ref?.current ?? formRef.current?.querySelector(check.selector!) as HTMLElement;
+        scrollToField(el);
+        return false;
+      }
+    }
+
+    if (!confirmed) {
+      setError("יש לאשר את התנאים");
+      scrollToField(confirmRef.current);
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!roomType) {
-      setError("יש לבחור סוג חדר");
-      scrollToField(roomRef.current);
-      return;
-    }
-
-    // Let browser validate required fields and scroll to first invalid
-    if (formRef.current && !formRef.current.checkValidity()) {
-      const firstInvalid = formRef.current.querySelector(":invalid") as HTMLElement;
-      scrollToField(firstInvalid);
-      formRef.current.reportValidity();
-      return;
-    }
-
-    if (!confirmed) {
-      setError("יש לאשר את התנאים");
-      scrollToField(confirmRef.current);
-      return;
-    }
+    if (!validateAndScroll()) return;
 
     setSubmitting(true);
     const regToken = crypto.randomUUID();
@@ -202,7 +214,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
         </div>
 
         {/* Form */}
-        <form ref={formRef} onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <form ref={formRef} onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4">
           {/* Room Type */}
           <div>
             <label className={labelClass}>סוג חדר *</label>
