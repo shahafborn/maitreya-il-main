@@ -142,8 +142,15 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   };
 
   const inputClass = "w-full px-4 py-3 rounded-lg border border-stone-300 bg-white text-base focus:outline-none focus:ring-2 focus:ring-[#C9A961] focus:border-transparent transition-shadow";
-  const selectClass = `${inputClass} appearance-none`;
+  const selectClass = `${inputClass} appearance-none pr-10`;
   const labelClass = "block text-sm font-semibold mb-1.5 text-stone-700";
+
+  const SelectWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div className="relative">
+      {children}
+      <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: WARM_GRAY }} />
+    </div>
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -169,19 +176,21 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
           {/* Room Type */}
           <div>
             <label className={labelClass}>סוג חדר *</label>
-            <select
-              value={roomType}
-              onChange={(e) => setRoomType(e.target.value as RoomType)}
-              required
-              className={selectClass}
-            >
-              <option value="">בחרו סוג חדר</option>
-              {ROOM_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label} - {opt.price}
-                </option>
-              ))}
-            </select>
+            <SelectWrapper>
+              <select
+                value={roomType}
+                onChange={(e) => setRoomType(e.target.value as RoomType)}
+                required
+                className={selectClass}
+              >
+                <option value="">בחרו סוג חדר</option>
+                {ROOM_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label} - {opt.price}
+                  </option>
+                ))}
+              </select>
+            </SelectWrapper>
           </div>
 
           {/* Name fields - two columns */}
@@ -231,25 +240,29 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
             </div>
             <div>
               <label className={labelClass}>העדפות בחדר אוכל *</label>
-              <select value={foodPref} onChange={(e) => setFoodPref(e.target.value)} required className={selectClass}>
-                <option value="">בחרו</option>
-                <option value="regular">רגיל</option>
-                <option value="vegetarian">צמחוני</option>
-                <option value="vegan">טבעוני</option>
-              </select>
+              <SelectWrapper>
+                <select value={foodPref} onChange={(e) => setFoodPref(e.target.value)} required className={selectClass}>
+                  <option value="">בחרו</option>
+                  <option value="regular">רגיל</option>
+                  <option value="vegetarian">צמחוני</option>
+                  <option value="vegan">טבעוני</option>
+                </select>
+              </SelectWrapper>
             </div>
           </div>
 
           {/* Previous Experience */}
           <div>
             <label className={labelClass}>ניסיון קודם בלימודים בודהיסטים *</label>
-            <select value={prevExp} onChange={(e) => setPrevExp(e.target.value)} required className={selectClass}>
-              <option value="">בחרו</option>
-              <option value="extensive">רב</option>
-              <option value="intermediate">בינוני</option>
-              <option value="limited">מועט</option>
-              <option value="none">ללא</option>
-            </select>
+            <SelectWrapper>
+              <select value={prevExp} onChange={(e) => setPrevExp(e.target.value)} required className={selectClass}>
+                <option value="">בחרו</option>
+                <option value="extensive">רב</option>
+                <option value="intermediate">בינוני</option>
+                <option value="limited">מועט</option>
+                <option value="none">ללא</option>
+              </select>
+            </SelectWrapper>
           </div>
 
           {/* Confirmation */}
