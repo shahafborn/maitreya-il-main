@@ -85,9 +85,11 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   const [gender, setGender] = useState("");
   const [foodPref, setFoodPref] = useState("");
   const [prevExp, setPrevExp] = useState("");
+  const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const roomRef = useRef<HTMLSelectElement>(null);
@@ -116,44 +118,58 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   const isValidPhone = (v: string) => /^0[2-9]\d{7,8}$/.test(v.replace(/[-\s]/g, ""));
 
   const validateAndScroll = (): boolean => {
-    const checks: { value: string; name: string; ref?: React.RefObject<HTMLElement | null>; selector?: string; validate?: () => boolean; formatError?: string }[] = [
-      { value: roomType, name: "יש לבחור סוג חדר", ref: roomRef },
-      { value: fname, name: "יש למלא שם פרטי", selector: "input[placeholder='שם פרטי']" },
-      { value: lname, name: "יש למלא שם משפחה", selector: "input[placeholder='שם משפחה']" },
-      { value: email, name: "יש למלא אימייל", selector: "input[type='email']", validate: () => isValidEmail(email), formatError: "כתובת אימייל לא תקינה" },
-      { value: phone, name: "יש למלא טלפון", selector: "input[type='tel']", validate: () => isValidPhone(phone), formatError: "מספר טלפון לא תקין (למשל 0501234567)" },
-      { value: gender, name: "יש לבחור מגדר", selector: "input[name='gender']" },
-      { value: foodPref, name: "יש לבחור העדפת אוכל", selector: "select:nth-of-type(2)" },
-      { value: prevExp, name: "יש לבחור ניסיון קודם", selector: "select:nth-of-type(3)" },
-    ];
+    const errors: Record<string, string> = {};
 
-    for (const check of checks) {
-      if (!check.value.trim()) {
-        setError(check.name);
-        const el = check.ref?.current ?? formRef.current?.querySelector(check.selector!) as HTMLElement;
-        scrollToField(el);
-        return false;
-      }
-      if (check.validate && !check.validate()) {
-        setError(check.formatError!);
-        const el = formRef.current?.querySelector(check.selector!) as HTMLElement;
-        scrollToField(el);
-        return false;
-      }
-    }
+    if (!roomType) errors.roomType = "יש לבחור סוג חדר";
+    if (!fname.trim()) errors.fname = "יש למלא שם פרטי";
+    if (!lname.trim()) errors.lname = "יש למלא שם משפחה";
+    if (!email.trim()) errors.email = "יש למלא אימייל";
+    else if (!isValidEmail(email)) errors.email = "כתובת אימייל לא תקינה";
+    if (!phone.trim()) errors.phone = "יש למלא טלפון";
+    else if (!isValidPhone(phone)) errors.phone = "מספר טלפון לא תקין (למשל 0501234567)";
+    if (!gender) errors.gender = "יש לבחור מגדר";
+    if (!foodPref) errors.foodPref = "יש לבחור העדפת אוכל";
+    if (!prevExp) errors.prevExp = "יש לבחור ניסיון קודם";
+    if (!confirmed) errors.confirmed = "יש לאשר את התנאים";
 
-    if (!confirmed) {
-      setError("יש לאשר את התנאים");
-      scrollToField(confirmRef.current);
+    setFieldErrors(errors);
+    setError("");
+
+    if (Object.keys(errors).length > 0) {
+      // Scroll to first error field
+      const fieldOrder = ["roomType", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "confirmed"];
+      const firstErrorKey = fieldOrder.find((k) => errors[k]);
+      const selectorMap: Record<string, string> = {
+        roomType: "[data-field='roomType']",
+        fname: "[data-field='fname']",
+        lname: "[data-field='lname']",
+        email: "[data-field='email']",
+        phone: "[data-field='phone']",
+        gender: "[data-field='gender']",
+        foodPref: "[data-field='foodPref']",
+        prevExp: "[data-field='prevExp']",
+        confirmed: "[data-field='confirmed']",
+      };
+      if (firstErrorKey) {
+        const el = formRef.current?.querySelector(selectorMap[firstErrorKey]) as HTMLElement;
+        scrollToField(el);
+      }
       return false;
     }
 
     return true;
   };
 
+  const fieldErrorClass = (field: string) =>
+    fieldErrors[field] ? "border-red-400 ring-1 ring-red-400" : "";
+
+  const FieldError = ({ field }: { field: string }) =>
+    fieldErrors[field] ? <p className="text-xs text-red-500 mt-1">{fieldErrors[field]}</p> : null;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
 
     if (!validateAndScroll()) return;
 
@@ -173,6 +189,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
           gender,
           food_pref: foodPref,
           prev_exp: prevExp,
+          message,
         }),
       });
 
@@ -225,15 +242,14 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
         {/* Form */}
         <form ref={formRef} onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4">
           {/* Room Type */}
-          <div>
+          <div data-field="roomType">
             <label className={labelClass}>סוג חדר *</label>
             <SelectWrapper>
               <select
                 ref={roomRef}
                 value={roomType}
-                onChange={(e) => setRoomType(e.target.value as RoomType)}
-                required
-                className={selectClass}
+                onChange={(e) => { setRoomType(e.target.value as RoomType); setFieldErrors((p) => ({ ...p, roomType: "" })); }}
+                className={`${selectClass} ${fieldErrorClass("roomType")}`}
               >
                 <option value="">בחרו סוג חדר</option>
                 {ROOM_OPTIONS.map((opt) => (
@@ -243,37 +259,42 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
                 ))}
               </select>
             </SelectWrapper>
+            <FieldError field="roomType" />
           </div>
 
           {/* Name fields - two columns */}
           <div className="grid grid-cols-2 gap-3">
-            <div>
+            <div data-field="fname">
               <label className={labelClass}>שם פרטי *</label>
-              <input type="text" value={fname} onChange={(e) => setFname(e.target.value)} required className={inputClass} placeholder="שם פרטי" />
+              <input type="text" value={fname} onChange={(e) => { setFname(e.target.value); setFieldErrors((p) => ({ ...p, fname: "" })); }} className={`${inputClass} ${fieldErrorClass("fname")}`} placeholder="שם פרטי" />
+              <FieldError field="fname" />
             </div>
-            <div>
+            <div data-field="lname">
               <label className={labelClass}>שם משפחה *</label>
-              <input type="text" value={lname} onChange={(e) => setLname(e.target.value)} required className={inputClass} placeholder="שם משפחה" />
+              <input type="text" value={lname} onChange={(e) => { setLname(e.target.value); setFieldErrors((p) => ({ ...p, lname: "" })); }} className={`${inputClass} ${fieldErrorClass("lname")}`} placeholder="שם משפחה" />
+              <FieldError field="lname" />
             </div>
           </div>
 
           {/* Email */}
-          <div>
+          <div data-field="email">
             <label className={labelClass}>אימייל *</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} placeholder="your@email.com" dir="ltr" style={{ textAlign: "left" }} />
+            <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: "" })); }} className={`${inputClass} ${fieldErrorClass("email")}`} placeholder="your@email.com" dir="ltr" style={{ textAlign: "left" }} />
+            <FieldError field="email" />
           </div>
 
           {/* Phone */}
-          <div>
+          <div data-field="phone">
             <label className={labelClass}>טלפון *</label>
-            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required className={inputClass} placeholder="050-1234567" dir="ltr" style={{ textAlign: "left" }} />
+            <input type="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setFieldErrors((p) => ({ ...p, phone: "" })); }} className={`${inputClass} ${fieldErrorClass("phone")}`} placeholder="050-1234567" dir="ltr" style={{ textAlign: "left" }} />
+            <FieldError field="phone" />
           </div>
 
           {/* Gender + Food Pref - two columns */}
           <div className="grid grid-cols-2 gap-3">
-            <div>
+            <div data-field="gender">
               <label className={labelClass}>מגדר (לשיבוץ חדרים) *</label>
-              <div className="flex gap-4 mt-2">
+              <div className={`flex gap-4 mt-2 p-2 rounded-lg ${fieldErrors.gender ? "ring-1 ring-red-400" : ""}`}>
                 {[{ value: "male", label: "גבר" }, { value: "female", label: "אישה" }].map((opt) => (
                   <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -281,33 +302,34 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
                       name="gender"
                       value={opt.value}
                       checked={gender === opt.value}
-                      onChange={(e) => setGender(e.target.value)}
-                      required
+                      onChange={(e) => { setGender(e.target.value); setFieldErrors((p) => ({ ...p, gender: "" })); }}
                       className="h-4 w-4 accent-[#C9A961]"
                     />
                     <span className="text-sm">{opt.label}</span>
                   </label>
                 ))}
               </div>
+              <FieldError field="gender" />
             </div>
-            <div>
+            <div data-field="foodPref">
               <label className={labelClass}>העדפות בחדר אוכל *</label>
               <SelectWrapper>
-                <select value={foodPref} onChange={(e) => setFoodPref(e.target.value)} required className={selectClass}>
+                <select value={foodPref} onChange={(e) => { setFoodPref(e.target.value); setFieldErrors((p) => ({ ...p, foodPref: "" })); }} className={`${selectClass} ${fieldErrorClass("foodPref")}`}>
                   <option value="">בחרו</option>
                   <option value="regular">רגיל</option>
                   <option value="vegetarian">צמחוני</option>
                   <option value="vegan">טבעוני</option>
                 </select>
               </SelectWrapper>
+              <FieldError field="foodPref" />
             </div>
           </div>
 
           {/* Previous Experience */}
-          <div>
+          <div data-field="prevExp">
             <label className={labelClass}>ניסיון קודם בלימודים בודהיסטים *</label>
             <SelectWrapper>
-              <select value={prevExp} onChange={(e) => setPrevExp(e.target.value)} required className={selectClass}>
+              <select value={prevExp} onChange={(e) => { setPrevExp(e.target.value); setFieldErrors((p) => ({ ...p, prevExp: "" })); }} className={`${selectClass} ${fieldErrorClass("prevExp")}`}>
                 <option value="">בחרו</option>
                 <option value="extensive">רב</option>
                 <option value="intermediate">בינוני</option>
@@ -315,23 +337,39 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
                 <option value="none">ללא</option>
               </select>
             </SelectWrapper>
+            <FieldError field="prevExp" />
+          </div>
+
+          {/* Message to organizers */}
+          <div>
+            <label className={labelClass}>הודעה למארגנים</label>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className={`${inputClass} resize-none`}
+              rows={3}
+              placeholder="רוצים לשתף אותנו במשהו?"
+            />
           </div>
 
           {/* Confirmation */}
-          <label ref={confirmRef} className="flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors">
-            <input
-              type="checkbox"
-              checked={confirmed}
-              onChange={(e) => setConfirmed(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
-            />
-            <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
-              אני מאשר/ת את תנאי הריטריט וההרשמה ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
-            </span>
-          </label>
+          <div data-field="confirmed">
+            <label ref={confirmRef} className={`flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors ${fieldErrors.confirmed ? "ring-1 ring-red-400 rounded-lg" : ""}`}>
+              <input
+                type="checkbox"
+                checked={confirmed}
+                onChange={(e) => { setConfirmed(e.target.checked); setFieldErrors((p) => ({ ...p, confirmed: "" })); }}
+                className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
+              />
+              <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
+                אני מאשר/ת את תנאי הריטריט וההרשמה ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
+              </span>
+            </label>
+            <FieldError field="confirmed" />
+          </div>
 
-          {/* Error */}
-          {error && (
+          {/* Network/server error only */}
+          {error && !Object.values(fieldErrors).some(Boolean) && (
             <p className="text-sm text-red-600 text-center font-medium">{error}</p>
           )}
 
