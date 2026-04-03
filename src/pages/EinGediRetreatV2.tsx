@@ -89,6 +89,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const roomRef = useRef<HTMLSelectElement>(null);
   const confirmRef = useRef<HTMLLabelElement>(null);
 
@@ -98,8 +99,17 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
   }, [open, preselectedRoom]);
 
   const scrollToField = (el: HTMLElement | null) => {
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-    if (el instanceof HTMLSelectElement || el instanceof HTMLInputElement) el.focus();
+    if (!el) return;
+    const container = scrollContainerRef.current;
+    if (container) {
+      const containerRect = container.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      const scrollTop = container.scrollTop + (elRect.top - containerRect.top) - containerRect.height / 3;
+      container.scrollTo({ top: scrollTop, behavior: "smooth" });
+    }
+    setTimeout(() => {
+      if (el instanceof HTMLSelectElement || el instanceof HTMLInputElement) el.focus();
+    }, 300);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -175,9 +185,10 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         dir="rtl"
-        className="max-w-lg max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-xl border-0"
+        className="max-w-lg max-h-[90vh] p-0 gap-0 rounded-xl border-0 overflow-hidden"
         style={{ fontFamily: "'Open Sans', 'Heebo', sans-serif" }}
       >
+        <div ref={scrollContainerRef} className="max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
           <DialogHeader className="text-center sm:text-center">
@@ -324,6 +335,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
             לאחר מילוי הטופס תועברו לדף תשלום מאובטח
           </p>
         </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
