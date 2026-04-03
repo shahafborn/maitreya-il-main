@@ -32,9 +32,9 @@ const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EinGedi_Register";
 type RoomType = "EinGedi_Healing_Triple" | "EinGedi_Healing_Double" | "EinGedi_Healing_Single" | "";
 
 const ROOM_OPTIONS: { value: RoomType; label: string; price: string }[] = [
-  { value: "EinGedi_Healing_Triple", label: "3 בחדר", price: "3,350₪" },
-  { value: "EinGedi_Healing_Double", label: "2 בחדר", price: "3,850₪" },
-  { value: "EinGedi_Healing_Single", label: "חדר ליחיד", price: "4,500₪" },
+  { value: "EinGedi_Healing_Triple", label: "3 בחדר", price: "3,350₪ לאדם" },
+  { value: "EinGedi_Healing_Double", label: "2 בחדר", price: "3,850₪ לאדם" },
+  { value: "EinGedi_Healing_Single", label: "חדר ליחיד", price: "4,500₪ לאדם" },
 ];
 
 const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7, gallery5, gallery6, gallery11, gallery12, gallery13, gallery14, gallery15];
@@ -869,7 +869,7 @@ const EinGediRetreatV2 = () => {
                   {option.price}
                   <span className="text-lg font-normal mr-1">₪</span>
                 </p>
-                <p className="text-xs mb-6" style={{ color: WARM_GRAY }}>הכל כלול</p>
+                <p className="text-xs mb-6" style={{ color: WARM_GRAY }}>לאדם | הכל כלול</p>
                 <div className="mt-auto">
                   <CTAButton className="!text-base !px-8 !py-3 w-full" onClick={() => openRegistration(option.roomKey)}>להרשמה</CTAButton>
                 </div>
