@@ -65,18 +65,14 @@ const CTAButton = ({ children, className = "" }: { children: React.ReactNode; cl
 const EinGediRetreatV2 = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  // Clone enough images on each side so there's never a blank space
-  const CLONE_COUNT = 4;
-  const extendedImages = [
-    ...galleryImages.slice(-CLONE_COUNT),
-    ...galleryImages,
-    ...galleryImages.slice(0, CLONE_COUNT),
-  ];
-  const [carouselIndex, setCarouselIndex] = useState(CLONE_COUNT);
-  const trackRef = useRef<HTMLDivElement>(null);
+  // Repeat images enough times so the user never reaches an edge
+  const REPEATS = 7;
+  const MID_START = Math.floor(REPEATS / 2) * galleryImages.length;
+  const extendedImages = Array.from({ length: REPEATS }, () => galleryImages).flat();
+  const [carouselIndex, setCarouselIndex] = useState(MID_START);
 
   // Map extended index back to real index for dots/lightbox
-  const realIndex = ((carouselIndex - CLONE_COUNT) % galleryImages.length + galleryImages.length) % galleryImages.length;
+  const realIndex = carouselIndex % galleryImages.length;
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -84,28 +80,6 @@ const EinGediRetreatV2 = () => {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
-
-  // Teleport via DOM to avoid flicker - disable transition, jump, re-enable
-  const handleTransitionEnd = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    let jumpTo: number | null = null;
-    if (carouselIndex >= galleryImages.length + CLONE_COUNT) {
-      jumpTo = carouselIndex - galleryImages.length;
-    } else if (carouselIndex < CLONE_COUNT) {
-      jumpTo = carouselIndex + galleryImages.length;
-    }
-    if (jumpTo !== null) {
-      track.style.transition = "none";
-      setCarouselIndex(jumpTo);
-      // Force reflow then re-enable transition
-      requestAnimationFrame(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        track.offsetHeight;
-        track.style.transition = "";
-      });
-    }
-  }, [carouselIndex]);
 
   const [isPaused, setIsPaused] = useState(false);
   const [openSchedule, setOpenSchedule] = useState<number | null>(null);
@@ -533,19 +507,17 @@ const EinGediRetreatV2 = () => {
           >
             <div className="overflow-hidden rounded-lg" style={{ margin: isMobile ? "0 -6px" : "0 -10px" }} dir="ltr" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
               <div
-                ref={trackRef}
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
                   transform: isMobile
                     ? `translateX(calc(${carouselIndex * -75}% + 12.5%))`
                     : `translateX(${carouselIndex * (-100 / 3)}%)`,
                 }}
-                onTransitionEnd={handleTransitionEnd}
               >
                 {extendedImages.map((src, i) => (
                   <div key={i} className="shrink-0" style={{ width: isMobile ? "75%" : `${100 / 3}%`, padding: isMobile ? "0 6px" : "0 10px" }}>
                     <div
-                      onClick={() => setLightboxIndex(((i - CLONE_COUNT) % galleryImages.length + galleryImages.length) % galleryImages.length)}
+                      onClick={() => setLightboxIndex(i % galleryImages.length)}
                       className="cursor-pointer rounded-lg overflow-hidden"
                       role="button"
                       tabIndex={0}
@@ -578,7 +550,7 @@ const EinGediRetreatV2 = () => {
               {galleryImages.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCarouselIndex(i + CLONE_COUNT)}
+                  onClick={() => setCarouselIndex(MID_START + i)}
                   className="w-2 h-2 rounded-full transition-colors"
                   style={{ backgroundColor: i === realIndex ? GOLD : "#D4CFC7" }}
                 />
@@ -593,6 +565,19 @@ const EinGediRetreatV2 = () => {
         <div
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
           onClick={() => setLightboxIndex(null)}
+          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; touchStartY.current = e.touches[0].clientY; }}
+          onTouchEnd={(e) => {
+            if (touchStartX.current === null || touchStartY.current === null) return;
+            const dx = e.changedTouches[0].clientX - touchStartX.current;
+            const dy = e.changedTouches[0].clientY - touchStartY.current;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+              e.stopPropagation();
+              if (dx < 0) setLightboxIndex((lightboxIndex + 1) % galleryImages.length);
+              else setLightboxIndex((lightboxIndex - 1 + galleryImages.length) % galleryImages.length);
+            }
+            touchStartX.current = null;
+            touchStartY.current = null;
+          }}
         >
           <button className="absolute top-4 left-4 text-white/80 hover:text-white p-2" onClick={() => setLightboxIndex(null)}>
             <X className="h-8 w-8" />
