@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { crypto as stdCrypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 
 const MAILCHIMP_API_KEY = Deno.env.get("MAILCHIMP_API_KEY")!;
 const MAILCHIMP_AUDIENCE_ID = Deno.env.get("MAILCHIMP_AUDIENCE_ID")!;
@@ -86,7 +87,7 @@ serve(async (req) => {
 /** MD5 hash (MailChimp uses MD5 of lowercase email as subscriber ID) */
 async function md5(text: string): Promise<string> {
   const data = new TextEncoder().encode(text);
-  const hash = await crypto.subtle.digest("MD5", data);
+  const hash = await stdCrypto.subtle.digest("MD5", data);
   return Array.from(new Uint8Array(hash))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
