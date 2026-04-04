@@ -1183,14 +1183,6 @@ const EinGediRetreatV2 = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>מלגות</h3>
-            <p style={{ color: WARM_GRAY }} className="leading-[1.8]">
-              מאיטרייה סנגהה ישראל מעניקה מספר מלגות חלקיות למשתתפים שזקוקים
-              לסיוע כלכלי. לפרטים ולהגשת בקשה, צרו קשר בדוא״ל.
-            </p>
-          </div>
-
-          <div>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>צרו קשר</h3>
             <p style={{ color: WARM_GRAY }}>
               לשאלות, בירורים והרשמה:{" "}
