@@ -476,7 +476,7 @@ const MailingListSignup = () => {
     setStatus("loading");
     try {
       const { error } = await supabase.functions.invoke("mailchimp-sync", {
-        body: { email, tag: "ריטריט הילינג עין גדי 2026" },
+        body: { email, tag: "Hebrew" },
       });
       if (error) throw error;
       setStatus("success");
