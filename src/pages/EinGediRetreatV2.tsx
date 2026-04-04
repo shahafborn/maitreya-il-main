@@ -224,7 +224,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         dir="rtl"
-        className="max-w-lg max-h-[90vh] p-0 gap-0 rounded-xl border-0 overflow-hidden"
+        className="max-w-lg md:max-w-2xl max-h-[90vh] p-0 gap-0 rounded-xl border-0 overflow-hidden"
         style={{ fontFamily: "'Open Sans', 'Heebo', sans-serif" }}
       >
         <div ref={scrollContainerRef} className="max-h-[90vh] overflow-y-auto">
@@ -363,7 +363,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
                 className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
               />
               <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
-                אני מאשר/ת את תנאי הריטריט וההרשמה ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
+                אני מאשר/ת את <a href="https://maitreya.org.il/he/our_events/lg202606-healingretreat-terms/" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 hover:text-[#C9A961]">תנאי הריטריט וההרשמה</a> ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
               </span>
             </label>
             <FieldError field="confirmed" />
@@ -597,13 +597,45 @@ const EinGediRetreatV2 = () => {
     touchStartY.current = null;
   };
 
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Silently reset to middle when drifting too far from center
+  const resetIfNeeded = useCallback((idx: number) => {
+    const len = galleryImages.length;
+    const lowerBound = len;
+    const upperBound = (REPEATS - 1) * len;
+    if (idx < lowerBound || idx >= upperBound) {
+      const real = ((idx % len) + len) % len;
+      const resetIdx = MID_START + real;
+      requestAnimationFrame(() => {
+        if (carouselRef.current) {
+          carouselRef.current.style.transition = "none";
+        }
+        setCarouselIndex(resetIdx);
+        requestAnimationFrame(() => {
+          if (carouselRef.current) {
+            carouselRef.current.style.transition = "";
+          }
+        });
+      });
+    }
+  }, [MID_START]);
+
   const nextSlide = useCallback(() => {
-    setCarouselIndex((prev) => prev + 1);
-  }, []);
+    setCarouselIndex((prev) => {
+      const next = prev + 1;
+      resetIfNeeded(next);
+      return next;
+    });
+  }, [resetIfNeeded]);
 
   const prevSlide = useCallback(() => {
-    setCarouselIndex((prev) => prev - 1);
-  }, []);
+    setCarouselIndex((prev) => {
+      const next = prev - 1;
+      resetIfNeeded(next);
+      return next;
+    });
+  }, [resetIfNeeded]);
 
   useEffect(() => {
     if (isPaused || lightboxIndex !== null) return;
@@ -624,7 +656,13 @@ const EinGediRetreatV2 = () => {
           <a href="https://maitreya.org.il/">
             <img src={maitreyaLogo} alt="מאיטרייה סנגהה ישראל" className="h-11 object-contain" />
           </a>
-          <CTAButton className="!py-2.5 !px-6 !text-base" onClick={() => openRegistration()}>להרשמה</CTAButton>
+          <button
+            className="py-2.5 px-6 text-base font-bold text-white rounded-full shadow-md hover:shadow-xl hover:scale-110 hover:brightness-110 transition-all duration-200"
+            style={{ backgroundColor: "#B8860B" }}
+            onClick={() => openRegistration()}
+          >
+            להרשמה
+          </button>
         </div>
       </nav>
 
@@ -657,9 +695,20 @@ const EinGediRetreatV2 = () => {
       {/* ── Key info strip (visual break between two photo stripes) ── */}
       <div className="py-12 md:py-16" style={{ backgroundColor: CREAM }}>
         <div className="max-w-3xl mx-auto px-6">
-          <p className="text-lg md:text-xl leading-[1.8] text-center" style={{ color: "#3D3830" }}>
+          <p className="text-lg md:text-xl leading-[1.8] text-center mb-8" style={{ color: "#3D3830" }}>
             המסורת הבודהיסטית עתיקת היומין מביאה אמצעים רבי עוצמה לריפוי והארה. בריטריט מיוחד זה נלמד עם לאמה גלן מולין, תלמידו האישי של הדלאי לאמה, מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - תרגולים עתיקים ורבי עוצמה לריפוי, לאיזון, להארכת חיים ולהעמקה בדרך הרוחנית.
           </p>
+          <div className="text-center">
+            <button
+              className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+              style={{ borderColor: "#B8860B", color: "#B8860B", backgroundColor: "transparent" }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#B8860B"; e.currentTarget.style.color = "#fff"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#B8860B"; }}
+              onClick={() => openRegistration()}
+            >
+              להרשמה
+            </button>
+          </div>
         </div>
       </div>
 
@@ -947,13 +996,20 @@ const EinGediRetreatV2 = () => {
                   {option.price}
                   <span className="text-lg font-normal mr-1">₪</span>
                 </p>
-                <p className="text-xs mb-6" style={{ color: WARM_GRAY }}>לאדם | הכל כלול</p>
+                <p className="text-xs mb-2" style={{ color: WARM_GRAY }}>לאדם | הכל כלול</p>
+                {option.roomKey === "EinGedi_Healing_Single" && (
+                  <p className="text-xs font-medium mb-4" style={{ color: GOLD }}>5 חדרים בלבד</p>
+                )}
+                {option.roomKey !== "EinGedi_Healing_Single" && <div className="mb-6" />}
                 <div className="mt-auto">
                   <CTAButton className="!text-base !px-8 !py-3 w-full" onClick={() => openRegistration(option.roomKey)}>להרשמה</CTAButton>
                 </div>
               </div>
             ))}
           </div>
+          <p className="text-base md:text-lg mt-8 text-center" style={{ color: WARM_GRAY }}>
+            מספר המקומות מוגבל - מומלץ להירשם בהקדם
+          </p>
         </div>
       </section>
 
@@ -1001,6 +1057,7 @@ const EinGediRetreatV2 = () => {
           >
             <div className="overflow-hidden rounded-lg" style={{ margin: isMobile ? "0 -6px" : "0 -10px" }} dir="ltr" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
               <div
+                ref={carouselRef}
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
                   transform: isMobile
@@ -1098,17 +1155,18 @@ const EinGediRetreatV2 = () => {
       )}
 
       {/* ── Final CTA ── */}
-      <section className="py-20 md:py-28 text-center" style={{ background: `linear-gradient(135deg, ${DARK} 0%, #2C2620 100%)` }}>
-        <div className="max-w-2xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+      <section className="relative py-20 md:py-28 text-center">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto4})` }} />
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="relative z-10 max-w-2xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
             הצטרפו לריטריט
           </h2>
-          <p className="text-lg text-white/70 mb-10 leading-relaxed">
-            שישה ימים של חניכות ותרגולי ריפוי עומק, על שפת ים המלח, עם לאמה גלן
-            ודרופון צ׳ונגוואל-לה
+          <p className="text-lg text-white/70 mb-10 leading-relaxed drop-shadow-md">
+            שישה ימים של תרגולי ריפוי ממסורת הבודהיזם הטנטרי, על שפת ים המלח, באווירה טבעית ומרפאת
           </p>
-          <CTAButton onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
-          <p className="text-sm text-white/40 mt-8">מספר המקומות מוגבל</p>
+          <CTAButton className="drop-shadow-lg" onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
+          <p className="text-sm text-white/40 mt-8 drop-shadow-sm">מספר המקומות מוגבל</p>
         </div>
       </section>
 
