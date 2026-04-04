@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
-import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
@@ -463,6 +464,83 @@ const PaymentStatusModal = ({ status, onClose }: { status: "success" | "failed";
     </DialogContent>
   </Dialog>
 );
+
+/* ── Mailing List Signup Component ── */
+const MailingListSignup = () => {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("loading");
+    try {
+      const { error } = await supabase.functions.invoke("mailchimp-sync", {
+        body: { email, tag: "ריטריט הילינג עין גדי 2026" },
+      });
+      if (error) throw error;
+      setStatus("success");
+      setEmail("");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <section className="py-16 px-4" style={{ backgroundColor: "#F5F0EB" }} dir="rtl">
+      <div className="max-w-xl mx-auto text-center">
+        <h2
+          className="text-2xl md:text-3xl font-bold mb-3"
+          style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}
+        >
+          הישארו מעודכנים
+        </h2>
+        <p className="mb-6" style={{ color: WARM_GRAY }}>
+          הירשמו לרשימת התפוצה שלנו וקבלו עדכונים על הריטריט, סדנאות והזדמנויות נוספות
+        </p>
+
+        {status === "success" ? (
+          <div className="flex items-center justify-center gap-2 text-green-700">
+            <CheckCircle2 className="h-5 w-5" />
+            <span>תודה! נרשמת בהצלחה</span>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <input
+              type="email"
+              required
+              placeholder="כתובת אימייל"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setStatus("idle"); }}
+              className="w-full sm:w-72 px-4 py-3 rounded-lg border border-stone-300 bg-white text-right focus:outline-none focus:ring-2 focus:ring-[#C9A961]"
+              dir="ltr"
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="px-6 py-3 rounded-lg text-white font-medium flex items-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-60"
+              style={{ backgroundColor: GOLD }}
+            >
+              {status === "loading" ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+              הרשמה
+            </button>
+          </form>
+        )}
+
+        {status === "error" && (
+          <p className="mt-3 text-red-600 text-sm flex items-center justify-center gap-1">
+            <XCircle className="h-4 w-4" />
+            שגיאה בהרשמה, נסו שוב
+          </p>
+        )}
+      </div>
+    </section>
+  );
+};
 
 const EinGediRetreatV2 = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -1065,6 +1143,9 @@ const EinGediRetreatV2 = () => {
           </div>
         </div>
       </section>
+
+      {/* ── Mailing List Signup ── */}
+      <MailingListSignup />
 
       {/* ── Footer ── */}
       <footer className="py-8 text-center text-sm border-t border-stone-200" style={{ color: WARM_GRAY }}>

@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email } = await req.json();
+    const { email, tag } = await req.json();
 
     if (!email) {
       return new Response(JSON.stringify({ error: "email is required" }), {
@@ -24,6 +24,8 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const tagName = tag || "2026-video-coursel-healing-lp";
 
     // 1. Add/update member in audience (PUT is an upsert)
     const memberUrl = `https://${MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${MAILCHIMP_AUDIENCE_ID}/members/${await md5(email.toLowerCase())}`;
@@ -59,7 +61,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        tags: [{ name: "2026-video-coursel-healing-lp", status: "active" }],
+        tags: [{ name: tagName, status: "active" }],
       }),
     });
 
