@@ -452,11 +452,11 @@ const PaymentStatusModal = ({ status, onClose }: { status: "success" | "failed";
           </button>
           {status === "failed" && (
             <a
-              href="mailto:info@maitreya.org.il"
+              href="mailto:maitreyasanghaisrael@gmail.com"
               className="text-sm underline underline-offset-4 transition-colors hover:text-[#C9A961]"
               style={{ color: WARM_GRAY }}
             >
-              צרו קשר: info@maitreya.org.il
+              צרו קשר: maitreyasanghaisrael@gmail.com
             </a>
           )}
         </div>
@@ -1210,8 +1210,14 @@ const EinGediRetreatV2 = () => {
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>צרו קשר</h3>
             <p style={{ color: WARM_GRAY }}>
               לשאלות, בירורים והרשמה:{" "}
-              <a href="mailto:info@maitreya.org.il" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
-                info@maitreya.org.il
+              <a href="mailto:maitreyasanghaisrael@gmail.com" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
+                maitreyasanghaisrael@gmail.com
+              </a>
+            </p>
+            <p className="mt-2" style={{ color: WARM_GRAY }}>
+              טלפון:{" "}
+              <a href="tel:054-4905031" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
+                054-4905031
               </a>
             </p>
           </div>

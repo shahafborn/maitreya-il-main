@@ -121,4 +121,4 @@ note: מספר המקומות מוגבל
 
 ## contact
 
-לשאלות, בירורים והרשמה: [info@maitreya.org.il](mailto:info@maitreya.org.il)
+לשאלות, בירורים והרשמה: [maitreyasanghaisrael@gmail.com](mailto:maitreyasanghaisrael@gmail.com) | טלפון: [054-4905031](tel:054-4905031)
