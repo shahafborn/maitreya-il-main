@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
@@ -174,6 +180,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
 
     if (!validateAndScroll()) return;
 
+    window.gtag?.("event", "registration_submitted", { room_type: roomType });
     setSubmitting(true);
     const regToken = crypto.randomUUID();
 
@@ -198,6 +205,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
 
       const data = await res.json();
       if (data.cardcom_url) {
+        window.gtag?.("event", "payment_redirect", { room_type: roomType });
         window.location.href = data.cardcom_url;
       } else {
         throw new Error("לא התקבל קישור לתשלום");
@@ -249,7 +257,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
               <select
                 ref={roomRef}
                 value={roomType}
-                onChange={(e) => { setRoomType(e.target.value as RoomType); setFieldErrors((p) => ({ ...p, roomType: "" })); }}
+                onChange={(e) => { const val = e.target.value as RoomType; setRoomType(val); if (val) window.gtag?.("event", "room_type_selected", { room_type: val }); setFieldErrors((p) => ({ ...p, roomType: "" })); }}
                 className={`${selectClass} ${fieldErrorClass("roomType")}`}
               >
                 <option value="">בחרו סוג חדר</option>
@@ -548,7 +556,20 @@ const EinGediRetreatV2 = () => {
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
 
+  useEffect(() => {
+    if (paymentStatus === "success") {
+      window.gtag?.("event", "payment_success");
+    } else if (paymentStatus === "failed") {
+      window.gtag?.("event", "payment_failed");
+    }
+  }, [paymentStatus]);
+
+  const trackEvent = (event: string, params?: Record<string, string>) => {
+    window.gtag?.("event", event, params);
+  };
+
   const openRegistration = (room: RoomType = "") => {
+    trackEvent("registration_modal_open", room ? { room_type: room } : undefined);
     setPreselectedRoom(room);
     setModalOpen(true);
   };
