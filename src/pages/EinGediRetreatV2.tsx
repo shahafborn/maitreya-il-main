@@ -1111,6 +1111,27 @@ const EinGediRetreatV2 = () => {
         </div>
       </section>
 
+      {/* ── Video ── */}
+      <section className="py-16 md:py-24" style={{ backgroundColor: CREAM }}>
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            הכירו את לאמה גלן מולין
+          </h2>
+          <p className="text-center mb-10" style={{ color: WARM_GRAY }}>
+            לאמה גלן מולין על טנטרה בודהיסטית בחיי היומיום
+          </p>
+          <div className="relative w-full rounded-xl overflow-hidden shadow-lg" style={{ paddingBottom: "56.25%" }}>
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src="https://www.youtube.com/embed/r6IniYsqRcw?start=1"
+              title="ריטריט הילינג"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ── Lightbox ── */}
       {lightboxIndex !== null && (
         <div
