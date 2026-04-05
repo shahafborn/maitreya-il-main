@@ -804,10 +804,10 @@ const EinGediRetreatV2 = () => {
               <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
                 לאמה גלן מולין
               </h3>
-              <p className="text-sm font-medium mb-5" style={{ color: GOLD }}>
+              <p className="text-base font-medium mb-5" style={{ color: GOLD }}>
                 מורה בכיר לטנטרה בודהיסטית וטומו
               </p>
-              <p className="text-base leading-[1.9]" style={{ color: WARM_GRAY }}>
+              <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
                 לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
                 הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
                 הם לינג רינפוצ׳ה השישי וטריג׳נג רינפוצ׳ה - מורי השורש האישיים של
@@ -832,10 +832,10 @@ const EinGediRetreatV2 = () => {
               <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
                 דרופון צ׳ונגוואל-לה
               </h3>
-              <p className="text-sm font-medium mb-5" style={{ color: GOLD }}>
+              <p className="text-base font-medium mb-5" style={{ color: GOLD }}>
                 מדריך ריטריטים ומורה לטנטרה בודהיסטית
               </p>
-              <p className="text-base leading-[1.9]" style={{ color: WARM_GRAY }}>
+              <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
                 דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
                 לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
                 כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה
@@ -854,7 +854,7 @@ const EinGediRetreatV2 = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
             שלושת התרגולים
           </h2>
-          <p className="text-center mb-12" style={{ color: WARM_GRAY }}>
+          <p className="text-lg text-center mb-12" style={{ color: WARM_GRAY }}>
             שלושה תרגולי ליבה ממסורת הבודהיזם הטנטרי הטיבטי, כולל חניכות
           </p>
 
@@ -890,8 +890,8 @@ const EinGediRetreatV2 = () => {
                   <h3 className="text-xl font-bold mb-1" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
                     {practice.title}
                   </h3>
-                  <p className="text-sm font-medium mb-2" style={{ color: GOLD }}>{practice.subtitle}</p>
-                  <p className="leading-[1.8]" style={{ color: WARM_GRAY }}>{practice.description}</p>
+                  <p className="text-base font-medium mb-2" style={{ color: GOLD }}>{practice.subtitle}</p>
+                  <p className="text-lg leading-[1.8]" style={{ color: WARM_GRAY }}>{practice.description}</p>
                 </div>
               </div>
             ))}
@@ -912,13 +912,13 @@ const EinGediRetreatV2 = () => {
               <h3 className="text-sm font-bold tracking-[0.15em] uppercase mb-4" style={{ color: WARM_GRAY, letterSpacing: "0.15em" }}>
                 הגעה ולוגיסטיקה
               </h3>
-              <div className="space-y-4 leading-[1.8]" style={{ color: "#3D3830" }}>
+              <div className="space-y-4 text-lg leading-[1.8]" style={{ color: "#3D3830" }}>
                 <p>הריטריט מתחיל ביום שני, 1 ביוני בשעה 14:00, ומסתיים ביום שבת, 6 ביוני 2026 בשעה 15:00.</p>
               </div>
               <h3 className="text-sm font-bold tracking-[0.15em] uppercase mt-8 mb-4" style={{ color: WARM_GRAY, letterSpacing: "0.15em" }}>
                 ארוחות
               </h3>
-              <div className="leading-[1.8]" style={{ color: "#3D3830" }}>
+              <div className="text-lg leading-[1.8]" style={{ color: "#3D3830" }}>
                 <p>ארוחת בוקר: 8:00-9:15</p>
                 <p>ארוחת צהריים: 12:30-13:30</p>
                 <p>ארוחת ערב: 18:30-19:30</p>
@@ -949,28 +949,28 @@ const EinGediRetreatV2 = () => {
                   { days: "ימים 5-6 (שישי-שבת)", practice: "צ׳אקרסמוורה הלבן", times: "בוקר: 9:30-12:30 | אחה״צ: 14:30-18:15" },
                 ].map((block, i) => (
                   <div key={i} className="border-r-2 pr-4" style={{ borderColor: GOLD }}>
-                    <p className="font-bold text-sm mb-0.5">{block.days}</p>
-                    <p className="font-bold" style={{ color: GOLD }}>{block.practice}</p>
-                    <p className="text-sm mt-1" style={{ color: WARM_GRAY }}>{block.times}</p>
+                    <p className="font-bold text-base mb-0.5">{block.days}</p>
+                    <p className="font-bold text-lg" style={{ color: GOLD }}>{block.practice}</p>
+                    <p className="text-base mt-1" style={{ color: WARM_GRAY }}>{block.times}</p>
                   </div>
                 ))}
               </div>
-              <p className="text-sm mt-6" style={{ color: WARM_GRAY }}>
+              <p className="text-base mt-6" style={{ color: WARM_GRAY }}>
                 היום הראשון מתחיל ב-14:00. היום האחרון מסתיים ב-15:00.
               </p>
-              <p className="text-sm mt-4" style={{ color: WARM_GRAY }}>
+              <p className="text-base mt-4" style={{ color: WARM_GRAY }}>
                 כל יום יכלול הוראה, חניכה, תרגול מודרך, יוגה ומדיטציה.
               </p>
-              <p className="text-sm mt-2" style={{ color: WARM_GRAY }}>
+              <p className="text-base mt-2" style={{ color: WARM_GRAY }}>
                 למעוניינים: מדיטציה בשעות הבוקר המוקדמות ופעילויות ערב.
               </p>
             </div>
           </div>
 
-          <p className="text-center text-sm" style={{ color: WARM_GRAY }}>
+          <p className="text-center text-base" style={{ color: WARM_GRAY }}>
             הריטריט מתאים למתרגלים מתחילים ומתקדמים וילווה בתרגום לעברית.
           </p>
-          <p className="text-center text-xs mt-4" style={{ color: WARM_GRAY }}>
+          <p className="text-center text-sm mt-4" style={{ color: WARM_GRAY }}>
             * לוח הזמנים המוצג הוא משוער. לוח הזמנים הסופי יישלח למשתתפים לפני הריטריט.
           </p>
         </div>
@@ -995,7 +995,7 @@ const EinGediRetreatV2 = () => {
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 py-1">
                 <span className="text-lg" style={{ color: GOLD }}>&#10047;</span>
-                <span className="text-base text-white/90">{item}</span>
+                <span className="text-lg text-white/90">{item}</span>
               </div>
             ))}
           </div>
@@ -1008,7 +1008,7 @@ const EinGediRetreatV2 = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
             עלות למשתתף
           </h2>
-          <p className="text-center text-sm mb-12" style={{ color: WARM_GRAY }}>
+          <p className="text-center text-base mb-12" style={{ color: WARM_GRAY }}>
             כל המחירים כוללים לינה, ארוחות מלאות והשתתפות בכל השיעורים והתרגולים
           </p>
 
@@ -1036,14 +1036,14 @@ const EinGediRetreatV2 = () => {
                 <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
                   {option.type}
                 </h3>
-                <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>{option.note}</p>
+                <p className="text-base mb-6" style={{ color: WARM_GRAY }}>{option.note}</p>
                 <p className="text-4xl font-bold mb-1">
                   {option.price}
                   <span className="text-lg font-normal mr-1">₪</span>
                 </p>
-                <p className="text-xs mb-2" style={{ color: WARM_GRAY }}>לאדם | הכל כלול</p>
+                <p className="text-sm mb-2" style={{ color: WARM_GRAY }}>לאדם | הכל כלול</p>
                 {option.roomKey === "EinGedi_Healing_Single" && (
-                  <p className="text-xs font-medium mb-4" style={{ color: GOLD }}>5 חדרים בלבד</p>
+                  <p className="text-sm font-medium mb-4" style={{ color: GOLD }}>5 חדרים בלבד</p>
                 )}
                 {option.roomKey !== "EinGedi_Healing_Single" && <div className="mb-6" />}
                 <div className="mt-auto">
@@ -1055,7 +1055,7 @@ const EinGediRetreatV2 = () => {
           <p className="text-base md:text-lg mt-8 text-center" style={{ color: WARM_GRAY }}>
             מספר המקומות מוגבל - מומלץ להירשם בהקדם
           </p>
-          <p className="text-sm mt-3 text-center" style={{ color: WARM_GRAY }}>
+          <p className="text-base mt-3 text-center" style={{ color: WARM_GRAY }}>
             ניתן לשלם בתשלומים
           </p>
         </div>
@@ -1073,7 +1073,7 @@ const EinGediRetreatV2 = () => {
             מתחם שקט ויפה הפונה לים המלח עם נוף ישיר לים ולהרי מואב.
             חמש דקות נסיעה מקיבוץ עין גדי, קרוב לשמורת הטבע ולמצוקי דרגות.
           </p>
-          <p className="text-base text-white/70 leading-[1.8] max-w-2xl mx-auto">
+          <p className="text-lg text-white/70 leading-[1.8] max-w-2xl mx-auto">
             החדרים שופצו בשנים האחרונות - פשוטים, יפים ונוחים. כל חדר כולל
             שירותים ומקלחת, מזגן ופינת קפה. המתחם כולל אולמות ממוזגים, חדר
             אוכל עם ארוחות מלאות, ושטחי חוץ ירוקים ונעימים.
@@ -1165,7 +1165,7 @@ const EinGediRetreatV2 = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
             הכירו את לאמה גלן מולין
           </h2>
-          <p className="text-center mb-10" style={{ color: WARM_GRAY }}>
+          <p className="text-lg text-center mb-10" style={{ color: WARM_GRAY }}>
             לאמה גלן מולין על טנטרה בודהיסטית בחיי היומיום
           </p>
           <div className="relative w-full rounded-xl overflow-hidden shadow-lg" style={{ paddingBottom: "56.25%" }}>
@@ -1231,7 +1231,7 @@ const EinGediRetreatV2 = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
             הצטרפו לריטריט
           </h2>
-          <p className="text-lg text-white/70 mb-10 leading-relaxed drop-shadow-md">
+          <p className="text-xl text-white/70 mb-10 leading-relaxed drop-shadow-md">
             שישה ימים של תרגולי ריפוי ממסורת הבודהיזם הטנטרי, על שפת ים המלח, באווירה טבעית ומרפאת
           </p>
           <CTAButton className="drop-shadow-lg" onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
@@ -1244,7 +1244,7 @@ const EinGediRetreatV2 = () => {
         <div className="max-w-3xl mx-auto px-6 space-y-10">
           <div>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>מדיניות ביטול</h3>
-            <ul className="space-y-2" style={{ color: WARM_GRAY }}>
+            <ul className="space-y-2 text-lg" style={{ color: WARM_GRAY }}>
               <li className="flex items-start gap-3"><GoldDot /><span>ביטול עד 30 יום לפני הריטריט - החזר מלא</span></li>
               <li className="flex items-start gap-3"><GoldDot /><span>ביטול 14-30 יום לפני - החזר של 50%</span></li>
               <li className="flex items-start gap-3"><GoldDot /><span>ביטול פחות מ-14 יום לפני - ללא החזר</span></li>
@@ -1253,13 +1253,13 @@ const EinGediRetreatV2 = () => {
 
           <div>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>צרו קשר</h3>
-            <p style={{ color: WARM_GRAY }}>
+            <p className="text-lg" style={{ color: WARM_GRAY }}>
               לשאלות, בירורים והרשמה:{" "}
               <a href="mailto:maitreyasanghaisrael@gmail.com" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
                 maitreyasanghaisrael@gmail.com
               </a>
             </p>
-            <p className="mt-2" style={{ color: WARM_GRAY }}>
+            <p className="text-lg mt-2" style={{ color: WARM_GRAY }}>
               טלפון:{" "}
               <a href="tel:054-4905031" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
                 054-4905031
