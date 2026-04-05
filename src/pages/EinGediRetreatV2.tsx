@@ -644,7 +644,31 @@ const EinGediRetreatV2 = () => {
   }, [isPaused, lightboxIndex, nextSlide]);
 
   useEffect(() => {
-    document.title = "ריטריט הילינג בעין גדי | מאיטרייה סנגהה ישראל";
+    const title = "ריטריט הילינג בודהיסטי בעין גדי | 1-6 ביוני 2026 | מאיטרייה סנגהה ישראל";
+    const description = "שישה ימים של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה. כולל 3 חניכות, לינה וארוחות מלאות בבית ספר שדה עין גדי.";
+    const url = "https://maitreya.org.il/p/events/ein-gedi-healing-retreat";
+    const image = `https://maitreya.org.il${heroImage}`;
+
+    document.title = title;
+
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`) || document.querySelector(`meta[property="${name}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(name.startsWith("og:") ? "property" : "name", name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMeta("description", description);
+    setMeta("keywords", "ריטריט, הילינג, בודהיזם, טנטרה, לאמה גלן, עין גדי, מדיטציה, ריפוי, מאיטרייה סנגהה");
+    setMeta("og:title", title);
+    setMeta("og:description", description);
+    setMeta("og:url", url);
+    setMeta("og:image", image);
+    setMeta("og:type", "website");
+    setMeta("og:locale", "he_IL");
   }, []);
 
   return (
