@@ -263,7 +263,7 @@ const EinGediRetreat = () => {
           <div className="w-16 h-1 bg-accent mx-auto rounded-full mb-4" />
           <p className="text-center text-muted-foreground mb-10">
             6 ימים, 5 לילות | כולל לינה, ארוחות מלאות והשתתפות בכל
-            ההוראות והתרגולים
+            השיעורים והתרגולים
           </p>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[

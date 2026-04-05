@@ -941,7 +941,7 @@ const EinGediRetreatV2 = () => {
           </h2>
           <div className="grid md:grid-cols-2 gap-x-20 gap-y-5 max-w-3xl mx-auto">
             {[
-              "השתתפות בכל ההוראות והתרגולים",
+              "השתתפות בכל השיעורים והתרגולים",
               "שלוש חניכות מלאות",
               "לינה ל-5 לילות",
               "ארוחות מלאות (בוקר, צהריים, ערב)",
@@ -964,7 +964,7 @@ const EinGediRetreatV2 = () => {
             עלות למשתתף
           </h2>
           <p className="text-center text-sm mb-12" style={{ color: WARM_GRAY }}>
-            כל המחירים כוללים לינה, ארוחות מלאות והשתתפות בכל ההוראות והתרגולים
+            כל המחירים כוללים לינה, ארוחות מלאות והשתתפות בכל השיעורים והתרגולים
           </p>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -1009,6 +1009,9 @@ const EinGediRetreatV2 = () => {
           </div>
           <p className="text-base md:text-lg mt-8 text-center" style={{ color: WARM_GRAY }}>
             מספר המקומות מוגבל - מומלץ להירשם בהקדם
+          </p>
+          <p className="text-sm mt-3 text-center" style={{ color: WARM_GRAY }}>
+            ניתן לשלם בתשלומים
           </p>
         </div>
       </section>
