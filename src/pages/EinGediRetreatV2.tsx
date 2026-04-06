@@ -807,9 +807,7 @@ const EinGediRetreatV2 = () => {
               <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
                 לאמה גלן מולין
               </h3>
-              <p className="text-base font-medium mb-5" style={{ color: GOLD }}>
-                מורה בכיר לטנטרה בודהיסטית וטומו
-              </p>
+              <div className="w-12 h-[2px] mb-5 mx-auto md:mx-0 md:ms-0" style={{ backgroundColor: GOLD }} />
               <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
                 לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
                 הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
@@ -835,9 +833,7 @@ const EinGediRetreatV2 = () => {
               <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
                 דרופון צ׳ונגוואל-לה
               </h3>
-              <p className="text-base font-medium mb-5" style={{ color: GOLD }}>
-                מדריך ריטריטים ומורה לטנטרה בודהיסטית
-              </p>
+              <div className="w-12 h-[2px] mb-5 mx-auto md:mx-0 md:ms-0" style={{ backgroundColor: GOLD }} />
               <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
                 דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
                 לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
