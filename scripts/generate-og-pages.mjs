@@ -46,11 +46,26 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 
-function injectOgTags(template, { title, description }) {
+function injectOgTags(template, { title, description, image }) {
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description || title);
 
   let html = template;
+
+  if (image) {
+    const safeImage = escapeHtml(image);
+    if (/<meta property="og:image" content="[^"]*"/.test(html)) {
+      html = html.replace(
+        /<meta property="og:image" content="[^"]*"/,
+        `<meta property="og:image" content="${safeImage}"`
+      );
+    } else {
+      html = html.replace(
+        /<meta property="og:type"[^>]*>/,
+        (match) => `${match}\n    <meta property="og:image" content="${safeImage}" />`
+      );
+    }
+  }
 
   // Replace <title>
   html = html.replace(
@@ -91,6 +106,7 @@ const STATIC_EVENTS = [
     title: "ריטריט הילינג בעין גדי | מאיטרייה סנגהה ישראל",
     description:
       "ריטריט הילינג בעין גדי - דרך הריפוי וההילינג הבודהיסטי. שישה ימים של חניכות ותרגולי ריפוי עומק עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה. 1-6 ביוני 2026, בית ספר שדה עין גדי.",
+    image: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat.png",
   },
 ];
 
@@ -132,6 +148,7 @@ async function main() {
     const eventPage = injectOgTags(template, {
       title: event.title,
       description: event.description,
+      image: event.image,
     });
     writeHtml(path.join(DIST, event.route, "index.html"), eventPage);
     console.log(`  ✓ ${event.route}`);
