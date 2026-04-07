@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback, useRef, type FormEvent } from "react"
 import { useSearchParams } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
@@ -43,6 +44,12 @@ const ROOM_OPTIONS: { value: RoomType; label: string; price: string }[] = [
   { value: "EinGedi_Healing_Double", label: "2 בחדר", price: "3,850₪ לאדם" },
   { value: "EinGedi_Healing_Single", label: "חדר ליחיד", price: "4,500₪ לאדם" },
 ];
+
+const ROOM_PRICES: Record<Exclude<RoomType, "">, number> = {
+  EinGedi_Healing_Triple: 3350,
+  EinGedi_Healing_Double: 3850,
+  EinGedi_Healing_Single: 4500,
+};
 
 const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7, gallery5, gallery6, gallery11, gallery12, gallery13, gallery14, gallery15];
 
@@ -181,6 +188,29 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
     if (!validateAndScroll()) return;
 
     window.gtag?.("event", "registration_submitted", { room_type: roomType });
+
+    const price = roomType ? ROOM_PRICES[roomType] : 0;
+    const pixelEventId = generateEventId();
+    trackMeta(
+      "InitiateCheckout",
+      {
+        value: price,
+        currency: "ILS",
+        content_name: "Ein Gedi Healing Retreat",
+        content_ids: roomType ? [roomType] : [],
+        num_items: 1,
+      },
+      pixelEventId,
+    );
+    try {
+      sessionStorage.setItem(
+        "ein_gedi_pending_purchase",
+        JSON.stringify({ value: price, roomType, event_id: pixelEventId, ts: Date.now() }),
+      );
+    } catch {
+      /* sessionStorage may be unavailable */
+    }
+
     setSubmitting(true);
     const regToken = crypto.randomUUID();
 
@@ -556,9 +586,42 @@ const EinGediRetreatV2 = () => {
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
 
+  const purchaseFiredRef = useRef(false);
   useEffect(() => {
     if (paymentStatus === "success") {
       window.gtag?.("event", "payment_success");
+      if (purchaseFiredRef.current) return;
+      if (sessionStorage.getItem("ein_gedi_purchase_fired") === "1") {
+        purchaseFiredRef.current = true;
+        return;
+      }
+      try {
+        const raw = sessionStorage.getItem("ein_gedi_pending_purchase");
+        if (raw) {
+          const pending = JSON.parse(raw) as { value: number; roomType: string; event_id: string };
+          trackMeta(
+            "Purchase",
+            {
+              value: pending.value,
+              currency: "ILS",
+              content_name: "Ein Gedi Healing Retreat",
+              content_ids: pending.roomType ? [pending.roomType] : [],
+              num_items: 1,
+            },
+            pending.event_id,
+          );
+          sessionStorage.removeItem("ein_gedi_pending_purchase");
+          sessionStorage.setItem("ein_gedi_purchase_fired", "1");
+          purchaseFiredRef.current = true;
+        } else {
+          // Fallback: fire Purchase without value if sessionStorage was cleared
+          trackMeta("Purchase", { currency: "ILS", content_name: "Ein Gedi Healing Retreat" });
+          sessionStorage.setItem("ein_gedi_purchase_fired", "1");
+          purchaseFiredRef.current = true;
+        }
+      } catch {
+        /* ignore */
+      }
     } else if (paymentStatus === "failed") {
       window.gtag?.("event", "payment_failed");
     }
