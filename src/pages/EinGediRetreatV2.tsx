@@ -594,14 +594,18 @@ const EinGediRetreatV2 = () => {
     if (paymentStatus === "success") {
       window.gtag?.("event", "payment_success");
       if (purchaseFiredRef.current) return;
-      if (sessionStorage.getItem("ein_gedi_purchase_fired") === "1") {
-        purchaseFiredRef.current = true;
-        return;
-      }
       try {
         const raw = sessionStorage.getItem("ein_gedi_pending_purchase");
         if (raw) {
           const pending = JSON.parse(raw) as { value: number; roomType: string; event_id: string };
+          // Per-event-id guard: only block if this exact event_id already fired.
+          // This still prevents accidental double-fires on refresh, but allows
+          // repeat testing in the same tab (each test has a fresh reg_token).
+          const firedKey = `ein_gedi_purchase_fired:${pending.event_id}`;
+          if (sessionStorage.getItem(firedKey) === "1") {
+            purchaseFiredRef.current = true;
+            return;
+          }
           trackMeta(
             "Purchase",
             {
@@ -613,13 +617,13 @@ const EinGediRetreatV2 = () => {
             },
             pending.event_id,
           );
+          sessionStorage.setItem(firedKey, "1");
           sessionStorage.removeItem("ein_gedi_pending_purchase");
-          sessionStorage.setItem("ein_gedi_purchase_fired", "1");
           purchaseFiredRef.current = true;
         } else {
           // Fallback: fire Purchase without value if sessionStorage was cleared
+          // (e.g., user closed and reopened the tab between checkout and payment).
           trackMeta("Purchase", { currency: "ILS", content_name: "Ein Gedi Healing Retreat" });
-          sessionStorage.setItem("ein_gedi_purchase_fired", "1");
           purchaseFiredRef.current = true;
         }
       } catch {
