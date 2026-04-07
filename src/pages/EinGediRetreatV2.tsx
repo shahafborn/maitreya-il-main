@@ -190,7 +190,11 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
     window.gtag?.("event", "registration_submitted", { room_type: roomType });
 
     const price = roomType ? ROOM_PRICES[roomType] : 0;
-    const pixelEventId = generateEventId();
+    const regToken = crypto.randomUUID();
+    // Deterministic event IDs derived from reg_token so client-side pixel
+    // and server-side CAPI (fired from n8n) dedupe on the same value.
+    const icEventId = `ic-${regToken}`;
+    const purchaseEventId = `purchase-${regToken}`;
     trackMeta(
       "InitiateCheckout",
       {
@@ -200,19 +204,18 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
         content_ids: roomType ? [roomType] : [],
         num_items: 1,
       },
-      pixelEventId,
+      icEventId,
     );
     try {
       sessionStorage.setItem(
         "ein_gedi_pending_purchase",
-        JSON.stringify({ value: price, roomType, event_id: pixelEventId, ts: Date.now() }),
+        JSON.stringify({ value: price, roomType, event_id: purchaseEventId, ts: Date.now() }),
       );
     } catch {
       /* sessionStorage may be unavailable */
     }
 
     setSubmitting(true);
-    const regToken = crypto.randomUUID();
 
     try {
       const res = await fetch(N8N_WEBHOOK_URL, {
