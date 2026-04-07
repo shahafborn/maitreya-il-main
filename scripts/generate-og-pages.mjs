@@ -103,7 +103,7 @@ function writeHtml(filePath, content) {
 const STATIC_EVENTS = [
   {
     route: "events/ein-gedi-healing-retreat",
-    title: "ריטריט ריפוי בודהיסטי בים המלח | מאיטרייה סנגהה ישראל",
+    title: "ריטריט ריפוי בודהיסטי בים המלח | 1-6 ביוני 2026 | מאיטרייה סנגהה ישראל",
     description:
       "ריטריט הילינג בעין גדי - דרך הריפוי וההילינג הבודהיסטי. שישה ימים של חניכות ותרגולי ריפוי עומק עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה. 1-6 ביוני 2026, בית ספר שדה עין גדי.",
     image: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat.png",
