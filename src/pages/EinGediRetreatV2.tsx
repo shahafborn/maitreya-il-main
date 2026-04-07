@@ -665,7 +665,7 @@ const EinGediRetreatV2 = () => {
   }, [isPaused, lightboxIndex, nextSlide]);
 
   useEffect(() => {
-    const title = "ריטריט הילינג בודהיסטי בעין גדי | 1-6 ביוני 2026 | מאיטרייה סנגהה ישראל";
+    const title = "ריטריט ריפוי בודהיסטי בים המלח | מאיטרייה סנגהה ישראל";
     const description = "שישה ימים של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה - ריטריט מדיטציה ותרגול יחודי באחד מאתרי הריפוי העתיקים בעולם - ים המלח.";
     const url = "https://maitreya.org.il/p/events/ein-gedi-healing-retreat";
     const image = "https://maitreya.org.il/p/og-ein-gedi-healing-retreat.png";
