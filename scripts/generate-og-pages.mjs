@@ -115,6 +115,13 @@ const STATIC_EVENTS = [
       "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות החוכמה הייחודיות של הבודהיזם הטנטרי עם לאמה גלן, כולל חניכה למנג׳ושרי הלבן. תל אביב, 28-30 במאי 2026.",
     image: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat.png",
   },
+  {
+    route: "events/en/heart-of-wisdom-retreat",
+    title: "Mahamudra: Heart of Wisdom Retreat with Lama Glenn | May 28-30, 2026 | Maitreya Sangha Israel",
+    description:
+      "A three-day online retreat exploring the unique wisdom methods of Buddhist Tantra with Lama Glenn Mullin, including a White Manjushri empowerment. Live on Zoom, May 28-30, 2026.",
+    image: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat-en.png",
+  },
 ];
 
 async function main() {

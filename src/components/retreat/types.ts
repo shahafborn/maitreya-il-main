@@ -96,6 +96,10 @@ export interface RegistrationConfig {
   askCity?: boolean;
   /** "Can offer a ride to others" checkbox (pairs with askCity). */
   askRideShare?: boolean;
+  /** When false, the phone field is hidden and not required. Defaults to true. */
+  askPhone?: boolean;
+  /** Country text input (used for Zoom / international registrations). */
+  askCountry?: boolean;
   /** sessionStorage prefix to isolate pending-purchase keys per page. */
   storagePrefix: string;
   /**

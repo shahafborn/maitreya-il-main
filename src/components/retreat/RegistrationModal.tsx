@@ -47,6 +47,9 @@ interface RegistrationModalCopy {
   /** City field (optional). */
   cityLabel?: string;
   cityPlaceholder?: string;
+  /** Country field (optional). */
+  countryLabel?: string;
+  countryPlaceholder?: string;
   /** Ride-share checkbox label (optional). */
   rideShareLabel?: string;
   /** Confirmation checkbox body text (can include <a> via dangerouslySetInnerHTML-safe pattern). */
@@ -68,6 +71,7 @@ interface RegistrationModalCopy {
   errFood: string;
   errPrevExp: string;
   errCity?: string;
+  errCountry?: string;
   errConfirmed: string;
   errServer: string;
   errNoPaymentUrl: string;
@@ -113,6 +117,7 @@ export const RegistrationModal = ({
   const [foodPref, setFoodPref] = useState("");
   const [prevExp, setPrevExp] = useState("");
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
   const [canOfferRide, setCanOfferRide] = useState(false);
   const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
@@ -151,19 +156,22 @@ export const RegistrationModal = ({
     if (!lname.trim()) errors.lname = copy.errLname;
     if (!email.trim()) errors.email = copy.errEmail;
     else if (!isValidEmail(email)) errors.email = copy.errEmailInvalid;
-    if (!phone.trim()) errors.phone = copy.errPhone;
-    else if (!isValidPhone(phone)) errors.phone = copy.errPhoneInvalid;
+    if (config.askPhone !== false) {
+      if (!phone.trim()) errors.phone = copy.errPhone;
+      else if (!isValidPhone(phone)) errors.phone = copy.errPhoneInvalid;
+    }
     if (config.askGender && !gender) errors.gender = copy.errGender;
     if (config.askFoodPref && !foodPref) errors.foodPref = copy.errFood;
     if (config.askPrevExp && !prevExp) errors.prevExp = copy.errPrevExp;
     if (config.askCity && !city.trim()) errors.city = copy.errCity ?? "";
+    if (config.askCountry && !country.trim()) errors.country = copy.errCountry ?? "";
     if (!confirmed) errors.confirmed = copy.errConfirmed;
 
     setFieldErrors(errors);
     setError("");
 
     if (Object.keys(errors).length > 0) {
-      const fieldOrder = ["tierId", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "city", "confirmed"];
+      const fieldOrder = ["tierId", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "city", "country", "confirmed"];
       const firstErrorKey = fieldOrder.find((k) => errors[k]);
       if (firstErrorKey) {
         const el = formRef.current?.querySelector(`[data-field='${firstErrorKey}']`) as HTMLElement;
@@ -207,7 +215,8 @@ export const RegistrationModal = ({
           field_event: selectedTier.id,
           full_name: `${fname} ${lname}`.trim(),
           email,
-          phone,
+          ...(config.askPhone !== false && { phone }),
+          ...(config.askCountry && { country }),
           ...(config.askGender && { gender }),
           ...(config.askFoodPref && { food_pref: foodPref }),
           ...(config.askPrevExp && { prev_exp: prevExp }),
@@ -350,22 +359,24 @@ export const RegistrationModal = ({
               <FieldError field="email" />
             </div>
 
-            <div data-field="phone">
-              <label className={labelClass}>{copy.phoneLabel} *</label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  setFieldErrors((p) => ({ ...p, phone: "" }));
-                }}
-                className={`${inputClass} ${fieldErrorClass("phone")}`}
-                placeholder={copy.phonePlaceholder}
-                dir="ltr"
-                style={{ textAlign: "left" }}
-              />
-              <FieldError field="phone" />
-            </div>
+            {config.askPhone !== false && (
+              <div data-field="phone">
+                <label className={labelClass}>{copy.phoneLabel} *</label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setFieldErrors((p) => ({ ...p, phone: "" }));
+                  }}
+                  className={`${inputClass} ${fieldErrorClass("phone")}`}
+                  placeholder={copy.phonePlaceholder}
+                  dir="ltr"
+                  style={{ textAlign: "left" }}
+                />
+                <FieldError field="phone" />
+              </div>
+            )}
 
             {(config.askGender || config.askFoodPref) && (
               <div className="grid grid-cols-2 gap-3">
@@ -461,6 +472,25 @@ export const RegistrationModal = ({
                   placeholder={copy.cityPlaceholder}
                 />
                 <FieldError field="city" />
+              </div>
+            )}
+
+            {config.askCountry && (
+              <div data-field="country">
+                <label className={labelClass}>
+                  {copy.countryLabel} *
+                </label>
+                <input
+                  type="text"
+                  value={country}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setFieldErrors((p) => ({ ...p, country: "" }));
+                  }}
+                  className={`${inputClass} ${fieldErrorClass("country")}`}
+                  placeholder={copy.countryPlaceholder}
+                />
+                <FieldError field="country" />
               </div>
             )}
 
