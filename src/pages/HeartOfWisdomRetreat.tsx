@@ -28,7 +28,7 @@
  *
  * Registration flow:
  *   Single "dana" tier → n8n webhook (reused Ein Gedi endpoint) with
- *   `field_event: "how_dana"` and `extraPayload.source: "heart-of-wisdom"` →
+ *   `field_event: "2026_05_HeartOfWisdom"` and `extraPayload.source: "heart-of-wisdom"` →
  *   Cardcom payment page configured to show both a fixed 650₪ option and an
  *   open-amount option on the same page (Cardcom feature, not our concern).
  *   Meta pixel events deduped via useRetreatPurchaseTracking with
@@ -97,7 +97,7 @@ const registrationConfig: RegistrationConfig = {
   dir: "rtl",
   tiers: [
     {
-      id: "how_dana",
+      id: "2026_05_HeartOfWisdom",
       title: "השתתפות בדאנא",
       priceDisplay: "650",
       priceValue: 650,
