@@ -55,6 +55,7 @@ import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
+import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
   howHero,
@@ -198,6 +199,8 @@ const HeartOfWisdomRetreat = () => {
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+
+  useRetreatSEO(seo);
 
   useRetreatPurchaseTracking({
     paymentStatus,
