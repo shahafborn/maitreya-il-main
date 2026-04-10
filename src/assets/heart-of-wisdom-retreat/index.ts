@@ -10,19 +10,28 @@
  * only imports from this index.
  */
 
-// TODO(Phase B.2): replace with real Heart of Wisdom / Mahamudra hero image.
-export { default as howHero } from "@/assets/retreat/hero-dead-sea-gen.jpeg";
+// Mount Kailash with Tibetan prayer flags, generated via ai-image-skill (Gemini).
+export { default as howHero } from "./hero-kailash.jpg";
 
 // Reused real photos (no swap needed).
 export { default as lamaGlennPhoto } from "@/assets/retreat/lama-glenn-big.jpg";
 export { default as druponPhoto } from "@/assets/retreat/drupon-chongwol.png";
 
-// TODO(Phase B.2): replace with White Manjushri thangka image.
-export { default as manjushriImage } from "@/assets/retreat/three-deities.jpg";
+// White Manjushri thangka (sourced from har-assets, gently enhanced via ai-image-skill).
+export { default as manjushriImage } from "./manjushri-white.jpg";
 
-// TODO(Phase B.2): replace with Antakarana Center venue photos (2 needed).
+// Soft cream-to-clouds gradient background for the About section.
+export { default as cloudsBg } from "./clouds-bg.jpg";
+
+// Tibetan prayer flags over Himalayan peaks - FinalCTA background.
+export { default as prayerFlagsBg } from "./prayer-flags.jpg";
+
+// Antakarana Center venue: real photo from a Lama Glenn teaching session.
+// Used as the VenueSection background. venuePhoto1 is still an Ein Gedi
+// placeholder used for WhatsIncluded / FinalCTA backgrounds.
+// TODO(Phase B.2): replace venuePhoto1 with a second real Antakarana photo.
 export { default as venuePhoto1 } from "@/assets/retreat/venue-eingedi-1.jpg";
-export { default as venuePhoto2 } from "@/assets/retreat/venue-eingedi-2.jpg";
+export { default as venuePhoto2 } from "./antakarana-venue.jpg";
 
 // TODO(Phase B.2): gallery can reuse a subset of Ein Gedi gallery images
 // or be replaced entirely with Heart of Wisdom / urban retreat photos.

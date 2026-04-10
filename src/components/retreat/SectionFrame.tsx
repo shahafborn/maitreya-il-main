@@ -65,7 +65,7 @@ export const SectionTitle = ({ children, className = "" }: { children: ReactNode
 /** All-caps tracked label used as section eyebrow (e.g. "אודות הריטריט"). */
 export const SectionEyebrow = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
   <h2
-    className={`text-sm font-bold tracking-[0.2em] uppercase ${className}`}
+    className={`text-base md:text-lg font-bold tracking-[0.2em] uppercase ${className}`}
     style={{ color: RETREAT_THEME.WARM_GRAY, letterSpacing: "0.2em" }}
   >
     {children}

@@ -21,6 +21,8 @@ export const RETREAT_THEME = {
   WARM_GRAY: "#6B635A",
   /** Paragraph body color (slightly warmer than DARK). */
   BODY: "#3D3830",
+  /** Deep maroon accent (used for the "what's included" stripe and section titles). */
+  MAROON: "#6B1F24",
 } as const;
 
 export const RETREAT_FONTS = {

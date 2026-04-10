@@ -1,23 +1,38 @@
 import { RETREAT_THEME } from "./theme";
 
 interface WhatsIncludedProps {
-  /** Background photo behind the dark overlay. */
-  bgImage: string;
+  /**
+   * Optional background photo. When omitted, the section renders a solid
+   * dark color from the theme palette - better when adjacent sections are
+   * already photo-heavy.
+   */
+  bgImage?: string;
   eyebrow: string;
   items: string[];
 }
 
 /**
- * Dark photo-background section with a two-column checklist of what the
- * retreat fee covers. Uses gold lotus dingbats instead of bullets.
+ * Dark section with a two-column checklist of what the retreat fee covers.
+ * Uses gold lotus dingbats instead of bullets. Background is either a
+ * photo with dark overlay, or a solid theme-dark color.
  */
 export const WhatsIncluded = ({ bgImage, eyebrow, items }: WhatsIncludedProps) => (
-  <section className="relative py-20 md:py-28">
-    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }} />
-    <div className="absolute inset-0 bg-black/55" />
+  <section
+    className="relative py-20 md:py-28"
+    style={bgImage ? undefined : { backgroundColor: RETREAT_THEME.MAROON }}
+  >
+    {bgImage && (
+      <>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${bgImage})` }}
+        />
+        <div className="absolute inset-0 bg-black/55" />
+      </>
+    )}
     <div className="relative z-10 max-w-4xl mx-auto px-6">
       <h2
-        className="text-sm font-bold tracking-[0.2em] uppercase text-center text-white/90 mb-14"
+        className="text-base md:text-lg font-bold tracking-[0.2em] uppercase text-center text-white/90 mb-14"
         style={{ letterSpacing: "0.2em" }}
       >
         {eyebrow}

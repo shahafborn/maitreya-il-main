@@ -44,6 +44,11 @@ interface RegistrationModalCopy {
   prevExpNone: string;
   messageLabel: string;
   messagePlaceholder: string;
+  /** City field (optional). */
+  cityLabel?: string;
+  cityPlaceholder?: string;
+  /** Ride-share checkbox label (optional). */
+  rideShareLabel?: string;
   /** Confirmation checkbox body text (can include <a> via dangerouslySetInnerHTML-safe pattern). */
   termsPrefix: string;
   termsLinkLabel: string;
@@ -62,6 +67,7 @@ interface RegistrationModalCopy {
   errGender: string;
   errFood: string;
   errPrevExp: string;
+  errCity?: string;
   errConfirmed: string;
   errServer: string;
   errNoPaymentUrl: string;
@@ -106,6 +112,8 @@ export const RegistrationModal = ({
   const [gender, setGender] = useState("");
   const [foodPref, setFoodPref] = useState("");
   const [prevExp, setPrevExp] = useState("");
+  const [city, setCity] = useState("");
+  const [canOfferRide, setCanOfferRide] = useState(false);
   const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -148,13 +156,14 @@ export const RegistrationModal = ({
     if (config.askGender && !gender) errors.gender = copy.errGender;
     if (config.askFoodPref && !foodPref) errors.foodPref = copy.errFood;
     if (config.askPrevExp && !prevExp) errors.prevExp = copy.errPrevExp;
+    if (config.askCity && !city.trim()) errors.city = copy.errCity ?? "";
     if (!confirmed) errors.confirmed = copy.errConfirmed;
 
     setFieldErrors(errors);
     setError("");
 
     if (Object.keys(errors).length > 0) {
-      const fieldOrder = ["tierId", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "confirmed"];
+      const fieldOrder = ["tierId", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "city", "confirmed"];
       const firstErrorKey = fieldOrder.find((k) => errors[k]);
       if (firstErrorKey) {
         const el = formRef.current?.querySelector(`[data-field='${firstErrorKey}']`) as HTMLElement;
@@ -202,17 +211,26 @@ export const RegistrationModal = ({
           ...(config.askGender && { gender }),
           ...(config.askFoodPref && { food_pref: foodPref }),
           ...(config.askPrevExp && { prev_exp: prevExp }),
+          ...(config.askCity && { city }),
+          ...(config.askRideShare && { can_offer_ride: canOfferRide }),
           message,
           ...(config.extraPayload ?? {}),
         }),
       });
       if (!res.ok) throw new Error(copy.errServer);
-      const data = await res.json();
-      if (data.cardcom_url) {
+      // If the page provides a static Cardcom URL, skip the dynamic cardcom_url
+      // from n8n and redirect directly. Otherwise expect cardcom_url in the response.
+      if (config.staticPaymentUrl) {
         window.gtag?.("event", "payment_redirect", { tier: selectedTier.id });
-        window.location.href = data.cardcom_url;
+        window.location.href = config.staticPaymentUrl;
       } else {
-        throw new Error(copy.errNoPaymentUrl);
+        const data = await res.json();
+        if (data.cardcom_url) {
+          window.gtag?.("event", "payment_redirect", { tier: selectedTier.id });
+          window.location.href = data.cardcom_url;
+        } else {
+          throw new Error(copy.errNoPaymentUrl);
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : copy.errGeneric);
@@ -425,6 +443,39 @@ export const RegistrationModal = ({
                 </SelectWrapper>
                 <FieldError field="prevExp" />
               </div>
+            )}
+
+            {config.askCity && (
+              <div data-field="city">
+                <label className={labelClass}>
+                  {copy.cityLabel} *
+                </label>
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    setFieldErrors((p) => ({ ...p, city: "" }));
+                  }}
+                  className={`${inputClass} ${fieldErrorClass("city")}`}
+                  placeholder={copy.cityPlaceholder}
+                />
+                <FieldError field="city" />
+              </div>
+            )}
+
+            {config.askRideShare && (
+              <label className="flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={canOfferRide}
+                  onChange={(e) => setCanOfferRide(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
+                />
+                <span className="text-sm" style={{ color: RETREAT_THEME.BODY }}>
+                  {copy.rideShareLabel}
+                </span>
+              </label>
             )}
 
             <div>

@@ -34,13 +34,21 @@ export const VenueSection = ({
   <>
     <section className="relative py-20 md:py-28">
       <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${bgImage})` }}
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "50% 60%",
+          backgroundRepeat: "no-repeat",
+        }}
       />
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <div className="absolute inset-0 bg-black/55" />
+      <div
+        className="relative z-10 max-w-4xl mx-auto px-6 text-center"
+        style={{ textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}
+      >
         <h2
-          className="text-sm font-bold tracking-[0.2em] uppercase text-white/90 mb-10"
+          className="text-base md:text-lg font-bold tracking-[0.2em] uppercase text-white/90 mb-10"
           style={{ letterSpacing: "0.2em" }}
         >
           {eyebrow}

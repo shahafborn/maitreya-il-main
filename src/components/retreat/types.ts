@@ -92,6 +92,10 @@ export interface RegistrationConfig {
   askGender?: boolean;
   askFoodPref?: boolean;
   askPrevExp?: boolean;
+  /** City text input (used by urban / commuter retreats for ride-sharing). */
+  askCity?: boolean;
+  /** "Can offer a ride to others" checkbox (pairs with askCity). */
+  askRideShare?: boolean;
   /** sessionStorage prefix to isolate pending-purchase keys per page. */
   storagePrefix: string;
   /**
@@ -99,4 +103,11 @@ export interface RegistrationConfig {
    * Merged into the webhook payload.
    */
   extraPayload?: Record<string, string>;
+  /**
+   * Optional static Cardcom Low-Profile payment URL. When set, the modal
+   * submits the lead to n8n and then redirects the user to this URL instead
+   * of expecting n8n to return a dynamic `cardcom_url`. Use for retreats
+   * with a pre-configured Cardcom payment page (e.g. Heart of Wisdom dana).
+   */
+  staticPaymentUrl?: string;
 }
