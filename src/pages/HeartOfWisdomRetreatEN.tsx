@@ -64,7 +64,7 @@ const seo: SEOConfig = {
 };
 
 const registrationConfig: RegistrationConfig = {
-  title: "Register for the Retreat",
+  title: "Registration for the Online Retreat",
   subtitle: "Mahamudra: Heart of Wisdom | May 28-30, 2026 | Zoom",
   webhookUrl: N8N_WEBHOOK_URL,
   contentName: "Heart of Wisdom Retreat EN",
