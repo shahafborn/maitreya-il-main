@@ -122,6 +122,13 @@ const STATIC_EVENTS = [
       "A three-day online retreat exploring the unique wisdom methods of Buddhist Tantra with Lama Glenn Mullin, including a White Manjushri empowerment. Live on Zoom, May 28-30, 2026.",
     image: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat-en.png",
   },
+  {
+    route: "events/en/ein-gedi-healing-retreat",
+    title: "Ein Gedi Healing Retreat with Lama Glenn | June 1-6, 2026 | Maitreya Sangha Israel",
+    description:
+      "Six days of deep healing and longevity practices from Tibetan Buddhist Tantra with Lama Glenn Mullin and Drupon Chongwol-la. Live on Zoom, June 1-6, 2026.",
+    image: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat-en.png",
+  },
 ];
 
 async function main() {

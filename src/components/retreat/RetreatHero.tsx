@@ -10,16 +10,27 @@ interface RetreatHeroProps {
   accent?: string;
   /** Date/venue line (muted white). */
   dateLine: string;
+  /** CSS object-position for the hero image (default: "center"). */
+  objectPosition?: string;
+  /** Separate image shown on mobile only (hidden md+). Desktop still uses `image`. */
+  mobileImage?: string;
 }
 
 /**
  * Full-width hero image with gradient overlay and stacked title/subtitle/date.
  * Extracted from EinGediRetreatV2 hero section.
  */
-export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine }: RetreatHeroProps) => (
-  <section className="relative">
-    <img src={image} alt={imageAlt} className="w-full h-[50vh] md:h-[65vh] object-cover" />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/55 md:from-black/70 via-black/35 md:via-black/40 via-[75%] to-transparent" />
+export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine, objectPosition, mobileImage }: RetreatHeroProps) => (
+  <section className="relative overflow-hidden">
+    {mobileImage ? (
+      <>
+        <img src={mobileImage} alt={imageAlt} className="w-full h-[60vh] object-cover md:hidden" />
+        <img src={image} alt={imageAlt} className="w-full h-[65vh] object-cover hidden md:block" style={objectPosition ? { objectPosition } : undefined} />
+      </>
+    ) : (
+      <img src={image} alt={imageAlt} className="w-full h-[60vh] md:h-[65vh] object-cover" style={objectPosition ? { objectPosition } : undefined} />
+    )}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/70 md:from-black/70 via-black/45 md:via-black/40 via-[75%] to-black/20" />
     <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
       <div
         className="max-w-4xl mx-auto text-center md:text-start"
