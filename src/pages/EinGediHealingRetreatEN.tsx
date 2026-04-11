@@ -40,7 +40,7 @@ import {
   threeDeities,
   medicineBuddha,
   venuePhoto1,
-  venuePhoto3,
+  prayerFlagsBg,
   einGediGalleryImages,
 } from "@/assets/ein-gedi-retreat";
 
@@ -264,7 +264,7 @@ const EinGediHealingRetreatEN = () => {
       {/* ── About ── */}
       <AboutSection
         eyebrow="About the Retreat"
-        bgImage={venuePhoto1}
+        bgImage={heroImage}
         ctaLabel="Register for the Online Retreat"
         onCtaClick={open}
         paragraphs={[
@@ -464,7 +464,6 @@ const EinGediHealingRetreatEN = () => {
       {/* ── What's Included ── */}
       <WhatsIncluded
         eyebrow="What's Included"
-        bgImage={venuePhoto3}
         items={whatsIncluded}
       />
 

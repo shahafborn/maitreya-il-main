@@ -19,6 +19,9 @@ export { default as threeDeities } from "@/assets/retreat/three-deities-hd.jpg";
 // Medicine Buddha only (cropped for mobile hero)
 export { default as medicineBuddha } from "@/assets/retreat/medicine-buddha.jpg";
 
+// Prayer flags (What's Included background)
+export { default as prayerFlagsBg } from "@/assets/heart-of-wisdom-retreat/prayer-flags.jpg";
+
 // Venue photos (used as section backgrounds / gallery)
 export { default as venuePhoto1 } from "@/assets/retreat/venue-eingedi-1.jpg";
 export { default as venuePhoto2 } from "@/assets/retreat/venue-eingedi-2.jpg";
