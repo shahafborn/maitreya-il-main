@@ -51,7 +51,7 @@ const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
 const seo: SEOConfig = {
   title:
-    "Ein Gedi Healing Retreat with Lama Glenn | June 1-6, 2026 | Maitreya Sangha Israel",
+    "The Path of Tantric Healing with Lama Glenn | June 1-6, 2026 | Maitreya Sangha Israel",
   description:
     "Six days of deep healing and longevity practices from Tibetan Buddhist Tantra with Lama Glenn Mullin and Drupon Chongwol-la. Live on Zoom, June 1-6, 2026.",
   keywords:
@@ -63,9 +63,9 @@ const seo: SEOConfig = {
 
 const registrationConfig: RegistrationConfig = {
   title: "Registration for the Online Retreat",
-  subtitle: "Ein Gedi Healing Retreat | June 1-6, 2026 | Zoom",
+  subtitle: "The Path of Tantric Healing | June 1-6, 2026 | Zoom",
   webhookUrl: N8N_WEBHOOK_URL,
-  contentName: "Ein Gedi Healing Retreat EN",
+  contentName: "The Path of Tantric Healing EN",
   currency: "USD",
   lang: "en",
   dir: "ltr",
@@ -216,7 +216,7 @@ const EinGediHealingRetreatEN = () => {
       {/* ── Hero ── */}
       <RetreatHero
         image={threeDeities}
-        imageAlt="The three healing deities - Ein Gedi Healing Retreat"
+        imageAlt="The three healing deities - The Path of Tantric Healing"
         title="The Path of Tantric Healing"
         subtitle="Six days of deep healing and longevity practices from Tibetan Buddhist Tantra"
         accent="with Lama Glenn Mullin"
@@ -543,7 +543,7 @@ const EinGediHealingRetreatEN = () => {
           status={paymentStatus}
           dir="ltr"
           successTitle="Registration Successful!"
-          successBody="Thank you for registering for the Ein Gedi Healing Retreat. A confirmation email with details will be sent to you shortly."
+          successBody="Thank you for registering for The Path of Tantric Healing retreat. A confirmation email with details will be sent to you shortly."
           successDetails={{
             heading: "Retreat Details",
             lines: ["June 1-6, 2026", "Live on Zoom"],
