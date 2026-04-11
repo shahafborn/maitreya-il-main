@@ -160,11 +160,9 @@ const HeartOfWisdomRetreatEN = () => {
 
   useRetreatSEO(seo);
 
-  useRetreatPurchaseTracking({
-    paymentStatus,
-    contentName: registrationConfig.contentName,
-    storagePrefix: registrationConfig.storagePrefix,
-  });
+  // Purchase pixel disabled - only Ein Gedi HE fires Purchase to keep
+  // campaign optimization signal clean. Re-enable when this page gets its
+  // own campaign with a Custom Conversion filter.
 
   const open = () => {
     window.gtag?.("event", "registration_modal_open", { page: "heart-of-wisdom-en" });
