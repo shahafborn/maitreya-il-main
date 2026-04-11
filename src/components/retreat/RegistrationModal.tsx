@@ -147,7 +147,10 @@ export const RegistrationModal = ({
   };
 
   const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  const isValidPhone = (v: string) => /^0[2-9]\d{7,8}$/.test(v.replace(/[-\s]/g, ""));
+  const isValidPhone = (v: string) =>
+    config.phoneInternational
+      ? /^\d{7,15}$/.test(v)
+      : /^0[2-9]\d{7,8}$/.test(v.replace(/[-\s]/g, ""));
 
   const validateAndScroll = (): boolean => {
     const errors: Record<string, string> = {};
@@ -366,7 +369,10 @@ export const RegistrationModal = ({
                   type="tel"
                   value={phone}
                   onChange={(e) => {
-                    setPhone(e.target.value);
+                    const val = config.phoneInternational
+                      ? e.target.value.replace(/\D/g, "")
+                      : e.target.value;
+                    setPhone(val);
                     setFieldErrors((p) => ({ ...p, phone: "" }));
                   }}
                   className={`${inputClass} ${fieldErrorClass("phone")}`}

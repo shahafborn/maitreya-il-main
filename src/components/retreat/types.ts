@@ -98,6 +98,8 @@ export interface RegistrationConfig {
   askRideShare?: boolean;
   /** When false, the phone field is hidden and not required. Defaults to true. */
   askPhone?: boolean;
+  /** When true, phone accepts international format (digits only, no dashes/spaces). */
+  phoneInternational?: boolean;
   /** Country text input (used for Zoom / international registrations). */
   askCountry?: boolean;
   /** sessionStorage prefix to isolate pending-purchase keys per page. */
