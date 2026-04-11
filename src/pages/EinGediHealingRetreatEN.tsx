@@ -218,7 +218,7 @@ const EinGediHealingRetreatEN = () => {
         image={threeDeities}
         imageAlt="The three healing deities - The Path of Tantric Healing"
         title="The Path of Tantric Healing"
-        subtitle="Six days of deep healing and longevity practices from Tibetan Buddhist Tantra"
+        subtitle="Six days of deep healing and longevity practices from the Tibetan Buddhist Tantric tradition"
         accent="with Lama Glenn Mullin"
         dateLine="June 1-6, 2026 | Live on Zoom"
         objectPosition="center 30%"
