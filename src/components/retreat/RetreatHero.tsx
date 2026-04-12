@@ -28,7 +28,7 @@ export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine
         <img src={image} alt={imageAlt} className="w-full h-[65vh] object-cover hidden md:block" style={objectPosition ? { objectPosition } : undefined} />
       </>
     ) : (
-      <img src={image} alt={imageAlt} className="w-full h-[60vh] md:h-[65vh] object-cover" style={objectPosition ? { objectPosition } : undefined} />
+      <img src={image} alt={imageAlt} className="w-full h-[57vh] md:h-[62vh] object-cover" style={objectPosition ? { objectPosition } : undefined} />
     )}
     <div className="absolute inset-0 bg-gradient-to-t from-black/70 md:from-black/70 via-black/45 md:via-black/40 via-[75%] to-black/20" />
     <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">

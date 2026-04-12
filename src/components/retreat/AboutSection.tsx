@@ -41,7 +41,7 @@ export const AboutSection = ({
   if (!bgImage) {
     return (
       <section
-        className="relative py-20 md:py-32"
+        className="relative pt-12 pb-20 md:pt-16 md:pb-32"
         style={{ backgroundColor: RETREAT_THEME.CREAM }}
       >
         {softBgImage && (
