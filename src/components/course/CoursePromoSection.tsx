@@ -7,8 +7,8 @@ interface CoursePromoSectionProps {
 }
 
 const i18n = {
-  he: { heading: "קורסים קרובים", cta: "לפרטים נוספים" },
-  en: { heading: "Upcoming Courses", cta: "More Details" },
+  he: { heading: "אירועים קרובים", cta: "לפרטים נוספים" },
+  en: { heading: "Upcoming Events", cta: "More Details" },
 };
 
 function usePromoImageUrls(promotions: Promotion[]) {
@@ -84,28 +84,41 @@ const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
 
   if (promotions.length === 0) return null;
 
+  const lang = promotions[0].language;
+  const texts = i18n[lang];
+  const count = promotions.length;
+
+  const gridCols =
+    count === 1
+      ? ""
+      : count === 2
+        ? "md:grid-cols-2"
+        : "md:grid-cols-3";
+
   return (
     <section className="py-14 md:py-20">
-      <div className="container mx-auto px-6 max-w-3xl">
-        {promotions.map((promo) => {
-          const lang = promo.language;
-          const texts = i18n[lang];
-          const hasImage = promo.image_storage_path && imageUrls[promo.id];
+      <div className="container mx-auto px-6 max-w-5xl">
+        {/* Single shared heading */}
+        <div className="text-center">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary mb-3">
+            {texts.heading}
+          </h2>
+          <div className="w-12 h-1 bg-accent mx-auto rounded-full mb-10" />
+        </div>
 
-          const dir = lang === "he" ? "rtl" : "ltr";
+        {/* Responsive grid */}
+        <div className={`grid gap-8 ${gridCols} ${count === 1 ? "max-w-lg mx-auto" : ""}`}>
+          {promotions.map((promo) => {
+            const cardLang = promo.language;
+            const cardTexts = i18n[cardLang];
+            const hasImage = promo.image_storage_path && imageUrls[promo.id];
+            const dir = cardLang === "he" ? "rtl" : "ltr";
 
-          return (
-            <div key={promo.id} className="text-center">
-              {/* Section heading */}
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary mb-3">
-                {texts.heading}
-              </h2>
-              <div className="w-12 h-1 bg-accent mx-auto rounded-full mb-10" />
-
-              {/* Card */}
+            return (
               <div
+                key={promo.id}
                 dir={dir}
-                className="rounded-xl overflow-hidden shadow-lg border border-border bg-card max-w-lg mx-auto"
+                className="rounded-xl overflow-hidden shadow-lg border border-border bg-card"
               >
                 {hasImage && (
                   <a href={promo.link_url} target="_blank" rel="noopener noreferrer">
@@ -118,7 +131,7 @@ const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
                 )}
 
                 <div className="px-7 py-6 text-center">
-                  {/* Title — also a link */}
+                  {/* Title - also a link */}
                   <a
                     href={promo.link_url}
                     target="_blank"
@@ -130,13 +143,13 @@ const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
                     </h3>
                   </a>
 
-                  {/* Date — prominent, accent colored, flexbox to avoid bidi reordering */}
+                  {/* Date - prominent, accent colored, flexbox to avoid bidi reordering */}
                   {promo.event_date && (
                     <p
                       className="text-accent text-lg font-semibold mb-4 flex justify-center gap-1.5"
                       dir={dir}
                     >
-                      {getDateParts(promo.event_date, promo.event_end_date, lang).map(
+                      {getDateParts(promo.event_date, promo.event_end_date, cardLang).map(
                         (part, i) => (
                           <span key={i}>{part}</span>
                         ),
@@ -161,13 +174,13 @@ const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
                     rel="noopener noreferrer"
                     className="inline-block mt-1 px-8 py-3 rounded-full bg-accent text-accent-foreground font-bold hover:bg-accent/90 transition-colors shadow-sm"
                   >
-                    {texts.cta}
+                    {cardTexts.cta}
                   </a>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
