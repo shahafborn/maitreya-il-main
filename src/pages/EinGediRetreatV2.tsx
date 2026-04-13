@@ -10,6 +10,8 @@ import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2,
 import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { howPromoCard } from "@/assets/heart-of-wisdom-retreat";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
 import threeDeities from "@/assets/retreat/three-deities.jpg";
@@ -1337,6 +1339,23 @@ const EinGediRetreatV2 = () => {
           </div>
         </div>
       </section>
+
+      {/* ── Other Events ── */}
+      <OtherEvents
+        heading="אירועים קרובים"
+        events={[
+          {
+            image: howPromoCard,
+            imageAlt: "מהמודרה - לב החוכמה",
+            title: "מהמודרה - לב החוכמה",
+            dateLabel: "28-30 במאי 2026",
+            endDate: "2026-05-30",
+            description: "שלושה ימי לימוד ותרגול של שיטות החוכמה הייחודיות של הבודהיזם הטנטרי, בליווי חניכה למנג׳ושרי הלבן",
+            ctaLabel: "לפרטים נוספים",
+            href: "/events/heart-of-wisdom-retreat",
+          },
+        ]}
+      />
 
       {/* ── Mailing List Signup ── */}
       <MailingListSignup />

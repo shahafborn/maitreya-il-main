@@ -26,6 +26,8 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
+import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { howPromoCard } from "@/assets/heart-of-wisdom-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -513,6 +515,23 @@ const EinGediHealingRetreatEN = () => {
           label: "For questions and inquiries:",
           email: CONTACT_EMAIL,
         }}
+      />
+
+      {/* ── Other Events ── */}
+      <OtherEvents
+        heading="Upcoming Events"
+        events={[
+          {
+            image: howPromoCard,
+            imageAlt: "Mahamudra - Heart of Wisdom",
+            title: "Mahamudra - Heart of Wisdom",
+            dateLabel: "May 28-30, 2026",
+            endDate: "2026-05-30",
+            description: "Three days of teaching and practice of the unique wisdom methods of Buddhist Tantra, including a White Manjushri empowerment",
+            ctaLabel: "Learn More",
+            href: "/events/en/heart-of-wisdom-retreat",
+          },
+        ]}
       />
 
       {/* ── Mailing List ── */}

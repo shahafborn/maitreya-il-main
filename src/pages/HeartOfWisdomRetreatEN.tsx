@@ -31,6 +31,8 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
+import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -327,6 +329,22 @@ const HeartOfWisdomRetreatEN = () => {
           label: "For questions and inquiries:",
           email: CONTACT_EMAIL,
         }}
+      />
+
+      <OtherEvents
+        heading="Upcoming Events"
+        events={[
+          {
+            image: einGediPromoCard,
+            imageAlt: "The Path of Tantric Healing",
+            title: "The Path of Tantric Healing",
+            dateLabel: "June 1-6, 2026",
+            endDate: "2026-06-06",
+            description: "Six days of deep healing and longevity practices from the Tibetan Buddhist Tantric tradition",
+            ctaLabel: "Learn More",
+            href: "/events/en/ein-gedi-healing-retreat",
+          },
+        ]}
       />
 
       <MailingListSignup

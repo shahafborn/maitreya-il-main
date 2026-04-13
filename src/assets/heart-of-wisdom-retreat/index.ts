@@ -47,3 +47,6 @@ import g9 from "@/assets/retreat/gallery-9.jpg";
 import g10 from "@/assets/retreat/gallery-10.jpg";
 
 export const howGalleryImages = [g1, g2, g3, g4, g5, g6, g7, g8, g9, g10];
+
+// Promotional card image (used in cross-promotion and course page promos)
+export { default as howPromoCard } from "./promo-card.jpg";

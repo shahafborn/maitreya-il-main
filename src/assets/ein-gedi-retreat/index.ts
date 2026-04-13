@@ -46,3 +46,6 @@ import g14 from "@/assets/retreat/gallery-14.jpg";
 import g15 from "@/assets/retreat/gallery-15.jpg";
 
 export const einGediGalleryImages = [g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12, g13, g14, g15];
+
+// Promotional card image (16:9, Gemini-outpainted from poster)
+export { default as einGediPromoCard } from "./promo-card.jpg";

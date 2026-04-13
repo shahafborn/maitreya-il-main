@@ -51,6 +51,8 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
+import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -351,6 +353,22 @@ const HeartOfWisdomRetreat = () => {
           phone: CONTACT_PHONE,
           phoneLabel: "טלפון:",
         }}
+      />
+
+      <OtherEvents
+        heading="אירועים קרובים"
+        events={[
+          {
+            image: einGediPromoCard,
+            imageAlt: "ריטריט ריפוי בודהיסטי בים המלח",
+            title: "דרך הריפוי וההילינג הבודהיסטי",
+            dateLabel: "1-6 ביוני 2026",
+            endDate: "2026-06-06",
+            description: "שישה ימי עומק של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי - בים המלח",
+            ctaLabel: "לפרטים נוספים",
+            href: "/events/ein-gedi-healing-retreat",
+          },
+        ]}
       />
 
       <MailingListSignup
