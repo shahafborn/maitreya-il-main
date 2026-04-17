@@ -14,7 +14,8 @@
  *   RetreatLayout
  *     RetreatHero
  *     AboutSection
- *     EmpowermentSection (White Manjushri)
+ *     "על התרגול" (inline - SectionFrame + large ngakpa photo + prose)
+ *     Empowerment (inline - SectionFrame side-by-side, Manjushri image right / text left)
  *     TeacherCard × 2 (Lama Glenn + Drupon Chongwol-la)
  *     ScheduleBlock (3 days)
  *     VenueSection (Antakarana, accessibility list)
@@ -40,7 +41,6 @@ import { useSearchParams } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
-import { EmpowermentSection } from "@/components/retreat/EmpowermentSection";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
 import { ScheduleBlock } from "@/components/retreat/ScheduleBlock";
 import { VenueSection } from "@/components/retreat/VenueSection";
@@ -56,6 +56,7 @@ import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
+import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
@@ -65,6 +66,7 @@ import {
   druponPhoto,
   manjushriImage,
   cloudsBg,
+  ngakpaMeadow,
   prayerFlagsBg,
   venuePhoto1,
   venuePhoto2,
@@ -250,15 +252,58 @@ const HeartOfWisdomRetreat = () => {
         ]}
       />
 
-      <EmpowermentSection
-        title="חניכה למנג׳ושרי הלבן"
-        image={manjushriImage}
-        imageAlt="מנג׳ושרי הלבן - בודהה החוכמה"
-        paragraphs={[
-          "הריטריט כולל חניכה למנג׳ושרי הלבן - בודהה החוכמה הנעלה, המגלם את חוכמת כל הבודהות. תרגול מנג׳ושרי הלבן מתאים במיוחד לתרגולי החוכמה, ומסייע בפיתוח מהיר במיוחד של בהירות והבנה של טבע המציאות.",
-          "החניכה פותחת את השער לתרגול ומעניקה חיבור ישיר לשושלת ולברכותיה.",
-        ]}
-      />
+      {/* "About the practice" section: introduces Mahamudra meditation for a reader
+          who has never encountered the practice. Editorial layout — ngakpa photo
+          leads, centered title + caption-style prose below. */}
+      <SectionFrame tone="cream" maxWidth="xl">
+        <img
+          src={ngakpaMeadow}
+          alt="נגקפה במדיטציה מול רכס הרים"
+          className="w-full rounded-lg shadow-xl mb-12 md:mb-16"
+        />
+        <div className="max-w-3xl mx-auto">
+          <SectionTitle className="text-center mb-10">על התרגול</SectionTitle>
+          <div
+            className="space-y-6 text-lg leading-[1.9]"
+            style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+          >
+            <p>תרגול המהמודרה פשוט בעיקרו: הנחת התודעה במצבה הטבעי, ללא מאמץ להשיג דבר. ללא ניסיון לעצור את המחשבות וללא ריכוז באובייקט, אלא מנוחה באיכות הבהירה, הפתוחה והערה שמתחת לכל תנועה של התודעה.</p>
+            <p>התרגול מלמד אותנו כיצד להתמודד עם המכשולים למדיטציה ולחיי היומיום - עייפות, מחשבות טורדניות, רגשות עזים - וכיצד לשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם - ודרכו להגיע בסופו של דבר להארה שלמה.</p>
+            <p>המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.</p>
+            <p>תרגול המהמודרה נחשב לתרגול הגבוה ביותר במסורת הבודהיסטית - והוא מתורגל ע״י מודטים ויוגים באסיה זה אלפי שנים כמסורת חיה ורבת עוצמה.</p>
+          </div>
+        </div>
+      </SectionFrame>
+
+      {/* Empowerment section: side-by-side compact layout. Image on the right
+          (RTL: first DOM child), text on the left. Smaller than the shared
+          EmpowermentSection component, which centers a small image above text. */}
+      <SectionFrame tone="stone" size="md" maxWidth="lg">
+        <div className="grid md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-center">
+          <div className="mx-auto md:mx-0 w-[220px] md:w-[240px] shrink-0">
+            <img
+              src={manjushriImage}
+              alt="מנג׳ושרי הלבן - בודהה החוכמה"
+              className="w-full rounded-lg shadow-md"
+            />
+          </div>
+          <div>
+            <h2
+              className="text-xl md:text-2xl font-bold mb-6"
+              style={{ fontFamily: RETREAT_FONTS.serif }}
+            >
+              חניכה למנג׳ושרי הלבן
+            </h2>
+            <div
+              className="space-y-5 text-lg leading-[1.9]"
+              style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+            >
+              <p>הריטריט כולל חניכה למנג׳ושרי הלבן - בודהה החוכמה הנעלה, המגלם את חוכמת כל הבודהות. תרגול מנג׳ושרי הלבן מתאים במיוחד לתרגולי החוכמה, ומסייע בפיתוח מהיר במיוחד של בהירות והבנה של טבע המציאות.</p>
+              <p>החניכה פותחת את השער לתרגול ומעניקה חיבור ישיר לשושלת ולברכותיה.</p>
+            </div>
+          </div>
+        </div>
+      </SectionFrame>
 
       <SectionFrame tone="stone" maxWidth="xl">
         <div

@@ -19,7 +19,6 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const EinGediRetreat = lazy(() => import("./pages/EinGediRetreat"));
 const EinGediRetreatV2 = lazy(() => import("./pages/EinGediRetreatV2"));
 const HeartOfWisdomRetreat = lazy(() => import("./pages/HeartOfWisdomRetreat"));
-const HeartOfWisdomRetreatDraft = lazy(() => import("./pages/HeartOfWisdomRetreatDraft"));
 const HeartOfWisdomRetreatEN = lazy(() => import("./pages/HeartOfWisdomRetreatEN"));
 const EinGediHealingRetreatEN = lazy(() => import("./pages/EinGediHealingRetreatEN"));
 
@@ -88,7 +87,6 @@ const AppRoutes = () => (
       <Route path="/events/ein-gedi-v1" element={<EinGediRetreat />} />
       <Route path="/events/ein-gedi-v2" element={<EinGediRetreatV2 />} />
       <Route path="/events/heart-of-wisdom-retreat" element={<HeartOfWisdomRetreat />} />
-      <Route path="/events/heart-of-wisdom-retreat-draft" element={<HeartOfWisdomRetreatDraft />} />
       <Route path="/events/en/heart-of-wisdom-retreat" element={<HeartOfWisdomRetreatEN />} />
       <Route path="/events/en/ein-gedi-healing-retreat" element={<EinGediHealingRetreatEN />} />
 
