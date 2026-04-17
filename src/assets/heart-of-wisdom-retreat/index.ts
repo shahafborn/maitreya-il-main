@@ -23,6 +23,11 @@ export { default as manjushriImage } from "./manjushri-white.jpg";
 // Soft cream-to-clouds gradient background for the About section.
 export { default as cloudsBg } from "./clouds-bg.jpg";
 
+// Ngakpa (lay tantric yogi) meditating in an alpine meadow facing the
+// Himalayas. Generated via ai-image-skill (Gemini). Used as the bgImage
+// for the "About the practice" section (practice-section-drafts.md, Draft G).
+export { default as ngakpaMeadow } from "./ngakpa-meadow.jpg";
+
 // Tibetan prayer flags over Himalayan peaks - FinalCTA background.
 export { default as prayerFlagsBg } from "./prayer-flags.jpg";
 

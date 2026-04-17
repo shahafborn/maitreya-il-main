@@ -70,6 +70,7 @@ import {
   druponPhoto,
   manjushriImage,
   cloudsBg,
+  ngakpaMeadow,
   prayerFlagsBg,
   venuePhoto1,
   venuePhoto2,
@@ -252,6 +253,20 @@ const HeartOfWisdomRetreatDraft = () => {
           </>,
           "הריטריט יכלול לימוד מעמיק של הטקסט, הדרכה מעשית לתרגול, חניכה למנג׳ושרי הלבן - בודהה החוכמה - ותרגול מודרך לאורך שלושת הימים.",
           "הריטריט מתאים למתרגלים מתחילים ומתקדמים, ויתקיים בליווי תרגום לעברית.",
+        ]}
+      />
+
+      {/* DRAFT: "About the practice" section (Draft G from practice-section-drafts.md).
+          Explains what Mahamudra meditation actually is for a reader who has never
+          encountered the practice. Background is a ngakpa meditating in an alpine
+          meadow facing the Himalayas. */}
+      <AboutSection
+        eyebrow="על התרגול"
+        bgImage={ngakpaMeadow}
+        paragraphs={[
+          "תרגול המהמודרה פשוט בעיקרו: הנחת התודעה במצבה הטבעי, ללא מאמץ להשיג דבר. ללא מחיקת המחשבות ולא ריכוז באובייקט, אלא מנוחה באיכות הבהירה, הפתוחה והערה שמתחת לכל תנועה פנימית.",
+          "התרגול מלמד אותנו כיצד להתמודד עם המכשולים המוכרים לכל מתרגל - עייפות, מחשבות טורדניות, רגשות עזים - ולשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם.",
+          "המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.",
         ]}
       />
 
