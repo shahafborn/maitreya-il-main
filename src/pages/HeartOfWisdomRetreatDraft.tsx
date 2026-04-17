@@ -61,6 +61,7 @@ import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
+import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
@@ -258,17 +259,31 @@ const HeartOfWisdomRetreatDraft = () => {
 
       {/* DRAFT: "About the practice" section (Draft G from practice-section-drafts.md).
           Explains what Mahamudra meditation actually is for a reader who has never
-          encountered the practice. Background is a ngakpa meditating in an alpine
-          meadow facing the Himalayas. */}
-      <AboutSection
-        eyebrow="על התרגול"
-        bgImage={ngakpaMeadow}
-        paragraphs={[
-          "תרגול המהמודרה פשוט בעיקרו: הנחת התודעה במצבה הטבעי, ללא מאמץ להשיג דבר. ללא מחיקת המחשבות ולא ריכוז באובייקט, אלא מנוחה באיכות הבהירה, הפתוחה והערה שמתחת לכל תנועה פנימית.",
-          "התרגול מלמד אותנו כיצד להתמודד עם המכשולים המוכרים לכל מתרגל - עייפות, מחשבות טורדניות, רגשות עזים - ולשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם.",
-          "המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.",
-        ]}
-      />
+          encountered the practice. Side-by-side layout (text right / image left in RTL)
+          to avoid stacking two photo-background sections in a row (About above uses
+          softBgImage={cloudsBg}). */}
+      <SectionFrame tone="cream" maxWidth="xl">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+          <div>
+            <SectionTitle className="mb-8">על התרגול</SectionTitle>
+            <div
+              className="space-y-5 text-lg leading-[1.9]"
+              style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+            >
+              <p>תרגול המהמודרה פשוט בעיקרו: הנחת התודעה במצבה הטבעי, ללא מאמץ להשיג דבר. ללא מחיקת המחשבות ולא ריכוז באובייקט, אלא מנוחה באיכות הבהירה, הפתוחה והערה שמתחת לכל תנועה פנימית.</p>
+              <p>התרגול מלמד אותנו כיצד להתמודד עם המכשולים המוכרים לכל מתרגל - עייפות, מחשבות טורדניות, רגשות עזים - ולשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם.</p>
+              <p>המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.</p>
+            </div>
+          </div>
+          <div>
+            <img
+              src={ngakpaMeadow}
+              alt="נגקפה במדיטציה מול רכס הרים"
+              className="w-full rounded-lg shadow-xl"
+            />
+          </div>
+        </div>
+      </SectionFrame>
 
       <EmpowermentSection
         title="חניכה למנג׳ושרי הלבן"
