@@ -257,21 +257,17 @@ const HeartOfWisdomRetreatDraft = () => {
       />
 
       {/* DRAFT: "About the practice" section (Draft G from practice-section-drafts.md).
-          Editorial layout: ngakpa photo leads, centered title + caption-style prose below.
-          Compact size (size="md") to keep the page rhythm tight. */}
-      <SectionFrame tone="cream" size="md" maxWidth="xl">
+          Editorial layout: the ngakpa photo is large and leads the section, the text
+          sits below in a narrow centered column so it reads like a caption.
+          Keeps the section simple and lets the open, landscape image carry the weight. */}
+      <SectionFrame tone="cream" maxWidth="xl">
         <img
           src={ngakpaMeadow}
           alt="נגקפה במדיטציה מול רכס הרים"
-          className="w-full rounded-lg shadow-xl mb-10 md:mb-14"
+          className="w-full rounded-lg shadow-xl mb-12 md:mb-16"
         />
         <div className="max-w-3xl mx-auto">
-          <h2
-            className="text-xl md:text-2xl font-bold text-center mb-8"
-            style={{ fontFamily: RETREAT_FONTS.serif }}
-          >
-            על התרגול
-          </h2>
+          <SectionTitle className="text-center mb-10">על התרגול</SectionTitle>
           <div
             className="space-y-6 text-lg leading-[1.9]"
             style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
