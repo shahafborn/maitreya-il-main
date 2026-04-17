@@ -56,7 +56,6 @@ import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
-import { CTAButton } from "@/components/retreat/CTAButton";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
@@ -274,7 +273,28 @@ const HeartOfWisdomRetreat = () => {
             <p>תרגול המהמודרה נחשב לתרגול הגבוה ביותר במסורת הבודהיסטית - והוא מתורגל ע״י מודטים ויוגים באסיה זה אלפי שנים כמסורת חיה ורבת עוצמה.</p>
           </div>
           <div className="mt-10 flex justify-center">
-            <CTAButton onClick={open}>להרשמה לריטריט</CTAButton>
+            {/* Outline gold button matching the About section's CTA style. */}
+            <button
+              type="button"
+              onClick={open}
+              className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer"
+              style={{
+                borderColor: RETREAT_THEME.GOLD_DARK,
+                color: RETREAT_THEME.GOLD_DARK,
+                backgroundColor: "transparent",
+                fontFamily: RETREAT_FONTS.sans,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
+              }}
+            >
+              להרשמה לריטריט
+            </button>
           </div>
         </div>
       </SectionFrame>
