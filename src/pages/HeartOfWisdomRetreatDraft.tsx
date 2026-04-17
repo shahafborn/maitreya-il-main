@@ -45,7 +45,6 @@ import { useSearchParams } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
-import { EmpowermentSection } from "@/components/retreat/EmpowermentSection";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
 import { ScheduleBlock } from "@/components/retreat/ScheduleBlock";
 import { VenueSection } from "@/components/retreat/VenueSection";
@@ -258,17 +257,21 @@ const HeartOfWisdomRetreatDraft = () => {
       />
 
       {/* DRAFT: "About the practice" section (Draft G from practice-section-drafts.md).
-          Editorial layout: the ngakpa photo is large and leads the section, the text
-          sits below in a narrow centered column so it reads like a caption.
-          Keeps the section simple and lets the open, landscape image carry the weight. */}
-      <SectionFrame tone="cream" maxWidth="xl">
+          Editorial layout: ngakpa photo leads, centered title + caption-style prose below.
+          Compact size (size="md") to keep the page rhythm tight. */}
+      <SectionFrame tone="cream" size="md" maxWidth="xl">
         <img
           src={ngakpaMeadow}
           alt="נגקפה במדיטציה מול רכס הרים"
-          className="w-full rounded-lg shadow-xl mb-12 md:mb-16"
+          className="w-full rounded-lg shadow-xl mb-10 md:mb-14"
         />
         <div className="max-w-3xl mx-auto">
-          <SectionTitle className="text-center mb-10">על התרגול</SectionTitle>
+          <h2
+            className="text-xl md:text-2xl font-bold text-center mb-8"
+            style={{ fontFamily: RETREAT_FONTS.serif }}
+          >
+            על התרגול
+          </h2>
           <div
             className="space-y-6 text-lg leading-[1.9]"
             style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
@@ -280,15 +283,36 @@ const HeartOfWisdomRetreatDraft = () => {
         </div>
       </SectionFrame>
 
-      <EmpowermentSection
-        title="חניכה למנג׳ושרי הלבן"
-        image={manjushriImage}
-        imageAlt="מנג׳ושרי הלבן - בודהה החוכמה"
-        paragraphs={[
-          "הריטריט כולל חניכה למנג׳ושרי הלבן - בודהה החוכמה הנעלה, המגלם את חוכמת כל הבודהות. תרגול מנג׳ושרי הלבן מתאים במיוחד לתרגולי החוכמה, ומסייע בפיתוח מהיר במיוחד של בהירות והבנה של טבע המציאות.",
-          "החניכה פותחת את השער לתרגול ומעניקה חיבור ישיר לשושלת ולברכותיה.",
-        ]}
-      />
+      {/* DRAFT: Empowerment section reworked to side-by-side.
+          Image on the right (RTL: first DOM child), text on the left. Smaller image
+          (~240px) and smaller title than the shared EmpowermentSection component.
+          Compact padding (size="md") to match the tightened page rhythm. */}
+      <SectionFrame tone="stone" size="md" maxWidth="lg">
+        <div className="grid md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-center">
+          <div className="mx-auto md:mx-0 w-[220px] md:w-[240px] shrink-0">
+            <img
+              src={manjushriImage}
+              alt="מנג׳ושרי הלבן - בודהה החוכמה"
+              className="w-full rounded-lg shadow-md"
+            />
+          </div>
+          <div>
+            <h2
+              className="text-xl md:text-2xl font-bold mb-6"
+              style={{ fontFamily: RETREAT_FONTS.serif }}
+            >
+              חניכה למנג׳ושרי הלבן
+            </h2>
+            <div
+              className="space-y-5 text-lg leading-[1.9]"
+              style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+            >
+              <p>הריטריט כולל חניכה למנג׳ושרי הלבן - בודהה החוכמה הנעלה, המגלם את חוכמת כל הבודהות. תרגול מנג׳ושרי הלבן מתאים במיוחד לתרגולי החוכמה, ומסייע בפיתוח מהיר במיוחד של בהירות והבנה של טבע המציאות.</p>
+              <p>החניכה פותחת את השער לתרגול ומעניקה חיבור ישיר לשושלת ולברכותיה.</p>
+            </div>
+          </div>
+        </div>
+      </SectionFrame>
 
       <SectionFrame tone="stone" maxWidth="xl">
         <div
