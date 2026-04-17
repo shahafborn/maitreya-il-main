@@ -60,7 +60,7 @@ import { OtherEvents } from "@/components/retreat/OtherEvents";
 import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
-import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
+import { SectionFrame, SectionTitle, SectionEyebrow } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
@@ -258,28 +258,56 @@ const HeartOfWisdomRetreatDraft = () => {
       />
 
       {/* DRAFT: "About the practice" section (Draft G from practice-section-drafts.md).
-          Explains what Mahamudra meditation actually is for a reader who has never
-          encountered the practice. Side-by-side layout (text right / image left in RTL)
-          to avoid stacking two photo-background sections in a row (About above uses
-          softBgImage={cloudsBg}). */}
+          Engaging layered layout:
+          - short gold divider + centered eyebrow + title (matches Teachers section pattern)
+          - asymmetric 2-column grid: wider text on right (RTL), image on left
+          - image sits on a soft gold mat for depth
+          - third paragraph (Milarepa metaphors) pulled into a gold-rule blockquote so
+            the poetic moment becomes a visual anchor
+          - plain cream bg so the section contrasts with the cloudy About above. */}
       <SectionFrame tone="cream" maxWidth="xl">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-          <div>
-            <SectionTitle className="mb-8">על התרגול</SectionTitle>
-            <div
-              className="space-y-5 text-lg leading-[1.9]"
-              style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+        <div
+          className="h-px w-64 md:w-80 mx-auto -mt-8 md:-mt-12 mb-10 md:mb-14"
+          style={{ backgroundColor: RETREAT_THEME.GOLD }}
+          aria-hidden
+        />
+        <SectionEyebrow className="text-center mb-3 tracking-[0.25em]">
+          המבט הישיר בטבע התודעה
+        </SectionEyebrow>
+        <SectionTitle className="text-center mb-14 md:mb-20">
+          על התרגול
+        </SectionTitle>
+        <div className="grid md:grid-cols-[1.1fr_1fr] gap-10 md:gap-16 items-center">
+          <div
+            className="space-y-6 text-lg leading-[1.9]"
+            style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+          >
+            <p>תרגול המהמודרה פשוט בעיקרו: הנחת התודעה במצבה הטבעי, ללא מאמץ להשיג דבר. ללא מחיקת המחשבות ולא ריכוז באובייקט, אלא מנוחה באיכות הבהירה, הפתוחה והערה שמתחת לכל תנועה פנימית.</p>
+            <p>התרגול מלמד אותנו כיצד להתמודד עם המכשולים המוכרים לכל מתרגל - עייפות, מחשבות טורדניות, רגשות עזים - ולשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם.</p>
+            <blockquote
+              className="pr-6 md:pr-8 border-r-[3px] my-2"
+              style={{
+                borderColor: RETREAT_THEME.GOLD,
+                color: RETREAT_THEME.DARK,
+                fontFamily: RETREAT_FONTS.serif,
+              }}
             >
-              <p>תרגול המהמודרה פשוט בעיקרו: הנחת התודעה במצבה הטבעי, ללא מאמץ להשיג דבר. ללא מחיקת המחשבות ולא ריכוז באובייקט, אלא מנוחה באיכות הבהירה, הפתוחה והערה שמתחת לכל תנועה פנימית.</p>
-              <p>התרגול מלמד אותנו כיצד להתמודד עם המכשולים המוכרים לכל מתרגל - עייפות, מחשבות טורדניות, רגשות עזים - ולשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם.</p>
-              <p>המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.</p>
-            </div>
+              <p className="text-lg md:text-xl leading-[1.85] italic">
+                המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.
+              </p>
+            </blockquote>
           </div>
-          <div>
+          <div className="relative">
+            {/* Offset gold mat creates depth behind the photo. */}
+            <div
+              className="absolute -inset-2 md:-inset-3 rounded-lg"
+              style={{ backgroundColor: RETREAT_THEME.GOLD, opacity: 0.18 }}
+              aria-hidden
+            />
             <img
               src={ngakpaMeadow}
               alt="נגקפה במדיטציה מול רכס הרים"
-              className="w-full rounded-lg shadow-xl"
+              className="relative w-full rounded-lg shadow-2xl"
             />
           </div>
         </div>
