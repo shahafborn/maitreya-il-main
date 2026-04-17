@@ -56,6 +56,7 @@ import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
+import { CTAButton } from "@/components/retreat/CTAButton";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
@@ -271,6 +272,9 @@ const HeartOfWisdomRetreat = () => {
             <p>התרגול מלמד אותנו כיצד להתמודד עם המכשולים למדיטציה ולחיי היומיום - עייפות, מחשבות טורדניות, רגשות עזים - וכיצד לשוב שוב ושוב אל המרחב הפתוח שנמצא תמיד מתחתם - ודרכו להגיע בסופו של דבר להארה שלמה.</p>
             <p>המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.</p>
             <p>תרגול המהמודרה נחשב לתרגול הגבוה ביותר במסורת הבודהיסטית - והוא מתורגל ע״י מודטים ויוגים באסיה זה אלפי שנים כמסורת חיה ורבת עוצמה.</p>
+          </div>
+          <div className="mt-10 flex justify-center">
+            <CTAButton onClick={open}>להרשמה לריטריט</CTAButton>
           </div>
         </div>
       </SectionFrame>
