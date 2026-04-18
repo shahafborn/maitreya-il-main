@@ -642,6 +642,7 @@ const EinGediRetreatV2 = () => {
 
   const openRegistration = (room: RoomType = "") => {
     trackEvent("registration_modal_open", room ? { room_type: room } : undefined);
+    trackMeta("Lead", room ? { content_name: room } : undefined);
     setPreselectedRoom(room);
     setModalOpen(true);
   };
