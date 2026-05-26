@@ -63,6 +63,12 @@ const CourseGallery = ({ photos, courseId }: CourseGalleryProps) => {
           Photo Gallery
         </h2>
 
+        {photos.length === 0 ? (
+          <p className="text-center text-muted-foreground italic">
+            Photos from the retreat will appear here.
+          </p>
+        ) : (
+        <>
         <Carousel className="w-full max-w-3xl mx-auto">
           <CarouselContent>
             {photos.map((photo, index) => (
@@ -143,6 +149,8 @@ const CourseGallery = ({ photos, courseId }: CourseGalleryProps) => {
             )}
           </DialogContent>
         </Dialog>
+        </>
+        )}
       </div>
     </section>
   );

@@ -51,6 +51,11 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
           Recordings
         </h2>
 
+        {recordings.length === 0 ? (
+          <p className="text-center text-muted-foreground italic">
+            Session recordings will appear here as they are added.
+          </p>
+        ) : (
         <Accordion type="multiple" defaultValue={weeks.map((w) => String(w))} className="w-full">
           {weeks.map((week) => {
             const recs = grouped.get(week)!;
@@ -88,6 +93,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
             );
           })}
         </Accordion>
+        )}
       </div>
     </section>
   );

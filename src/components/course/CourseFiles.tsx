@@ -32,6 +32,11 @@ const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
           Resources
         </h2>
 
+        {files.length === 0 ? (
+          <p className="text-center text-muted-foreground italic">
+            Practice materials and supporting documents will appear here.
+          </p>
+        ) : (
         <div className="space-y-3">
           {files.map((file) => (
             <div
@@ -70,6 +75,7 @@ const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
             </div>
           ))}
         </div>
+        )}
       </div>
     </section>
   );

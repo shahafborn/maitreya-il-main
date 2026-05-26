@@ -62,8 +62,13 @@ const CoursePage = ({ course }: CoursePageProps) => {
           <CourseContentBlock key={block.id} block={block} />
         ))}
 
-      {/* Schedule */}
+      {/* Schedule: either recurring meetings (weekly courses) or free-form schedule blocks (one-shot retreats) */}
       {meetings.length > 0 && <CourseSchedule meetings={meetings} />}
+      {contentBlocks
+        .filter((b) => b.section === "schedule")
+        .map((block) => (
+          <CourseContentBlock key={block.id} block={block} />
+        ))}
 
       {/* Promotions */}
       <CoursePromoSection promotions={promotions} />
@@ -75,18 +80,23 @@ const CoursePage = ({ course }: CoursePageProps) => {
           <CourseContentBlock key={block.id} block={block} />
         ))}
 
-      {/* Photo Gallery */}
-      {photos.length > 0 && <CourseGallery photos={photos} courseId={course.id} />}
+      {/* Photo Gallery (always rendered; component shows an empty state when no photos) */}
+      <CourseGallery photos={photos} courseId={course.id} />
 
-      {/* PDF Downloads */}
-      {files.length > 0 && <CourseFiles files={files} courseId={course.id} />}
+      {/* PDF Downloads (always rendered; component shows an empty state when no files) */}
+      <CourseFiles files={files} courseId={course.id} />
 
-      {/* Recordings */}
-      {recordings.length > 0 && <CourseRecordings recordings={recordings} courseId={course.id} />}
+      {/* Recordings (always rendered; component shows an empty state when no recordings) */}
+      <CourseRecordings recordings={recordings} courseId={course.id} />
 
-      {/* Footer content blocks */}
+      {/* Footer content blocks (anything that isn't about / schedule / practice) */}
       {contentBlocks
-        .filter((b) => b.section !== "about" && b.section !== "practice")
+        .filter(
+          (b) =>
+            b.section !== "about" &&
+            b.section !== "practice" &&
+            b.section !== "schedule"
+        )
         .map((block) => (
           <CourseContentBlock key={block.id} block={block} />
         ))}
