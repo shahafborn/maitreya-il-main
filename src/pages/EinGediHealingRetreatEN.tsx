@@ -148,7 +148,7 @@ const registrationCopy = {
 
 const whatsIncluded = [
   "Six days of teaching and practice with Lama Glenn Mullin",
-  "Three initiations (White Tara, Medicine Buddha, White Chakrasamvara)",
+  "Three initiations (Medicine Buddha, White Tara, White Chakrasamvara)",
   "Guided healing and longevity meditations",
   "Recordings of all sessions available for up to one month after the retreat",
   "Opportunity to continue practice with Drupon Chongwol-la in a weekly practice group",
@@ -158,16 +158,16 @@ const whatsIncluded = [
 
 const practices = [
   {
-    title: "White Tara",
-    subtitle: "The Wish-Fulfilling Wheel",
-    description:
-      "White Tara is a female Buddha embodying the five enlightened activities of awakened consciousness: pacifying, magnetizing, enriching, wrathful action, and protection. Her practice is especially powerful for longevity, healing, and removing inner and outer obstacles.",
-  },
-  {
     title: "Medicine Buddha",
     subtitle: "The Buddha of Healing",
     description:
       "Medicine Buddha, often called the First Physician, is a central figure in Buddhist healing traditions. This practice enables practitioners to activate and strengthen their innate healing powers, and to empower the protective forces of the human energy field.",
+  },
+  {
+    title: "White Tara",
+    subtitle: "The Wish-Fulfilling Wheel",
+    description:
+      "White Tara is a female Buddha embodying the five enlightened activities of awakened consciousness: pacifying, magnetizing, enriching, wrathful action, and protection. Her practice is especially powerful for longevity, healing, and removing inner and outer obstacles.",
   },
   {
     title: "White Chakrasamvara",
@@ -381,8 +381,8 @@ const EinGediHealingRetreatEN = () => {
         {/* Day cards - 3x2 grid grouped by practice pair */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-10">
           {[
-            { days: "Days 1-2", dates: "Mon-Tue, Jun 1-2", practice: "White Tara" },
-            { days: "Days 3-4", dates: "Wed-Thu, Jun 3-4", practice: "Medicine Buddha" },
+            { days: "Days 1-2", dates: "Mon-Tue, Jun 1-2", practice: "Medicine Buddha" },
+            { days: "Days 3-4", dates: "Wed-Thu, Jun 3-4", practice: "White Tara" },
             { days: "Days 5-6", dates: "Fri-Sat, Jun 5-6", practice: "White Chakrasamvara" },
           ].map((block, i) => (
             <div
