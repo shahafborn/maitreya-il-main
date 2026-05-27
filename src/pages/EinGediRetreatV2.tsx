@@ -42,13 +42,13 @@ const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EinGedi_Register";
 type RoomType = "EinGedi_Healing_Triple" | "EinGedi_Healing_Double" | "EinGedi_Healing_Single" | "";
 
 const ROOM_OPTIONS: { value: RoomType; label: string; price: string }[] = [
-  { value: "EinGedi_Healing_Triple", label: "3 בחדר", price: "3,350₪ לאדם" },
+  { value: "EinGedi_Healing_Triple", label: "3 בחדר", price: "3,500₪ לאדם" },
   { value: "EinGedi_Healing_Double", label: "2 בחדר", price: "3,850₪ לאדם" },
   { value: "EinGedi_Healing_Single", label: "חדר ליחיד", price: "4,500₪ לאדם" },
 ];
 
 const ROOM_PRICES: Record<Exclude<RoomType, "">, number> = {
-  EinGedi_Healing_Triple: 3350,
+  EinGedi_Healing_Triple: 3500,
   EinGedi_Healing_Double: 3850,
   EinGedi_Healing_Single: 4500,
 };
@@ -1086,7 +1086,7 @@ const EinGediRetreatV2 = () => {
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { type: "3 בחדר", price: "3,350", note: "חדר משותף לשלושה", roomKey: "EinGedi_Healing_Triple" as RoomType },
+              { type: "3 בחדר", price: "3,500", note: "חדר משותף לשלושה", roomKey: "EinGedi_Healing_Triple" as RoomType },
               { type: "2 בחדר", price: "3,850", note: "חדר משותף לשניים", featured: true, roomKey: "EinGedi_Healing_Double" as RoomType },
               { type: "חדר ליחיד", price: "4,500", note: "חדר פרטי", roomKey: "EinGedi_Healing_Single" as RoomType },
             ].map((option) => (

@@ -280,7 +280,7 @@ const EinGediRetreat = () => {
               },
               {
                 type: "3 בחדר",
-                price: "3,350",
+                price: "3,500",
                 note: "חדר משותף לשלושה",
               },
             ].map((option) => (
