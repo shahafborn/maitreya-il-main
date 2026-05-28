@@ -9,7 +9,8 @@ interface VideoEmbedProps {
 
 // Allowed embed domains for security
 const ALLOWED_DOMAINS = [
-  "iframe.mediadelivery.net",  // bunny.net
+  "iframe.mediadelivery.net",  // bunny.net - "Embed code" iframe URL
+  "player.mediadelivery.net",  // bunny.net - "Direct Play URL"
   "www.youtube.com",
   "youtube.com",
   "www.youtube-nocookie.com",
