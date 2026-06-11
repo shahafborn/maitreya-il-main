@@ -79,14 +79,29 @@ function getDateParts(
   ];
 }
 
+/**
+ * Hide promotions whose event has already passed. The due date is the
+ * event's end date, falling back to its start date. Promotions with no
+ * date at all are evergreen and always shown.
+ */
+function isPromoActive(promo: Promotion): boolean {
+  const dueStr = promo.event_end_date ?? promo.event_date;
+  if (!dueStr) return true;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const due = new Date(dueStr + "T23:59:59");
+  return due >= now;
+}
+
 const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
-  const { data: imageUrls = {} } = usePromoImageUrls(promotions);
+  const activePromotions = promotions.filter(isPromoActive);
+  const { data: imageUrls = {} } = usePromoImageUrls(activePromotions);
 
-  if (promotions.length === 0) return null;
+  if (activePromotions.length === 0) return null;
 
-  const lang = promotions[0].language;
+  const lang = activePromotions[0].language;
   const texts = i18n[lang];
-  const count = promotions.length;
+  const count = activePromotions.length;
 
   const gridCols =
     count === 1
@@ -108,7 +123,7 @@ const CoursePromoSection = ({ promotions }: CoursePromoSectionProps) => {
 
         {/* Responsive grid */}
         <div className={`grid gap-8 ${gridCols} ${count === 1 ? "max-w-lg mx-auto" : ""}`}>
-          {promotions.map((promo) => {
+          {activePromotions.map((promo) => {
             const cardLang = promo.language;
             const cardTexts = i18n[cardLang];
             const hasImage = promo.image_storage_path && imageUrls[promo.id];
