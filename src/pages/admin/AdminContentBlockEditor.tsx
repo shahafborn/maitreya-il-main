@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -71,6 +72,7 @@ function BlockRow({
     body: block.body,
     dir: block.dir,
     sort_order: String(block.sort_order),
+    is_visible: block.is_visible,
   });
 
   const updateMutation = useMutation({
@@ -83,6 +85,7 @@ function BlockRow({
           body: form.body,
           dir: form.dir,
           sort_order: Number(form.sort_order),
+          is_visible: form.is_visible,
         })
         .eq("id", block.id);
       if (error) throw error;
@@ -91,7 +94,8 @@ function BlockRow({
       queryClient.invalidateQueries({ queryKey: ["course-content-blocks", courseId] }),
   });
 
-  const set = (key: string, value: string) => setForm((f) => ({ ...f, [key]: value }));
+  const set = (key: string, value: string | boolean) =>
+    setForm((f) => ({ ...f, [key]: value }));
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 space-y-3">
@@ -136,6 +140,14 @@ function BlockRow({
           rows={6}
           dir={form.dir}
         />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Switch
+          checked={form.is_visible}
+          onCheckedChange={(v) => set("is_visible", v)}
+        />
+        <Label className="text-xs">Visible on course page</Label>
       </div>
 
       <div className="flex gap-2">

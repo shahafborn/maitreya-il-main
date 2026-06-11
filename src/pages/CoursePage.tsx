@@ -33,6 +33,9 @@ const CoursePage = ({ course }: CoursePageProps) => {
   const photos = resources.filter((r) => r.resource_type === "photo");
   const files = resources.filter((r) => r.resource_type === "pdf");
 
+  // Content blocks the admin has toggled off are hidden from the public page.
+  const visibleBlocks = contentBlocks.filter((b) => b.is_visible);
+
   return (
     <div dir={course.default_dir} className="min-h-screen bg-background font-body overflow-x-hidden">
       {/* Header */}
@@ -56,7 +59,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
       <CourseHeader course={course} />
 
       {/* Content blocks (about section) */}
-      {contentBlocks
+      {visibleBlocks
         .filter((b) => b.section === "about")
         .map((block) => (
           <CourseContentBlock key={block.id} block={block} />
@@ -64,7 +67,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
 
       {/* Schedule: either recurring meetings (weekly courses) or free-form schedule blocks (one-shot retreats) */}
       {meetings.length > 0 && <CourseSchedule meetings={meetings} />}
-      {contentBlocks
+      {visibleBlocks
         .filter((b) => b.section === "schedule")
         .map((block) => (
           <CourseContentBlock key={block.id} block={block} />
@@ -74,7 +77,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
       <CoursePromoSection promotions={promotions} />
 
       {/* Content blocks (practice section) */}
-      {contentBlocks
+      {visibleBlocks
         .filter((b) => b.section === "practice")
         .map((block) => (
           <CourseContentBlock key={block.id} block={block} />
@@ -90,7 +93,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
       <CourseRecordings recordings={recordings} courseId={course.id} />
 
       {/* Footer content blocks (anything that isn't about / schedule / practice) */}
-      {contentBlocks
+      {visibleBlocks
         .filter(
           (b) =>
             b.section !== "about" &&

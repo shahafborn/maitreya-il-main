@@ -26,6 +26,7 @@ export interface CourseContentBlock {
   body: string;
   dir: "ltr" | "rtl";
   sort_order: number;
+  is_visible: boolean;
 }
 
 export interface CourseResource {
