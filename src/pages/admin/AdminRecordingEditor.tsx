@@ -1,5 +1,23 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCourseRecordings, type CourseRecording } from "@/hooks/useCourseContent";
 import { Button } from "@/components/ui/button";
@@ -36,8 +54,8 @@ const AdminRecordingEditor = ({ courseId }: Props) => {
   const queryClient = useQueryClient();
   const { data: recordings = [], isLoading } = useCourseRecordings(courseId);
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["course-recordings", courseId] });
+  const queryKey = ["course-recordings", courseId];
+  const invalidate = () => queryClient.invalidateQueries({ queryKey });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -47,20 +65,69 @@ const AdminRecordingEditor = ({ courseId }: Props) => {
     onSuccess: invalidate,
   });
 
+  // Persist a new ordering by writing sort_order = position for every recording.
+  const reorderMutation = useMutation({
+    mutationFn: async (ordered: CourseRecording[]) => {
+      const results = await Promise.all(
+        ordered.map((rec, i) =>
+          supabase.from("course_recordings").update({ sort_order: i }).eq("id", rec.id),
+        ),
+      );
+      const failed = results.find((r) => r.error);
+      if (failed?.error) throw failed.error;
+    },
+    onError: invalidate, // roll back optimistic order on failure
+    onSuccess: invalidate,
+  });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = recordings.findIndex((r) => r.id === active.id);
+    const newIndex = recordings.findIndex((r) => r.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+    const newOrder = arrayMove(recordings, oldIndex, newIndex);
+    queryClient.setQueryData(queryKey, newOrder); // optimistic reorder
+    reorderMutation.mutate(newOrder);
+  };
+
   if (isLoading) return <div className="animate-pulse text-muted-foreground">Loading...</div>;
 
   return (
     <div className="space-y-6">
       <h3 className="font-heading text-lg font-semibold">Recordings</h3>
+      {recordings.length > 1 && (
+        <p className="text-xs text-muted-foreground">
+          Drag the handle on each recording to set the order shown on the course page.
+        </p>
+      )}
 
-      {recordings.map((rec) => (
-        <RecordingRow
-          key={rec.id}
-          recording={rec}
-          courseId={courseId}
-          onDelete={() => deleteMutation.mutate(rec.id)}
-        />
-      ))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={recordings.map((r) => r.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-6">
+            {recordings.map((rec) => (
+              <RecordingRow
+                key={rec.id}
+                recording={rec}
+                courseId={courseId}
+                onDelete={() => deleteMutation.mutate(rec.id)}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       <NewRecordingForm courseId={courseId} sortOrder={recordings.length} />
     </div>
@@ -83,9 +150,24 @@ function RecordingRow({
     session_type: rec.session_type ?? "none",
     embed_type: rec.embed_type,
     embed_url: rec.embed_url,
-    sort_order: String(rec.sort_order),
   });
   const [showPreview, setShowPreview] = useState(false);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: rec.id });
+
+  const style: CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
 
   const updateMutation = useMutation({
     mutationFn: async () => {
@@ -97,7 +179,6 @@ function RecordingRow({
           session_type: form.session_type === "none" ? null : form.session_type || null,
           embed_type: form.embed_type,
           embed_url: form.embed_url,
-          sort_order: Number(form.sort_order),
         })
         .eq("id", rec.id);
       if (error) throw error;
@@ -109,8 +190,23 @@ function RecordingRow({
   const set = (key: string, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-card border border-border rounded-lg p-4 space-y-3"
+    >
+      <button
+        type="button"
+        aria-label="Drag to reorder"
+        className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-5 w-5" />
+        <span className="text-xs">Drag to reorder</span>
+      </button>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="md:col-span-2">
           <Label className="text-xs">Title</Label>
           <Input value={form.title} onChange={(e) => set("title", e.target.value)} />
@@ -130,10 +226,6 @@ function RecordingRow({
               ))}
             </SelectContent>
           </Select>
-        </div>
-        <div>
-          <Label className="text-xs">Sort Order</Label>
-          <Input type="number" value={form.sort_order} onChange={(e) => set("sort_order", e.target.value)} />
         </div>
       </div>
 
