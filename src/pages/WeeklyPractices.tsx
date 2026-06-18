@@ -12,8 +12,12 @@
  * category-colored session cards (basic / healing / highest-tantra / tummo).
  */
 
+import { MousePointerClick } from "lucide-react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
+
+/** Shared Zoom room for all weekly practice sessions. */
+const ZOOM_URL = "https://us06web.zoom.us/j/89734429077?pwd=kd2gA4sJBXsnb8voZQmbOieqiExIQ4.1";
 
 /* ── Brand palette (from the approved design canvas) ── */
 const COLORS = {
@@ -138,7 +142,14 @@ function SessionCard({ s }: { s: Session }) {
   const showHealingPill = s.categories.includes("healing");
 
   return (
-    <div className="relative flex items-stretch overflow-hidden rounded-xl" style={{ background: bg }}>
+    <a
+      href={ZOOM_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="הצטרפו למפגש בזום"
+      className="relative flex items-stretch overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      style={{ background: bg }}
+    >
       {/* Category color bar (split into stacked halves when two categories) */}
       <div className="flex w-1.5 shrink-0 flex-col">
         {s.categories.map((c) => (
@@ -184,7 +195,7 @@ function SessionCard({ s }: { s: Session }) {
           </div>
         )}
       </div>
-    </div>
+    </a>
   );
 }
 
@@ -234,9 +245,25 @@ const WeeklyPractices = () => {
             </div>
           </header>
 
+          {/* How to join — clicking a practice opens its Zoom meeting */}
+          <div
+            className="mt-6 flex items-center gap-3 rounded-xl px-4 py-4 md:px-5"
+            style={{ background: "#FBF3E2", border: "1px solid #E7D6AE" }}
+          >
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+              style={{ background: "#EBD8AC" }}
+            >
+              <MousePointerClick className="h-5 w-5" style={{ color: "#8C6410" }} />
+            </span>
+            <p className="text-base font-bold leading-snug md:text-lg" style={{ color: "#7A5A12" }}>
+              להצטרפות למפגש בזום, לחצו על התרגול הרצוי
+            </p>
+          </div>
+
           {/* Legend */}
           <div
-            className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border bg-white px-4 py-3"
+            className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border bg-white px-4 py-3"
             style={{ borderColor: COLORS.border }}
           >
             {(Object.keys(CATEGORY) as CategoryKey[]).map((c) => (
