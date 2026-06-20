@@ -12,6 +12,7 @@
  * category-colored session cards (basic / healing / highest-tantra / tummo).
  */
 
+import { useEffect } from "react";
 import { MousePointerClick } from "lucide-react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
@@ -214,7 +215,18 @@ const GRID_COLS = "110px 1fr 1fr 1fr";
 
 /* ── Page ── */
 const WeeklyPractices = () => {
-  useDocumentTitle("תרגולים שבועיים | מאיטרייה סנגהה ישראל");
+  useDocumentTitle("מאיטרייה סנגהה ישראל | לו״ז תרגולים");
+
+  // Keep this internal schedule out of search results.
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
 
   return (
     <div dir="rtl" className="min-h-screen font-body" style={{ background: COLORS.pageBg }}>
