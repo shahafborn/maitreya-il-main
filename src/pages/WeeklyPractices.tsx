@@ -101,7 +101,8 @@ const SCHEDULE: DayRow[] = [
       {
         time: "20-21",
         title: "מנג׳ושרי הלבן",
-        altPrefix: "מתחלף מדי שבוע עם",
+        subtitle: "עד 5.8",
+        altPrefix: "מ-12.8:",
         altTitle: "ואג׳רפאני-הייגריבה-גארודה",
         categories: ["basic"],
         beginner: true,
@@ -124,6 +125,77 @@ const SCHEDULE: DayRow[] = [
     evening: [],
   },
 ];
+
+/* ── Per-week overrides ──────────────────────────────────────────────
+ * The page shows the standing SCHEDULE above by default. A WeekOverride
+ * temporarily REPLACES specific day/period cells for a date window, then
+ * auto-reverts once that window passes (matched against the viewer's local
+ * date) — no manual revert or redeploy needed.
+ *
+ * To change a given week (move/retime/add/remove sessions — e.g. shifting the
+ * Saturday Tummo classes or changing Chongwol-la's time):
+ *   1. Add an entry to WEEK_OVERRIDES with `from`/`to` (inclusive ISO dates).
+ *   2. Under `days`, list each affected day; the periods you provide REPLACE
+ *      that day's standing cells for the window (omit a period to keep it as-is,
+ *      pass an empty array to clear it).
+ *   3. Optional `note` renders a highlighted banner while the override is active.
+ * Keep the Google Calendar in sync separately via
+ * `sangha-gmail-api/scripts/create_practice_calendar.py` or a per-instance edit.
+ * Past entries can be left in place (they simply stop matching) or pruned.
+ * ──────────────────────────────────────────────────────────────────── */
+interface WeekOverride {
+  /** Inclusive ISO date (YYYY-MM-DD) the override starts showing. */
+  from: string;
+  /** Inclusive ISO date (YYYY-MM-DD) the override stops showing. */
+  to: string;
+  /** Optional highlighted banner shown while the override is active. */
+  note?: string;
+  /** Per-day period cells that replace the standing schedule for the window. */
+  days: Partial<Record<string, Partial<Record<PeriodKey, Session[]>>>>;
+}
+
+const WEEK_OVERRIDES: WeekOverride[] = [
+  {
+    // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
+    from: "2026-06-22",
+    to: "2026-06-27",
+    note: "שימו לב: השבוע תרגולי הטומו של שבת מתקיימים אחר הצהריים, ולא בבוקר.",
+    days: {
+      "שבת": {
+        morning: [],
+        afternoon: [
+          { time: "14:30-15:30", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
+          { time: "15:30-17:30", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+        ],
+      },
+    },
+  },
+];
+
+/** Local (viewer-timezone) ISO date, used to match override windows. */
+function localISODate(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/** Apply any active overrides on top of the standing schedule for `today`. */
+function effectiveSchedule(today: Date): { schedule: DayRow[]; notes: string[] } {
+  const iso = localISODate(today);
+  const active = WEEK_OVERRIDES.filter((o) => iso >= o.from && iso <= o.to);
+  if (active.length === 0) return { schedule: SCHEDULE, notes: [] };
+  const schedule = SCHEDULE.map((row) => {
+    let merged = row;
+    for (const o of active) {
+      const dayOv = o.days[row.day];
+      if (dayOv) merged = { ...merged, ...dayOv };
+    }
+    return merged;
+  });
+  const notes = active.map((o) => o.note).filter((n): n is string => Boolean(n));
+  return { schedule, notes };
+}
 
 /* ── Small building blocks ── */
 function Pill({ bg, color, children }: { bg: string; color: string; children: React.ReactNode }) {
@@ -217,6 +289,9 @@ const GRID_COLS = "110px 1fr 1fr 1fr";
 const WeeklyPractices = () => {
   useDocumentTitle("מאיטרייה סנגהה ישראל | לו״ז תרגולים");
 
+  // Standing schedule with any active per-week override applied (auto-reverts).
+  const { schedule, notes } = effectiveSchedule(new Date());
+
   // Keep this internal schedule out of search results.
   useEffect(() => {
     const meta = document.createElement("meta");
@@ -253,7 +328,7 @@ const WeeklyPractices = () => {
             >
               לוח תרגולים קבועים בזום
               <br />
-              יוני, יולי, ספטמבר 2026
+              יוני - ספטמבר 2026
             </div>
           </header>
 
@@ -273,15 +348,16 @@ const WeeklyPractices = () => {
             </p>
           </div>
 
-          {/* TEMPORARY one-time notice — REMOVE after Sat 2026-06-27.
-              This Saturday only, the two Tummo sessions move from morning to
-              afternoon (14:30 / 15:30). The standing SCHEDULE below is unchanged. */}
-          <div
-            className="mt-4 rounded-xl px-4 py-3 text-sm font-semibold leading-snug md:text-base"
-            style={{ background: CATEGORY.tummo.bg, border: "1px solid #E0C3A3", color: CATEGORY.tummo.legendText }}
-          >
-            שימו לב: בשבת הקרובה (27.6) תרגולי הטומו יתקיימו אחר הצהריים - יסודות הטומו ב-14:30, וטומו עם צ׳ונגוואל-לה ב-15:30.
-          </div>
+          {/* Active per-week override notice(s), if any (see WEEK_OVERRIDES). */}
+          {notes.map((n, i) => (
+            <div
+              key={i}
+              className="mt-4 rounded-xl px-4 py-3 text-sm font-semibold leading-snug md:text-base"
+              style={{ background: "#FBF3E2", border: "1px solid #E7D6AE", color: "#7A5A12" }}
+            >
+              {n}
+            </div>
+          ))}
 
           {/* Legend */}
           <div
@@ -327,7 +403,7 @@ const WeeklyPractices = () => {
             </div>
 
             {/* Day rows */}
-            {SCHEDULE.map((row) => (
+            {schedule.map((row) => (
               <div
                 key={row.day}
                 className="grid items-stretch gap-3 border-t py-3"
@@ -348,7 +424,7 @@ const WeeklyPractices = () => {
 
           {/* Timetable — mobile stacked by day */}
           <div className="mt-8 lg:hidden">
-            {SCHEDULE.map((row) => (
+            {schedule.map((row) => (
               <div key={row.day} className="border-t py-4" style={{ borderColor: COLORS.border }}>
                 <h2 className="mb-3 font-heading text-2xl font-semibold" style={{ color: COLORS.ink }}>
                   {row.day}
