@@ -273,6 +273,16 @@ const WeeklyPractices = () => {
             </p>
           </div>
 
+          {/* TEMPORARY one-time notice — REMOVE after Sat 2026-06-27.
+              This Saturday only, the two Tummo sessions move from morning to
+              afternoon (14:30 / 15:30). The standing SCHEDULE below is unchanged. */}
+          <div
+            className="mt-4 rounded-xl px-4 py-3 text-sm font-semibold leading-snug md:text-base"
+            style={{ background: CATEGORY.tummo.bg, border: "1px solid #E0C3A3", color: CATEGORY.tummo.legendText }}
+          >
+            שימו לב: בשבת הקרובה (27.6) תרגולי הטומו יתקיימו אחר הצהריים - יסודות הטומו ב-14:30, וטומו עם צ׳ונגוואל-לה ב-15:30.
+          </div>
+
           {/* Legend */}
           <div
             className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border bg-white px-4 py-3"
