@@ -45,7 +45,6 @@ import {
 /* ── Constants ── */
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/UmaZubTri_Register";
-const CARDCOM_URL = "https://secure.cardcom.solutions/EA/EA5/eSX8N1JhkKqShPl23muA";
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
 const seo: SEOConfig = {
@@ -90,7 +89,6 @@ const registrationConfig: RegistrationConfig = {
   askCountry: false,
   storagePrefix: "uzt",
   extraPayload: { source: "uma-zub-tri" },
-  staticPaymentUrl: CARDCOM_URL,
 };
 
 const registrationCopy = {
