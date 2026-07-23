@@ -11,9 +11,10 @@
 // Himalayas above a sea of clouds - the "sky-like mind" of Mahamudra.
 export { default as umaHero } from "@/assets/heart-of-wisdom-retreat/ngakpa-meadow.jpg";
 
-// Manjushri thangka (wisdom deity) - the course's iconic image on the promo.
-// v1 uses the White Manjushri asset; swap for the promo's orange Manjushri crop later.
-export { default as umaManjushri } from "@/assets/heart-of-wisdom-retreat/manjushri-white.jpg";
+// Orange Manjushri thangka (wisdom deity) - the course's iconic image, the same
+// figure as the promo poster. Full standalone artwork (flaming sword of wisdom,
+// Prajnaparamita text on a lotus, seated on a lotus throne).
+export { default as umaManjushri } from "./manjushri-orange.jpg";
 
 // Soft cream-to-clouds gradient background for the About section.
 export { default as umaCloudsBg } from "@/assets/heart-of-wisdom-retreat/clouds-bg.jpg";
