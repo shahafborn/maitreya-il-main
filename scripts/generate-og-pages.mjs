@@ -129,6 +129,13 @@ const STATIC_EVENTS = [
       "Six days of deep healing and longevity practices from Tibetan Buddhist Tantra with Lama Glenn Mullin and Drupon Chongwol-la. Live on Zoom, June 1-6, 2026.",
     image: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat-en.png",
   },
+  {
+    route: "events/uma-zub-tri",
+    title: "UMA ZUB TRI: סדרת לימוד אונליין עם לאמה גלן | החל מ-1 באוגוסט 2026 | מאיטרייה סנגהה ישראל",
+    description:
+      "סדרת לימוד ותרגול בת שישה שבועות בנושא המהמודרה - ההצבעה הישירה אל טבע התודעה, עם לאמה גלן מולין. מפגש שבועי בזום, בשבתות בשעה 16:00 (שעון ישראל), החל מ-1 באוגוסט 2026.",
+    image: "https://maitreya.org.il/p/og-uma-zub-tri.png",
+  },
 ];
 
 async function main() {
