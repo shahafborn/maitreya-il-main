@@ -87,6 +87,8 @@ export const GalleryCarousel = ({ title, images, alt }: GalleryCarouselProps) =>
                     <img
                       src={src}
                       alt={alt}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full aspect-[3/4] md:aspect-square object-cover transition-all duration-300 hover:scale-105"
                     />
                   </div>

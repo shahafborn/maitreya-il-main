@@ -243,6 +243,8 @@ const UmaZubTri = () => {
           <img
             src={umaManjushri}
             alt="מנג׳ושרי - בודהה החוכמה"
+            loading="lazy"
+            decoding="async"
             className="w-full rounded-lg shadow-md"
           />
         </div>

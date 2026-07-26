@@ -57,6 +57,8 @@ export const OtherEvents = ({ heading, events }: OtherEventsProps) => {
               <img
                 src={event.image}
                 alt={event.imageAlt}
+                loading="lazy"
+                decoding="async"
                 className="w-full aspect-[16/9] object-cover"
               />
             </Link>

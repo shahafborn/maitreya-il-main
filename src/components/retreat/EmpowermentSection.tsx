@@ -27,7 +27,13 @@ export const EmpowermentSection = ({ title, image, imageAlt, paragraphs }: Empow
       </h2>
       {image && (
         <div className="max-w-sm mx-auto mb-10">
-          <img src={image} alt={imageAlt ?? title} className="w-full rounded-lg shadow-md" />
+          <img
+            src={image}
+            alt={imageAlt ?? title}
+            loading="lazy"
+            decoding="async"
+            className="w-full rounded-lg shadow-md"
+          />
         </div>
       )}
       <div

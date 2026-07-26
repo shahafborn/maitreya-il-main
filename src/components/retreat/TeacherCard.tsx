@@ -18,7 +18,13 @@ export const TeacherCard = ({ name, photo, bio, reversed, size = "lg" }: Teacher
   return (
     <div className={`flex flex-col ${rowDir} items-center gap-8 md:gap-12 mb-20 last:mb-0`}>
       <div className="flex-shrink-0">
-        <img src={photo} alt={name} className={`${dims} rounded-lg object-cover shadow-xl`} />
+        <img
+          src={photo}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+          className={`${dims} rounded-lg object-cover shadow-xl`}
+        />
       </div>
       <div className="text-center md:text-start flex-1">
         <h3 className={`${nameClass} font-bold mb-2`} style={{ fontFamily: RETREAT_FONTS.serif }}>

@@ -83,6 +83,8 @@ export const VenueSection = ({
                 key={i}
                 src={p.src}
                 alt={p.alt}
+                loading="lazy"
+                decoding="async"
                 className={`${i === 0 ? "col-span-2 h-48 md:h-72" : "h-40 md:h-52"} w-full object-cover rounded-lg`}
               />
             ))}
