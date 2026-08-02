@@ -126,7 +126,7 @@ const SCHEDULE: DayRow[] = [
     afternoon: [
       {
         time: "16-17:30",
-        title: "אומה זוב טרי עם לאמה גלן",
+        title: "מהמודרה עם לאמה גלן",
         subtitle: "עד 5.9",
         categories: ["basic"],
         url: "/p/events/uma-zub-tri",
