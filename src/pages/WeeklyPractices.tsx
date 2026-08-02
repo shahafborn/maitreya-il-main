@@ -61,6 +61,8 @@ interface Session {
   altTitle?: string;
   categories: CategoryKey[];
   beginner?: boolean;
+  /** Overrides the shared Zoom room (e.g. a course with its own room/page). */
+  url?: string;
 }
 
 const PERIODS = [
@@ -88,8 +90,8 @@ const SCHEDULE: DayRow[] = [
   {
     day: "שלישי",
     morning: [{ time: "07-08", title: "יאמנטקה", categories: ["tantra"] }],
-    afternoon: [{ time: "17-18", title: "טארה הלבנה", categories: ["healing"], beginner: true }],
-    evening: [],
+    afternoon: [],
+    evening: [{ time: "20-21", title: "טארה הלבנה", categories: ["healing"], beginner: true }],
   },
   {
     day: "רביעי",
@@ -121,7 +123,15 @@ const SCHEDULE: DayRow[] = [
       { time: "08-09", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
       { time: "09-11", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
     ],
-    afternoon: [],
+    afternoon: [
+      {
+        time: "16-17:30",
+        title: "אומה זוב טרי עם לאמה גלן",
+        subtitle: "עד 5.9",
+        categories: ["basic"],
+        url: "/p/events/uma-zub-tri",
+      },
+    ],
     evening: [],
   },
 ];
@@ -216,10 +226,10 @@ function SessionCard({ s }: { s: Session }) {
 
   return (
     <a
-      href={ZOOM_URL}
+      href={s.url ?? ZOOM_URL}
       target="_blank"
       rel="noopener noreferrer"
-      title="הצטרפו למפגש בזום"
+      title={s.url ? "לפרטי הקורס" : "הצטרפו למפגש בזום"}
       className="relative flex items-stretch overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
       style={{ background: bg }}
     >
