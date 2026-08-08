@@ -180,6 +180,31 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
+  {
+    // This Saturday (2026-08-08) only: Chongwol-la's Tummo moves to 14:00-15:30.
+    // יסודות הטומו stays put in the morning; Lama Glenn's course is unchanged
+    // (re-listed below because a provided period REPLACES the standing cell).
+    from: "2026-08-08",
+    to: "2026-08-08",
+    note: "שימו לב: היום תרגול הטומו עם צ׳ונגוואל-לה מתקיים ב-14:00, ולא בבוקר.",
+    days: {
+      "שבת": {
+        morning: [
+          { time: "08-09", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
+        ],
+        afternoon: [
+          { time: "14-15:30", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+          {
+            time: "16-17:30",
+            title: "מהמודרה עם לאמה גלן",
+            subtitle: "עד 5.9",
+            categories: ["basic"],
+            url: "/p/events/uma-zub-tri",
+          },
+        ],
+      },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
