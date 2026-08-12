@@ -101,11 +101,12 @@ const SCHEDULE: DayRow[] = [
     afternoon: [],
     evening: [
       {
+        // The White Manjushri -> Vajrapani-Hayagriva-Garuda handover was CANCELLED,
+        // not rescheduled (Shahaf, 2026-08-12). White Manjushri continues open-ended
+        // until the Sangha says otherwise, so this cell carries no end note and no
+        // alternate. Do not re-add a handover without a confirmed date.
         time: "20-21",
         title: "מנג׳ושרי הלבן",
-        subtitle: "עד 5.8",
-        altPrefix: "מ-12.8:",
-        altTitle: "ואג׳רפאני-הייגריבה-גארודה",
         categories: ["basic"],
         beginner: true,
       },
@@ -113,8 +114,10 @@ const SCHEDULE: DayRow[] = [
   },
   {
     day: "חמישי",
-    morning: [],
-    afternoon: [{ time: "16-17", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+    // Tummo (Naropa) moved from the afternoon (16-17) to the morning (07-08),
+    // standing change from 2026-08-13 (Shahaf, 2026-08-12).
+    morning: [{ time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+    afternoon: [],
     evening: [{ time: "20-21", title: "וג׳ראיוגיני", categories: ["tantra"] }],
   },
   {
@@ -194,6 +197,33 @@ const WEEK_OVERRIDES: WeekOverride[] = [
         ],
         afternoon: [
           { time: "14-15:30", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+          {
+            time: "16-17:30",
+            title: "מהמודרה עם לאמה גלן",
+            subtitle: "עד 5.9",
+            categories: ["basic"],
+            url: "/p/events/uma-zub-tri",
+          },
+        ],
+      },
+    },
+  },
+  {
+    // This Saturday (2026-08-15) only, same shape as the 08-08 window above:
+    // Chongwol-la is on New York time, so his Tummo runs 14:00-15:30 Israel
+    // (= 07:00 NY). Confirmed by him on 2026-08-10.
+    // Aug 22 and Aug 29 are NOT confirmed and deliberately get no override -
+    // they fall back to the standing 09-11 until Shahaf has checked with him.
+    from: "2026-08-14",
+    to: "2026-08-15",
+    note: "שימו לב: השבוע תרגול הטומו עם צ׳ונגוואל-לה מתקיים בשבת ב-14:00-15:30, ולא בבוקר.",
+    days: {
+      "שבת": {
+        morning: [
+          { time: "08-09", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
+        ],
+        afternoon: [
+          { time: "14:00-15:30", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
           {
             time: "16-17:30",
             title: "מהמודרה עם לאמה גלן",
