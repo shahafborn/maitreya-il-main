@@ -114,10 +114,8 @@ const SCHEDULE: DayRow[] = [
   },
   {
     day: "חמישי",
-    // Tummo (Naropa) moved from the afternoon (16-17) to the morning (07-08),
-    // standing change from 2026-08-13 (Shahaf, 2026-08-12).
-    morning: [{ time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
-    afternoon: [],
+    morning: [],
+    afternoon: [{ time: "16-17", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
     evening: [{ time: "20-21", title: "וג׳ראיוגיני", categories: ["tantra"] }],
   },
   {
@@ -205,6 +203,21 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             url: "/p/events/uma-zub-tri",
           },
         ],
+      },
+    },
+  },
+  {
+    // This Thursday (2026-08-13) ONLY: Tummo (Naropa) runs 07-08 in the morning
+    // instead of 16-17 (Shahaf, 2026-08-12 - one week, not a standing change).
+    // The standing schedule above stays 16-17, and the evening Vajrayogini is
+    // untouched because an omitted period keeps its standing cell.
+    from: "2026-08-12",
+    to: "2026-08-13",
+    note: "שימו לב: השבוע תרגול הטומו (נארופה) מתקיים בחמישי ב-07:00 בבוקר, ולא אחר הצהריים.",
+    days: {
+      "חמישי": {
+        morning: [{ time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+        afternoon: [],
       },
     },
   },
