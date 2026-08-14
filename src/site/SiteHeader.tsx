@@ -51,11 +51,9 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="container flex items-center justify-between py-3">
-        <Link to={lang === "he" ? "/he" : "/en"} className="flex items-center gap-3">
-          <img src={logo} alt="מאיטרייה סנגהה ישראל" className="h-12 w-auto" />
-          <span className="font-heading text-lg font-bold text-primary hidden sm:block">
-            {lang === "he" ? "מאיטרייה סנגהה ישראל" : "Maitreya Sangha Israel"}
-          </span>
+        {/* The logo image already carries the bilingual name - no text beside it */}
+        <Link to={lang === "he" ? "/he" : "/en"} className="flex items-center">
+          <img src={logo} alt="מאיטרייה סנגהה ישראל" className="h-14 w-auto" />
         </Link>
 
         {/* Desktop nav */}

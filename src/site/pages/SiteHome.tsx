@@ -16,7 +16,8 @@ import { SiteLayout } from "../SiteLayout";
 import heroImage from "@/assets/retreat/hero-dead-sea.jpg";
 import lamaGlenn from "@/assets/retreat/lama-glenn-big.jpg";
 import druponChongwol from "@/assets/retreat/drupon-chongwol.png";
-import community from "@/assets/retreat/gallery-4.jpg";
+// Public asset - resolved against the app base (/p/ today, / after cutover)
+const community = `${import.meta.env.BASE_URL}media/site/community-1.jpg`;
 
 const EventCard = ({ ev, lang }: { ev: EventItem; lang: SiteLang }) => {
   const card = (
