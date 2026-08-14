@@ -25,6 +25,15 @@ const UmaZubTri = lazy(() => import("./pages/UmaZubTri"));
 const YamantakaOnlineRetreat = lazy(() => import("./pages/YamantakaOnlineRetreat"));
 const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 
+// Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
+const SiteHome = lazy(() => import("./site/pages/SiteHome"));
+const SiteAbout = lazy(() => import("./site/pages/SiteAbout"));
+const SiteArticlesIndex = lazy(() => import("./site/pages/SiteArticlesIndex"));
+const SiteArticle = lazy(() => import("./site/pages/SiteArticle"));
+const SiteEventsIndex = lazy(() => import("./site/pages/SiteEventsIndex"));
+const SiteContact = lazy(() => import("./site/pages/SiteContact"));
+const SiteGallery = lazy(() => import("./site/pages/SiteGallery"));
+
 const queryClient = new QueryClient();
 
 const ExternalRedirect = ({ url }: { url: string }) => {
@@ -101,6 +110,24 @@ const AppRoutes = () => (
 
       {/* Weekly practices schedule (Hebrew, public) */}
       <Route path="/practices" element={<WeeklyPractices />} />
+
+      {/* Site pages (WordPress replacement) - public, bilingual trees */}
+      <Route path="/he" element={<SiteHome lang="he" />} />
+      <Route path="/he/about" element={<SiteAbout lang="he" />} />
+      <Route path="/he/events" element={<SiteEventsIndex lang="he" />} />
+      <Route path="/he/articles" element={<SiteArticlesIndex lang="he" />} />
+      <Route path="/he/articles/:slug" element={<SiteArticle lang="he" />} />
+      <Route path="/he/gallery" element={<SiteGallery lang="he" />} />
+      <Route path="/he/contact" element={<SiteContact lang="he" />} />
+      <Route path="/en" element={<SiteHome lang="en" />} />
+      <Route path="/en/about" element={<SiteAbout lang="en" />} />
+      <Route path="/en/events" element={<SiteEventsIndex lang="en" />} />
+      <Route path="/en/articles" element={<SiteArticlesIndex lang="en" />} />
+      <Route path="/en/articles/:slug" element={<SiteArticle lang="en" />} />
+      <Route path="/en/contact" element={<SiteContact lang="en" />} />
+
+      {/* Root: the site's Hebrew front door (replaces the old redirect to WordPress) */}
+      <Route path="/" element={<Navigate to="/he" replace />} />
 
       {/* Everything else goes through AuthGate */}
       <Route path="/*" element={<AuthGate />} />
