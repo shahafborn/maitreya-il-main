@@ -24,6 +24,7 @@ const NAV: Record<SiteLang, NavItem[]> = {
     { label: "מאמרים", to: "/he/articles" },
     { label: "גלריה", to: "/he/gallery" },
     { label: "אודות", to: "/he/about" },
+    { label: "דאנה", to: "/he/dana" },
     { label: "צור קשר", to: "/he/contact" },
   ],
   en: [
@@ -32,6 +33,7 @@ const NAV: Record<SiteLang, NavItem[]> = {
     { label: "Weekly Practice", to: "/practices" },
     { label: "Articles", to: "/en/articles" },
     { label: "About", to: "/en/about" },
+    { label: "Dana", to: "/en/dana" },
     { label: "Contact", to: "/en/contact" },
   ],
 };

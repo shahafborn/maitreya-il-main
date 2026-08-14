@@ -145,7 +145,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
               },
               {
                 img: druponChongwol,
-                name: he ? "דרופון צ׳ונגוול-לה" : "Drupon Chongwol-la",
+                name: he ? "דרופון צ׳ונגוואל-לה" : "Drupon Chongwol-la",
                 line: he
                   ? "מדריך הריטריטים של לאמה גלן ומורה מיומן לווג׳ריאנה וטומו, המלווה את הסנגהה הישראלית לאורך השנה."
                   : "Lama Glenn's retreat master and a skilled teacher of Vajrayana and Tummo, accompanying the Israeli sangha throughout the year.",

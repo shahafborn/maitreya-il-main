@@ -33,6 +33,7 @@ const SiteArticle = lazy(() => import("./site/pages/SiteArticle"));
 const SiteEventsIndex = lazy(() => import("./site/pages/SiteEventsIndex"));
 const SiteContact = lazy(() => import("./site/pages/SiteContact"));
 const SiteGallery = lazy(() => import("./site/pages/SiteGallery"));
+const SiteDana = lazy(() => import("./site/pages/SiteDana"));
 
 const queryClient = new QueryClient();
 
@@ -118,12 +119,14 @@ const AppRoutes = () => (
       <Route path="/he/articles" element={<SiteArticlesIndex lang="he" />} />
       <Route path="/he/articles/:slug" element={<SiteArticle lang="he" />} />
       <Route path="/he/gallery" element={<SiteGallery lang="he" />} />
+      <Route path="/he/dana" element={<SiteDana lang="he" />} />
       <Route path="/he/contact" element={<SiteContact lang="he" />} />
       <Route path="/en" element={<SiteHome lang="en" />} />
       <Route path="/en/about" element={<SiteAbout lang="en" />} />
       <Route path="/en/events" element={<SiteEventsIndex lang="en" />} />
       <Route path="/en/articles" element={<SiteArticlesIndex lang="en" />} />
       <Route path="/en/articles/:slug" element={<SiteArticle lang="en" />} />
+      <Route path="/en/dana" element={<SiteDana lang="en" />} />
       <Route path="/en/contact" element={<SiteContact lang="en" />} />
 
       {/* Root: the site's Hebrew front door (replaces the old redirect to WordPress) */}

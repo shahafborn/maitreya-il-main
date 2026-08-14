@@ -18,6 +18,7 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
         { label: "תרגול שבועי", to: "/practices" },
         { label: "מאמרים", to: "/he/articles" },
         { label: "אודות", to: "/he/about" },
+        { label: "דאנה", to: "/he/dana" },
         { label: "צור קשר", to: "/he/contact" },
       ]
     : [
@@ -25,6 +26,7 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
         { label: "Weekly Practice", to: "/practices" },
         { label: "Articles", to: "/en/articles" },
         { label: "About", to: "/en/about" },
+        { label: "Dana", to: "/en/dana" },
         { label: "Contact", to: "/en/contact" },
       ];
 
@@ -37,7 +39,7 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
           </h3>
           <p className="font-body text-sm opacity-80 leading-relaxed">
             {he
-              ? "קהילה ללימוד ותרגול בודהיזם טיבטי בהנחיית לאמה גלן מולין ודרופון צ׳ונגוול-לה."
+              ? "קהילה ללימוד ותרגול בודהיזם טיבטי בהנחיית לאמה גלן מולין ודרופון צ׳ונגוואל-לה."
               : "A community for the study and practice of Tibetan Buddhism, guided by Lama Glenn Mullin and Drupon Chongwol-la."}
           </p>
         </div>
