@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
 import type { RetreatLang, RetreatDir, SEOConfig } from "./types";
@@ -57,9 +58,10 @@ export const RetreatLayout = ({
       {/* ── Sticky nav ── */}
       <nav className="sticky top-0 z-40 backdrop-blur-md bg-white/90 border-b border-stone-200">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
-          <a href="https://maitreya.org.il/">
+          {/* Logo -> site home (the in-app /he home replaced the old WordPress root) */}
+          <Link to={lang === "en" ? "/en" : "/he"}>
             <img src={maitreyaLogo} alt="Maitreya Sangha" className="h-11 object-contain" />
-          </a>
+          </Link>
           <button
             className="py-2.5 px-6 text-base font-bold text-white rounded-full shadow-md hover:shadow-xl hover:scale-110 hover:brightness-110 transition-all duration-200"
             style={{ backgroundColor: RETREAT_THEME.GOLD_DARK }}

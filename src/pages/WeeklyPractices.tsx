@@ -13,6 +13,7 @@
  */
 
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { MousePointerClick } from "lucide-react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
@@ -483,11 +484,13 @@ const WeeklyPractices = () => {
           {/* Header */}
           <header className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <img
-                src={maitreyaLogo}
-                alt="Maitreya Sangha Israel"
-                className="mb-3 h-12 w-auto md:h-14"
-              />
+              <Link to="/he" aria-label="לדף הבית" className="inline-block">
+                <img
+                  src={maitreyaLogo}
+                  alt="Maitreya Sangha Israel"
+                  className="mb-3 h-12 w-auto md:h-14"
+                />
+              </Link>
               <h1
                 className="font-heading text-4xl font-semibold leading-none md:text-5xl"
                 style={{ color: COLORS.ink }}

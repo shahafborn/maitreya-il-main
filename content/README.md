@@ -65,6 +65,8 @@ description: "תקציר קצר למנועי חיפוש ולתצוגת הרשי�
 
 The article appears automatically in the articles index (newest first) and gets its own page at `/he/articles/<filename-without-.md>`. Images: put files in `public/media/articles/` and embed with `![תיאור](/media/articles/file.jpg)`.
 
+**Embedding a YouTube video:** put the video's link alone on its own line (nothing else on that line) and it renders as an embedded player. A `t=`/`start=` seconds parameter in the link is respected. A link inside a sentence stays a normal link.
+
 ## How to edit an existing page
 
 Open the page's file under `pages/`, edit, save. `home.md` is special: its frontmatter fields are the homepage's text blocks (hero, section titles, newsletter copy) - edit the field values, keep the field names.
