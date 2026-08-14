@@ -2,7 +2,9 @@
 title: "Dana - Generosity of the Heart | Maitreya Sangha Israel"
 description: "On the tradition of dana in the Buddhist path, and what the community's generosity makes possible - teacher visits, weekly practices, retreats and translation."
 email: "maitreyasanghaisrael@gmail.com"
-cta_label: "To give or ask - write to us"
+cta_label: "Questions about giving - write to us"
+cardcom_url: ""
+cardcom_label: "Give by credit card"
 ---
 ## What is Dana?
 

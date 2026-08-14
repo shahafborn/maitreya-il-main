@@ -10,6 +10,8 @@
  * (quotes optional). Nested YAML is not supported - keep content flat.
  */
 
+import { parseFrontmatter } from "./frontmatter";
+
 export type SiteLang = "he" | "en";
 
 export interface PageContent {
@@ -46,26 +48,8 @@ const files = import.meta.glob("/content/**/*.md", {
 }) as Record<string, string>;
 
 function parse(raw: string): PageContent {
-  const meta: Record<string, string> = {};
-  let body = raw;
-  const match = raw.match(/^---\n([\s\S]*?)\n---\n?/);
-  if (match) {
-    body = raw.slice(match[0].length);
-    for (const line of match[1].split("\n")) {
-      const idx = line.indexOf(":");
-      if (idx === -1) continue;
-      const key = line.slice(0, idx).trim();
-      let value = line.slice(idx + 1).trim();
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
-      if (key) meta[key] = value;
-    }
-  }
-  return { meta, body: body.trim() };
+  const { meta, body } = parseFrontmatter(raw);
+  return { meta, body };
 }
 
 function filesUnder(prefix: string): Array<{ slug: string; content: PageContent }> {

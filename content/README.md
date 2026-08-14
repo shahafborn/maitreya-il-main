@@ -2,6 +2,10 @@
 
 This folder is the ENTIRE editable content of the maitreya.org.il website (the site pages - not the retreat landing pages, which live in `src/pages/`). Updating the website = editing a text file here. No code knowledge needed. This guide is written for humans and AI assistants alike.
 
+**Two ways to edit, same files:**
+1. **Directly** - edit the markdown files here (by hand or via an AI assistant).
+2. **Back office** - the admin area (`/admin` -> "Site Content") shows every file as a friendly form. While the local dev server runs, saving from there writes to these same files and the site updates instantly. (Publishing from the DEPLOYED admin is a go-live phase item - see the migration plan in the vault.)
+
 ## Structure
 
 ```
