@@ -56,17 +56,50 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
   return (
     <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={he ? "/he" : "/en"}>
       {/* Hero */}
-      <section className="relative min-h-[70vh] flex items-center justify-center">
-        <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-deep-blue/60" />
-        <div className="relative container text-center py-24">
-          <h1 className="font-heading text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in-up">
-            {meta.hero_title}
-          </h1>
-          <p className="font-body text-lg md:text-2xl text-primary-foreground/90 max-w-3xl mx-auto mb-10">
-            {meta.hero_subtitle}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
+      <section className="relative min-h-[70vh] flex items-end md:items-center justify-center">
+        {/*
+          The photo has Lama Glenn on the left of the frame, which suits Hebrew: the text
+          sits on the right and his face stays clear. For English the whole composition is
+          MIRRORED (scale-x-[-1]) so he lands on the right and the text can take the left -
+          i.e. in both languages he sits on the reading-END side and the copy starts from
+          the reading-START side. That is why every rule below is logical (start/end), not
+          physical (left/right): one set of classes, correct in both directions.
+
+          object-position is responsive: the photo is very wide (~2.1:1), so a narrow phone
+          crops it horizontally and centre framing lands on his shoulder with his head cut
+          off. Pulling the frame toward his face keeps him in shot on phones; from md up the
+          container is wider than the photo's ratio, the crop turns vertical, and centre is
+          right again.
+        */}
+        <img
+          src={heroImage}
+          alt=""
+          className={`absolute inset-0 h-full w-full object-cover object-[26%_center] md:object-center ${he ? "" : "scale-x-[-1]"}`}
+        />
+        {/*
+          Warm scrim, not the blue one: the photo is warm (brick + saffron) and a cool
+          overlay turned the skin tones grey. Phones get a bottom-weighted gradient - there
+          is no empty side to escape to at that width, so the copy drops to the bottom over
+          the robe and his face stays clean above it. From md up the darkness is weighted to
+          whichever side the text occupies.
+        */}
+        <div className="absolute inset-0 md:hidden bg-[linear-gradient(to_top,rgba(38,18,12,0.94)_0%,rgba(38,18,12,0.88)_32%,rgba(38,18,12,0.62)_52%,rgba(38,18,12,0.18)_78%,rgba(38,18,12,0.02)_100%)]" />
+        <div
+          className={`absolute inset-0 hidden md:block ${
+            he
+              ? "bg-[linear-gradient(to_left,rgba(38,18,12,0.88)_0%,rgba(38,18,12,0.74)_34%,rgba(38,18,12,0.30)_62%,rgba(38,18,12,0.04)_100%)]"
+              : "bg-[linear-gradient(to_right,rgba(38,18,12,0.88)_0%,rgba(38,18,12,0.74)_34%,rgba(38,18,12,0.30)_62%,rgba(38,18,12,0.04)_100%)]"
+          }`}
+        />
+        <div className="relative container pt-24 pb-12 md:py-24 text-center md:text-start">
+          <div className="md:max-w-xl md:me-auto md:ms-0">
+            <h1 className="font-heading text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in-up">
+              {meta.hero_title}
+            </h1>
+            <p className="font-body text-lg md:text-2xl text-primary-foreground/90 max-w-3xl mx-auto md:mx-0 mb-10">
+              {meta.hero_subtitle}
+            </p>
+            <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
             <Link
               to={meta.hero_cta_href || (he ? "/he/events" : "/en/events")}
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground font-body font-semibold rounded-full px-8 py-3 hover:bg-secondary transition-colors"
@@ -80,6 +113,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
             >
               {meta.hero_cta2_label}
             </Link>
+            </div>
           </div>
         </div>
       </section>
