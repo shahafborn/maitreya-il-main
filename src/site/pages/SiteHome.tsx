@@ -13,7 +13,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
 import { getPage, getEvents, getArticles, formatEventDates, type SiteLang, type EventItem } from "../content";
 import { SiteLayout } from "../SiteLayout";
-import heroImage from "@/assets/retreat/hero-dead-sea.jpg";
+import heroImage from "@/assets/site/hero-lama-glenn.jpg";
 import lamaGlenn from "@/assets/retreat/lama-glenn-big.jpg";
 import druponChongwol from "@/assets/retreat/drupon-chongwol.png";
 // Public asset - resolved against the app base (/p/ today, / after cutover)
