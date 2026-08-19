@@ -320,8 +320,9 @@ export const RegistrationModal = ({
       >
         {paymentUrl ? (
           <div className="max-h-[90vh] overflow-y-auto">
-            {/* pe-12 keeps the heading clear of the dialog's close button. */}
-            <div className="px-6 pe-12 pt-6 pb-5">
+            {/* The close button is pinned to the physical right, which in an RTL
+                dialog is where the heading starts - hence the extra start padding. */}
+            <div className="px-6 ps-12 pt-6 pb-5">
               <DialogHeader className="sr-only">
                 <DialogTitle>{copy.paymentTitle ?? config.title}</DialogTitle>
                 <DialogDescription>{config.subtitle}</DialogDescription>

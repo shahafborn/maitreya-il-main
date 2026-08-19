@@ -71,7 +71,7 @@ const registrationConfig: RegistrationConfig = {
   tiers: [
     {
       id: "Yamantaka_Online_Monthly",
-      title: "דאנה חודשית",
+      title: "דאנה לחודש אחד",
       note: "תשלום עבור החודש הקרוב. לקראת כל חודש נשלח קישור חדש.",
       priceDisplay: "300",
       priceValue: 300,
@@ -79,8 +79,8 @@ const registrationConfig: RegistrationConfig = {
     },
     {
       id: "Yamantaka_Online_Full",
-      title: "דאנה לשלושת החודשים",
-      note: "750 ש״ח במקום 900 - חיסכון של 150 ש״ח",
+      title: "דאנה לשלושת החודשים - מחיר מיוחד",
+      note: "750 ש״ח במקום 900",
       priceDisplay: "750",
       priceValue: 750,
       currencySymbol: "₪",
