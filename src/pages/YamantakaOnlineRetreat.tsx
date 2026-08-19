@@ -65,9 +65,9 @@ const registrationConfig: RegistrationConfig = {
   currency: "ILS",
   lang: "he",
   dir: "rtl",
-  // Two choices in the first select; picking the three-month one opens a second
-  // select for how many payments. The ids of the variants are what n8n, the
-  // sheet and the Mailchimp tags see.
+  // Two choices. How many installments the three-month option is split into is
+  // chosen on the Cardcom page itself, which offers 1, 2 or 3 - so there is no
+  // second field here for it.
   tiers: [
     {
       id: "Yamantaka_Online_Monthly",
@@ -80,32 +80,7 @@ const registrationConfig: RegistrationConfig = {
     {
       id: "Yamantaka_Online_Full",
       title: "דאנה לשלושת החודשים - מחיר מיוחד",
-      note: "750 ש״ח במקום 900",
-      priceDisplay: "750",
-      priceValue: 750,
-      currencySymbol: "₪",
-    },
-    {
-      id: "Yamantaka_Online_Full_1",
-      variantOf: "Yamantaka_Online_Full",
-      variantLabel: "תשלום אחד",
-      title: "דאנה לשלושת החודשים",
-      note: "בתשלום אחד",
-      priceDisplay: "750",
-      priceValue: 750,
-      currencySymbol: "₪",
-    },
-    // Two installments is deliberately absent: the Cardcom terminal forces
-    // three whenever a payment page is opened in installment mode, whatever
-    // number we ask for (tested 2026-08-19 with several min/max combinations).
-    // Once that terminal setting allows a range, add the option back here -
-    // n8n already knows the `Yamantaka_Online_Full_2` code.
-    {
-      id: "Yamantaka_Online_Full_3",
-      variantOf: "Yamantaka_Online_Full",
-      variantLabel: "3 תשלומים",
-      title: "דאנה לשלושת החודשים",
-      note: "3 תשלומים של 250 ש״ח",
+      note: "750 ש״ח במקום 900. אפשר לפרוס עד 3 תשלומים בעמוד התשלום.",
       priceDisplay: "750",
       priceValue: 750,
       currencySymbol: "₪",
@@ -113,7 +88,6 @@ const registrationConfig: RegistrationConfig = {
   ],
   showTierSelect: true,
   tierSelectLabel: "אופן ההשתתפות בדאנה",
-  variantSelectLabel: "מספר תשלומים",
   termsUrl: "https://maitreya.org.il/",
   askPrevExp: true,
   storagePrefix: "yamantaka26",
@@ -153,7 +127,6 @@ const registrationCopy = {
   submittingLabel: "שולח...",
   submitFootnote: "התשלום מתבצע כאן בעמוד, בעמוד סליקה מאובטח. ההרשמה תסתיים רק לאחר התשלום.",
   errTier: "יש לבחור אופן השתתפות",
-  errVariant: "יש לבחור מספר תשלומים",
   errFname: "יש למלא שם פרטי",
   errLname: "יש למלא שם משפחה",
   errEmail: "יש למלא אימייל",
