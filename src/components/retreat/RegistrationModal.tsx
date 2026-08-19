@@ -81,6 +81,19 @@ interface RegistrationModalCopy {
   paymentNote?: string;
 }
 
+/**
+ * Visible height of the embedded Cardcom frame. Tall enough to hold their whole
+ * form including the pay button, so nothing is stranded out of reach; the dialog
+ * itself scrolls.
+ */
+const PAYMENT_FRAME_HEIGHT = 820;
+/**
+ * How much of the top of Cardcom's page to hide: their white band plus the
+ * repeat of the business name, which duplicates our own heading above it.
+ * Measured against the live page - re-check if Cardcom changes their layout.
+ */
+const PAYMENT_FRAME_CROP_TOP = 205;
+
 interface RegistrationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -291,51 +304,63 @@ export const RegistrationModal = ({
       >
         {paymentUrl ? (
           <div className="max-h-[90vh] overflow-y-auto">
-            <div className="px-6 pt-6 pb-4 border-b border-stone-200">
-              <DialogHeader className="text-center sm:text-center">
-                <DialogTitle
-                  className="text-2xl font-bold"
-                  style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.DARK }}
-                >
-                  {copy.paymentTitle ?? config.title}
-                </DialogTitle>
-                <DialogDescription className="text-sm mt-1" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-                  {config.subtitle}
-                </DialogDescription>
+            <div className="px-6 pt-6 pb-5">
+              <DialogHeader className="sr-only">
+                <DialogTitle>{copy.paymentTitle ?? config.title}</DialogTitle>
+                <DialogDescription>{config.subtitle}</DialogDescription>
               </DialogHeader>
 
-              {/* What they are paying for, in our own words - the thing that is
-                  buried in a side panel on Cardcom's own page. */}
-              <div
-                className="mt-4 rounded-lg px-4 py-3 text-center"
-                style={{ background: RETREAT_THEME.STONE }}
+              {/* What they are paying for, in our own words and at full size -
+                  on Cardcom's own page this is a small line in a side panel. */}
+              <p
+                className="text-xs font-semibold tracking-wide mb-2"
+                style={{ color: RETREAT_THEME.GOLD_DARK }}
               >
-                <p className="font-semibold" style={{ color: RETREAT_THEME.DARK }}>
+                {copy.paymentTitle ?? config.title}
+              </p>
+              <div className="flex items-baseline justify-between gap-4">
+                <h2
+                  className="text-2xl md:text-[1.75rem] font-bold leading-tight"
+                  style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.DARK }}
+                >
                   {selectedTier.title}
-                </p>
-                {selectedTier.note && (
-                  <p className="text-sm mt-0.5" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-                    {selectedTier.note}
-                  </p>
-                )}
+                </h2>
                 <p
-                  className="text-2xl font-bold mt-1"
+                  className="text-2xl font-bold whitespace-nowrap"
                   style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.GOLD_DARK }}
                 >
                   {selectedTier.priceDisplay}
                   {selectedTier.currencySymbol ?? ""}
                 </p>
               </div>
+              {selectedTier.note && (
+                <p className="text-sm mt-1.5" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                  {selectedTier.note}
+                </p>
+              )}
             </div>
 
-            <iframe
-              src={paymentUrl}
-              title={copy.paymentTitle ?? config.title}
-              className="w-full border-0"
-              style={{ height: "760px" }}
-              /* Lets the Google Pay / Apple Pay buttons run inside the frame. */
-              allow="payment"
-            />
+            {/*
+              Cardcom's page opens with a band of white space and a repeat of the
+              business name, which reads as a gap under our own heading. We cannot
+              restyle a page on their domain, so the frame is made taller than its
+              window and pulled up by the same amount, hiding that band. The frame's
+              own footer (total + pay button) sits at the bottom of its window, so it
+              stays exactly where it was.
+            */}
+            <div className="overflow-hidden" style={{ height: PAYMENT_FRAME_HEIGHT }}>
+              <iframe
+                src={paymentUrl}
+                title={copy.paymentTitle ?? config.title}
+                className="w-full border-0 block"
+                style={{
+                  height: PAYMENT_FRAME_HEIGHT + PAYMENT_FRAME_CROP_TOP,
+                  marginTop: -PAYMENT_FRAME_CROP_TOP,
+                }}
+                /* Lets the Google Pay / Apple Pay buttons run inside the frame. */
+                allow="payment"
+              />
+            </div>
 
             {copy.paymentNote && (
               <p className="px-6 pb-5 text-xs text-center" style={{ color: RETREAT_THEME.WARM_GRAY }}>
