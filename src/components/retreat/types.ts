@@ -116,4 +116,15 @@ export interface RegistrationConfig {
    * with a pre-configured Cardcom payment page (e.g. Heart of Wisdom dana).
    */
   staticPaymentUrl?: string;
+  /**
+   * When true, the Cardcom page opens inside the modal in an iframe, under a
+   * summary of what is being paid for, instead of navigating away. Cardcom
+   * serves the low-profile page without frame-blocking headers, and its own
+   * API function for creating one is named "Create a new Iframe / Redirect page".
+   *
+   * The iframe carries `allow="payment"` so the Google Pay / Apple Pay buttons
+   * work inside it. Apple Pay additionally needs the domain registered with
+   * Apple - see the vault note `cardcom-embedding-assessment.md`.
+   */
+  embedPayment?: boolean;
 }

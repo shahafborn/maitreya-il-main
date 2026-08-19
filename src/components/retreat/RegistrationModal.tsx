@@ -76,6 +76,9 @@ interface RegistrationModalCopy {
   errServer: string;
   errNoPaymentUrl: string;
   errGeneric: string;
+  /** Embedded payment view (only used when config.embedPayment is on). */
+  paymentTitle?: string;
+  paymentNote?: string;
 }
 
 interface RegistrationModalProps {
@@ -124,11 +127,17 @@ export const RegistrationModal = ({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  /** Set only when config.embedPayment is on: the Cardcom page shown in-place. */
+  const [paymentUrl, setPaymentUrl] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      // Closing the dialog drops the payment page, so reopening starts clean.
+      setPaymentUrl("");
+      return;
+    }
     setTierId(preselectedTierId ?? (singleTier ? config.tiers[0].id : ""));
   }, [open, preselectedTierId, singleTier, config.tiers]);
 
@@ -239,7 +248,12 @@ export const RegistrationModal = ({
         const data = await res.json();
         if (data.cardcom_url) {
           window.gtag?.("event", "payment_redirect", { tier: selectedTier.id });
-          window.location.href = data.cardcom_url;
+          if (config.embedPayment) {
+            // Stay on our page: the Cardcom fields open inside the dialog.
+            setPaymentUrl(data.cardcom_url);
+          } else {
+            window.location.href = data.cardcom_url;
+          }
         } else {
           throw new Error(copy.errNoPaymentUrl);
         }
@@ -266,6 +280,8 @@ export const RegistrationModal = ({
     </div>
   );
 
+  const selectedTier = config.tiers.find((t) => t.id === tierId) ?? config.tiers[0];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -273,6 +289,61 @@ export const RegistrationModal = ({
         className="max-w-lg md:max-w-2xl max-h-[90vh] p-0 gap-0 rounded-xl border-0 overflow-hidden"
         style={{ fontFamily: RETREAT_FONTS.sans }}
       >
+        {paymentUrl ? (
+          <div className="max-h-[90vh] overflow-y-auto">
+            <div className="px-6 pt-6 pb-4 border-b border-stone-200">
+              <DialogHeader className="text-center sm:text-center">
+                <DialogTitle
+                  className="text-2xl font-bold"
+                  style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.DARK }}
+                >
+                  {copy.paymentTitle ?? config.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm mt-1" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                  {config.subtitle}
+                </DialogDescription>
+              </DialogHeader>
+
+              {/* What they are paying for, in our own words - the thing that is
+                  buried in a side panel on Cardcom's own page. */}
+              <div
+                className="mt-4 rounded-lg px-4 py-3 text-center"
+                style={{ background: RETREAT_THEME.STONE }}
+              >
+                <p className="font-semibold" style={{ color: RETREAT_THEME.DARK }}>
+                  {selectedTier.title}
+                </p>
+                {selectedTier.note && (
+                  <p className="text-sm mt-0.5" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                    {selectedTier.note}
+                  </p>
+                )}
+                <p
+                  className="text-2xl font-bold mt-1"
+                  style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.GOLD_DARK }}
+                >
+                  {selectedTier.priceDisplay}
+                  {selectedTier.currencySymbol ?? ""}
+                </p>
+              </div>
+            </div>
+
+            <iframe
+              src={paymentUrl}
+              title={copy.paymentTitle ?? config.title}
+              className="w-full border-0"
+              style={{ height: "760px" }}
+              /* Lets the Google Pay / Apple Pay buttons run inside the frame. */
+              allow="payment"
+            />
+
+            {copy.paymentNote && (
+              <p className="px-6 pb-5 text-xs text-center" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                {copy.paymentNote}
+              </p>
+            )}
+          </div>
+        ) : (
         <div ref={scrollContainerRef} className="max-h-[90vh] overflow-y-auto">
           <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
             <DialogHeader className="text-center sm:text-center">
@@ -584,6 +655,7 @@ export const RegistrationModal = ({
             </p>
           </form>
         </div>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -22,6 +22,7 @@ const HeartOfWisdomRetreat = lazy(() => import("./pages/HeartOfWisdomRetreat"));
 const HeartOfWisdomRetreatEN = lazy(() => import("./pages/HeartOfWisdomRetreatEN"));
 const EinGediHealingRetreatEN = lazy(() => import("./pages/EinGediHealingRetreatEN"));
 const UmaZubTri = lazy(() => import("./pages/UmaZubTri"));
+const YamantakaOnlineRetreat = lazy(() => import("./pages/YamantakaOnlineRetreat"));
 const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 
 const queryClient = new QueryClient();
@@ -94,6 +95,9 @@ const AppRoutes = () => (
 
       {/* Uma Zub Tri online course (Hebrew, public) */}
       <Route path="/events/uma-zub-tri" element={<UmaZubTri />} />
+
+      {/* Yamantaka three-month online retreat (Hebrew, public) */}
+      <Route path="/events/yamantaka-online-2026" element={<YamantakaOnlineRetreat />} />
 
       {/* Weekly practices schedule (Hebrew, public) */}
       <Route path="/practices" element={<WeeklyPractices />} />
