@@ -47,6 +47,15 @@ export interface PricingTier {
   footnote?: string;
   /** Per-person label (e.g. "לאדם | הכל כלול"). */
   perPersonLabel?: string;
+  /**
+   * Makes this tier a follow-up choice rather than a top-level one: it is
+   * hidden from the first select, and appears in a second select that opens
+   * only once the tier named here is chosen (e.g. how many installments, once
+   * "pay for all three months" is picked). The id submitted is this tier's.
+   */
+  variantOf?: string;
+  /** Short label for this tier inside the second select (e.g. "3 תשלומים"). */
+  variantLabel?: string;
 }
 
 export interface SEOConfig {
@@ -86,6 +95,8 @@ export interface RegistrationConfig {
   showTierSelect?: boolean;
   /** Label for the tier <select> (e.g. "סוג חדר"). */
   tierSelectLabel?: string;
+  /** Label for the second select that opens for tiers that have variants. */
+  variantSelectLabel?: string;
   /** Link to T&C page. */
   termsUrl: string;
   /** Extra fields to collect. When omitted, minimal: first/last/email/phone. */

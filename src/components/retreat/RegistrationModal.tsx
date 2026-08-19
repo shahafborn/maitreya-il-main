@@ -73,6 +73,8 @@ interface RegistrationModalCopy {
   errCity?: string;
   errCountry?: string;
   errConfirmed: string;
+  /** Error for the follow-up select (falls back to errTier). */
+  errVariant?: string;
   errServer: string;
   errNoPaymentUrl: string;
   errGeneric: string;
@@ -123,8 +125,11 @@ export const RegistrationModal = ({
   config,
   copy,
 }: RegistrationModalProps) => {
-  const singleTier = config.tiers.length === 1;
-  const [tierId, setTierId] = useState<string>(preselectedTierId ?? (singleTier ? config.tiers[0].id : ""));
+  // Tiers marked `variantOf` are follow-up choices, not top-level ones.
+  const topTiers = config.tiers.filter((t) => !t.variantOf);
+  const singleTier = topTiers.length === 1;
+  const [tierId, setTierId] = useState<string>(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
+  const [variantId, setVariantId] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
@@ -151,8 +156,18 @@ export const RegistrationModal = ({
       setPaymentUrl("");
       return;
     }
-    setTierId(preselectedTierId ?? (singleTier ? config.tiers[0].id : ""));
+    setTierId(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
+    setVariantId("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preselectedTierId, singleTier, config.tiers]);
+
+  /** The follow-up options for whatever is chosen in the first select. */
+  const variants = config.tiers.filter((t) => t.variantOf === tierId);
+  /** What actually gets submitted: the follow-up choice when there is one. */
+  const effectiveTier =
+    (variants.length > 0
+      ? config.tiers.find((t) => t.id === variantId)
+      : config.tiers.find((t) => t.id === tierId)) ?? config.tiers[0];
 
   const scrollToField = (el: HTMLElement | null) => {
     if (!el) return;
@@ -177,6 +192,7 @@ export const RegistrationModal = ({
   const validateAndScroll = (): boolean => {
     const errors: Record<string, string> = {};
     if (config.showTierSelect && !tierId) errors.tierId = copy.errTier;
+    if (variants.length > 0 && !variantId) errors.variantId = copy.errVariant ?? copy.errTier;
     if (!fname.trim()) errors.fname = copy.errFname;
     if (!lname.trim()) errors.lname = copy.errLname;
     if (!email.trim()) errors.email = copy.errEmail;
@@ -218,7 +234,7 @@ export const RegistrationModal = ({
     setFieldErrors({});
     if (!validateAndScroll()) return;
 
-    const selectedTier = config.tiers.find((t) => t.id === tierId) ?? config.tiers[0];
+    const selectedTier = effectiveTier;
     window.gtag?.("event", "registration_submitted", { tier: selectedTier.id });
 
     const regToken = crypto.randomUUID();
@@ -293,7 +309,7 @@ export const RegistrationModal = ({
     </div>
   );
 
-  const selectedTier = config.tiers.find((t) => t.id === tierId) ?? config.tiers[0];
+  const selectedTier = effectiveTier;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -304,7 +320,8 @@ export const RegistrationModal = ({
       >
         {paymentUrl ? (
           <div className="max-h-[90vh] overflow-y-auto">
-            <div className="px-6 pt-6 pb-5">
+            {/* pe-12 keeps the heading clear of the dialog's close button. */}
+            <div className="px-6 pe-12 pt-6 pb-5">
               <DialogHeader className="sr-only">
                 <DialogTitle>{copy.paymentTitle ?? config.title}</DialogTitle>
                 <DialogDescription>{config.subtitle}</DialogDescription>
@@ -393,12 +410,13 @@ export const RegistrationModal = ({
                     value={tierId}
                     onChange={(e) => {
                       setTierId(e.target.value);
-                      setFieldErrors((p) => ({ ...p, tierId: "" }));
+                      setVariantId("");
+                      setFieldErrors((p) => ({ ...p, tierId: "", variantId: "" }));
                     }}
                     className={`${selectClass} ${fieldErrorClass("tierId")}`}
                   >
                     <option value="">{copy.tierSelectPlaceholder}</option>
-                    {config.tiers.map((t) => (
+                    {topTiers.map((t) => (
                       <option key={t.id} value={t.id}>
                         {t.title}
                         {t.priceDisplay ? ` - ${t.priceDisplay}${t.currencySymbol ?? ""}` : ""}
@@ -407,6 +425,31 @@ export const RegistrationModal = ({
                   </select>
                 </SelectWrapper>
                 <FieldError field="tierId" />
+                {/* Whatever the chosen option still needs answering - for the
+                    three-month dana, how many payments to split it into. */}
+                {variants.length > 0 && (
+                  <div data-field="variantId" className="mt-4">
+                    <label className={labelClass}>{config.variantSelectLabel} *</label>
+                    <SelectWrapper>
+                      <select
+                        value={variantId}
+                        onChange={(e) => {
+                          setVariantId(e.target.value);
+                          setFieldErrors((p) => ({ ...p, variantId: "" }));
+                        }}
+                        className={`${selectClass} ${fieldErrorClass("variantId")}`}
+                      >
+                        <option value="">{copy.tierSelectPlaceholder}</option>
+                        {variants.map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.variantLabel ?? v.title}
+                          </option>
+                        ))}
+                      </select>
+                    </SelectWrapper>
+                    <FieldError field="variantId" />
+                  </div>
+                )}
               </div>
             )}
 
