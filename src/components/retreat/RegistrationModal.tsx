@@ -88,7 +88,7 @@ interface RegistrationModalCopy {
  * form including the pay button, so nothing is stranded out of reach; the dialog
  * itself scrolls.
  */
-const PAYMENT_FRAME_HEIGHT = 820;
+const PAYMENT_FRAME_HEIGHT = 900;
 /**
  * How much of the top of Cardcom's page to hide: their white band plus the
  * repeat of the business name, which duplicates our own heading above it.
@@ -149,6 +149,7 @@ export const RegistrationModal = ({
   const [paymentUrl, setPaymentUrl] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const paymentScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) {
@@ -160,6 +161,17 @@ export const RegistrationModal = ({
     setVariantId("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preselectedTierId, singleTier, config.tiers]);
+
+  // The payment step must open at the top. The Cardcom frame focuses its card
+  // field a moment after it loads, and the browser scrolls to that - so reset
+  // once now and once after the frame has settled.
+  useEffect(() => {
+    if (!paymentUrl) return;
+    const toTop = () => paymentScrollRef.current?.scrollTo({ top: 0 });
+    toTop();
+    const t = window.setTimeout(toTop, 800);
+    return () => window.clearTimeout(t);
+  }, [paymentUrl]);
 
   /** The follow-up options for whatever is chosen in the first select. */
   const variants = config.tiers.filter((t) => t.variantOf === tierId);
@@ -319,10 +331,19 @@ export const RegistrationModal = ({
         style={{ fontFamily: RETREAT_FONTS.sans }}
       >
         {paymentUrl ? (
-          <div className="max-h-[90vh] overflow-y-auto">
-            {/* The close button is pinned to the physical right, which in an RTL
-                dialog is where the heading starts - hence the extra start padding. */}
-            <div className="px-6 ps-12 pt-6 pb-5">
+          <div ref={paymentScrollRef} className="max-h-[90vh] overflow-y-auto">
+            {/*
+              Sticky, because the Cardcom frame puts the cursor in the card field
+              as it loads and the browser scrolls to it - which on a phone pushed
+              what you are paying for off the top of the screen. Sticky keeps the
+              amount in sight however far down the form you are.
+              The close button is pinned to the physical right, which in an RTL
+              dialog is where the heading starts - hence the extra start padding.
+            */}
+            <div
+              className="px-6 ps-12 pt-6 pb-5 sticky top-0 z-10 border-b border-stone-200"
+              style={{ backgroundColor: RETREAT_THEME.CREAM }}
+            >
               <DialogHeader className="sr-only">
                 <DialogTitle>{copy.paymentTitle ?? config.title}</DialogTitle>
                 <DialogDescription>{config.subtitle}</DialogDescription>
