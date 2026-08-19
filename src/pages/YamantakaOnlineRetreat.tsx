@@ -176,7 +176,7 @@ const scheduleDays = [
   {
     label: "מפגש ראשון",
     time: "01:30-03:00",
-    description: "התהוות כיאמנטקה.",
+    description: "עליה כיאמנטקה.",
   },
   {
     label: "מפגש שני",
@@ -186,7 +186,8 @@ const scheduleDays = [
   {
     label: "מפגש שלישי",
     time: "07:00-09:00",
-    description: "תרגול יאמנטקה ו-Bardo Jangcho או Shinin Donduk.",
+    description:
+      "תרגול יאמנטקה ו-Bardo Jangcho או Shinin Donduk (תרגול לנפטרים ותרגול טיהור המארות).",
   },
   {
     label: "מפגש רביעי",
@@ -196,14 +197,12 @@ const scheduleDays = [
   {
     label: "מפגש חמישי",
     time: "13:00-14:30",
-    description:
-      "טומו / Tsewang, או קריאת טקסט / יוגת החלום. מפגש זה יתקיים מספר פעמים בשבוע, וחלק מהמפגשים יהיו פתוחים לציבור.",
+    description: "טומו / Tsewang, או קריאת טקסט / יוגת החלום.",
   },
 ];
 
 const scheduleNotes = [
   "השעות הן לפי שעון ישראל, לפני המעבר לשעון חורף. החל מהמעבר לשעון חורף בסוף אוקטובר, שעות המפגשים בישראל יוקדמו בשעה.",
-  "למי שישתתפו בריטריט במסגרת שהייה במקום, תהיה אפשרות לקיים שלושה או ארבעה מפגשי תרגול ביום.",
 ];
 
 const YamantakaOnlineRetreat = () => {
@@ -251,8 +250,8 @@ const YamantakaOnlineRetreat = () => {
       <AboutSection
         eyebrow="על הריטריט"
         paragraphs={[
-          "דרופון צ׳ונגוואל-לה עצמו יקיים ויוביל את הריטריט המלא בן שלושת החודשים, מ-1 בספטמבר 2026 (19 בחודש השביעי בלוח הירחי) ועד 20 בנובמבר 2026 (19 בחודש העשירי בלוח הירחי).",
-          "בכל יום מתקיימים מפגשי תרגול ולימוד, בימים שני עד שישי.",
+          "ריטריט מלא בן שלושה חודשים בהובלת דרופון צ׳ונגוואל-לה. הריטריט יעמיק בתרגול מעשי ולימוד של טנטרת היוגה העליונה של יאמנטקה ותרגולים הקשורים למחזור יאמנטקה.",
+          "מ-1 בספטמבר 2026 עד 20 בנובמבר 2026.",
         ]}
         ctaLabel="להרשמה לריטריט"
         onCtaClick={open}
@@ -270,17 +269,17 @@ const YamantakaOnlineRetreat = () => {
 
       <ScheduleBlock
         eyebrow="סדר המפגשים"
-        intro="המפגשים מתקיימים בימים שני עד שישי."
+        intro="הריטריט מתקיים בימים שני עד שישי. בכל יום יהיו חמישה מפגשים."
         days={scheduleDays}
         notes={scheduleNotes}
       />
 
       <SectionFrame tone="cream" maxWidth="md">
-        <SectionTitle className="text-center mb-8">למשתתפים בריטריט</SectionTitle>
+        <SectionTitle className="text-center mb-8">הנחיות למשתתפים בריטריט</SectionTitle>
         <ul className="max-w-2xl mx-auto space-y-4 text-lg" style={{ color: RETREAT_THEME.BODY }}>
           <li className="flex gap-3">
             <GoldDot />
-            <span>משתתפים מישראל - השתתפות בשניים עד שלושה מפגשים בשבוע, ותרגול גם בבית.</span>
+            <span>משתתפים מישראל - יש להשתתף לפחות בשניים עד שלושה מפגשים בשבוע, ולתרגל גם בבית.</span>
           </li>
           <li className="flex gap-3">
             <GoldDot />
