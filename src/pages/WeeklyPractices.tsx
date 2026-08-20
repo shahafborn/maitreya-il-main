@@ -253,7 +253,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // 2026-08-20 and cross-checked against the real offsets (NY = Israel -7,
     // Seoul = Israel +6) - all three of his zone conversions agree.
     //   Sat: Tummo foundations 09-10 (Shahaf), Chongwol-la's Tummo 10-11:30.
-    //   Sun: Mahamudra clarification 15:00-16:30, and Green Tara moves 16 -> 17
+    //   Sun: Mahamudra clarification 15:00-16:30, and Green Tara moves 16:00 -> 20:30 (afternoon -> evening)
     //        for this week only (Shahaf, 2026-08-20).
     // ROOMS DIFFER THIS WEEKEND: Saturday's Tummo stays in the usual Israel
     // room (the page default), but the Sunday clarification is in Chongwol-la's
@@ -264,7 +264,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // Saturday afternoon is omitted so the standing Lama Glenn cell stays.
     from: "2026-08-22",
     to: "2026-08-23",
-    note: "שימו לב: השבוע תרגולי הטומו של שבת מתקיימים שעה מאוחר יותר - יסודות הטומו ב-9:00 והטומו עם צ׳ונגוואל-לה ב-10:00. ביום ראשון מתקיים מפגש הבהרות עם צ׳ונגוואל-לה ב-15:00 בחדר זום אחר, וטארה הירוקה עוברת ל-17:00.",
+    note: "שימו לב: השבוע תרגולי הטומו של שבת מתקיימים שעה מאוחר יותר - יסודות הטומו ב-9:00 והטומו עם צ׳ונגוואל-לה ב-10:00. ביום ראשון מתקיים מפגש הבהרות עם צ׳ונגוואל-לה ב-15:00 בחדר זום אחר, וטארה הירוקה עוברת ל-20:30.",
     days: {
       "שבת": {
         morning: [
@@ -280,7 +280,9 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             categories: ["basic"],
             url: "https://us02web.zoom.us/j/86757320677?pwd=aJi9zGfhOSQKmiuga60XFpzQeQ8VN6.1",
           },
-          { time: "17-18", title: "טארה הירוקה", categories: ["basic"], beginner: true },
+        ],
+        evening: [
+          { time: "20:30-21:30", title: "טארה הירוקה", categories: ["basic"], beginner: true },
         ],
       },
     },
