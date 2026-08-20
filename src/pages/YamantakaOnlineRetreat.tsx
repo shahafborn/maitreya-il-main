@@ -39,7 +39,7 @@ import { GoldDot } from "@/components/retreat/GoldDot";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
-import { yamantakaHero, druponPhoto } from "@/assets/yamantaka-online-2026";
+import { yamantakaHero, yamantakaHeroMobile, druponPhoto } from "@/assets/yamantaka-online-2026";
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/Yamantaka_Register";
 
@@ -214,7 +214,8 @@ const YamantakaOnlineRetreat = () => {
     >
       <RetreatHero
         image={yamantakaHero}
-        imageAlt="ריטריט יאמנטקה עם דרופון צ׳ונגוואל-לה"
+        mobileImage={yamantakaHeroMobile}
+        imageAlt="תנקה של יאמנטקה בצורת הגיבור היחיד"
         title="ריטריט יאמנטקה"
         subtitle="ריטריט און ליין מלא בן שלושה חודשים"
         accent="עם דרופון צ׳ונגוואל-לה"
@@ -242,13 +243,13 @@ const YamantakaOnlineRetreat = () => {
             מנג׳ושרי, בודהה החוכמה.
           </p>
           <p>
-            השם ואג׳רבהאירווה (בטיבטית <span dir="ltr">rDo-rje ’jigs-byed</span>) פירושו ״האימה
-            שאין להשמידה״, והשם יאמנטקה פירושו ״קוטלו של יאמה״ - יאמה הוא אדון המוות.
+            השם יאמנטקה פירושו ״משמיד המוות״ (יאמה הוא אדון המוות במסורת ההודית), ומתייחס
+            ליכולתו של התרגול להתמיר את שלושת סוגי המוות - החיצוני, הפנימי, והסודי.
           </p>
           <p>
-            יחד עם צ׳אקרסמוורה וגוהיאסמאג׳ה, ואג׳רבהאירווה - בצורת דמות יחידה, ״הגיבור הבודד״
+            יחד עם צ׳אקרסמוורה ו-גוהיאסמאג׳ה, ואג׳רבהאירווה - בצורת ״הגיבור היחיד״
             (<span dir="ltr">ekavira</span> בסנסקריט) - הוא אחד משלושת היידמים המרכזיים של מסורת
-            הגלוג. התרגול שלו שייך למחלקת ״טנטרת האב״, שמדגישה את טיפוח האמצעים המיומנים
+            הדאלאי לאמות. התרגול שלו שייך למחלקת ״טנטרת האב״, שמדגישה את טיפוח האמצעים המיומנים
             (<span dir="ltr">upaya</span> בסנסקריט).
           </p>
         </div>

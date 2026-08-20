@@ -6,8 +6,15 @@
  * text-free crop of that same image, so the page and the promotion match.
  */
 
-// Text-free crop of the campaign graphic: the thangka and both teachers.
-export { default as yamantakaHero } from "./hero-yamantaka.png";
+// Ekavira ("Solitary Hero") Yamantaka thangka - the cover Shahaf supplied on
+// 20 Aug 2026. The source is portrait, so the desktop file lays the whole
+// painting on a wide canvas and extends its own sky sideways instead of
+// cropping the deity; mobile gets the painting near its native ratio.
+export { default as yamantakaHero } from "./hero-ekavira.jpg";
+export { default as yamantakaHeroMobile } from "./hero-ekavira-mobile.jpg";
+
+// Previous hero: the text-free crop of the campaign graphic. Kept for reference.
+export { default as yamantakaHeroLegacy } from "./hero-yamantaka.png";
 
 // The full campaign graphic, text and all - used for cross-promotion cards.
 export { default as yamantakaPromoCard } from "./promo-card.png";
