@@ -141,7 +141,8 @@ const STATIC_EVENTS = [
     title: "ריטריט יאמנטקה עם דרופון צ׳ונגוואל-לה | 1 בספטמבר עד 20 בנובמבר 2026 | מאיטרייה סנגהה ישראל",
     description:
       "ריטריט מלא בן שלושה חודשים בהנחיית דרופון צ׳ונגוואל-לה. התהוות כיאמנטקה, דקלום מנטרות, תרגול טומו ויוגת החלום. מפגשים מקוונים בימים שני עד שישי, 1 בספטמבר עד 20 בנובמבר 2026.",
-    image: "https://maitreya.org.il/p/og-yamantaka-online-2026.png",
+    // JPEG on purpose - WhatsApp drops any og:image over 600KB.
+    image: "https://maitreya.org.il/p/og-yamantaka-online-2026.jpg",
   },
 ];
 

@@ -53,7 +53,9 @@ const seo: SEOConfig = {
   keywords:
     "ריטריט יאמנטקה, דרופון צ׳ונגוואל-לה, טנטרה בודהיסטית, טומו, יוגת החלום, מנטרות, ריטריט אונליין, מאיטרייה סנגהה",
   url: "https://maitreya.org.il/p/events/yamantaka-online-2026",
-  ogImage: "https://maitreya.org.il/p/og-yamantaka-online-2026.png",
+  // JPEG, not PNG: WhatsApp drops any og:image over 600KB, and a photographic
+  // 1200x630 PNG of this thangka lands around 1.5MB. This one is ~257KB.
+  ogImage: "https://maitreya.org.il/p/og-yamantaka-online-2026.jpg",
   locale: "he_IL",
 };
 
