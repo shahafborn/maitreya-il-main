@@ -232,6 +232,29 @@ const YamantakaOnlineRetreat = () => {
       />
 
       <SectionFrame tone="stone" maxWidth="md">
+        <SectionTitle className="text-center mb-8">מיהו יאמנטקה</SectionTitle>
+        <div
+          className="max-w-2xl mx-auto space-y-5 text-lg leading-relaxed"
+          style={{ color: RETREAT_THEME.BODY }}
+        >
+          <p>
+            בבודהיזם הוואג׳ראיאנה, ואג׳רבהאירווה - הידוע גם בשם יאמנטקה - הוא הביטוי הזועם של
+            מנג׳ושרי, בודהה החוכמה.
+          </p>
+          <p>
+            השם ואג׳רבהאירווה (בטיבטית <span dir="ltr">rDo-rje ’jigs-byed</span>) פירושו ״האימה
+            שאין להשמידה״, והשם יאמנטקה פירושו ״קוטלו של יאמה״ - יאמה הוא אדון המוות.
+          </p>
+          <p>
+            יחד עם צ׳אקרסמוורה וגוהיאסמאג׳ה, ואג׳רבהאירווה - בצורת דמות יחידה, ״הגיבור הבודד״
+            (<span dir="ltr">ekavira</span> בסנסקריט) - הוא אחד משלושת היידמים המרכזיים של מסורת
+            הגלוג. התרגול שלו שייך למחלקת ״טנטרת האב״, שמדגישה את טיפוח האמצעים המיומנים
+            (<span dir="ltr">upaya</span> בסנסקריט).
+          </p>
+        </div>
+      </SectionFrame>
+
+      <SectionFrame tone="cream" maxWidth="md">
         <SectionTitle className="text-center mb-10">המורה</SectionTitle>
         <TeacherCard
           name="דרופון צ׳ונגוואל-לה"
