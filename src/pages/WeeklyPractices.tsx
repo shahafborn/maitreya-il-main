@@ -248,6 +248,43 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
+  {
+    // This weekend (2026-08-22 / 23) only. Chongwol-la's own schedule, sent
+    // 2026-08-20 and cross-checked against the real offsets (NY = Israel -7,
+    // Seoul = Israel +6) - all three of his zone conversions agree.
+    //   Sat: Tummo foundations 09-10 (Shahaf), Chongwol-la's Tummo 10-11:30.
+    //   Sun: Mahamudra clarification 15:00-16:30, and Green Tara moves 16 -> 17
+    //        for this week only (Shahaf, 2026-08-20).
+    // ROOMS DIFFER THIS WEEKEND: Saturday's Tummo stays in the usual Israel
+    // room (the page default), but the Sunday clarification is in Chongwol-la's
+    // other room, so it carries an explicit `url`.
+    // Tsewang - Healing Empowerment (Sat 14:00) is deliberately NOT listed: its
+    // duration and room are unknown, and it is the only item in his message
+    // without an "Israel" label, so it may not be an Israeli-sangha session.
+    // Saturday afternoon is omitted so the standing Lama Glenn cell stays.
+    from: "2026-08-22",
+    to: "2026-08-23",
+    note: "שימו לב: השבוע תרגולי הטומו של שבת מתקיימים שעה מאוחר יותר - יסודות הטומו ב-9:00 והטומו עם צ׳ונגוואל-לה ב-10:00. ביום ראשון מתקיים מפגש הבהרות עם צ׳ונגוואל-לה ב-15:00 בחדר זום אחר, וטארה הירוקה עוברת ל-17:00.",
+    days: {
+      "שבת": {
+        morning: [
+          { time: "09-10", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
+          { time: "10-11:30", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+        ],
+      },
+      "ראשון": {
+        afternoon: [
+          {
+            time: "15-16:30",
+            title: "מהמודרה: מפגש הבהרות עם צ׳ונגוואל-לה",
+            categories: ["basic"],
+            url: "https://us02web.zoom.us/j/86757320677?pwd=aJi9zGfhOSQKmiuga60XFpzQeQ8VN6.1",
+          },
+          { time: "17-18", title: "טארה הירוקה", categories: ["basic"], beginner: true },
+        ],
+      },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
@@ -297,7 +334,7 @@ function SessionCard({ s }: { s: Session }) {
       href={s.url ?? ZOOM_URL}
       target="_blank"
       rel="noopener noreferrer"
-      title={s.url ? "לפרטי הקורס" : "הצטרפו למפגש בזום"}
+      title={s.url && !s.url.includes("zoom.us") ? "לפרטי הקורס" : "הצטרפו למפגש בזום"}
       className="relative flex items-stretch overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
       style={{ background: bg }}
     >
