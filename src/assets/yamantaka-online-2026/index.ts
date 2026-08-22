@@ -13,10 +13,12 @@
 export { default as yamantakaHero } from "./hero-ekavira.jpg";
 export { default as yamantakaHeroMobile } from "./hero-ekavira-mobile.jpg";
 
-// The same painting near its native portrait ratio, shown inline above the
-// "who is Yamantaka" heading. Same file as the mobile hero, so Vite emits it
-// once, but exported under its own name so body usage does not read as a hero.
-export { default as yamantakaThangka } from "./hero-ekavira-mobile.jpg";
+// The complete painting, uncropped, shown inline above the "who is Yamantaka"
+// heading. Converted from Shahaf's high-res source (ekavirahr.tif, 1937x2414)
+// at its full extent - throne, lotus, sky and landscape included. The hero
+// files above are crops of this same painting and cut all of that off, so do
+// not substitute one for the other here.
+export { default as yamantakaThangka } from "./thangka-ekavira-full.jpg";
 
 // Previous hero: the text-free crop of the campaign graphic. Kept for reference.
 export { default as yamantakaHeroLegacy } from "./hero-yamantaka.png";
