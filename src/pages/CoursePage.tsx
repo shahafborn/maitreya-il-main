@@ -77,9 +77,6 @@ const CoursePage = ({ course }: CoursePageProps) => {
           <CourseContentBlock key={block.id} block={block} />
         ))}
 
-      {/* Promotions */}
-      <CoursePromoSection promotions={promotions} />
-
       {/* Content blocks (practice section) */}
       {visibleBlocks
         .filter((b) => b.section === "practice")
@@ -92,6 +89,12 @@ const CoursePage = ({ course }: CoursePageProps) => {
 
       {/* PDF Downloads (always rendered; component shows an empty state when no files) */}
       <CourseFiles files={files} courseId={course.id} />
+
+      {/* Promotions - after the course's own material, before the recordings.
+          Shahaf, 2026-08-22: a promo for another course should not interrupt
+          before people have seen what they came for, but it should catch them
+          before they settle into watching. */}
+      <CoursePromoSection promotions={promotions} />
 
       {/* Recordings (always rendered; component shows an empty state when no recordings) */}
       <CourseRecordings recordings={recordings} courseId={course.id} />
