@@ -44,6 +44,31 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
     return b - a;
   });
 
+  // A course with no week numbers at all (an ongoing practice rather than a
+  // numbered series) has nothing to group BY, so the accordion would wrap every
+  // recording in a single meaningless "Additional Recordings" drawer. Render a
+  // plain list instead - the titles already carry the date.
+  const ungrouped = weeks.length === 1 && weeks[0] === null;
+
+  const RecordingItem = ({ rec }: { rec: CourseRecording }) => (
+    <div>
+      <h4 className="text-sm font-medium text-foreground mb-2">
+        {rec.title}
+        {rec.session_type && (
+          <span className="ml-2 text-xs text-muted-foreground">
+            ({SESSION_LABELS[rec.session_type] ?? rec.session_type})
+          </span>
+        )}
+      </h4>
+      <VideoEmbed
+        embedType={rec.embed_type}
+        embedUrl={rec.embed_url}
+        title={rec.title}
+        onLoad={() => handleVideoLoad(rec.id)}
+      />
+    </div>
+  );
+
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto px-6 max-w-3xl">
@@ -55,6 +80,12 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
           <p className="text-center text-muted-foreground italic">
             Session recordings will appear here as they are added.
           </p>
+        ) : ungrouped ? (
+          <div className="space-y-8">
+            {grouped.get(null)!.map((rec) => (
+              <RecordingItem key={rec.id} rec={rec} />
+            ))}
+          </div>
         ) : (
         <Accordion type="multiple" defaultValue={weeks.map((w) => String(w))} className="w-full">
           {weeks.map((week) => {
@@ -70,22 +101,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
                 <AccordionContent>
                   <div className="space-y-6 pt-2">
                     {recs.map((rec) => (
-                      <div key={rec.id}>
-                        <h4 className="text-sm font-medium text-foreground mb-2">
-                          {rec.title}
-                          {rec.session_type && (
-                            <span className="ml-2 text-xs text-muted-foreground">
-                              ({SESSION_LABELS[rec.session_type] ?? rec.session_type})
-                            </span>
-                          )}
-                        </h4>
-                        <VideoEmbed
-                          embedType={rec.embed_type}
-                          embedUrl={rec.embed_url}
-                          title={rec.title}
-                          onLoad={() => handleVideoLoad(rec.id)}
-                        />
-                      </div>
+                      <RecordingItem key={rec.id} rec={rec} />
                     ))}
                   </div>
                 </AccordionContent>
