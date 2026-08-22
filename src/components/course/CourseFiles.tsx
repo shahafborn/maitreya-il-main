@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CourseResource } from "@/hooks/useCourseContent";
-import { triggerDownload } from "@/lib/storage";
+import { triggerDownload, isExternalUrl } from "@/lib/storage";
 import { trackResourceDownload } from "@/lib/analytics";
 import { friendlyTitle, looksLikeRawFilename } from "@/lib/utils";
 
@@ -12,6 +12,9 @@ interface CourseFilesProps {
 
 const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  const isLink = (file: CourseResource) =>
+    file.resource_type === "link" || isExternalUrl(file.storage_path);
 
   const handleDownload = async (file: CourseResource) => {
     setDownloadingId(file.id);
@@ -57,6 +60,11 @@ const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
                     {file.description}
                   </p>
                 )}
+                {isLink(file) && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Opens in a new tab
+                  </p>
+                )}
                 {file.file_size && (
                   <p className="text-xs text-muted-foreground mt-1">
                     {(file.file_size / 1024 / 1024).toFixed(1)} MB
@@ -70,7 +78,11 @@ const CourseFiles = ({ files, courseId }: CourseFilesProps) => {
                 onClick={() => handleDownload(file)}
                 className="ml-4 shrink-0"
               >
-                {downloadingId === file.id ? "..." : "Download"}
+                {downloadingId === file.id
+                  ? "..."
+                  : isLink(file)
+                    ? "Open"
+                    : "Download"}
               </Button>
             </div>
           ))}

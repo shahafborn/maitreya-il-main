@@ -31,7 +31,11 @@ const CoursePage = ({ course }: CoursePageProps) => {
   const { data: promotions = [] } = useActivePromotions();
 
   const photos = resources.filter((r) => r.resource_type === "photo");
-  const files = resources.filter((r) => r.resource_type === "pdf");
+  // "link" sits alongside "pdf": both render in the Resources list, one
+  // downloads from storage and the other opens externally.
+  const files = resources.filter(
+    (r) => r.resource_type === "pdf" || r.resource_type === "link"
+  );
 
   // Content blocks the admin has toggled off are hidden from the public page.
   const visibleBlocks = contentBlocks.filter((b) => b.is_visible);
