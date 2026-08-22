@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useCourseResources, type CourseResource } from "@/hooks/useCourseContent";
-import { uploadFile, deleteFile } from "@/lib/storage";
+import { uploadFile, deleteFile, isExternalUrl } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,15 +24,21 @@ const AdminResourceUploader = ({ courseId }: Props) => {
   const { data: resources = [], isLoading } = useCourseResources(courseId);
 
   const photos = resources.filter((r) => r.resource_type === "photo");
-  const files = resources.filter((r) => r.resource_type === "pdf");
+  // Links live in the same list as files - both are "things to open".
+  const files = resources.filter(
+    (r) => r.resource_type === "pdf" || r.resource_type === "link"
+  );
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ["course-resources", courseId] });
 
   const deleteMutation = useMutation({
     mutationFn: async (resource: CourseResource) => {
-      // Delete storage object first, then DB row
-      await deleteFile(resource.storage_path);
+      // Delete storage object first, then DB row. A link has no object in the
+      // bucket - deleting it would throw and strand the row.
+      if (!isExternalUrl(resource.storage_path)) {
+        await deleteFile(resource.storage_path);
+      }
       const { error } = await supabase
         .from("course_resources")
         .delete()
@@ -70,7 +76,7 @@ const AdminResourceUploader = ({ courseId }: Props) => {
       {/* PDFs */}
       {files.length > 0 && (
         <div>
-          <h3 className="font-heading text-lg font-semibold mb-3">Files ({files.length})</h3>
+          <h3 className="font-heading text-lg font-semibold mb-3">Files &amp; Links ({files.length})</h3>
           <div className="space-y-2">
             {files.map((r) => (
               <ResourceRow
@@ -150,9 +156,35 @@ function ResourceRow({
 function UploadForm({ courseId, sortOrder }: { courseId: string; sortOrder: number }) {
   const queryClient = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [resourceType, setResourceType] = useState<"photo" | "pdf">("photo");
+  const [resourceType, setResourceType] = useState<"photo" | "pdf" | "link">("photo");
+  const [linkTitle, setLinkTitle] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+
+  /** A link has no file to upload - just a row with the URL in storage_path. */
+  const handleAddLink = async () => {
+    if (!linkTitle.trim() || !linkUrl.trim()) return;
+    setUploading(true);
+    setError("");
+    try {
+      const { error: dbError } = await supabase.from("course_resources").insert({
+        course_id: courseId,
+        resource_type: "link",
+        title: linkTitle.trim(),
+        storage_path: linkUrl.trim(),
+        sort_order: sortOrder,
+      });
+      if (dbError) throw dbError;
+      queryClient.invalidateQueries({ queryKey: ["course-resources", courseId] });
+      setLinkTitle("");
+      setLinkUrl("");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Could not add the link");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleUpload = async () => {
     const file = fileRef.current?.files?.[0];
@@ -188,29 +220,60 @@ function UploadForm({ courseId, sortOrder }: { courseId: string; sortOrder: numb
 
   return (
     <div className="bg-muted/30 border border-border rounded-lg p-4 space-y-3">
-      <h3 className="font-heading text-lg font-semibold">Upload Resource</h3>
+      <h3 className="font-heading text-lg font-semibold">Add Resource</h3>
       <div className="flex items-end gap-3">
         <div>
           <Label className="text-xs">Type</Label>
-          <Select value={resourceType} onValueChange={(v: "photo" | "pdf") => setResourceType(v)}>
+          <Select
+            value={resourceType}
+            onValueChange={(v: "photo" | "pdf" | "link") => setResourceType(v)}
+          >
             <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="photo">Photo</SelectItem>
               <SelectItem value="pdf">PDF</SelectItem>
+              <SelectItem value="link">Link</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div className="flex-1">
-          <Label className="text-xs">File</Label>
-          <Input
-            ref={fileRef}
-            type="file"
-            accept={resourceType === "photo" ? "image/*" : "application/pdf"}
-                     />
-        </div>
-        <Button onClick={handleUpload} disabled={uploading}>
-          {uploading ? "Uploading..." : "Upload"}
-        </Button>
+        {resourceType === "link" ? (
+          <>
+            <div className="flex-1">
+              <Label className="text-xs">Title</Label>
+              <Input
+                value={linkTitle}
+                onChange={(e) => setLinkTitle(e.target.value)}
+                placeholder="What the link is called on the page"
+              />
+            </div>
+            <div className="flex-1">
+              <Label className="text-xs">URL</Label>
+              <Input
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                placeholder="https://..."
+                dir="ltr"
+              />
+            </div>
+            <Button onClick={handleAddLink} disabled={uploading}>
+              {uploading ? "Adding..." : "Add Link"}
+            </Button>
+          </>
+        ) : (
+          <>
+            <div className="flex-1">
+              <Label className="text-xs">File</Label>
+              <Input
+                ref={fileRef}
+                type="file"
+                accept={resourceType === "photo" ? "image/*" : "application/pdf"}
+              />
+            </div>
+            <Button onClick={handleUpload} disabled={uploading}>
+              {uploading ? "Uploading..." : "Upload"}
+            </Button>
+          </>
+        )}
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>

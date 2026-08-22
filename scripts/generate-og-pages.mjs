@@ -23,10 +23,15 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 }
 
 const SITE_NAME = "Maitreya Sangha Israel";
+const SITE_NAME_HE = "מאיטרייה סנגהה ישראל";
+
+/** A Hebrew course should not be suffixed with the English site name. */
+const siteNameFor = (course) =>
+  course.default_dir === "rtl" ? SITE_NAME_HE : SITE_NAME;
 
 async function fetchCourses() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/courses?select=slug,title,description&is_published=eq.true`,
+    `${SUPABASE_URL}/rest/v1/courses?select=slug,title,description,default_dir&is_published=eq.true`,
     {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -99,6 +104,19 @@ function writeHtml(filePath, content) {
   fs.writeFileSync(filePath, content, "utf-8");
 }
 
+// Standing pages that are not events and not courses, but do get shared.
+// Anything NOT listed here (and not a published course) falls back to the
+// generic tags in index.html - which is fine as a floor, but a page people
+// actually paste into WhatsApp deserves its own.
+const STATIC_PAGES = [
+  {
+    route: "practices",
+    title: "לוח התרגולים השבועי | מאיטרייה סנגהה ישראל",
+    description:
+      "לוח התרגולים הקבועים של מאיטרייה סנגהה ישראל. תרגולים שבועיים בזום, חלקם מומלצים גם למתחילים.",
+  },
+];
+
 // Static event pages with hardcoded OG tags
 const STATIC_EVENTS = [
   {
@@ -153,8 +171,9 @@ async function main() {
   console.log(`Generating OG pages for ${courses.length} course(s)...`);
 
   for (const course of courses) {
-    const courseTitle = `${course.title} | ${SITE_NAME}`;
-    const registerTitle = `${course.title} | ${SITE_NAME}`;
+    const site = siteNameFor(course);
+    const courseTitle = `${course.title} | ${site}`;
+    const registerTitle = `${course.title} | ${site}`;
     const desc = course.description || course.title;
 
     // /courses/<slug>/index.html
@@ -188,6 +207,19 @@ async function main() {
     });
     writeHtml(path.join(DIST, event.route, "index.html"), eventPage);
     console.log(`  ✓ ${event.route}`);
+  }
+
+  // Standing non-event pages
+  console.log(`Generating OG pages for ${STATIC_PAGES.length} standing page(s)...`);
+
+  for (const page of STATIC_PAGES) {
+    const html = injectOgTags(template, {
+      title: page.title,
+      description: page.description,
+      image: page.image,
+    });
+    writeHtml(path.join(DIST, page.route, "index.html"), html);
+    console.log(`  ✓ ${page.route}`);
   }
 
   console.log("Done.");
