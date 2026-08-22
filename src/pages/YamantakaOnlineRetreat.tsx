@@ -39,7 +39,7 @@ import { GoldDot } from "@/components/retreat/GoldDot";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
-import { yamantakaHero, yamantakaHeroMobile, druponPhoto } from "@/assets/yamantaka-online-2026";
+import { yamantakaHero, yamantakaHeroMobile, yamantakaThangka, druponPhoto } from "@/assets/yamantaka-online-2026";
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/Yamantaka_Register";
 
@@ -236,6 +236,15 @@ const YamantakaOnlineRetreat = () => {
       />
 
       <SectionFrame tone="stone" maxWidth="md">
+        <div className="max-w-sm mx-auto mb-10">
+          <img
+            src={yamantakaThangka}
+            alt="תנקה של יאמנטקה בצורת הגיבור היחיד"
+            loading="lazy"
+            decoding="async"
+            className="w-full rounded-lg shadow-md"
+          />
+        </div>
         <SectionTitle className="text-center mb-8">מיהו יאמנטקה</SectionTitle>
         <div
           className="max-w-2xl mx-auto space-y-5 text-lg leading-relaxed"

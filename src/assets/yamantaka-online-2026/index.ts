@@ -13,6 +13,11 @@
 export { default as yamantakaHero } from "./hero-ekavira.jpg";
 export { default as yamantakaHeroMobile } from "./hero-ekavira-mobile.jpg";
 
+// The same painting near its native portrait ratio, shown inline above the
+// "who is Yamantaka" heading. Same file as the mobile hero, so Vite emits it
+// once, but exported under its own name so body usage does not read as a hero.
+export { default as yamantakaThangka } from "./hero-ekavira-mobile.jpg";
+
 // Previous hero: the text-free crop of the campaign graphic. Kept for reference.
 export { default as yamantakaHeroLegacy } from "./hero-yamantaka.png";
 
