@@ -287,6 +287,45 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
+  {
+    // This Saturday (2026-08-29) only, per the schedule Shahaf sent the practice
+    // group on 2026-08-28: both Tummo sessions run two hours later than standing
+    // (10-11 and 11-12:30, the second one with Q&A), and a one-off mantra practice
+    // for Nepal runs 13-15. Lama Glenn's course is unchanged at 16-17:30, re-listed
+    // because a provided period REPLACES the standing cell.
+    from: "2026-08-29",
+    to: "2026-08-29",
+    note: "שימו לב: היום תרגולי הטומו מתקיימים מאוחר יותר - יסודות הטומו ב-10:00 והטומו עם צ׳ונגוואל-לה ב-11:00. בנוסף, ב-13:00 מתקיים תרגול מנטרות למען נפאל והאנשים שנפגעו מהאסון.",
+    days: {
+      "שבת": {
+        morning: [
+          { time: "10-11", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
+          {
+            time: "11-12:30",
+            title: "טומו עם צ׳ונגוואל-לה",
+            subtitle: "כולל שאלות ותשובות",
+            categories: ["tummo"],
+            beginner: true,
+          },
+        ],
+        afternoon: [
+          {
+            time: "13-15",
+            title: "תרגול מנטרות למען נפאל",
+            subtitle: "למען הנפגעים מהאסון",
+            categories: ["basic"],
+          },
+          {
+            time: "16-17:30",
+            title: "מהמודרה עם לאמה גלן",
+            subtitle: "עד 5.9",
+            categories: ["basic"],
+            url: "/p/events/uma-zub-tri",
+          },
+        ],
+      },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
