@@ -56,6 +56,24 @@ export interface PricingTier {
   variantOf?: string;
   /** Short label for this tier inside the second select (e.g. "3 תשלומים"). */
   variantLabel?: string;
+  /**
+   * Keeps this tier out of the first select entirely. It becomes reachable
+   * only by being preselected from a link - for options that are sent to
+   * named people rather than offered to everyone (e.g. an open dana amount
+   * for scholarship recipients and board members).
+   */
+  hidden?: boolean;
+  /**
+   * No fixed price: the payer types the amount in the form, and *that* number
+   * is what n8n charges. Set on the parent tier; its variants inherit it.
+   * Note that priceValue stays 0 here and is not the charge - see the comment
+   * on priceValue above.
+   */
+  openAmount?: boolean;
+  /** Smallest accepted amount, in the tier's currency. Defaults to 1. */
+  openAmountMin?: number;
+  /** Largest accepted amount. Guards typos and crafted requests. */
+  openAmountMax?: number;
 }
 
 export interface SEOConfig {

@@ -75,6 +75,12 @@ interface RegistrationModalCopy {
   errConfirmed: string;
   /** Error for the follow-up select (falls back to errTier). */
   errVariant?: string;
+  /** Label for the open-amount field (e.g. "סכום הדאנה"). */
+  amountLabel?: string;
+  /** Helper line under it (e.g. "כל סכום, כפי יכולתכם"). */
+  amountNote?: string;
+  errAmount?: string;
+  errAmountRange?: string;
   errServer: string;
   errNoPaymentUrl: string;
   errGeneric: string;
@@ -125,11 +131,14 @@ export const RegistrationModal = ({
   config,
   copy,
 }: RegistrationModalProps) => {
-  // Tiers marked `variantOf` are follow-up choices, not top-level ones.
-  const topTiers = config.tiers.filter((t) => !t.variantOf);
+  // Tiers marked `variantOf` are follow-up choices, not top-level ones, and
+  // `hidden` ones are not offered at all - they arrive preselected from a link.
+  const topTiers = config.tiers.filter((t) => !t.variantOf && !t.hidden);
   const singleTier = topTiers.length === 1;
   const [tierId, setTierId] = useState<string>(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
   const [variantId, setVariantId] = useState("");
+  /** Only used by tiers marked openAmount: the sum the payer types. */
+  const [amount, setAmount] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
@@ -159,6 +168,7 @@ export const RegistrationModal = ({
     }
     setTierId(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
     setVariantId("");
+    setAmount("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preselectedTierId, singleTier, config.tiers]);
 
@@ -175,6 +185,18 @@ export const RegistrationModal = ({
 
   /** The follow-up options for whatever is chosen in the first select. */
   const variants = config.tiers.filter((t) => t.variantOf === tierId);
+  /** The tier chosen in the first select, whether or not it is offered there. */
+  const parentTier = config.tiers.find((t) => t.id === tierId);
+  /**
+   * A hidden tier reached by link. The first select is replaced by a plain
+   * line naming it, since it is not one choice among several - it is the only
+   * thing this link does.
+   */
+  const lockedTier = parentTier?.hidden ? parentTier : undefined;
+  /** Variants inherit openAmount from their parent rather than repeating it. */
+  const openAmount = Boolean(parentTier?.openAmount);
+  const amountMin = parentTier?.openAmountMin ?? 1;
+  const amountMax = parentTier?.openAmountMax ?? 100000;
   /** What actually gets submitted: the follow-up choice when there is one. */
   const effectiveTier =
     (variants.length > 0
@@ -205,6 +227,12 @@ export const RegistrationModal = ({
     const errors: Record<string, string> = {};
     if (config.showTierSelect && !tierId) errors.tierId = copy.errTier;
     if (variants.length > 0 && !variantId) errors.variantId = copy.errVariant ?? copy.errTier;
+    if (openAmount) {
+      const n = Number(amount);
+      if (!amount.trim()) errors.amount = copy.errAmount ?? "";
+      else if (!Number.isFinite(n) || !Number.isInteger(n) || n < amountMin || n > amountMax)
+        errors.amount = copy.errAmountRange ?? "";
+    }
     if (!fname.trim()) errors.fname = copy.errFname;
     if (!lname.trim()) errors.lname = copy.errLname;
     if (!email.trim()) errors.email = copy.errEmail;
@@ -224,7 +252,7 @@ export const RegistrationModal = ({
     setError("");
 
     if (Object.keys(errors).length > 0) {
-      const fieldOrder = ["tierId", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "city", "country", "confirmed"];
+      const fieldOrder = ["tierId", "amount", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "city", "country", "confirmed"];
       const firstErrorKey = fieldOrder.find((k) => errors[k]);
       if (firstErrorKey) {
         const el = formRef.current?.querySelector(`[data-field='${firstErrorKey}']`) as HTMLElement;
@@ -252,7 +280,9 @@ export const RegistrationModal = ({
     const regToken = crypto.randomUUID();
     fireInitiateCheckout({
       regToken,
-      value: selectedTier.priceValue,
+      // For an open amount the tier carries no price, so the typed sum is what
+      // the pixel should report as the value of this checkout.
+      value: openAmount ? Number(amount) : selectedTier.priceValue,
       tierId: selectedTier.id,
       contentName: config.contentName,
       storagePrefix: config.storagePrefix,
@@ -266,6 +296,9 @@ export const RegistrationModal = ({
         body: JSON.stringify({
           reg_token: regToken,
           field_event: selectedTier.id,
+          // n8n charges this number when the option's table entry has no fixed
+          // amount. It re-checks the range there: this value is client-supplied.
+          ...(openAmount && { amount: Number(amount) }),
           full_name: `${fname} ${lname}`.trim(),
           email,
           ...(config.askPhone !== false && { phone }),
@@ -427,25 +460,36 @@ export const RegistrationModal = ({
             {config.showTierSelect && (
               <div data-field="tierId">
                 <label className={labelClass}>{config.tierSelectLabel} *</label>
-                <SelectWrapper>
-                  <select
-                    value={tierId}
-                    onChange={(e) => {
-                      setTierId(e.target.value);
-                      setVariantId("");
-                      setFieldErrors((p) => ({ ...p, tierId: "", variantId: "" }));
-                    }}
-                    className={`${selectClass} ${fieldErrorClass("tierId")}`}
+                {/* A hidden tier arrives preselected from a link, so there is
+                    nothing to choose between - name it and move on. */}
+                {lockedTier ? (
+                  <p
+                    className="text-sm py-2"
+                    style={{ color: RETREAT_THEME.MAROON }}
                   >
-                    <option value="">{copy.tierSelectPlaceholder}</option>
-                    {topTiers.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.title}
-                        {t.priceDisplay ? ` - ${t.priceDisplay}${t.currencySymbol ?? ""}` : ""}
-                      </option>
-                    ))}
-                  </select>
-                </SelectWrapper>
+                    {lockedTier.title}
+                  </p>
+                ) : (
+                  <SelectWrapper>
+                    <select
+                      value={tierId}
+                      onChange={(e) => {
+                        setTierId(e.target.value);
+                        setVariantId("");
+                        setFieldErrors((p) => ({ ...p, tierId: "", variantId: "" }));
+                      }}
+                      className={`${selectClass} ${fieldErrorClass("tierId")}`}
+                    >
+                      <option value="">{copy.tierSelectPlaceholder}</option>
+                      {topTiers.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.title}
+                          {t.priceDisplay ? ` - ${t.priceDisplay}${t.currencySymbol ?? ""}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </SelectWrapper>
+                )}
                 <FieldError field="tierId" />
                 {/* Whatever the chosen option still needs answering - for the
                     three-month dana, how many payments to split it into. */}
@@ -470,6 +514,40 @@ export const RegistrationModal = ({
                       </select>
                     </SelectWrapper>
                     <FieldError field="variantId" />
+                  </div>
+                )}
+                {openAmount && (
+                  <div data-field="amount" className="mt-4">
+                    <label className={labelClass}>{copy.amountLabel} *</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={amount}
+                        onChange={(e) => {
+                          // Digits only: a stray character here becomes a
+                          // rejected charge two steps later.
+                          setAmount(e.target.value.replace(/[^\d]/g, ""));
+                          setFieldErrors((p) => ({ ...p, amount: "" }));
+                        }}
+                        className={`${inputClass} ${fieldErrorClass("amount")}`}
+                        placeholder={String(amountMin)}
+                      />
+                      {parentTier?.currencySymbol && (
+                        <span
+                          className="absolute inset-y-0 left-3 flex items-center text-sm pointer-events-none"
+                          style={{ color: RETREAT_THEME.WARM_GRAY }}
+                        >
+                          {parentTier.currencySymbol}
+                        </span>
+                      )}
+                    </div>
+                    <FieldError field="amount" />
+                    {copy.amountNote && (
+                      <p className="text-xs mt-1" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                        {copy.amountNote}
+                      </p>
+                    )}
                   </div>
                 )}
               </div>

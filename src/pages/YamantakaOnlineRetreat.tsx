@@ -43,6 +43,22 @@ import { yamantakaHero, yamantakaHeroMobile, yamantakaThangka, druponPhoto } fro
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/Yamantaka_Register";
 
+/**
+ * Unlocks the open-amount dana option: `?dana=q7f4mx`.
+ *
+ * Not offered anywhere on the page - Shahaf sends this link by hand to
+ * scholarship recipients and board members. The value is deliberately not a
+ * word: `?dana=open` would be one guess away from letting a stranger register
+ * at one shekel with a real confirmation and a Mailchimp tag. It is obscurity,
+ * not security (anyone who forwards the mail forwards the link), but the risk
+ * it actually closes is casual discovery.
+ *
+ * Every open-amount registration lands in the sheet with its own ticket_type
+ * and the amount, so an unexpected one is visible rather than silent.
+ */
+const OPEN_DANA_KEY = "q7f4mx";
+const OPEN_DANA_TIER_ID = "Yamantaka_Online_Open";
+
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 const CONTACT_PHONE = "054-4905031";
 
@@ -87,9 +103,42 @@ const registrationConfig: RegistrationConfig = {
       priceValue: 750,
       currencySymbol: "₪",
     },
+    // Open amount. Never shown on the page: `hidden` keeps it out of the
+    // select, and it is reachable only through the ?dana=<UNLOCK> link, which
+    // is sent by hand to scholarship recipients and board members.
+    // The two variants below decide the period, which the fixed tiers carry in
+    // their ids and n8n needs for the sheet's `period` column.
+    {
+      id: "Yamantaka_Online_Open",
+      title: "דאנה בסכום שתבחרו",
+      hidden: true,
+      openAmount: true,
+      openAmountMin: 1,
+      openAmountMax: 20000,
+      priceDisplay: "",
+      priceValue: 0,
+      currencySymbol: "₪",
+    },
+    {
+      id: "Yamantaka_Online_Open_Monthly",
+      variantOf: "Yamantaka_Online_Open",
+      variantLabel: "לחודש הקרוב",
+      title: "דאנה בסכום שתבחרו - לחודש הקרוב",
+      priceDisplay: "",
+      priceValue: 0,
+    },
+    {
+      id: "Yamantaka_Online_Open_Full",
+      variantOf: "Yamantaka_Online_Open",
+      variantLabel: "לשלושת החודשים",
+      title: "דאנה בסכום שתבחרו - לשלושת החודשים",
+      priceDisplay: "",
+      priceValue: 0,
+    },
   ],
   showTierSelect: true,
   tierSelectLabel: "אופן ההשתתפות בדאנה",
+  variantSelectLabel: "עבור איזו תקופה",
   termsUrl: "https://maitreya.org.il/",
   askPrevExp: true,
   storagePrefix: "yamantaka26",
@@ -128,7 +177,12 @@ const registrationCopy = {
   submitLabel: "המשך לתשלום",
   submittingLabel: "שולח...",
   submitFootnote: "התשלום מתבצע כאן בעמוד, בעמוד סליקה מאובטח. ההרשמה תסתיים רק לאחר התשלום.",
+  amountLabel: "סכום הדאנה",
+  amountNote: "כל סכום, כפי יכולתכם.",
   errTier: "יש לבחור אופן השתתפות",
+  errVariant: "יש לבחור תקופה",
+  errAmount: "יש למלא סכום",
+  errAmountRange: "יש למלא סכום במספרים שלמים, בין 1 ל-20,000",
   errFname: "יש למלא שם פרטי",
   errLname: "יש למלא שם משפחה",
   errEmail: "יש למלא אימייל",
@@ -185,6 +239,7 @@ const scheduleNotes = [
 const YamantakaOnlineRetreat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const openDana = searchParams.get("dana") === OPEN_DANA_KEY;
   const [modalOpen, setModalOpen] = useState(false);
 
   useRetreatSEO(seo);
@@ -198,6 +253,13 @@ const YamantakaOnlineRetreat = () => {
       window.top.location.href = window.location.href;
     }
   }, [paymentStatus]);
+
+  // Arriving on the open-dana link opens the form straight away - the person
+  // was sent here to pay, not to read the page again. Suppressed while a
+  // payment result is showing, so the two dialogs never fight.
+  useEffect(() => {
+    if (openDana && !paymentStatus) setModalOpen(true);
+  }, [openDana, paymentStatus]);
 
   const open = () => {
     window.gtag?.("event", "registration_modal_open", { page: "yamantaka-online-2026" });
@@ -334,6 +396,7 @@ const YamantakaOnlineRetreat = () => {
       <RegistrationModal
         open={modalOpen}
         onOpenChange={setModalOpen}
+        preselectedTierId={openDana ? OPEN_DANA_TIER_ID : undefined}
         config={registrationConfig}
         copy={registrationCopy}
       />
