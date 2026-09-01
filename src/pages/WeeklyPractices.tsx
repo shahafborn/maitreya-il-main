@@ -326,6 +326,23 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
+  {
+    // Yamantaka retreat, 2026-09-01 to 2026-11-20 (Mon-Fri, Korea time). Its
+    // third session runs 07:00-09:00 Israel time, which collides head-on with
+    // the three 07-08 morning practices on Mon/Tue/Wed, so they are cleared for
+    // the duration. Nothing else overlaps: the retreat's other sessions fall at
+    // 01:30, 03:30, 09:30 and 13:00, and it does not run Sat/Sun, so the Sunday
+    // and Saturday cells and every evening session stay as they are.
+    // The window auto-reverts on 2026-11-21 - no manual undo needed.
+    from: "2026-09-01",
+    to: "2026-11-20",
+    note: "בתקופת ריטריט יאמנטקה (1.9 עד 20.11) תרגולי הבוקר בימים שני, שלישי ורביעי אינם מתקיימים - הם חופפים למפגשי הריטריט. שאר התרגולים ממשיכים כרגיל.",
+    days: {
+      "שני": { morning: [] },
+      "שלישי": { morning: [] },
+      "רביעי": { morning: [] },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
