@@ -1,0 +1,49 @@
+name: Rollback - restore the archived WordPress web root
+
+# Emergency undo for cutover.yml. Puts back the copy of the web root that the
+# cutover archived (WordPress + the old /p/ app, exactly as they were) and
+# parks the new build's files in ~/site-rolledback-<timestamp>/ on the server.
+# The WordPress database was never touched, so the old site is simply back.
+# Run by hand: Actions -> this workflow -> Run workflow, type ROLLBACK.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type ROLLBACK to restore the archived WordPress web root"
+        required: true
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    if: github.event.inputs.confirm == 'ROLLBACK'
+    runs-on: ubuntu-latest
+    env:
+      SFTP_HOST: ${{ secrets.SFTP_HOST }}
+      SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+      SSHPASS: ${{ secrets.SFTP_PASSWORD }}
+      SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+
+      - name: Restore the archived web root
+        run: |
+          echo "::add-mask::$SFTP_USERNAME"
+          ROOT="${SFTP_REMOTE_PATH%/}"; ROOT="${ROOT%/p}"
+          sshpass -e ssh -o StrictHostKeyChecking=no -p "$SFTP_PORT" "$SFTP_USERNAME@$SFTP_HOST" \
+            "bash -s -- '$ROOT'" < scripts/server/restore-wordpress.sh
+
+      - name: Check the old site answers
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" https://maitreya.org.il/)
+          echo "home: $code"
+          test "$code" = "200"

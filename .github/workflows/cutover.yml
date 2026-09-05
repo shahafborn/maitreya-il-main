@@ -1,0 +1,91 @@
+name: Cutover - publish the site at the domain root
+
+# ONE-TIME migration off WordPress. Run by hand (Actions -> this workflow ->
+# Run workflow, type CUTOVER). What it does, in order:
+#   1. builds the site exactly like deploy.yml (tests, pre-render, link check)
+#   2. on the server: dumps the WordPress database and copies the whole web
+#      root (WordPress + the old /p/ app) to ~/site-archive-<timestamp>/
+#   3. mirrors the new build over the web root - the new .htaccess takes over
+#      and WordPress stops answering the moment it lands
+#   4. on the server: moves the WordPress files and the old /p/ folder out of
+#      the web root (they stay in the archive)
+#   5. runs the smoke test against https://maitreya.org.il
+# Undo: .github/workflows/rollback.yml restores the archived web root.
+# Details and the manual checklist: docs/deployment.md
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type CUTOVER to archive WordPress and publish the new site at the root"
+        required: true
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  cutover:
+    if: github.event.inputs.confirm == 'CUTOVER'
+    runs-on: ubuntu-latest
+    env:
+      SFTP_HOST: ${{ secrets.SFTP_HOST }}
+      SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+      SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+      SSHPASS: ${{ secrets.SFTP_PASSWORD }}
+      SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for pre-rendering
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          CI: true
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Install lftp + sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp sshpass
+
+      - name: Archive WordPress on the server (database dump + full copy of the web root)
+        run: |
+          echo "::add-mask::$SFTP_USERNAME"
+          ROOT="${SFTP_REMOTE_PATH%/}"; ROOT="${ROOT%/p}"
+          sshpass -e ssh -o StrictHostKeyChecking=no -p "$SFTP_PORT" "$SFTP_USERNAME@$SFTP_HOST" \
+            "bash -s -- '$ROOT'" < scripts/server/archive-wordpress.sh
+
+      - name: Publish the new build over the web root
+        timeout-minutes: 8
+        run: |
+          ROOT="${SFTP_REMOTE_PATH%/}"; ROOT="${ROOT%/p}"
+          lftp -u "$SFTP_USERNAME","$SFTP_PASSWORD" \
+            -p "$SFTP_PORT" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; set net:reconnect-interval-base 5; mirror -R --overwrite --verbose dist/ $ROOT; quit" \
+            sftp://"$SFTP_HOST"
+
+      - name: Move the WordPress files and the old /p/ folder out of the web root
+        run: |
+          ROOT="${SFTP_REMOTE_PATH%/}"; ROOT="${ROOT%/p}"
+          sshpass -e ssh -o StrictHostKeyChecking=no -p "$SFTP_PORT" "$SFTP_USERNAME@$SFTP_HOST" \
+            "bash -s -- '$ROOT'" < scripts/server/move-wordpress-aside.sh
+
+      - name: Smoke test the live site
+        run: node scripts/smoke-test.mjs https://maitreya.org.il
