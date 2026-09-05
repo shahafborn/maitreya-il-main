@@ -61,5 +61,9 @@ jobs:
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
 
-      - name: Smoke test the live site
+      # Hostinger's edge answers 403 to GitHub's runners (seen at the 2026-09-05 cutover), so this
+      # step is informational here. Run it from a normal machine for the real verdict:
+      #   node scripts/smoke-test.mjs https://maitreya.org.il
+      - name: Smoke test the live site (informational - runner IPs may be blocked)
+        continue-on-error: true
         run: node scripts/smoke-test.mjs https://maitreya.org.il

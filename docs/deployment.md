@@ -14,7 +14,7 @@ How maitreya.org.il is served, how a deploy works, and the one-time runbook that
 
 1. Commit on `main` (or merge a branch). Pre-commit checks: `npm run test`, `npx tsc --noEmit`, `npm run build`.
 2. Push. `.github/workflows/deploy.yml` builds (tests, pre-render, link check), mirrors `dist/` over the document root by SFTP and runs `scripts/smoke-test.mjs` against the live site.
-3. If the smoke test fails, the workflow is red - read its output; every check names the URL and what it expected.
+3. The workflow's own smoke-test step is informational only: Hostinger's edge answers 403 to GitHub's runners (seen at the cutover). Run `node scripts/smoke-test.mjs https://maitreya.org.il` from a normal machine for the real verdict; every check names the URL and what it expected. Remember Hostinger's edge cache: right after a deploy, old HTML can still be served until it expires or is purged in hPanel.
 
 The SFTP target comes from the `SFTP_REMOTE_PATH` secret. Historically it pointed at the old `/p/` folder; the workflows strip a trailing `/p`, so the secret may keep its old value or be set to the document root itself.
 
