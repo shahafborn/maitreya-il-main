@@ -54,8 +54,8 @@ const seo: SEOConfig = {
     "סדרת לימוד ותרגול בת שישה שבועות בנושא המהמודרה - ההצבעה הישירה אל טבע התודעה, עם לאמה גלן מולין. מפגש שבועי בזום, בשבתות בשעה 16:00 (שעון ישראל), החל מ-1 באוגוסט 2026.",
   keywords:
     "מהמודרה, אומה זוב טרי, בודהיזם, טנטרה, לאמה גלן, מדיטציה, ריקות, טבע התודעה, אונליין, זום, מאיטרייה סנגהה",
-  url: "https://maitreya.org.il/p/events/uma-zub-tri",
-  ogImage: "https://maitreya.org.il/p/og-uma-zub-tri.png",
+  url: "https://maitreya.org.il/events/uma-zub-tri",
+  ogImage: "https://maitreya.org.il/og-uma-zub-tri.png",
   locale: "he_IL",
 };
 
@@ -78,7 +78,7 @@ const registrationConfig: RegistrationConfig = {
     },
   ],
   showTierSelect: false,
-  termsUrl: "https://maitreya.org.il/",
+  termsUrl: "https://maitreya.org.il/events/online-terms",
   askGender: false,
   askFoodPref: false,
   askPrevExp: true,

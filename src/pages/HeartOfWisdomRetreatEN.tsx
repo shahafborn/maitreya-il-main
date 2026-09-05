@@ -60,8 +60,8 @@ const seo: SEOConfig = {
     "A three-day online retreat exploring the unique wisdom methods of Buddhist Tantra with Lama Glenn Mullin, including a White Manjushri empowerment. Live on Zoom, May 28-30, 2026.",
   keywords:
     "retreat, mahamudra, Buddhism, tantra, Lama Glenn, Manjushri, meditation, wisdom, Maitreya Sangha, Zoom",
-  url: "https://maitreya.org.il/p/events/en/heart-of-wisdom-retreat",
-  ogImage: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat-en.png",
+  url: "https://maitreya.org.il/events/en/heart-of-wisdom-retreat",
+  ogImage: "https://maitreya.org.il/og-heart-of-wisdom-retreat.png", // no English card exists; the Hebrew one is visual only
   locale: "en_US",
 };
 
@@ -83,7 +83,7 @@ const registrationConfig: RegistrationConfig = {
     },
   ],
   showTierSelect: false,
-  termsUrl: "https://maitreya.org.il/",
+  termsUrl: "https://maitreya.org.il/events/online-terms",
   askGender: false,
   askFoodPref: false,
   askPrevExp: true,

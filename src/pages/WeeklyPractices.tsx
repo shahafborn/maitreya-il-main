@@ -13,8 +13,9 @@
  */
 
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { MousePointerClick } from "lucide-react";
-import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 /** Shared Zoom room for all weekly practice sessions. */
@@ -130,7 +131,7 @@ const SCHEDULE: DayRow[] = [
         title: "מהמודרה עם לאמה גלן",
         subtitle: "עד 5.9",
         categories: ["basic"],
-        url: "/p/events/uma-zub-tri",
+        url: "/events/uma-zub-tri",
       },
     ],
     evening: [],
@@ -200,7 +201,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             title: "מהמודרה עם לאמה גלן",
             subtitle: "עד 5.9",
             categories: ["basic"],
-            url: "/p/events/uma-zub-tri",
+            url: "/events/uma-zub-tri",
           },
         ],
       },
@@ -242,7 +243,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             title: "מהמודרה עם לאמה גלן",
             subtitle: "עד 5.9",
             categories: ["basic"],
-            url: "/p/events/uma-zub-tri",
+            url: "/events/uma-zub-tri",
           },
         ],
       },
@@ -320,7 +321,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             title: "מהמודרה עם לאמה גלן",
             subtitle: "עד 5.9",
             categories: ["basic"],
-            url: "/p/events/uma-zub-tri",
+            url: "/events/uma-zub-tri",
           },
         ],
       },
@@ -460,7 +461,14 @@ const GRID_COLS = "110px 1fr 1fr 1fr";
 
 /* ── Page ── */
 const WeeklyPractices = () => {
-  useDocumentTitle("מאיטרייה סנגהה ישראל | לו״ז תרגולים");
+  useRetreatSEO({
+    title: "מאיטרייה סנגהה ישראל | לו״ז תרגולים",
+    description: "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - טומו, מהמודרה, טארה הירוקה ותרגולים נוספים עם דרופון צ׳ונגוואל-לה ולאמה גלן מולין.",
+    keywords: "תרגול שבועי, זום, טומו, מהמודרה, מאיטרייה סנגהה ישראל",
+    url: "https://maitreya.org.il/practices",
+    ogImage: "https://maitreya.org.il/og-default.png",
+    locale: "he_IL",
+  });
 
   // Standing schedule with any active per-week override applied (auto-reverts).
   const { schedule, notes } = effectiveSchedule(new Date());
@@ -483,11 +491,13 @@ const WeeklyPractices = () => {
           {/* Header */}
           <header className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <img
-                src={maitreyaLogo}
-                alt="Maitreya Sangha Israel"
-                className="mb-3 h-12 w-auto md:h-14"
-              />
+              <Link to="/" aria-label="לדף הבית" className="inline-block">
+                <img
+                  src={maitreyaLogo}
+                  alt="Maitreya Sangha Israel"
+                  className="mb-3 h-12 w-auto md:h-14"
+                />
+              </Link>
               <h1
                 className="font-heading text-4xl font-semibold leading-none md:text-5xl"
                 style={{ color: COLORS.ink }}

@@ -1,5 +1,9 @@
 name: Build & Deploy to Hostinger
 
+# Every push to main rebuilds the site and mirrors dist/ to the domain root
+# on Hostinger over SFTP. The site has lived at the root (not /p/) since the
+# 2026-09 cutover - see .github/workflows/cutover.yml and docs/deployment.md.
+
 on:
   push:
     branches: [main]
@@ -25,22 +29,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Chromium for pre-rendering
+        run: npx playwright install --with-deps chromium
+
       - name: Run tests
         run: npm run test
 
-      - name: Build
+      - name: Build (pre-render, sitemap, redirects, link check)
         run: npm run build
         env:
+          CI: true
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Deploy via SFTP
-        timeout-minutes: 3
+        timeout-minutes: 5
         run: |
+          echo "::add-mask::$SFTP_USERNAME"
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          # The site root. SFTP_REMOTE_PATH historically pointed at the old /p/
+          # folder; a trailing "/p" is stripped so either value works.
+          TARGET="${SFTP_REMOTE_PATH%/}"; TARGET="${TARGET%/p}"
           lftp -u "$SFTP_USERNAME","$SFTP_PASSWORD" \
             -p "$SFTP_PORT" \
-            -e "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; set net:reconnect-interval-base 5; mirror -R --overwrite --verbose dist/ $SFTP_REMOTE_PATH; quit" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; set net:reconnect-interval-base 5; mirror -R --overwrite --verbose dist/ $TARGET; quit" \
             sftp://"$SFTP_HOST"
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
@@ -48,3 +60,10 @@ jobs:
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
+
+      # Hostinger's edge answers 403 to GitHub's runners (seen at the 2026-09-05 cutover), so this
+      # step is informational here. Run it from a normal machine for the real verdict:
+      #   node scripts/smoke-test.mjs https://maitreya.org.il
+      - name: Smoke test the live site (informational - runner IPs may be blocked)
+        continue-on-error: true
+        run: node scripts/smoke-test.mjs https://maitreya.org.il

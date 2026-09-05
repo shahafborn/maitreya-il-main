@@ -2,7 +2,23 @@
 
 ## Overview
 
-The web app lives at `maitreya.org.il/p/` (base path `/p/`). The main WordPress site is at `maitreya.org.il/`. Root (`/p/`) redirects to the main site.
+The app serves the whole domain from the root (`maitreya.org.il/`) since the 2026-09 cutover; WordPress is gone and every old `/p/...` or `/he/...` URL 301-redirects (`scripts/redirects.mjs`). Hebrew is the primary language at the root, English lives under `/en`.
+
+### Site pages (content in `content/`, components in `src/site/`)
+
+| Route | English twin | Content file |
+|-------|--------------|--------------|
+| `/` | `/en` | `content/<lang>/pages/home.md` |
+| `/about` | `/en/about` | `pages/about.md` |
+| `/events` | `/en/events` | `content/<lang>/events/*.md` (upcoming + archive, one file per event) |
+| `/articles`, `/articles/:slug` | `/en/articles` | `articles/*.md` |
+| `/gallery` | - | `pages/gallery.md` + `src/assets/site-gallery/` |
+| `/dana` | `/en/dana` | `pages/dana.md` |
+| `/contact` | `/en/contact` | `pages/contact.md` |
+| `/events/online-terms`, `/events/ein-gedi-healing-retreat/terms` | - | `pages/online-terms.md`, `pages/ein-gedi-terms.md` |
+| `/practices` | - | `src/pages/WeeklyPractices.tsx` (noindex) |
+
+All of these are pre-rendered to real HTML at build time (`scripts/prerender.mjs`); the list lives in `scripts/site-routes.mjs`.
 
 ## Route Structure
 
@@ -40,11 +56,10 @@ Admin dashboard for managing courses, content, users, and analytics. Requires ad
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Redirects to `maitreya.org.il` (main WordPress site) |
 | `/auth/callback` | OAuth callback (Google sign-in) |
 | `/reset-password` | Password reset flow |
 | `/heb/healing-online-course` | Legacy redirect → `/discover/healing-retreat` |
-| `/*` (catch-all) | Redirects to `maitreya.org.il` |
+| `/*` (catch-all) | 404 page (`src/pages/NotFound.tsx`; the server serves `404.html` with a real 404 status) |
 
 ## Where New Pages Go
 
@@ -62,7 +77,7 @@ For physical events, retreats, and workshops that need a public-facing landing p
 - Marketing-focused: hero, description, schedule, pricing, teacher info, venue, CTA
 - Registration links to external system or on-site registration form
 - Hebrew RTL content
-- SEO-optimized with OG tags (generated in `scripts/generate-og-pages.mjs` via STATIC_EVENTS array)
+- SEO-optimized: `useRetreatSEO` sets title/description/OG/canonical at runtime and the pre-renderer bakes them into the static HTML; add the route to `scripts/site-routes.mjs`
 - Lazy-loaded, standalone components
 
 | Route | Component | Purpose |
@@ -73,5 +88,5 @@ For physical events, retreats, and workshops that need a public-facing landing p
 - **Frontend:** React + TypeScript + Vite + Tailwind + shadcn/ui
 - **Backend:** Supabase (auth, database, storage)
 - **Hosting:** Hostinger via SFTP (GitHub Actions CI/CD)
-- **Base path:** `/p/` (configured in Vite + React Router)
-- **Main site:** WordPress at `maitreya.org.il/`
+- **Base path:** `/` (Vite `base` + React Router basename derive from it)
+- **Deploy + cutover runbook:** `docs/deployment.md`

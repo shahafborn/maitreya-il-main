@@ -7,8 +7,8 @@ declare global {
   }
 }
 
-/** The app's BrowserRouter basename — must match the value in App.tsx. */
-const BASE_PATH = "/p";
+/** The app's BrowserRouter basename - derived from the Vite base, same as App.tsx ("" at the root). */
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 /** Strip trailing slash to avoid split metrics (e.g. /register vs /register/). */
 function normalizePath(path: string): string {

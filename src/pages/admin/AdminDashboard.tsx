@@ -13,6 +13,8 @@ const AdminAnalytics = lazy(() => import("./AdminAnalytics"));
 const AdminUserList = lazy(() => import("./AdminUserList"));
 const AdminStaffManagement = lazy(() => import("./AdminStaffManagement"));
 const AdminPromotions = lazy(() => import("./AdminPromotions"));
+const AdminSiteContent = lazy(() => import("./AdminSiteContent"));
+const AdminSiteContentEditor = lazy(() => import("./AdminSiteContentEditor"));
 
 const AdminLogin = () => {
   const { signIn, signInWithGoogle } = useAuth();
@@ -165,6 +167,7 @@ const AdminDashboard = () => {
           <h1 className="font-heading text-lg font-bold text-primary">Admin</h1>
           <nav className="flex gap-4 text-sm">
             {navLink("/admin/courses", "Courses")}
+            {navLink("/admin/site-content", "Site Content")}
             {navLink("/admin/promotions", "Promotions")}
             {isAdminOrAbove && navLink("/admin/analytics", "Analytics")}
             {isAdminOrAbove && navLink("/admin/users", "Users")}
@@ -186,6 +189,9 @@ const AdminDashboard = () => {
             <Route index element={<Navigate to="courses" replace />} />
             <Route path="courses" element={<AdminCourseList />} />
             <Route path="courses/:courseId" element={<AdminCourseEditor />} />
+            <Route path="site-content" element={<AdminSiteContent />} />
+            <Route path="site-content/edit" element={<AdminSiteContentEditor />} />
+            <Route path="site-content/new" element={<AdminSiteContentEditor />} />
             <Route path="promotions" element={<AdminPromotions />} />
             {isAdminOrAbove && (
               <Route path="analytics" element={<AdminAnalytics />} />

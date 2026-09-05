@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin + "/p/auth/callback" },
+      options: { redirectTo: window.location.origin + import.meta.env.BASE_URL + "auth/callback" },
     });
   };
 
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + "/p/reset-password",
+      redirectTo: window.location.origin + import.meta.env.BASE_URL + "reset-password",
     });
     return { error };
   };

@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 
-const LP = "https://maitreya.org.il/p/events/ein-gedi-healing-retreat/";
-const SUCCESS_URL = "https://maitreya.org.il/p/events/ein-gedi-healing-retreat/?payment=success";
+const LP = "https://maitreya.org.il/events/ein-gedi-healing-retreat/";
+const SUCCESS_URL = "https://maitreya.org.il/events/ein-gedi-healing-retreat/?payment=success";
 const N8N_WEBHOOK = "https://tknstk.app.n8n.cloud/webhook/EinGedi_Register";
 
 const pixelHits = [];

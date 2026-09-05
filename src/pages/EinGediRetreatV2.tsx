@@ -4,6 +4,7 @@ declare global {
   }
 }
 
+import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
@@ -406,7 +407,7 @@ const RegistrationModal = ({ open, onOpenChange, preselectedRoom }: {
                 className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
               />
               <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
-                אני מאשר/ת את <a href="https://maitreya.org.il/he/our_events/lg202606-healingretreat-terms/" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 hover:text-[#C9A961]">תנאי הריטריט וההרשמה</a> ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
+                אני מאשר/ת את <a href="/events/ein-gedi-healing-retreat/terms" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 hover:text-[#C9A961]">תנאי הריטריט וההרשמה</a> ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
               </span>
             </label>
             <FieldError field="confirmed" />
@@ -737,33 +738,16 @@ const EinGediRetreatV2 = () => {
     return () => clearInterval(timer);
   }, [isPaused, lightboxIndex, nextSlide]);
 
-  useEffect(() => {
-    const title = "ריטריט ריפוי בודהיסטי בים המלח | 1-6 ביוני 2026 | מאיטרייה סנגהה ישראל";
-    const description = "שישה ימים של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה - ריטריט מדיטציה ותרגול יחודי באחד מאתרי הריפוי העתיקים בעולם - ים המלח.";
-    const url = "https://maitreya.org.il/p/events/ein-gedi-healing-retreat";
-    const image = "https://maitreya.org.il/p/og-ein-gedi-healing-retreat.png";
-
-    document.title = title;
-
-    const setMeta = (name: string, content: string) => {
-      let el = document.querySelector(`meta[name="${name}"]`) || document.querySelector(`meta[property="${name}"]`);
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute(name.startsWith("og:") ? "property" : "name", name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute("content", content);
-    };
-
-    setMeta("description", description);
-    setMeta("keywords", "ריטריט, הילינג, בודהיזם, טנטרה, לאמה גלן, עין גדי, מדיטציה, ריפוי, מאיטרייה סנגהה");
-    setMeta("og:title", title);
-    setMeta("og:description", description);
-    setMeta("og:url", url);
-    setMeta("og:image", image);
-    setMeta("og:type", "website");
-    setMeta("og:locale", "he_IL");
-  }, []);
+  // Page SEO through the shared hook (adds canonical, site name and twitter tags)
+  useRetreatSEO({
+    title: "ריטריט ריפוי בודהיסטי בים המלח | 1-6 ביוני 2026 | מאיטרייה סנגהה ישראל",
+    description:
+      "שישה ימים של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה - ריטריט מדיטציה ותרגול יחודי באחד מאתרי הריפוי העתיקים בעולם - ים המלח.",
+    keywords: "ריטריט, הילינג, בודהיזם, טנטרה, לאמה גלן, עין גדי, מדיטציה, ריפוי, מאיטרייה סנגהה",
+    url: "https://maitreya.org.il/events/ein-gedi-healing-retreat",
+    ogImage: "https://maitreya.org.il/og-ein-gedi-healing-retreat.png",
+    locale: "he_IL",
+  });
 
   return (
     <div dir="rtl" style={{ backgroundColor: CREAM, color: DARK, fontFamily: "'Open Sans', 'Heebo', sans-serif" }} className="min-h-screen">
