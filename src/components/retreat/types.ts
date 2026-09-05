@@ -85,6 +85,8 @@ export interface SEOConfig {
   ogImage: string;
   /** e.g. "he_IL" or "en_US". */
   locale: string;
+  /** Set false when the page manages its own canonical link (SiteLayout does). Defaults to true. */
+  canonical?: boolean;
 }
 
 /**

@@ -3,7 +3,7 @@
  * English has no articles yet - shows a graceful empty state.
  */
 import { Link } from "react-router-dom";
-import { getArticles, type SiteLang } from "../content";
+import { getArticles, sitePath, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 
 export const SiteArticlesIndex = ({ lang }: { lang: SiteLang }) => {
@@ -19,7 +19,7 @@ export const SiteArticlesIndex = ({ lang }: { lang: SiteLang }) => {
           ? "מאמרים וראיונות על בודהיזם טיבטי, טנטרה בודהיסטית ותרגול - מאת ועם לאמה גלן מולין."
           : "Articles and interviews on Tibetan Buddhism, Buddhist tantra and practice."
       }
-      path={`/${lang}/articles`}
+      path={sitePath(lang, "/articles")}
     >
       <div className="container max-w-4xl py-16">
         <h1 className="font-heading text-4xl font-bold text-primary mb-10">{title}</h1>
@@ -32,7 +32,7 @@ export const SiteArticlesIndex = ({ lang }: { lang: SiteLang }) => {
             {articles.map((a) => (
               <Link
                 key={a.slug}
-                to={`/${lang}/articles/${a.slug}`}
+                to={sitePath(lang, `/articles/${a.slug}`)}
                 className="bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col"
               >
                 <h2 className="font-heading text-xl font-bold text-primary mb-3 leading-snug">{a.title}</h2>

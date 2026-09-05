@@ -1,102 +1,50 @@
 /**
- * Post-build script: generates per-course HTML files with correct OG meta tags.
+ * Post-build: social-preview shells for the course pages.
  *
- * Reads dist/index.html as a template, fetches all published courses from
- * Supabase, and writes route-specific HTML files so that social media crawlers
- * (WhatsApp, Facebook, Twitter) see the right preview for each course URL.
+ * The course pages (/courses/<slug>, /courses/<slug>/register) are
+ * client-rendered behind sign-in, so they are not pre-rendered. Crawlers
+ * (WhatsApp, Facebook) still need the right <title>/OG tags, so this writes
+ * one copy of the app shell per published course with those tags injected,
+ * into dist/_pages/courses/... - the .htaccess routes the clean URL there.
  *
- * The SPA JS bundle is identical — only the <title> and OG tags differ.
+ * Reads the published courses from Supabase. Env comes from the CI secrets
+ * or, for local builds, from .env.local.
  */
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DIST = path.resolve(__dirname, "../dist");
-
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY");
-  process.exit(1);
-}
+import fs from "node:fs";
+import path from "node:path";
+import { DIST, ROOT } from "./site-routes.mjs";
 
 const SITE_NAME = "Maitreya Sangha Israel";
-const SITE_NAME_HE = "מאיטרייה סנגהה ישראל";
 
-/** A Hebrew course should not be suffixed with the English site name. */
-const siteNameFor = (course) =>
-  course.default_dir === "rtl" ? SITE_NAME_HE : SITE_NAME;
+function loadEnvLocal() {
+  const file = path.join(ROOT, ".env.local");
+  if (!fs.existsSync(file)) return;
+  for (const line of fs.readFileSync(file, "utf8").split("\n")) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*"?([^"\n]*)"?\s*$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
+  }
+}
 
-async function fetchCourses() {
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/courses?select=slug,title,description,default_dir&is_published=eq.true`,
-    {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    }
-  );
+async function fetchCourses(url, key) {
+  const res = await fetch(`${url}/rest/v1/courses?select=slug,title,description&is_published=eq.true`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
   if (!res.ok) throw new Error(`Supabase fetch failed: ${res.status}`);
   return res.json();
 }
 
 function escapeHtml(str) {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return String(str).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function injectOgTags(template, { title, description, image }) {
+export function injectOgTags(template, { title, description }) {
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description || title);
-
-  let html = template;
-
-  if (image) {
-    const safeImage = escapeHtml(image);
-    if (/<meta property="og:image" content="[^"]*"/.test(html)) {
-      html = html.replace(
-        /<meta property="og:image" content="[^"]*"/,
-        `<meta property="og:image" content="${safeImage}"`
-      );
-    } else {
-      html = html.replace(
-        /<meta property="og:type"[^>]*>/,
-        (match) => `${match}\n    <meta property="og:image" content="${safeImage}" />`
-      );
-    }
-  }
-
-  // Replace <title>
-  html = html.replace(
-    /<title>[^<]*<\/title>/,
-    `<title>${safeTitle}</title>`
-  );
-
-  // Replace og:title
-  html = html.replace(
-    /<meta property="og:title" content="[^"]*"/,
-    `<meta property="og:title" content="${safeTitle}"`
-  );
-
-  // Replace og:description
-  html = html.replace(
-    /<meta property="og:description" content="[^"]*"/,
-    `<meta property="og:description" content="${safeDesc}"`
-  );
-
-  // Replace meta description
-  html = html.replace(
-    /<meta name="description" content="[^"]*"/,
-    `<meta name="description" content="${safeDesc}"`
-  );
-
-  return html;
+  return template
+    .replace(/<title>[^<]*<\/title>/, `<title>${safeTitle}</title>`)
+    .replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${safeTitle}"`)
+    .replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${safeDesc}"`)
+    .replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${safeDesc}"`);
 }
 
 function writeHtml(filePath, content) {
@@ -104,128 +52,29 @@ function writeHtml(filePath, content) {
   fs.writeFileSync(filePath, content, "utf-8");
 }
 
-// Standing pages that are not events and not courses, but do get shared.
-// Anything NOT listed here (and not a published course) falls back to the
-// generic tags in index.html - which is fine as a floor, but a page people
-// actually paste into WhatsApp deserves its own.
-const STATIC_PAGES = [
-  {
-    route: "practices",
-    title: "לוח התרגולים השבועי | מאיטרייה סנגהה ישראל",
-    description:
-      "לוח התרגולים הקבועים של מאיטרייה סנגהה ישראל. תרגולים שבועיים בזום, חלקם מומלצים גם למתחילים.",
-  },
-];
-
-// Static event pages with hardcoded OG tags
-const STATIC_EVENTS = [
-  {
-    route: "events/ein-gedi-healing-retreat",
-    title: "ריטריט ריפוי בודהיסטי בים המלח | 1-6 ביוני 2026 | מאיטרייה סנגהה ישראל",
-    description:
-      "ריטריט הילינג בעין גדי - דרך הריפוי וההילינג הבודהיסטי. שישה ימים של חניכות ותרגולי ריפוי עומק עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה. 1-6 ביוני 2026, בית ספר שדה עין גדי.",
-    image: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat.png",
-  },
-  {
-    route: "events/heart-of-wisdom-retreat",
-    title: "ריטריט מהמודרה: לב החוכמה עם לאמה גלן | 28-30 במאי 2026 | מאיטרייה סנגהה ישראל",
-    description:
-      "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות החוכמה הייחודיות של הבודהיזם הטנטרי עם לאמה גלן, כולל חניכה למנג׳ושרי הלבן. תל אביב, 28-30 במאי 2026.",
-    image: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat.png",
-  },
-  {
-    route: "events/en/heart-of-wisdom-retreat",
-    title: "Mahamudra: Heart of Wisdom Retreat with Lama Glenn | May 28-30, 2026 | Maitreya Sangha Israel",
-    description:
-      "A three-day online retreat exploring the unique wisdom methods of Buddhist Tantra with Lama Glenn Mullin, including a White Manjushri empowerment. Live on Zoom, May 28-30, 2026.",
-    image: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat-en.png",
-  },
-  {
-    route: "events/en/ein-gedi-healing-retreat",
-    title: "The Path of Tantric Healing with Lama Glenn | June 1-6, 2026 | Maitreya Sangha Israel",
-    description:
-      "Six days of deep healing and longevity practices from Tibetan Buddhist Tantra with Lama Glenn Mullin and Drupon Chongwol-la. Live on Zoom, June 1-6, 2026.",
-    image: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat-en.png",
-  },
-  {
-    route: "events/uma-zub-tri",
-    title: "UMA ZUB TRI: סדרת לימוד אונליין עם לאמה גלן | החל מ-1 באוגוסט 2026 | מאיטרייה סנגהה ישראל",
-    description:
-      "סדרת לימוד ותרגול בת שישה שבועות בנושא המהמודרה - ההצבעה הישירה אל טבע התודעה, עם לאמה גלן מולין. מפגש שבועי בזום, בשבתות בשעה 16:00 (שעון ישראל), החל מ-1 באוגוסט 2026.",
-    image: "https://maitreya.org.il/p/og-uma-zub-tri.png",
-  },
-  {
-    route: "events/yamantaka-online-2026",
-    title: "ריטריט יאמנטקה עם דרופון צ׳ונגוואל-לה | שלושה חודשים: ספטמבר-נובמבר | מאיטרייה סנגהה ישראל",
-    description:
-      "ריטריט עומק של שלושה חודשים בהנחיית דרופון צ׳ונגוואל-לה. ארבעה מפגשי תרגול יומיים מקוונים, בימים שני עד שישי, 1 בספטמבר עד 20 בנובמבר 2026.",
-    // JPEG on purpose - WhatsApp drops any og:image over 600KB.
-    image: "https://maitreya.org.il/p/og-yamantaka-online-2026.jpg",
-  },
-];
-
-async function main() {
+export async function generateCoursePages() {
+  loadEnvLocal();
+  const url = process.env.VITE_SUPABASE_URL;
+  const key = process.env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    if (process.env.CI) throw new Error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY");
+    console.warn("Course preview pages skipped: no Supabase env (set .env.local for local builds)");
+    return;
+  }
   const template = fs.readFileSync(path.join(DIST, "index.html"), "utf-8");
-  const courses = await fetchCourses();
-
-  console.log(`Generating OG pages for ${courses.length} course(s)...`);
-
+  const courses = await fetchCourses(url, key);
+  console.log(`Generating preview pages for ${courses.length} course(s)...`);
   for (const course of courses) {
-    const site = siteNameFor(course);
-    const courseTitle = `${course.title} | ${site}`;
-    const registerTitle = `${course.title} | ${site}`;
-    const desc = course.description || course.title;
-
-    // /courses/<slug>/index.html
-    const coursePage = injectOgTags(template, {
-      title: courseTitle,
-      description: desc,
-    });
-    writeHtml(path.join(DIST, "courses", course.slug, "index.html"), coursePage);
-
-    // /courses/<slug>/register/index.html
-    const registerPage = injectOgTags(template, {
-      title: registerTitle,
-      description: desc,
-    });
-    writeHtml(
-      path.join(DIST, "courses", course.slug, "register", "index.html"),
-      registerPage
-    );
-
-    console.log(`  ✓ ${course.slug}`);
+    const page = injectOgTags(template, { title: `${course.title} | ${SITE_NAME}`, description: course.description });
+    writeHtml(path.join(DIST, "_pages", "courses", `${course.slug}.html`), page);
+    writeHtml(path.join(DIST, "_pages", "courses", course.slug, "register.html"), page);
+    console.log(`  ✓ courses/${course.slug}`);
   }
-
-  // Generate OG pages for static event landing pages
-  console.log(`Generating OG pages for ${STATIC_EVENTS.length} event(s)...`);
-
-  for (const event of STATIC_EVENTS) {
-    const eventPage = injectOgTags(template, {
-      title: event.title,
-      description: event.description,
-      image: event.image,
-    });
-    writeHtml(path.join(DIST, event.route, "index.html"), eventPage);
-    console.log(`  ✓ ${event.route}`);
-  }
-
-  // Standing non-event pages
-  console.log(`Generating OG pages for ${STATIC_PAGES.length} standing page(s)...`);
-
-  for (const page of STATIC_PAGES) {
-    const html = injectOgTags(template, {
-      title: page.title,
-      description: page.description,
-      image: page.image,
-    });
-    writeHtml(path.join(DIST, page.route, "index.html"), html);
-    console.log(`  ✓ ${page.route}`);
-  }
-
-  console.log("Done.");
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
+  generateCoursePages().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

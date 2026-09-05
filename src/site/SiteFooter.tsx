@@ -4,7 +4,7 @@
  */
 import { Link } from "react-router-dom";
 import { Facebook, Youtube, Mail } from "lucide-react";
-import type { SiteLang } from "./content";
+import { sitePath, type SiteLang } from "./content";
 
 const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61571229722947";
 const YOUTUBE_URL = "https://www.youtube.com/channel/UCc6s-_U3kMCCZOV-3KR1ZMQ";
@@ -14,20 +14,20 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
   const he = lang === "he";
   const links = he
     ? [
-        { label: "אירועים", to: "/he/events" },
+        { label: "אירועים", to: sitePath("he", "/events") },
         { label: "תרגול שבועי", to: "/practices" },
-        { label: "מאמרים", to: "/he/articles" },
-        { label: "אודות", to: "/he/about" },
-        { label: "דאנה", to: "/he/dana" },
-        { label: "צור קשר", to: "/he/contact" },
+        { label: "מאמרים", to: sitePath("he", "/articles") },
+        { label: "אודות", to: sitePath("he", "/about") },
+        { label: "דאנה", to: sitePath("he", "/dana") },
+        { label: "צור קשר", to: sitePath("he", "/contact") },
       ]
     : [
-        { label: "Events", to: "/en/events" },
+        { label: "Events", to: sitePath("en", "/events") },
         { label: "Weekly Practice", to: "/practices" },
-        { label: "Articles", to: "/en/articles" },
-        { label: "About", to: "/en/about" },
-        { label: "Dana", to: "/en/dana" },
-        { label: "Contact", to: "/en/contact" },
+        { label: "Articles", to: sitePath("en", "/articles") },
+        { label: "About", to: sitePath("en", "/about") },
+        { label: "Dana", to: sitePath("en", "/dana") },
+        { label: "Contact", to: sitePath("en", "/contact") },
       ];
 
   return (

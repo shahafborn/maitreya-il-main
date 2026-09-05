@@ -14,6 +14,36 @@ import { parseFrontmatter } from "./frontmatter";
 
 export type SiteLang = "he" | "en";
 
+/** The site's public origin - used for canonical URLs, hreflang and structured data. */
+export const SITE_ORIGIN = "https://maitreya.org.il";
+
+/**
+ * Builds the in-app path for a site page in a language.
+ * URL scheme (decided at the domain cutover, 2026-09-05): Hebrew is the
+ * primary language and lives UNPREFIXED at the root ("/", "/about",
+ * "/articles/<slug>"); English lives under "/en" ("/en", "/en/about").
+ * Every link in the site chrome and pages goes through here, so the scheme
+ * is a one-line change if it ever needs to move.
+ *
+ * @example sitePath("he", "/about") -> "/about"; sitePath("en", "") -> "/en"
+ */
+export function sitePath(lang: SiteLang, sub: string = ""): string {
+  const clean = sub === "/" ? "" : sub;
+  if (lang === "he") return clean || "/";
+  return `/en${clean}`;
+}
+
+/** Sub-paths that exist in BOTH languages (gallery and the articles themselves are Hebrew-only today). */
+export const BILINGUAL_PAGES = ["", "/about", "/events", "/articles", "/dana", "/contact"];
+
+/** The same page in the other language, or null when it has no twin there. */
+export function twinPath(lang: SiteLang, sub: string): string | null {
+  const clean = sub === "/" ? "" : sub;
+  if (!BILINGUAL_PAGES.includes(clean)) return null;
+  const other: SiteLang = lang === "he" ? "en" : "he";
+  return sitePath(other, clean);
+}
+
 export interface PageContent {
   /** Flat frontmatter fields; missing keys read as "". */
   meta: Record<string, string>;

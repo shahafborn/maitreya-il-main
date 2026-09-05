@@ -9,7 +9,7 @@
  * contact shows. Pasting the link is a one-field edit in the admin back office.
  */
 import { Heart, Mail } from "lucide-react";
-import { getPage, type SiteLang } from "../content";
+import { getPage, sitePath, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
 
@@ -19,7 +19,7 @@ export const SiteDana = ({ lang }: { lang: SiteLang }) => {
   const email = meta.email ?? "maitreyasanghaisrael@gmail.com";
   const cardcomUrl = meta.cardcom_url ?? "";
   return (
-    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={`/${lang}/dana`}>
+    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={sitePath(lang, "/dana")}>
       <div className="container max-w-3xl py-16">
         <h1 className="font-heading text-4xl font-bold text-primary mb-8">
           {he ? "דאנה" : "Dana"}

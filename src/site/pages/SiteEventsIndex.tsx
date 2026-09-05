@@ -5,13 +5,15 @@
  */
 import { Link } from "react-router-dom";
 import { CalendarDays, MapPin } from "lucide-react";
-import { getEvents, getPage, formatEventDates, type SiteLang, type EventItem } from "../content";
+import { getEvents, getPage, formatEventDates, sitePath, SITE_ORIGIN, type SiteLang, type EventItem } from "../content";
 import { SiteLayout } from "../SiteLayout";
+import { useScrollToHash } from "../useScrollToHash";
 
 const EventRow = ({ ev, lang, dimmed }: { ev: EventItem; lang: SiteLang; dimmed?: boolean }) => {
   const inner = (
     <div
-      className={`bg-card rounded-lg border border-border p-6 transition-shadow ${
+      id={ev.slug}
+      className={`bg-card rounded-lg border border-border p-6 transition-shadow scroll-mt-24 ${
         dimmed ? "opacity-80" : "shadow-sm hover:shadow-md"
       }`}
     >
@@ -45,6 +47,22 @@ export const SiteEventsIndex = ({ lang }: { lang: SiteLang }) => {
   const { upcoming, past } = getEvents(lang);
   const { meta } = getPage(lang, "home");
   const he = lang === "he";
+  useScrollToHash(); // /events#<old-wordpress-slug> - the legacy event URLs redirect to their row
+  const eventsJsonLd = upcoming.map((ev) => ({
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: ev.title,
+    description: ev.summary,
+    startDate: ev.start,
+    endDate: ev.end,
+    eventAttendanceMode: /zoom|אונליין|online/i.test(`${ev.location} ${ev.summary}`)
+      ? "https://schema.org/OnlineEventAttendanceMode"
+      : "https://schema.org/OfflineEventAttendanceMode",
+    location: ev.location ? { "@type": "Place", name: ev.location } : undefined,
+    performer: ev.teacher ? { "@type": "Person", name: ev.teacher } : undefined,
+    organizer: { "@type": "Organization", name: "Maitreya Sangha Israel", url: `${SITE_ORIGIN}/` },
+    url: ev.url ? (ev.url.startsWith("http") ? ev.url : `${SITE_ORIGIN}${ev.url}`) : `${SITE_ORIGIN}${sitePath(lang, "/events")}`,
+  }));
   return (
     <SiteLayout
       lang={lang}
@@ -54,7 +72,8 @@ export const SiteEventsIndex = ({ lang }: { lang: SiteLang }) => {
           ? "ריטריטים, חניכות, לימודי אונליין וביקורי מורים של מאיטרייה סנגהה ישראל."
           : "Retreats, empowerments, online teachings and teacher visits of Maitreya Sangha Israel."
       }
-      path={`/${lang}/events`}
+      path={sitePath(lang, "/events")}
+      jsonLd={eventsJsonLd}
     >
       <div className="container max-w-4xl py-16">
         <h1 className="font-heading text-4xl font-bold text-primary mb-10">

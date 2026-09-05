@@ -58,11 +58,11 @@ original_url: https://maitreya.org.il/he/articles/milarepa-healing-yogas-amitayu
 
 לאמה גלן מולין יבקר בישראל בנומבר 2025 - לביקור בן עשרה ימים בו הוא יעביר לימודים, הרצאות וחניכות - כולל לימודי יוגות הריפוי של מילארפה, טומו, יוגת חלימה, ופוואה. 
 
--   **[יוגות הריפוי של מילארפה וטומו הילינג של בודהא אמיתאוס](https://maitreya.org.il/he/our_events/milarepa-healing-yogas-lg112025/)** - ריטריט סופ״ש - 14-16.11 - תל אביב
--   **[טומו - האש הפנימית, יוגת חלימה, ופּוֹואָה](https://maitreya.org.il/he/our_events/tummo-dreamyoga-powha-lg202511/)** - ריטריט סופ״ש - 19-22.11 - תל אביב
--   **[׳שלושת רבי העוצמה׳: תרגול לשלום והגנה](https://maitreya.org.il/he/our_events/three-wrathfuls-lg202511/)** - אירוע אח״צ -18.11 -פרדס חנה 
+-   **[יוגות הריפוי של מילארפה וטומו הילינג של בודהא אמיתאוס](/events#milarepa-healing-yogas-lg112025)** - ריטריט סופ״ש - 14-16.11 - תל אביב
+-   **[טומו - האש הפנימית, יוגת חלימה, ופּוֹואָה](/events#tummo-dreamyoga-powha-lg202511)** - ריטריט סופ״ש - 19-22.11 - תל אביב
+-   **[׳שלושת רבי העוצמה׳: תרגול לשלום והגנה](/events#three-wrathfuls-lg202511)** - אירוע אח״צ -18.11 -פרדס חנה 
 -   **[לתוכנית הביקור המלאה  
-    ](https://maitreya.org.il/he/our_events/)**
+    ](/events)**
 -   כולל חניכות, הרצאות, ואירועי לימוד נוספים
 
 ## היישום המשולש לריפוי
@@ -132,4 +132,4 @@ original_url: https://maitreya.org.il/he/articles/milarepa-healing-yogas-amitayu
 
 **מוזמנים ללמוד את תרגולי הריפוי הבודהיסטים העוצמתיים האלו - בפעם הראשונה בישראל** 
 
-**לפרטים [נוספים והרשמה >>](https://maitreya.org.il/he/our_events/lg26-the-path-of-buddhist-healing-retreat-he-1/)**
+**לפרטים [נוספים והרשמה >>](/events/ein-gedi-healing-retreat)**

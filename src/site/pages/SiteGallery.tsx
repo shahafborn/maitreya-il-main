@@ -12,7 +12,7 @@
  */
 import { useState } from "react";
 import { Lightbox } from "@/components/retreat/Lightbox";
-import { getPage, type SiteLang } from "../content";
+import { getPage, sitePath, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 
 const wpGallery = import.meta.glob("@/assets/site-gallery/*.{jpg,jpeg,png,webp}", {
@@ -42,7 +42,7 @@ export const SiteGallery = ({ lang }: { lang: SiteLang }) => {
   const he = lang === "he";
   const alt = he ? "מפעילויות הסנגהה" : "Sangha activities";
   return (
-    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={`/${lang}/gallery`}>
+    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={sitePath(lang, "/gallery")}>
       <div className="container py-16">
         <h1 className="font-heading text-4xl font-bold text-primary mb-4">
           {he ? "גלריה" : "Gallery"}

@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import type { SiteLang } from "./content";
+import { sitePath, type SiteLang } from "./content";
 import logo from "@/assets/maitreya-logo.png";
 
 interface NavItem {
@@ -16,25 +16,26 @@ interface NavItem {
   to: string;
 }
 
+// Paths are built with sitePath so the URL scheme lives in one place (content.ts)
 const NAV: Record<SiteLang, NavItem[]> = {
   he: [
-    { label: "בית", to: "/he" },
-    { label: "אירועים", to: "/he/events" },
+    { label: "בית", to: sitePath("he") },
+    { label: "אירועים", to: sitePath("he", "/events") },
     { label: "תרגול שבועי", to: "/practices" },
-    { label: "מאמרים", to: "/he/articles" },
-    { label: "גלריה", to: "/he/gallery" },
-    { label: "אודות", to: "/he/about" },
-    { label: "דאנה", to: "/he/dana" },
-    { label: "צור קשר", to: "/he/contact" },
+    { label: "מאמרים", to: sitePath("he", "/articles") },
+    { label: "גלריה", to: sitePath("he", "/gallery") },
+    { label: "אודות", to: sitePath("he", "/about") },
+    { label: "דאנה", to: sitePath("he", "/dana") },
+    { label: "צור קשר", to: sitePath("he", "/contact") },
   ],
   en: [
-    { label: "Home", to: "/en" },
-    { label: "Events", to: "/en/events" },
+    { label: "Home", to: sitePath("en") },
+    { label: "Events", to: sitePath("en", "/events") },
     { label: "Weekly Practice", to: "/practices" },
-    { label: "Articles", to: "/en/articles" },
-    { label: "About", to: "/en/about" },
-    { label: "Dana", to: "/en/dana" },
-    { label: "Contact", to: "/en/contact" },
+    { label: "Articles", to: sitePath("en", "/articles") },
+    { label: "About", to: sitePath("en", "/about") },
+    { label: "Dana", to: sitePath("en", "/dana") },
+    { label: "Contact", to: sitePath("en", "/contact") },
   ],
 };
 
@@ -43,7 +44,7 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
   const { pathname } = useLocation();
   const items = NAV[lang];
   const otherLang: { label: string; to: string } =
-    lang === "he" ? { label: "English", to: "/en" } : { label: "עברית", to: "/he" };
+    lang === "he" ? { label: "English", to: sitePath("en") } : { label: "עברית", to: sitePath("he") };
 
   const linkClass = (to: string) =>
     `font-body text-sm transition-colors hover:text-accent ${
@@ -54,7 +55,7 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="container flex items-center justify-between py-3">
         {/* The logo image already carries the bilingual name - no text beside it */}
-        <Link to={lang === "he" ? "/he" : "/en"} className="flex items-center">
+        <Link to={sitePath(lang)} className="flex items-center">
           <img src={logo} alt="מאיטרייה סנגהה ישראל" className="h-14 w-auto" />
         </Link>
 

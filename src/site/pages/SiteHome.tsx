@@ -11,8 +11,9 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { getPage, getEvents, getArticles, formatEventDates, type SiteLang, type EventItem } from "../content";
+import { getPage, getEvents, getArticles, formatEventDates, sitePath, type SiteLang, type EventItem } from "../content";
 import { SiteLayout } from "../SiteLayout";
+import { useScrollToHash } from "../useScrollToHash";
 import heroImage from "@/assets/site/hero-lama-glenn.jpg";
 import lamaGlenn from "@/assets/retreat/lama-glenn-big.jpg";
 import druponChongwol from "@/assets/retreat/drupon-chongwol.png";
@@ -52,9 +53,10 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
   const articles = getArticles(lang).slice(0, 3);
   const he = lang === "he";
   const Arrow = he ? ArrowLeft : ArrowRight;
+  useScrollToHash(); // /#newsletter (the old mailing-list pages redirect here)
 
   return (
-    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={he ? "/he" : "/en"}>
+    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={sitePath(lang)}>
       {/* Hero */}
       <section className="relative min-h-[70vh] flex items-end md:items-center justify-center">
         {/*
@@ -101,7 +103,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
             </p>
             <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
             <Link
-              to={meta.hero_cta_href || (he ? "/he/events" : "/en/events")}
+              to={meta.hero_cta_href || sitePath(lang, "/events")}
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground font-body font-semibold rounded-full px-8 py-3 hover:bg-secondary transition-colors"
             >
               {meta.hero_cta_label}
@@ -137,7 +139,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
           )}
           <div className="text-center mt-8">
             <Link
-              to={he ? "/he/events" : "/en/events"}
+              to={sitePath(lang, "/events")}
               className="font-body text-accent hover:text-secondary transition-colors inline-flex items-center gap-1"
             >
               {meta.events_archive_label}
@@ -200,7 +202,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
           </div>
           <div className="text-center mt-10">
             <Link
-              to={he ? "/he/about" : "/en/about"}
+              to={sitePath(lang, "/about")}
               className="font-body text-accent hover:text-secondary transition-colors inline-flex items-center gap-1"
             >
               {meta.community_cta_label}
@@ -221,7 +223,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
               {articles.map((a) => (
                 <Link
                   key={a.slug}
-                  to={`/${lang}/articles/${a.slug}`}
+                  to={sitePath(lang, `/articles/${a.slug}`)}
                   className="bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col"
                 >
                   <h3 className="font-heading text-lg font-bold text-primary mb-3 leading-snug">{a.title}</h3>
@@ -233,7 +235,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
             </div>
             <div className="text-center mt-8">
               <Link
-                to={he ? "/he/articles" : "/en/articles"}
+                to={sitePath(lang, "/articles")}
                 className="font-body text-accent hover:text-secondary transition-colors inline-flex items-center gap-1"
               >
                 {meta.articles_cta_label}
@@ -256,7 +258,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
       </section>
 
       {/* Newsletter */}
-      <div id="newsletter">
+      <div id="newsletter" className="scroll-mt-20">
         <MailingListSignup
           heading={meta.newsletter_heading ?? ""}
           subheading={meta.newsletter_subheading ?? ""}

@@ -58,8 +58,8 @@ const seo: SEOConfig = {
     "Six days of deep healing and longevity practices from Tibetan Buddhist Tantra with Lama Glenn Mullin and Drupon Chongwol-la. Live on Zoom, June 1-6, 2026.",
   keywords:
     "retreat, healing, Buddhism, tantra, Lama Glenn, Ein Gedi, meditation, White Tara, Medicine Buddha, Maitreya Sangha, Zoom",
-  url: "https://maitreya.org.il/p/events/en/ein-gedi-healing-retreat",
-  ogImage: "https://maitreya.org.il/p/og-ein-gedi-healing-retreat-en.png",
+  url: "https://maitreya.org.il/events/en/ein-gedi-healing-retreat",
+  ogImage: "https://maitreya.org.il/og-ein-gedi-healing-retreat.png", // no English card exists; the Hebrew one is visual only
   locale: "en_US",
 };
 
@@ -81,7 +81,7 @@ const registrationConfig: RegistrationConfig = {
     },
   ],
   showTierSelect: false,
-  termsUrl: "https://maitreya.org.il/",
+  termsUrl: "https://maitreya.org.il/events/online-terms",
   askGender: false,
   askFoodPref: false,
   askPrevExp: true,

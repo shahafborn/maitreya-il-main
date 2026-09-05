@@ -1,0 +1,92 @@
+/**
+ * Every URL the old WordPress site published in its Yoast sitemaps, pulled
+ * live on 2026-08-14 (vault: W-work/ventures/maitreya-sangha/projects/
+ * website-migration/url-inventory-2026-08-14.md) and re-checked 2026-09-05,
+ * plus the URLs the app itself used to expose under /p/. The redirect tests
+ * and the smoke test walk this list: each must end on a live page.
+ */
+export const LEGACY_PATHS = [
+  // Articles
+  "/he/articles/lama_glenn_mullin_six_yogas_interview_gv/",
+  "/he/articles/interview-trantric-buddhism-in-the-modern-world/",
+  "/he/articles/chulen-extracting-the-essence-lama-glenn/",
+  "/he/articles/interview-tummo-chulen-lama-glenn/",
+  "/he/articles/the-subtle-art-of-mindful-death/",
+  "/he/articles/milarepa-healing-yogas-amitayus-hayagriva-tummo/",
+  "/he/articles/category/uncategorized/",
+  // Core Hebrew pages
+  "/",
+  "/he/",
+  "/he/home/",
+  "/he/about/",
+  "/he/contact/",
+  "/he/gallery/",
+  "/he/articles/",
+  "/he/our_events/",
+  "/he/join-mailing-list-heb/",
+  // English + mailing list
+  "/en/",
+  "/en/home-english/",
+  "/home-english/",
+  "/mailing-list-eng/",
+  "/en/mailing-list-eng/",
+  "/home-english/lg26-the-path-of-tantric-healing-retreat-eng/",
+  "/home-english/lg26-the-path-of-tantric-healing-retreat-eng/tc-eng-poth-retreat-lg2026/",
+  "/lg26-introduction_to_tantra_en/",
+  "/12-weeks-vajrayogini-teaching-series-lama-glenn-august-2025/",
+  "/visit-of-lama-glenn-mullin-in-israel-november-2025/",
+  "/en/visit-of-lama-glenn-mullin-in-israel-november-2025/",
+  "/visit-of-lama-glenn-mullin-in-israel-november-2025/lg2025-milarepa-healing-yogas/",
+  "/visit-of-lama-glenn-mullin-in-israel-november-2025/lgnov25_the_three_wrathfuls/",
+  "/visit-of-lama-glenn-mullin-in-israel-november-2025/lgnov25-tummo_dreamyoga_powha/",
+  // Hebrew event pages
+  "/he/our_events/lg2025-buddha-of-compassion-practice-for-peace/",
+  "/he/our_events/lg-tummo-retreat-2025/",
+  "/he/our_events/lg2025-white-dakini/",
+  "/he/our_events/lg-chakrasamvara_empowerment/",
+  "/he/our_events/lg2025-tantric-practice-times-of-war-and-chaos/",
+  "/he/our_events/2025-chongwola-open-practice/",
+  "/he/our_events/2025-chongwola-healing-buddha-teaching/",
+  "/he/our_events/2025-chongwola-practice-for-healing-and-peace/",
+  "/he/our_events/lg-intro-to-six-yogas-2025/",
+  "/he/our_events/25-chongwola-israel/",
+  "/he/our_events/2025-chongwola-tummo-retreat/",
+  "/he/lg2025-tantra-in-the-modern-world/",
+  "/he/our_events/vajrayogini-12-weeks-teaching-with-lama-glenn/",
+  "/he/our_events/three-wrathfuls-lg202511/",
+  "/he/our_events/tummo-dreamyoga-powha-lg202511/",
+  "/he/our_events/milarepa-healing-yogas-lg112025/",
+  "/he/our_events/lg25_11_dc_healingyogas/",
+  "/he/our_events/lg26-05-form-healing-4days/",
+  "/he/our_events/lg-2025-volunteering/",
+  "/he/our_events/tos_online_event/",
+  "/he/our_events/lg26_introduction_to_tantra/",
+  "/he/our_events/lg26-the-path-of-buddhist-healing-retreat-he-1/",
+  "/he/our_events/lg202606-healingretreat-terms/",
+  // Yoast sitemaps
+  "/sitemap_index.xml",
+  "/page-sitemap.xml",
+  "/post-sitemap.xml",
+  "/category-sitemap.xml",
+  // The app's own former URLs under /p/
+  "/p/",
+  "/p/practices",
+  "/p/practices/",
+  "/p/events/yamantaka-online-2026",
+  "/p/events/uma-zub-tri/",
+  "/p/events/ein-gedi-healing-retreat/?payment=success",
+  "/p/events/en/ein-gedi-healing-retreat",
+  "/p/events/heart-of-wisdom-retreat",
+  "/p/events/en/heart-of-wisdom-retreat",
+  "/p/events/ein-gedi-v1",
+  "/p/events/ein-gedi-v2",
+  "/p/courses/2026-intro-to-tantra",
+  "/p/admin",
+  "/p/auth/callback",
+  "/p/discover/healing-retreat",
+  "/p/heb/healing-online-course",
+  "/p/reset-password",
+];
+
+/** WordPress internals that must answer 410 Gone (nothing to redirect to). */
+export const GONE_PATHS = ["/wp-login.php", "/wp-admin/", "/xmlrpc.php", "/wp-json/", "/wp-content/uploads/2025/07/x.jpg", "/feed/"];

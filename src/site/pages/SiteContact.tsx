@@ -5,7 +5,7 @@
  * sangha Gmail). A real form can be added in a later phase if wanted.
  */
 import { Mail } from "lucide-react";
-import { getPage, type SiteLang } from "../content";
+import { getPage, sitePath, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
 
@@ -14,7 +14,7 @@ export const SiteContact = ({ lang }: { lang: SiteLang }) => {
   const he = lang === "he";
   const email = meta.email ?? "maitreyasanghaisrael@gmail.com";
   return (
-    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={`/${lang}/contact`}>
+    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={sitePath(lang, "/contact")}>
       <div className="container max-w-2xl py-16">
         <h1 className="font-heading text-4xl font-bold text-primary mb-8">
           {he ? "צור קשר" : "Contact"}

@@ -1,19 +1,25 @@
 import { useEffect } from "react";
 import type { SEOConfig } from "../types";
 
+const SITE_NAME = "Maitreya Sangha Israel";
+
 /**
  * Sets document.title and a standard set of meta tags (description, keywords,
- * og:title/description/url/image/type/locale) for a retreat landing page.
+ * og:title/description/url/image/type/locale/site_name, twitter card) plus the
+ * canonical link for a page. Used by the retreat landing pages (via
+ * RetreatLayout) and by the site pages (via SiteLayout, which manages its own
+ * canonical/hreflang and passes `canonical: false`).
  *
- * Mounted once per page. Runs in useEffect so SSR-safe (does nothing until hydration).
+ * Mounted once per page. Runs in useEffect - the pre-renderer captures the
+ * result, so crawlers see these tags in the static HTML.
  *
  * @example
  * useRetreatSEO({
  *   title: "ריטריט לב החוכמה",
  *   description: "…",
  *   keywords: "…",
- *   url: "https://maitreya.org.il/p/events/heart-of-wisdom-retreat",
- *   ogImage: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat.png",
+ *   url: "https://maitreya.org.il/events/heart-of-wisdom-retreat",
+ *   ogImage: "https://maitreya.org.il/og-heart-of-wisdom-retreat.png",
  *   locale: "he_IL",
  * });
  */
@@ -41,5 +47,23 @@ export function useRetreatSEO(seo: SEOConfig) {
     setMeta("og:image", seo.ogImage);
     setMeta("og:type", "website");
     setMeta("og:locale", seo.locale);
-  }, [seo.title, seo.description, seo.keywords, seo.url, seo.ogImage, seo.locale]);
+    setMeta("og:site_name", SITE_NAME);
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", seo.title);
+    setMeta("twitter:description", seo.description);
+    setMeta("twitter:image", seo.ogImage);
+
+    if (seo.canonical === false) return;
+    let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"][data-seo-canonical]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "canonical";
+      link.setAttribute("data-seo-canonical", "");
+      document.head.appendChild(link);
+    }
+    link.href = seo.url;
+    return () => {
+      link?.remove();
+    };
+  }, [seo.title, seo.description, seo.keywords, seo.url, seo.ogImage, seo.locale, seo.canonical]);
 }

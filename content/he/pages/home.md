@@ -4,7 +4,7 @@ description: "קהילת תלמידים הלומדת ומתרגלת בודהיז
 hero_title: "מאיטרייה סנגהה ישראל"
 hero_subtitle: "קהילת תלמידים הלומדת ומתרגלת בודהיזם טיבטי בהנחיית לאמה גלן מולין ודרופון צ׳ונגוואל-לה"
 hero_cta_label: "לאירועים הקרובים"
-hero_cta_href: "/he/events"
+hero_cta_href: "/events"
 hero_cta2_label: "לתרגול השבועי"
 hero_cta2_href: "/practices"
 events_title: "אירועים קרובים"

@@ -59,7 +59,7 @@ export const RetreatLayout = ({
       <nav className="sticky top-0 z-40 backdrop-blur-md bg-white/90 border-b border-stone-200">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
           {/* Logo -> site home (the in-app /he home replaced the old WordPress root) */}
-          <Link to={lang === "en" ? "/en" : "/he"}>
+          <Link to={lang === "en" ? "/en" : "/"}>
             <img src={maitreyaLogo} alt="Maitreya Sangha" className="h-11 object-contain" />
           </Link>
           <button

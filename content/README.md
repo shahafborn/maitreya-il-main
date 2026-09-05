@@ -30,9 +30,13 @@ Every file is markdown with a frontmatter block (the `---` ... `---` section at 
 4. **Regular hyphens only** - never em dashes (–, —) anywhere.
 5. **Images** go in `public/media/` (articles: `public/media/articles/`, site photos: `public/media/site/`) and are referenced as `/media/...` paths.
 
+## Where pages live on the site (URL scheme)
+
+Hebrew is the primary language and lives at the root: `/`, `/about`, `/events`, `/articles/<slug>`, `/gallery`, `/dana`, `/contact`. English lives under `/en`: `/en`, `/en/about`, `/en/events`, ... The scheme is defined once in `src/site/content.ts` (`sitePath`). Old WordPress URLs (`/he/about/`, `/he/our_events/...`) and the app's former `/p/...` prefix redirect automatically (`scripts/redirects.mjs`).
+
 ## How to add a new event
 
-Create `content/he/events/<yyyy-mm-slug>.md` (and an `en/` twin if the event has an English audience):
+Create `content/he/events/<yyyy-mm-slug>.md` (and an `en/` twin if the event has an English audience). The file name becomes the row's anchor on the events page (`/events#<file-name>`); the entries migrated from WordPress keep their old slugs as file names for exactly that reason - old links land on the right row.
 
 ```markdown
 ---
@@ -70,6 +74,8 @@ The article appears automatically in the articles index (newest first) and gets 
 ## How to edit an existing page
 
 Open the page's file under `pages/`, edit, save. `home.md` is special: its frontmatter fields are the homepage's text blocks (hero, section titles, newsletter copy) - edit the field values, keep the field names.
+
+**Standalone documents** (terms pages such as `ein-gedi-terms.md` and `online-terms.md`) use the same format plus a `heading` field (the H1) and are wired to a path in `src/App.tsx` + `scripts/site-routes.mjs` via the generic `SiteDocPage` component.
 
 ## What NOT to touch from here
 

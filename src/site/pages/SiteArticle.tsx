@@ -4,7 +4,7 @@
  */
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { getArticle, type SiteLang } from "../content";
+import { getArticle, sitePath, SITE_ORIGIN, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
 
@@ -16,10 +16,10 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
 
   if (!article) {
     return (
-      <SiteLayout lang={lang} title={he ? "מאמר לא נמצא" : "Article not found"} path={`/${lang}/articles`}>
+      <SiteLayout lang={lang} title={he ? "מאמר לא נמצא" : "Article not found"} path={sitePath(lang, "/articles")}>
         <div className="container max-w-3xl py-16 text-center">
           <p className="font-body text-lg mb-6">{he ? "המאמר לא נמצא." : "Article not found."}</p>
-          <Link to={`/${lang}/articles`} className="text-accent hover:text-secondary inline-flex items-center gap-1">
+          <Link to={sitePath(lang, "/articles")} className="text-accent hover:text-secondary inline-flex items-center gap-1">
             <Arrow className="h-4 w-4" />
             {he ? "לכל המאמרים" : "All articles"}
           </Link>
@@ -28,11 +28,23 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
     );
   }
 
+  const path = sitePath(lang, `/articles/${slug}`);
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.description,
+    datePublished: article.date,
+    inLanguage: lang,
+    mainEntityOfPage: `${SITE_ORIGIN}${path}`,
+    author: { "@type": "Organization", name: "Maitreya Sangha Israel" },
+    publisher: { "@type": "Organization", name: "Maitreya Sangha Israel", url: `${SITE_ORIGIN}/` },
+  };
   return (
-    <SiteLayout lang={lang} title={article.title} description={article.description} path={`/${lang}/articles/${slug}`}>
+    <SiteLayout lang={lang} title={article.title} description={article.description} path={path} jsonLd={[articleJsonLd]}>
       <article className="container max-w-3xl py-16">
         <Link
-          to={`/${lang}/articles`}
+          to={sitePath(lang, "/articles")}
           className="font-body text-sm text-accent hover:text-secondary inline-flex items-center gap-1 mb-8"
         >
           <Arrow className="h-4 w-4" />

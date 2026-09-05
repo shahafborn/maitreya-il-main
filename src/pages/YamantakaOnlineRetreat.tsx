@@ -68,10 +68,10 @@ const seo: SEOConfig = {
     "ריטריט עומק של שלושה חודשים בהנחיית דרופון צ׳ונגוואל-לה. ארבעה מפגשי תרגול יומיים מקוונים, בימים שני עד שישי, 1 בספטמבר עד 20 בנובמבר 2026.",
   keywords:
     "ריטריט יאמנטקה, דרופון צ׳ונגוואל-לה, טנטרה בודהיסטית, טומו, יוגת החלום, מנטרות, ריטריט אונליין, מאיטרייה סנגהה",
-  url: "https://maitreya.org.il/p/events/yamantaka-online-2026",
+  url: "https://maitreya.org.il/events/yamantaka-online-2026",
   // JPEG, not PNG: WhatsApp drops any og:image over 600KB, and a photographic
   // 1200x630 PNG of this thangka lands around 1.5MB. This one is ~257KB.
-  ogImage: "https://maitreya.org.il/p/og-yamantaka-online-2026.jpg",
+  ogImage: "https://maitreya.org.il/og-yamantaka-online-2026.jpg",
   locale: "he_IL",
 };
 
@@ -139,7 +139,7 @@ const registrationConfig: RegistrationConfig = {
   showTierSelect: true,
   tierSelectLabel: "אופן ההשתתפות בדאנה",
   variantSelectLabel: "עבור איזו תקופה",
-  termsUrl: "https://maitreya.org.il/",
+  termsUrl: "https://maitreya.org.il/events/online-terms",
   askPrevExp: true,
   storagePrefix: "yamantaka26",
   extraPayload: { source: "yamantaka-online-2026" },

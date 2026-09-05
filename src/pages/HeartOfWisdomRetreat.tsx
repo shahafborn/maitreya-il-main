@@ -87,8 +87,8 @@ const seo: SEOConfig = {
     "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות החוכמה הייחודיות של הבודהיזם הטנטרי עם לאמה גלן, כולל העצמה למנג׳ושרי הלבן. תל אביב, 28-30 במאי 2026.",
   keywords:
     "ריטריט, מהמודרה, בודהיזם, טנטרה, לאמה גלן, מנג׳ושרי, תל אביב, מדיטציה, חוכמה, מאיטרייה סנגהה",
-  url: "https://maitreya.org.il/p/events/heart-of-wisdom-retreat",
-  ogImage: "https://maitreya.org.il/p/og-heart-of-wisdom-retreat.png",
+  url: "https://maitreya.org.il/events/heart-of-wisdom-retreat",
+  ogImage: "https://maitreya.org.il/og-heart-of-wisdom-retreat.png",
   locale: "he_IL",
 };
 
@@ -111,7 +111,7 @@ const registrationConfig: RegistrationConfig = {
     },
   ],
   showTierSelect: false,
-  termsUrl: "https://maitreya.org.il/",
+  termsUrl: "https://maitreya.org.il/events/online-terms",
   askGender: false,
   askFoodPref: false,
   askPrevExp: true,

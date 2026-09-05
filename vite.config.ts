@@ -5,7 +5,7 @@ import { siteContentDevApi } from "./vite-plugin-site-content";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/p/",
+  base: "/",
   server: {
     host: "::",
     port: 8080,
