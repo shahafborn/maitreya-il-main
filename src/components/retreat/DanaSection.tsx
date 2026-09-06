@@ -43,12 +43,16 @@ export const DanaSection = ({
           <p key={i}>{p}</p>
         ))}
       </div>
-      <div
-        className="my-10 py-6 px-6 rounded-lg bg-white shadow-sm text-xl md:text-2xl font-bold"
+      {/* The amount box is a button too - people tap the number expecting the form
+          (Shahaf's request, 2026-09-06), so it opens the same dialog as the CTA. */}
+      <button
+        type="button"
+        onClick={onCtaClick}
+        className="block w-full my-10 py-6 px-6 rounded-lg bg-white shadow-sm text-xl md:text-2xl font-bold text-center transition-all duration-200 hover:shadow-md hover:scale-[1.02] focus:outline-none focus-visible:ring-2"
         style={{ color: RETREAT_THEME.GOLD, fontFamily: RETREAT_FONTS.serif }}
       >
         {suggestedLine}
-      </div>
+      </button>
       {footerNote && (
         <p className="text-base mb-8" style={{ color: RETREAT_THEME.WARM_GRAY }}>
           {footerNote}
