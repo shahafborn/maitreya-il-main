@@ -197,6 +197,8 @@ export const RegistrationModal = ({
   const openAmount = Boolean(parentTier?.openAmount);
   const amountMin = parentTier?.openAmountMin ?? 1;
   const amountMax = parentTier?.openAmountMax ?? 100000;
+  /** Whole shekels normally; a tier whose minimum is under one shekel (test payments) takes decimals. */
+  const wholeAmounts = amountMin >= 1;
   /** What actually gets submitted: the follow-up choice when there is one. */
   const effectiveTier =
     (variants.length > 0
@@ -230,7 +232,7 @@ export const RegistrationModal = ({
     if (openAmount) {
       const n = Number(amount);
       if (!amount.trim()) errors.amount = copy.errAmount ?? "";
-      else if (!Number.isFinite(n) || !Number.isInteger(n) || n < amountMin || n > amountMax)
+      else if (!Number.isFinite(n) || (wholeAmounts && !Number.isInteger(n)) || n < amountMin || n > amountMax)
         errors.amount = copy.errAmountRange ?? "";
     }
     if (!fname.trim()) errors.fname = copy.errFname;
@@ -523,7 +525,7 @@ export const RegistrationModal = ({
                     <div className="relative">
                       <input
                         type="text"
-                        inputMode="numeric"
+                        inputMode={wholeAmounts ? "numeric" : "decimal"}
                         value={amount}
                         onChange={(e) => {
                           // Digits only: a stray character here becomes a

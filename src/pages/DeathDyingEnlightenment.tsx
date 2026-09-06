@@ -44,6 +44,17 @@ import { ddeHero, ddeHeroMobile, ddeLampsBg, lamaGlennPhoto, druponPhoto, ddeGal
 /* ── Constants ── */
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/DDE_Register";
+/**
+ * Test payments: `?test=k3v9tq` opens the form on a hidden option that takes any
+ * amount from 0.10 to 5 shekels, so the paid branch (sheet, Mailchimp, email)
+ * can be proved with a real card for a few agorot and refunded from Cardcom.
+ * The key is deliberately not a word; the option never appears in the select,
+ * and every such row lands in the sheet as "בדיקת תשלום".
+ */
+const TEST_KEY = "k3v9tq";
+const TEST_TIER_ID = "DDE_2026_Test";
+const DEFAULT_TIER_ID = "DDE_2026_Suggested";
+
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 const CONTACT_PHONE = "054-4905031";
 
@@ -87,6 +98,19 @@ const registrationConfig: RegistrationConfig = {
       openAmount: true,
       openAmountMin: 1,
       openAmountMax: 20000,
+      priceDisplay: "",
+      priceValue: 0,
+      currencySymbol: "₪",
+    },
+    // Hidden: reached only through the ?test= link (see TEST_KEY above).
+    {
+      id: TEST_TIER_ID,
+      title: "בדיקת תשלום",
+      note: "סכום בדיקה, בין 0.10 ל-5 ש״ח",
+      hidden: true,
+      openAmount: true,
+      openAmountMin: 0.1,
+      openAmountMax: 5,
       priceDisplay: "",
       priceValue: 0,
       currencySymbol: "₪",
@@ -194,8 +218,14 @@ const books = [
 const DeathDyingEnlightenment = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const testMode = searchParams.get("test") === TEST_KEY;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+
+  // The test link opens the form straight away, on the hidden test option.
+  useEffect(() => {
+    if (testMode && !paymentStatus) setModalOpen(true);
+  }, [testMode, paymentStatus]);
 
   // The payment happens inside an iframe on this same page, so Cardcom's
   // redirect back lands *inside* that frame. Same origin, so we can climb out
@@ -490,6 +520,8 @@ const DeathDyingEnlightenment = () => {
       <RegistrationModal
         open={modalOpen}
         onOpenChange={setModalOpen}
+        // The recommended dana is chosen in advance; the person only changes it if they want to.
+        preselectedTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
         config={registrationConfig}
         copy={registrationCopy}
       />
