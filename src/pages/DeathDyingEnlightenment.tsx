@@ -165,13 +165,6 @@ const sessionDates = [
   { n: "מפגש 6", date: "יום ראשון, 18 באוקטובר" },
 ];
 
-const timezones = [
-  { place: "ישראל", time: "יום ראשון, 16:00" },
-  { place: "ניו יורק", time: "יום ראשון, 09:00" },
-  { place: "קוריאה", time: "יום ראשון, 22:00" },
-  { place: "ברזיל וארגנטינה", time: "יום ראשון, 10:00" },
-];
-
 const whatsIncluded = [
   "שישה מפגשי לימוד בשידור חי עם לאמה גלן מולין",
   "מפגש הבהרות ותרגול מודרך שבועי עם דרופון צ׳ונגוואל-לה",
@@ -385,7 +378,7 @@ const DeathDyingEnlightenment = () => {
           className="text-lg text-center leading-[1.9] max-w-3xl mx-auto mb-10"
           style={{ color: RETREAT_THEME.BODY }}
         >
-          מפגש אחד בשבוע, במשך שישה שבועות, בימי ראשון, בשידור חי בזום. בכל מפגש לאמה גלן מלמד נושא אחד מתוך המדיטציות על המוות, על הארעיות ועל ההארה. בנוסף, בכל שבוע דרופון צ׳ונגוואל-לה מקיים מפגש הבהרות ותרגול מודרך של המדיטציות של אותו נושא. מועדי מפגשי ההבהרות יימסרו לנרשמים.
+          מפגש אחד בשבוע, במשך שישה שבועות, בימי ראשון, בשידור חי בזום. בכל מפגש לאמה גלן מלמד נושא אחד מתוך המדיטציות על המוות, על הארעיות ועל ההארה. בנוסף, בכל שבוע דרופון צ׳ונגוואל-לה יקיים מפגש הבהרות ותרגול מודרך נוסף של המדיטציות של אותו נושא. מועדי מפגשי ההבהרות יימסרו לנרשמים.
         </p>
 
         {/* Session dates */}
@@ -407,26 +400,23 @@ const DeathDyingEnlightenment = () => {
           ))}
         </div>
 
-        {/* Timezone strip */}
-        <div className="max-w-lg mx-auto rounded-xl p-5 mb-8 bg-white/70">
-          <p className="font-semibold text-center mb-3" style={{ color: RETREAT_THEME.DARK }}>
-            שעת המפגש לפי אזורי זמן
+        {/* Session time */}
+        <div className="max-w-lg mx-auto rounded-xl p-5 mb-8 bg-white/70 text-center">
+          <p className="font-semibold mb-2" style={{ color: RETREAT_THEME.DARK }}>
+            שעת המפגש
           </p>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-center">
-            {timezones.map((t) => (
-              <p key={t.place} className="text-base" style={{ color: RETREAT_THEME.BODY }}>
-                <span className="font-semibold">{t.place}</span> | {t.time}
-              </p>
-            ))}
-          </div>
+          <p className="text-lg" style={{ color: RETREAT_THEME.BODY }}>
+            <span className="font-semibold">ישראל</span> | יום ראשון, 16:00
+          </p>
         </div>
 
         <div className="max-w-2xl mx-auto space-y-3 text-center">
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-            קישור הזום יישלח לנרשמים לאחר ההרשמה. המפגשים יוקלטו ויהיו זמינים לצפייה חוזרת.
+            קישור הזום יישלח לנרשמים לאחר ההרשמה.{" "}
+            <strong style={{ color: RETREAT_THEME.DARK }}>המפגשים יוקלטו ויהיו זמינים לצפייה חוזרת.</strong>
           </p>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-            שימו לב: המפגש הראשון חל בראש השנה והשני בערב יום כיפור. מי שלא יוכל להצטרף בשידור החי יוכל לצפות בהקלטה.
+            שימו לב: המפגש הראשון חל במוצאי ראש השנה. מי שלא יוכל להצטרף בשידור החי יוכל לצפות בהקלטה.
           </p>
         </div>
       </SectionFrame>
@@ -468,7 +458,7 @@ const DeathDyingEnlightenment = () => {
       <FinalCTA
         bgImage={ddeLampsBg}
         title="הצטרפו לסדרה"
-        body="שישה שבועות של לימוד ותרגול על המוות, על הארעיות ועל ההארה, בהדרכת לאמה גלן מולין ודרופון צ׳ונגוואל-לה, בשידור חי בזום מכל מקום בעולם."
+        body="שישה שבועות של לימוד ותרגול על המוות, על הארעיות ועל ההארה, בהדרכת לאמה גלן מולין ודרופון צ׳ונגוואל-לה, בשידור חי בזום מכל מקום בעולם. המפגשים מוקלטים לצפייה חוזרת."
         ctaLabel="להרשמה לסדרה"
         onCtaClick={open}
       />
