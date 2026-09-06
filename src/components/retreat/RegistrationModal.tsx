@@ -529,8 +529,13 @@ export const RegistrationModal = ({
                         value={amount}
                         onChange={(e) => {
                           // Digits only: a stray character here becomes a
-                          // rejected charge two steps later.
-                          setAmount(e.target.value.replace(/[^\d]/g, ""));
+                          // rejected charge two steps later. A sub-shekel tier
+                          // (test payments) also takes one decimal point.
+                          const raw = e.target.value.replace(",", ".");
+                          const clean = wholeAmounts
+                            ? raw.replace(/[^\d]/g, "")
+                            : raw.replace(/[^\d.]/g, "").replace(/^(\d*\.\d*).*$/, "$1");
+                          setAmount(clean);
                           setFieldErrors((p) => ({ ...p, amount: "" }));
                         }}
                         className={`${inputClass} ${fieldErrorClass("amount")}`}
