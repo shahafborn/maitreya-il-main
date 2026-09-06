@@ -11,7 +11,7 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { getPage, getEvents, getArticles, formatEventDates, sitePath, type SiteLang, type EventItem } from "../content";
+import { getPage, getEvents, getArticles, formatEventDates, sitePath, SITE_ORIGIN, type SiteLang, type EventItem } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { useScrollToHash } from "../useScrollToHash";
 import heroImage from "@/assets/site/hero-lama-glenn.jpg";
@@ -56,7 +56,14 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
   useScrollToHash(); // /#newsletter (the old mailing-list pages redirect here)
 
   return (
-    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={sitePath(lang)}>
+    <SiteLayout
+      lang={lang}
+      title={meta.title ?? ""}
+      description={meta.description}
+      path={sitePath(lang)}
+      // Social share card = the hero photo (public/og-home.jpg, 1200x630 crop of hero-lama-glenn.jpg)
+      ogImage={`${SITE_ORIGIN}/og-home.jpg`}
+    >
       {/* Hero */}
       <section className="relative min-h-[70vh] flex items-end md:items-center justify-center">
         {/*
