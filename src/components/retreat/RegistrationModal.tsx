@@ -401,7 +401,8 @@ export const RegistrationModal = ({
                   className="text-2xl font-bold whitespace-nowrap"
                   style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.GOLD_DARK }}
                 >
-                  {selectedTier.priceDisplay}
+                  {/* An open-amount tier has no fixed price: show the sum the payer typed. */}
+                  {openAmount && amount ? Number(amount).toLocaleString("en-US") : selectedTier.priceDisplay}
                   {selectedTier.currencySymbol ?? ""}
                 </p>
               </div>

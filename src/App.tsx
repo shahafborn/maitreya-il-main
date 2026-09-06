@@ -24,6 +24,7 @@ const HeartOfWisdomRetreatEN = lazy(() => import("./pages/HeartOfWisdomRetreatEN
 const EinGediHealingRetreatEN = lazy(() => import("./pages/EinGediHealingRetreatEN"));
 const UmaZubTri = lazy(() => import("./pages/UmaZubTri"));
 const YamantakaOnlineRetreat = lazy(() => import("./pages/YamantakaOnlineRetreat"));
+const DeathDyingEnlightenment = lazy(() => import("./pages/DeathDyingEnlightenment"));
 const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 
 // Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
@@ -116,6 +117,9 @@ const AppRoutes = () => (
 
       {/* Yamantaka three-month online retreat (Hebrew, public) */}
       <Route path="/events/yamantaka-online-2026" element={<YamantakaOnlineRetreat />} />
+
+      {/* Death, Dying and Enlightenment - six-week online course (Hebrew, public) */}
+      <Route path="/events/death-dying-enlightenment" element={<DeathDyingEnlightenment />} />
 
       {/* Weekly practices: /practices = the members' page with Zoom links (unlisted);
           /weekly-practice = the open website's page, no links, with the join form */}
