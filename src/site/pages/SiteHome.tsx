@@ -117,7 +117,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
               <Arrow className="h-4 w-4" />
             </Link>
             <Link
-              to={meta.hero_cta2_href || "/practices"}
+              to={meta.hero_cta2_href || "/weekly-practice"}
               className="inline-flex items-center gap-2 border border-primary-foreground/60 text-primary-foreground font-body font-semibold rounded-full px-8 py-3 hover:bg-primary-foreground/10 transition-colors"
             >
               {meta.hero_cta2_label}
@@ -162,7 +162,7 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
           <h2 className="font-heading text-3xl font-bold text-primary mb-4">{meta.practices_title}</h2>
           <p className="font-body text-lg leading-relaxed mb-6">{meta.practices_text}</p>
           <Link
-            to="/practices"
+            to="/weekly-practice"
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-body font-semibold rounded-full px-8 py-3 hover:bg-deep-blue-light transition-colors"
           >
             {meta.practices_cta_label}

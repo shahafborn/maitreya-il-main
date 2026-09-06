@@ -88,8 +88,10 @@ export function getRoutes() {
   }
 
   // App pages outside the content layer (React components with their own SEO hooks)
-  // The schedule page carries robots noindex on purpose (internal schedule) - pre-rendered, but not listed for crawlers
+  // /practices = the members' schedule with Zoom links: pre-rendered but noindex and unlisted.
+  // /weekly-practice = the public schedule (no links, join form): indexed, in the sitemap.
   routes.push({ path: "/practices", lang: "he", alternates: { he: "/practices" }, priority: 0.9, changefreq: "weekly", kind: "app", noindex: true });
+  routes.push({ path: "/weekly-practice", lang: "he", alternates: { he: "/weekly-practice" }, priority: 0.9, changefreq: "weekly", kind: "page" });
   const retreat = (he, en, priority = 0.8) => {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });

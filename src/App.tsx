@@ -117,8 +117,10 @@ const AppRoutes = () => (
       {/* Yamantaka three-month online retreat (Hebrew, public) */}
       <Route path="/events/yamantaka-online-2026" element={<YamantakaOnlineRetreat />} />
 
-      {/* Weekly practices schedule (Hebrew, public) */}
-      <Route path="/practices" element={<WeeklyPractices />} />
+      {/* Weekly practices: /practices = the members' page with Zoom links (unlisted);
+          /weekly-practice = the open website's page, no links, with the join form */}
+      <Route path="/practices" element={<WeeklyPractices variant="sangha" />} />
+      <Route path="/weekly-practice" element={<WeeklyPractices variant="public" />} />
 
       {/* Terms pages (migrated from WordPress): linked from the registration forms */}
       <Route

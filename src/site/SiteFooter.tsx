@@ -15,7 +15,7 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
   const links = he
     ? [
         { label: "אירועים", to: sitePath("he", "/events") },
-        { label: "תרגול שבועי", to: "/practices" },
+        { label: "תרגול שבועי", to: "/weekly-practice" },
         { label: "מאמרים", to: sitePath("he", "/articles") },
         { label: "אודות", to: sitePath("he", "/about") },
         { label: "דאנה", to: sitePath("he", "/dana") },
@@ -23,7 +23,7 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
       ]
     : [
         { label: "Events", to: sitePath("en", "/events") },
-        { label: "Weekly Practice", to: "/practices" },
+        { label: "Weekly Practice", to: "/weekly-practice" },
         { label: "Articles", to: sitePath("en", "/articles") },
         { label: "About", to: sitePath("en", "/about") },
         { label: "Dana", to: sitePath("en", "/dana") },

@@ -6,7 +6,7 @@ hero_subtitle: "A community studying and practicing Tibetan Buddhism under the g
 hero_cta_label: "Upcoming Events"
 hero_cta_href: "/en/events"
 hero_cta2_label: "Weekly Practice"
-hero_cta2_href: "/practices"
+hero_cta2_href: "/weekly-practice"
 events_title: "Upcoming Events"
 events_empty: "Dates for the teachers' next visit to Israel will be announced soon. Join the mailing list to be the first to know."
 events_archive_label: "Past events"

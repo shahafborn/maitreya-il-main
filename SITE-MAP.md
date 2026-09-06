@@ -16,7 +16,8 @@ The app serves the whole domain from the root (`maitreya.org.il/`) since the 202
 | `/dana` | `/en/dana` | `pages/dana.md` |
 | `/contact` | `/en/contact` | `pages/contact.md` |
 | `/events/online-terms`, `/events/ein-gedi-healing-retreat/terms` | - | `pages/online-terms.md`, `pages/ein-gedi-terms.md` |
-| `/practices` | - | `src/pages/WeeklyPractices.tsx` (noindex) |
+| `/weekly-practice` | - | `src/pages/WeeklyPractices.tsx` (public variant: same timetable, NO Zoom links, join form `src/components/JoinPracticeForm.tsx` -> n8n `Practice_Join` -> Google Sheet + Mailchimp) |
+| `/practices` | - | `src/pages/WeeklyPractices.tsx` (members' variant with Zoom links; noindex, unlisted - shared with the sangha only) |
 
 All of these are pre-rendered to real HTML at build time (`scripts/prerender.mjs`); the list lives in `scripts/site-routes.mjs`.
 

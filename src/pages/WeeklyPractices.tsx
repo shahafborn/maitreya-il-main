@@ -10,12 +10,23 @@
  *
  * Brand: Frank Ruhl Libre (headings) + Heebo (body), cream background,
  * category-colored session cards (basic / healing / highest-tantra / tummo).
+ *
+ * TWO VARIANTS of the same schedule (Shahaf, 2026-09-06):
+ *   - "sangha" at /practices: the page shared with members - every card links to
+ *     its Zoom room. Unlisted (robots noindex), not linked from the site.
+ *   - "public" at /weekly-practice: what the open website links to - the same
+ *     timetable WITHOUT links, inside the site chrome, with a "join our
+ *     practices" form at the bottom (src/components/JoinPracticeForm.tsx).
+ *     People who are not part of the sangha ask to join and the team gets
+ *     back to them; nobody drops into a Zoom room from a Google result.
  */
 
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { MousePointerClick } from "lucide-react";
+import { MousePointerClick, Users } from "lucide-react";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { SiteLayout } from "@/site/SiteLayout";
+import { JoinPracticeForm } from "@/components/JoinPracticeForm";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
 /** Shared Zoom room for all weekly practice sessions. */
@@ -383,20 +394,12 @@ function Pill({ bg, color, children }: { bg: string; color: string; children: Re
   );
 }
 
-function SessionCard({ s }: { s: Session }) {
+function SessionCard({ s, linked }: { s: Session; linked: boolean }) {
   const split = s.categories.length > 1;
   const bg = split ? COLORS.splitBg : CATEGORY[s.categories[0]].bg;
   const showHealingPill = s.categories.includes("healing");
-
-  return (
-    <a
-      href={s.url ?? ZOOM_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={s.url && !s.url.includes("zoom.us") ? "לפרטי הקורס" : "הצטרפו למפגש בזום"}
-      className="relative flex items-stretch overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-      style={{ background: bg }}
-    >
+  const inner = (
+    <>
       {/* Category color bar (split into stacked halves when two categories) */}
       <div className="flex w-1.5 shrink-0 flex-col">
         {s.categories.map((c) => (
@@ -442,16 +445,37 @@ function SessionCard({ s }: { s: Session }) {
           </div>
         )}
       </div>
+    </>
+  );
+
+  // Public page: the same card, no link (no Zoom room for people outside the sangha)
+  if (!linked) {
+    return (
+      <div className="relative flex items-stretch overflow-hidden rounded-xl" style={{ background: bg }}>
+        {inner}
+      </div>
+    );
+  }
+  return (
+    <a
+      href={s.url ?? ZOOM_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={s.url && !s.url.includes("zoom.us") ? "לפרטי הקורס" : "הצטרפו למפגש בזום"}
+      className="relative flex items-stretch overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      style={{ background: bg }}
+    >
+      {inner}
     </a>
   );
 }
 
-function PeriodCell({ sessions }: { sessions: Session[] }) {
+function PeriodCell({ sessions, linked }: { sessions: Session[]; linked: boolean }) {
   if (sessions.length === 0) return <div />;
   return (
     <div className="flex flex-col gap-2">
       {sessions.map((s, i) => (
-        <SessionCard key={i} s={s} />
+        <SessionCard key={i} s={s} linked={linked} />
       ))}
     </div>
   );
@@ -460,7 +484,16 @@ function PeriodCell({ sessions }: { sessions: Session[] }) {
 const GRID_COLS = "110px 1fr 1fr 1fr";
 
 /* ── Page ── */
-const WeeklyPractices = () => {
+export type PracticesVariant = "sangha" | "public";
+
+const PUBLIC_SEO = {
+  title: "תרגולים שבועיים בזום - מאיטרייה סנגהה ישראל",
+  description:
+    "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - טומו, טארה הלבנה והירוקה, אמיתאיוס ותרגולים נוספים בהנחיית דרופון צ׳ונגוואל-לה. פתוח למצטרפים חדשים - השאירו פרטים ונחזור אליכם.",
+};
+
+/** The members' page (with Zoom links) - unlisted. */
+const SanghaSchedule = () => {
   useRetreatSEO({
     title: "מאיטרייה סנגהה ישראל | לו״ז תרגולים",
     description: "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - טומו, מהמודרה, טארה הירוקה ותרגולים נוספים עם דרופון צ׳ונגוואל-לה ולאמה גלן מולין.",
@@ -470,10 +503,7 @@ const WeeklyPractices = () => {
     locale: "he_IL",
   });
 
-  // Standing schedule with any active per-week override applied (auto-reverts).
-  const { schedule, notes } = effectiveSchedule(new Date());
-
-  // Keep this internal schedule out of search results.
+  // Keep the members' schedule (Zoom links) out of search results.
   useEffect(() => {
     const meta = document.createElement("meta");
     meta.name = "robots";
@@ -487,17 +517,47 @@ const WeeklyPractices = () => {
   return (
     <div dir="rtl" className="min-h-screen font-body" style={{ background: COLORS.pageBg }}>
       <div className="mx-auto max-w-5xl px-4 py-8 md:py-12">
-        <div className="rounded-2xl p-6 shadow-sm md:p-10" style={{ background: COLORS.cardBg }}>
+        <ScheduleCard variant="sangha" />
+      </div>
+    </div>
+  );
+};
+
+/** The open website's page: same timetable, no links, join form. */
+const PublicSchedule = () => (
+  <SiteLayout lang="he" title={PUBLIC_SEO.title} description={PUBLIC_SEO.description} path="/weekly-practice">
+    <div className="mx-auto max-w-5xl px-4 py-8 md:py-12">
+      <ScheduleCard variant="public" />
+      <JoinPracticeForm />
+    </div>
+  </SiteLayout>
+);
+
+const WeeklyPractices = ({ variant = "sangha" }: { variant?: PracticesVariant }) =>
+  variant === "public" ? <PublicSchedule /> : <SanghaSchedule />;
+
+/** The timetable card itself, shared by both variants. */
+const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
+  const linked = variant === "sangha";
+
+  // Standing schedule with any active per-week override applied (auto-reverts).
+  const { schedule, notes } = effectiveSchedule(new Date());
+
+  return (
+    <div className="rounded-2xl p-6 shadow-sm md:p-10" style={{ background: COLORS.cardBg }}>
           {/* Header */}
           <header className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <Link to="/" aria-label="לדף הבית" className="inline-block">
-                <img
-                  src={maitreyaLogo}
-                  alt="Maitreya Sangha Israel"
-                  className="mb-3 h-12 w-auto md:h-14"
-                />
-              </Link>
+              {/* The public variant sits inside the site header, which already carries the logo */}
+              {linked && (
+                <Link to="/" aria-label="לדף הבית" className="inline-block">
+                  <img
+                    src={maitreyaLogo}
+                    alt="Maitreya Sangha Israel"
+                    className="mb-3 h-12 w-auto md:h-14"
+                  />
+                </Link>
+              )}
               <h1
                 className="font-heading text-4xl font-semibold leading-none md:text-5xl"
                 style={{ color: COLORS.ink }}
@@ -515,7 +575,7 @@ const WeeklyPractices = () => {
             </div>
           </header>
 
-          {/* How to join — clicking a practice opens its Zoom meeting */}
+          {/* How to join: members click a practice to open its Zoom room; visitors leave their details below */}
           <div
             className="mt-6 flex items-center gap-3 rounded-xl px-4 py-4 md:px-5"
             style={{ background: "#FBF3E2", border: "1px solid #E7D6AE" }}
@@ -524,10 +584,24 @@ const WeeklyPractices = () => {
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
               style={{ background: "#EBD8AC" }}
             >
-              <MousePointerClick className="h-5 w-5" style={{ color: "#8C6410" }} />
+              {linked ? (
+                <MousePointerClick className="h-5 w-5" style={{ color: "#8C6410" }} />
+              ) : (
+                <Users className="h-5 w-5" style={{ color: "#8C6410" }} />
+              )}
             </span>
             <p className="text-base font-bold leading-snug md:text-lg" style={{ color: "#7A5A12" }}>
-              להצטרפות למפגש בזום, לחצו על התרגול הרצוי
+              {linked ? (
+                "להצטרפות למפגש בזום, לחצו על התרגול הרצוי"
+              ) : (
+                <>
+                  המפגשים מתקיימים בזום ופתוחים למצטרפים חדשים.{" "}
+                  <a href="#join" className="underline decoration-1 underline-offset-2 hover:text-[#C15C86]">
+                    השאירו פרטים למטה
+                  </a>{" "}
+                  ונחזור אליכם עם כל המידע.
+                </>
+              )}
             </p>
           </div>
 
@@ -599,7 +673,7 @@ const WeeklyPractices = () => {
                   {row.day}
                 </div>
                 {PERIODS.map((p) => (
-                  <PeriodCell key={p.key} sessions={row[p.key]} />
+                  <PeriodCell key={p.key} sessions={row[p.key]} linked={linked} />
                 ))}
               </div>
             ))}
@@ -619,7 +693,7 @@ const WeeklyPractices = () => {
                         <div className="mb-1 text-xs font-bold" style={{ color: COLORS.periodTime }}>
                           {p.label}
                         </div>
-                        <SessionCard s={s} />
+                        <SessionCard s={s} linked={linked} />
                       </div>
                     )),
                   )}
@@ -637,8 +711,6 @@ const WeeklyPractices = () => {
             מאיטרייה סנגהה ישראל · maitreya.org.il
             <span className="h-px w-6" style={{ background: COLORS.footerLine }} />
           </footer>
-        </div>
-      </div>
     </div>
   );
 };

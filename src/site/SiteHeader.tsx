@@ -21,7 +21,7 @@ const NAV: Record<SiteLang, NavItem[]> = {
   he: [
     { label: "בית", to: sitePath("he") },
     { label: "אירועים", to: sitePath("he", "/events") },
-    { label: "תרגול שבועי", to: "/practices" },
+    { label: "תרגול שבועי", to: "/weekly-practice" },
     { label: "מאמרים", to: sitePath("he", "/articles") },
     { label: "גלריה", to: sitePath("he", "/gallery") },
     { label: "אודות", to: sitePath("he", "/about") },
@@ -31,7 +31,7 @@ const NAV: Record<SiteLang, NavItem[]> = {
   en: [
     { label: "Home", to: sitePath("en") },
     { label: "Events", to: sitePath("en", "/events") },
-    { label: "Weekly Practice", to: "/practices" },
+    { label: "Weekly Practice", to: "/weekly-practice" },
     { label: "Articles", to: sitePath("en", "/articles") },
     { label: "About", to: sitePath("en", "/about") },
     { label: "Dana", to: sitePath("en", "/dana") },

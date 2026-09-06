@@ -6,7 +6,7 @@ hero_subtitle: "קהילת תלמידים הלומדת ומתרגלת בודהי
 hero_cta_label: "לאירועים הקרובים"
 hero_cta_href: "/events"
 hero_cta2_label: "לתרגול השבועי"
-hero_cta2_href: "/practices"
+hero_cta2_href: "/weekly-practice"
 events_title: "אירועים קרובים"
 events_empty: "מועדי הביקור הבא של המורים בישראל יפורסמו בקרוב. הצטרפו לרשימת התפוצה כדי להתעדכן ראשונים."
 events_archive_label: "לכל האירועים שהיו"
