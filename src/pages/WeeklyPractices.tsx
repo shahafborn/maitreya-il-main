@@ -300,6 +300,30 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     },
   },
   {
+    // This Sunday (2026-09-06) only: the LAST Uma Zub Tri clarification session
+    // with Chongwol-la runs 15-16:30 in HIS Zoom room (86757320677), not the
+    // shared practice room. Green Tara moves 16:00 -> 17:00 so it does not
+    // overlap the tail of it (Shahaf, 2026-09-06 - same fix he made by hand on
+    // 23.8). Both sit in `afternoon`, which REPLACES the standing 16-17 cell.
+    // Google Calendar patched separately, per-instance, the same morning.
+    from: "2026-09-06",
+    to: "2026-09-06",
+    note: "שימו לב: היום ב-15:00 מתקיים מפגש ההבהרות האחרון של מהמודרה עם צ׳ונגוואל-לה, בחדר זום אחר. טארה הירוקה עוברת היום ל-17:00.",
+    days: {
+      "ראשון": {
+        afternoon: [
+          {
+            time: "15-16:30",
+            title: "מהמודרה: מפגש הבהרות עם צ׳ונגוואל-לה",
+            categories: ["basic"],
+            url: "https://us02web.zoom.us/j/86757320677?pwd=aJi9zGfhOSQKmiuga60XFpzQeQ8VN6.1",
+          },
+          { time: "17-18", title: "טארה הירוקה", categories: ["basic"], beginner: true },
+        ],
+      },
+    },
+  },
+  {
     // This Saturday (2026-08-29) only, per the schedule Shahaf sent the practice
     // group on 2026-08-28: both Tummo sessions run two hours later than standing
     // (10-11 and 11-12:30, the second one with Q&A), and a one-off mantra practice
