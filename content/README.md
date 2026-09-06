@@ -46,9 +46,12 @@ end: 2026-12-12
 location: "בית ספר שדה עין גדי, ים המלח"
 teacher: "לאמה גלן מולין"
 url: "/events/some-landing-page"
+image: "/media/site/some-event.jpg"
 summary: "משפט או שניים על האירוע."
 ---
 ```
+
+`image` is optional: with it, the homepage shows the event as a large picture card (like the courses page promo) and the events page puts the picture beside the row; without it, a plain text card. Put the file in `public/media/site/` (a 1200x630 share card works well).
 
 That's the whole job. The event appears automatically: on the homepage "אירועים קרובים" section while `end` is today or later, and in the events archive after it passes. `url` may point to an in-app landing page (`/events/...`), or be omitted while registration isn't open yet.
 

@@ -20,7 +20,55 @@ import druponChongwol from "@/assets/retreat/drupon-chongwol.png";
 // Public asset - resolved against the app base (/p/ today, / after cutover)
 const community = `${import.meta.env.BASE_URL}media/site/community-1.jpg`;
 
+/**
+ * An event with a picture gets the treatment of the courses-page promo card:
+ * picture on top, centred title, accent date line, summary, a button.
+ * Events without a picture keep the plain text card below.
+ */
+const FeaturedEventCard = ({ ev, lang }: { ev: EventItem; lang: SiteLang }) => {
+  const he = lang === "he";
+  const cta = he ? "לפרטים והרשמה" : "Details and registration";
+  const inner = (
+    <div className="rounded-xl overflow-hidden shadow-lg border border-border bg-card h-full flex flex-col hover:shadow-xl transition-shadow">
+      <img src={ev.image} alt={ev.title} className="w-full aspect-[16/9] object-cover" loading="lazy" />
+      <div className="px-7 py-7 text-center flex-1 flex flex-col">
+        <h3 className="font-heading text-2xl md:text-3xl font-bold text-primary mb-3 leading-snug">{ev.title}</h3>
+        <p className="text-accent text-lg font-semibold mb-1 inline-flex items-center justify-center gap-2">
+          <CalendarDays className="h-5 w-5 shrink-0" />
+          {formatEventDates(ev, lang)}
+        </p>
+        {ev.location && (
+          <p className="text-sm text-muted-foreground inline-flex items-center justify-center gap-2 mb-4">
+            <MapPin className="h-4 w-4 text-accent shrink-0" />
+            {ev.location}
+          </p>
+        )}
+        {ev.summary && (
+          <>
+            <div className="w-8 h-px bg-border mx-auto mb-4" />
+            <p className="text-muted-foreground leading-relaxed mb-2 flex-1">{ev.summary}</p>
+          </>
+        )}
+        {ev.teacher && <p className="text-sm text-muted-foreground mb-5">{ev.teacher}</p>}
+        {ev.url && (
+          <span className="inline-block mx-auto mt-auto px-8 py-3 rounded-full bg-accent text-accent-foreground font-bold shadow-sm">
+            {cta}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+  return ev.url ? (
+    <Link to={ev.url} className="block h-full">
+      {inner}
+    </Link>
+  ) : (
+    inner
+  );
+};
+
 const EventCard = ({ ev, lang }: { ev: EventItem; lang: SiteLang }) => {
+  if (ev.image) return <FeaturedEventCard ev={ev} lang={lang} />;
   const card = (
     <div className="bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow p-6 h-full flex flex-col">
       <h3 className="font-heading text-xl font-bold text-primary mb-2">{ev.title}</h3>
@@ -134,7 +182,15 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
             {meta.events_title}
           </h2>
           {upcoming.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+            <div
+              className={`grid gap-8 mx-auto ${
+                upcoming.length === 1
+                  ? "max-w-2xl"
+                  : upcoming.length === 2
+                    ? "md:grid-cols-2 max-w-5xl"
+                    : "md:grid-cols-2 lg:grid-cols-3 max-w-5xl"
+              }`}
+            >
               {upcoming.map((ev) => (
                 <EventCard key={ev.slug} ev={ev} lang={lang} />
               ))}

@@ -13,10 +13,14 @@ const EventRow = ({ ev, lang, dimmed }: { ev: EventItem; lang: SiteLang; dimmed?
   const inner = (
     <div
       id={ev.slug}
-      className={`bg-card rounded-lg border border-border p-6 transition-shadow scroll-mt-24 ${
+      className={`bg-card rounded-lg border border-border overflow-hidden transition-shadow scroll-mt-24 ${
         dimmed ? "opacity-80" : "shadow-sm hover:shadow-md"
-      }`}
+      } ${ev.image ? "md:flex" : ""}`}
     >
+      {ev.image && (
+        <img src={ev.image} alt={ev.title} className="w-full aspect-[16/9] md:aspect-auto md:w-2/5 object-cover" loading="lazy" />
+      )}
+      <div className="p-6 flex-1">
       <h3 className="font-heading text-xl font-bold text-primary mb-2">{ev.title}</h3>
       <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground mb-3">
         <span className="inline-flex items-center gap-2">
@@ -32,6 +36,7 @@ const EventRow = ({ ev, lang, dimmed }: { ev: EventItem; lang: SiteLang; dimmed?
       </div>
       {ev.summary && <p className="font-body text-sm leading-relaxed">{ev.summary}</p>}
       {ev.teacher && <p className="font-body text-sm text-muted-foreground mt-2">{ev.teacher}</p>}
+      </div>
     </div>
   );
   return ev.url ? (

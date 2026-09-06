@@ -69,6 +69,8 @@ export interface EventItem {
   summary: string;
   /** Optional link to a landing page (in-app path or full URL). */
   url: string;
+  /** Optional picture (public path under /media/), shown on the homepage card and the events row. */
+  image: string;
 }
 
 const files = import.meta.glob("/content/**/*.md", {
@@ -125,6 +127,7 @@ function toEvent({ slug, content }: { slug: string; content: PageContent }): Eve
     teacher: content.meta.teacher ?? "",
     summary: content.meta.summary ?? "",
     url: content.meta.url ?? "",
+    image: content.meta.image ?? "",
   };
 }
 
