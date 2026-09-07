@@ -136,15 +136,11 @@ const SCHEDULE: DayRow[] = [
       { time: "08-09", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
       { time: "09-11", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
     ],
-    afternoon: [
-      {
-        time: "16-17:30",
-        title: "מהמודרה עם לאמה גלן",
-        subtitle: "עד 5.9",
-        categories: ["basic"],
-        url: "/events/uma-zub-tri",
-      },
-    ],
+    // Lama Glenn's Mahamudra course (Uma Zub Tri, Saturdays 16-17:30) ran its
+    // six sessions and ended 2026-09-05. Removed from the standing schedule
+    // 2026-09-07 (Shahaf). The old WEEK_OVERRIDES below still re-list it for
+    // their own past windows, which is harmless - they no longer match.
+    afternoon: [],
     evening: [],
   },
 ];
@@ -178,6 +174,26 @@ interface WeekOverride {
 }
 
 const WEEK_OVERRIDES: WeekOverride[] = [
+  {
+    // YAMANTAKA RETREAT, 2026-09-01 to 2026-11-20 (Drupon Chongwol-la, three
+    // months, Mon-Fri, four online sessions a day). For its duration the
+    // Sunday-to-Wednesday MORNING practices do not run - Shahaf, 2026-09-07:
+    // "we don't have the morning sessions apart from the Sunday session, which
+    // we also have to remove for the duration of the Yamantaka retreat."
+    // Only `morning` is provided, so every afternoon/evening cell and the whole
+    // of Thursday and Saturday keep their standing schedule. Auto-reverts on
+    // 2026-11-21. The Google Calendar's four morning series were ended early
+    // the same day; they return with the Q4 rebuild (they all expired 30.9).
+    from: "2026-09-01",
+    to: "2026-11-20",
+    note: "שימו לב: במהלך ריטריט היאמנטקה עם דרופון צ׳ונגוואל-לה, עד 20.11, לא מתקיימים תרגולי הבוקר של ימים ראשון עד רביעי. שאר התרגולים ממשיכים כרגיל.",
+    days: {
+      "ראשון": { morning: [] },
+      "שני": { morning: [] },
+      "שלישי": { morning: [] },
+      "רביעי": { morning: [] },
+    },
+  },
   {
     // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
     from: "2026-06-22",
