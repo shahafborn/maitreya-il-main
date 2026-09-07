@@ -195,6 +195,34 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     },
   },
   {
+    // DEATH, DYING AND ENLIGHTENMENT - Lama Glenn's six-Sunday online series,
+    // 2026-09-13 to 2026-10-18 at 16:00 Israel (own event page + own Zoom, sent
+    // to registrants). It sits exactly on the standing Green Tara 16-17, so for
+    // these six Sundays Green Tara moves to 20:30 (Shahaf, 2026-09-07 - the same
+    // move he made by hand on 23.8). Overlaps the retreat window above, which
+    // only touches `morning`; this one only touches `afternoon`/`evening`, and
+    // effectiveSchedule() merges active overrides per day, so both apply.
+    // Drupon Chongwol-la's weekly clarification session for the course has no
+    // time yet - add it here when Shahaf has it.
+    from: "2026-09-13",
+    to: "2026-10-18",
+    note: "שימו לב: בימי ראשון, מ-13.9 עד 18.10, מתקיימת ב-16:00 סדרת המפגשים \"מוות, לחיות לנוכח המוות, והארה\" עם לאמה גלן, ותרגול טארה הירוקה עובר ל-20:30.",
+    days: {
+      "ראשון": {
+        afternoon: [
+          {
+            time: "16-17:30",
+            title: "מוות, לחיות לנוכח המוות, והארה",
+            subtitle: "סדרה עם לאמה גלן, 13.9-18.10",
+            categories: ["basic"],
+            url: "/events/death-dying-enlightenment",
+          },
+        ],
+        evening: [{ time: "20:30-21:30", title: "טארה הירוקה", categories: ["basic"], beginner: true }],
+      },
+    },
+  },
+  {
     // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
     from: "2026-06-22",
     to: "2026-06-27",
@@ -376,23 +404,6 @@ const WEEK_OVERRIDES: WeekOverride[] = [
           },
         ],
       },
-    },
-  },
-  {
-    // Yamantaka retreat, 2026-09-01 to 2026-11-20 (Mon-Fri, Korea time). Its
-    // third session runs 07:00-09:00 Israel time, which collides head-on with
-    // the three 07-08 morning practices on Mon/Tue/Wed, so they are cleared for
-    // the duration. Nothing else overlaps: the retreat's other sessions fall at
-    // 01:30, 03:30, 09:30 and 13:00, and it does not run Sat/Sun, so the Sunday
-    // and Saturday cells and every evening session stay as they are.
-    // The window auto-reverts on 2026-11-21 - no manual undo needed.
-    from: "2026-09-01",
-    to: "2026-11-20",
-    note: "בתקופת ריטריט יאמנטקה (1.9 עד 20.11) תרגולי הבוקר בימים שני, שלישי ורביעי אינם מתקיימים - הם חופפים למפגשי הריטריט. שאר התרגולים ממשיכים כרגיל.",
-    days: {
-      "שני": { morning: [] },
-      "שלישי": { morning: [] },
-      "רביעי": { morning: [] },
     },
   },
 ];
