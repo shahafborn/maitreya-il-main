@@ -38,7 +38,16 @@ const SiteGallery = lazy(() => import("./site/pages/SiteGallery"));
 const SiteDana = lazy(() => import("./site/pages/SiteDana"));
 const SiteDocPage = lazy(() => import("./site/pages/SiteDocPage"));
 
-const queryClient = new QueryClient();
+// No refetch when the tab regains focus: on a phone that fires every time
+// someone switches back to the browser, re-rendering the course page under a
+// playing video for no new data. Five minutes of staleness is fine for pages
+// whose content changes a few times a week; admin edits invalidate their own
+// queries explicitly.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { refetchOnWindowFocus: false, staleTime: 5 * 60 * 1000 },
+  },
+});
 
 /**
  * Suspense fallback. On a pre-rendered page the first fallback shows the

@@ -19,6 +19,41 @@ const SESSION_LABELS: Record<string, string> = {
   clarification: "Clarification Session",
 };
 
+/**
+ * One recording: title + player.
+ *
+ * Deliberately a module-level component. It used to be declared inside
+ * CourseRecordings, which made it a brand-new component type on every render,
+ * so React unmounted and rebuilt every player - iframe and all - whenever the
+ * page re-rendered. On a phone that happens the moment you come back to the
+ * browser (the login token refreshes, queries refetch), and every video on the
+ * page reset to the start. Reported by a participant on 2026-09-07.
+ */
+const RecordingItem = ({
+  rec,
+  onLoad,
+}: {
+  rec: CourseRecording;
+  onLoad: (recordingId: string) => void;
+}) => (
+  <div>
+    <h4 className="text-sm font-medium text-foreground mb-2">
+      {rec.title}
+      {rec.session_type && (
+        <span className="ml-2 text-xs text-muted-foreground">
+          ({SESSION_LABELS[rec.session_type] ?? rec.session_type})
+        </span>
+      )}
+    </h4>
+    <VideoEmbed
+      embedType={rec.embed_type}
+      embedUrl={rec.embed_url}
+      title={rec.title}
+      onLoad={() => onLoad(rec.id)}
+    />
+  </div>
+);
+
 const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
   // Deduplicate tracking per session (prevent re-renders from spamming)
   const trackedRef = useRef<Set<string>>(new Set());
@@ -50,25 +85,6 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
   // plain list instead - the titles already carry the date.
   const ungrouped = weeks.length === 1 && weeks[0] === null;
 
-  const RecordingItem = ({ rec }: { rec: CourseRecording }) => (
-    <div>
-      <h4 className="text-sm font-medium text-foreground mb-2">
-        {rec.title}
-        {rec.session_type && (
-          <span className="ml-2 text-xs text-muted-foreground">
-            ({SESSION_LABELS[rec.session_type] ?? rec.session_type})
-          </span>
-        )}
-      </h4>
-      <VideoEmbed
-        embedType={rec.embed_type}
-        embedUrl={rec.embed_url}
-        title={rec.title}
-        onLoad={() => handleVideoLoad(rec.id)}
-      />
-    </div>
-  );
-
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto px-6 max-w-3xl">
@@ -83,7 +99,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
         ) : ungrouped ? (
           <div className="space-y-8">
             {grouped.get(null)!.map((rec) => (
-              <RecordingItem key={rec.id} rec={rec} />
+              <RecordingItem key={rec.id} rec={rec} onLoad={handleVideoLoad} />
             ))}
           </div>
         ) : (
@@ -101,7 +117,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
                 <AccordionContent>
                   <div className="space-y-6 pt-2">
                     {recs.map((rec) => (
-                      <RecordingItem key={rec.id} rec={rec} />
+                      <RecordingItem key={rec.id} rec={rec} onLoad={handleVideoLoad} />
                     ))}
                   </div>
                 </AccordionContent>
