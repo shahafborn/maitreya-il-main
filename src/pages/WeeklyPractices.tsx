@@ -89,7 +89,10 @@ type DayRow = { day: string } & Record<PeriodKey, Session[]>;
 const SCHEDULE: DayRow[] = [
   {
     day: "ראשון",
-    morning: [{ time: "07-08", title: "חמשת הבודהות", categories: ["basic"], beginner: true }],
+    // Tummo (Naropa), facilitated by Shahaf, replaced חמשת הבודהות in this cell
+    // permanently on 2026-09-10. It runs through the Yamantaka retreat window -
+    // see the retreat override below, which no longer clears Sunday morning.
+    morning: [{ time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
     afternoon: [{ time: "16-17", title: "טארה הירוקה", categories: ["basic"], beginner: true }],
     evening: [],
   },
@@ -177,18 +180,18 @@ const WEEK_OVERRIDES: WeekOverride[] = [
   {
     // YAMANTAKA RETREAT, 2026-09-01 to 2026-11-20 (Drupon Chongwol-la, three
     // months, Mon-Fri, four online sessions a day). For its duration the
-    // Sunday-to-Wednesday MORNING practices do not run - Shahaf, 2026-09-07:
-    // "we don't have the morning sessions apart from the Sunday session, which
-    // we also have to remove for the duration of the Yamantaka retreat."
+    // Monday-to-Wednesday MORNING practices do not run. Sunday morning was
+    // cleared too until 2026-09-10, when Shahaf added the 07-08 Tummo (Naropa)
+    // session he facilitates himself - the retreat is Mon-Fri, so his Sundays
+    // are free and that cell now runs straight through the retreat window.
     // Only `morning` is provided, so every afternoon/evening cell and the whole
     // of Thursday and Saturday keep their standing schedule. Auto-reverts on
     // 2026-11-21. The Google Calendar's four morning series were ended early
     // the same day; they return with the Q4 rebuild (they all expired 30.9).
     from: "2026-09-01",
     to: "2026-11-20",
-    note: "שימו לב: במהלך ריטריט היאמנטקה עם דרופון צ׳ונגוואל-לה, עד 20.11, לא מתקיימים תרגולי הבוקר של ימים ראשון עד רביעי. שאר התרגולים ממשיכים כרגיל.",
+    note: "שימו לב: במהלך ריטריט היאמנטקה עם דרופון צ׳ונגוואל-לה, עד 20.11, לא מתקיימים תרגולי הבוקר של ימים שני עד רביעי. שאר התרגולים ממשיכים כרגיל.",
     days: {
-      "ראשון": { morning: [] },
       "שני": { morning: [] },
       "שלישי": { morning: [] },
       "רביעי": { morning: [] },
