@@ -51,7 +51,7 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  amitayusThangka,
+  amitayusPoster,
   lhamoLatso,
   prayerFlagsBg,
   venuePhoto,
@@ -308,8 +308,8 @@ const HealingKundaliniRetreat = () => {
         {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
         <figure className="max-w-sm mx-auto mb-12 md:mb-16">
           <img
-            src={amitayusThangka}
-            alt="אמיטאיוס, בודהה החיים הארוכים - תנקה טיבטית"
+            src={amitayusPoster}
+            alt="אמיטאיוס, בודהה החיים הארוכים"
             className="w-full block rounded-lg shadow-xl"
           />
           <figcaption

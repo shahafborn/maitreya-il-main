@@ -38,6 +38,10 @@ export { default as vajrayoginiChakras } from "./vajrayogini-chakras.jpg";
 // Option E (Shahaf, 2026-09-11), in use: the Amitayus thangka from the Nov 2025 healing-visit
 // poster - Dropbox: _LG&C Visits/LG&C 11-2025 Visit/Amitayus/Amitayus_for_print.png (3765x5728).
 export { default as amitayusThangka } from "./amitayus-thangka.jpg";
+// Option F (Shahaf, 2026-09-11), in use: the Amitayus from the Nov 2025 healing-yoga flyer -
+// Shahaf's own render (Downloads/shahafbor_...5187dde4...png, 1632x2912; the flyer's Source
+// folder in Dropbox holds its square siblings), cropped to the figure at about 2:3.
+export { default as amitayusPoster } from "./amitayus-poster.jpg";
 // Palden Lhamo block (Shahaf, 2026-09-11): Lhamo Latso, her oracle lake in Tibet - the
 // second image Shahaf supplied (vault: marketing/lhamo-latso-shahaf-v2.jpg), replacing the
 // Gemini-generated scene (kept in the vault as lhamo-latso-generated.jpg).
