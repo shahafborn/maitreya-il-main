@@ -51,7 +51,7 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  amitayusAntique,
+  cosmicManChakras,
   lhamoLatso,
   prayerFlagsBg,
   venuePhoto,
@@ -308,15 +308,15 @@ const HealingKundaliniRetreat = () => {
         {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
         <figure className="max-w-sm mx-auto mb-12 md:mb-16">
           <img
-            src={amitayusAntique}
-            alt="אמיטאיוס, בודהה החיים הארוכים - תנקה מהמאה ה-19"
+            src={cosmicManChakras}
+            alt="האדם הקוסמי: ציור מסורתי של הגוף העדין ושש הצ׳אקרות"
             className="w-full block rounded-lg shadow-xl"
           />
           <figcaption
             className="mt-4 text-sm text-center leading-relaxed"
             style={{ color: RETREAT_THEME.WARM_GRAY, fontFamily: RETREAT_FONTS.sans }}
           >
-            אמיטאיוס, בודהה החיים הארוכים, בתנקה מהמאה ה-19 - הדמות שבמרכז יוגת הריפוי הטיבטית
+            הגוף העדין ושש הצ׳אקרות - ציור מסורתי של מפת האנרגיה שעליה נעשית עבודת הקונדליני
           </figcaption>
         </figure>
         <div className="max-w-3xl mx-auto">
