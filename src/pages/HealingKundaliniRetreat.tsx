@@ -53,7 +53,6 @@ import {
   cloudsBg,
   medicalTree,
   lhamoLatso,
-  paldenLhamo,
   prayerFlagsBg,
   venuePhoto,
   hkrGalleryImages,
@@ -362,34 +361,22 @@ const HealingKundaliniRetreat = () => {
               אגם להמו לה-צו - האגם הקדוש של פאלדן להמו בטיבט, הידוע בחזיונות הנבואיים הנשקפים במימיו
             </figcaption>
           </figure>
-          {/* Side-by-side like White Manjushri on the May page: thangka right, text left. */}
-          <div className="grid md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-start">
-            <div className="mx-auto md:mx-0 w-[220px] md:w-[260px] shrink-0">
-              <img
-                src={paldenLhamo}
-                alt="פאלדן להמו רוכבת על פרדתה - תנקה טיבטית"
-                className="w-full rounded-lg shadow-md"
-              />
-            </div>
-            <div>
-              <h2
-                className="text-xl md:text-2xl font-bold mb-2"
-                style={{ fontFamily: RETREAT_FONTS.serif }}
-              >
-                תרגול וחניכת פאלדן להמו
-              </h2>
-              <p className="text-lg font-semibold mb-6" style={{ color: RETREAT_THEME.GOLD_DARK }}>
-                תרגול לפיתוח ביטחון ויציבות בחיי היום יום
-              </p>
-              <div
-                className="space-y-5 text-lg leading-[1.9]"
-                style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
-              >
-                <p>בריטריט ילמד לאמה גלן את תרגול פאלדן להמו - תרגול של שימוש באנרגיה ובחוכמה הנשית ליצירת ביטחון ויציבות בחיי היום יום.</p>
-                <p>בעולם הבודהיזם הטנטרי, השימוש באנרגיה הנשית להשגת יציבות וביטחון בעולם החולין נחשב לתנאי לתרגול מדיטטיבי שנושא פרי. בעולמנו, המלא במורכבויות ובאתגרים, היכולת לפגוש את המציאות היומיומית בפתיחות ובנינוחות היא חלק חשוב שמאפשר למדיטציה להבשיל. פאלדן להמו היא אחת משומרות הדהרמה המרכזיות של שושלת הדלאי לאמות, ותרגולה עובר בשושלת מימיו של הדלאי לאמה הראשון.</p>
-                <p>במהלך הריטריט יעביר לאמה גלן את חניכת פאלדן להמו.</p>
-              </div>
-            </div>
+          <h2
+            className="text-xl md:text-2xl font-bold mb-2"
+            style={{ fontFamily: RETREAT_FONTS.serif }}
+          >
+            תרגול וחניכת פאלדן להמו
+          </h2>
+          <p className="text-lg font-semibold mb-6" style={{ color: RETREAT_THEME.GOLD_DARK }}>
+            תרגול לפיתוח ביטחון ויציבות בחיי היום יום
+          </p>
+          <div
+            className="space-y-5 text-lg leading-[1.9]"
+            style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
+          >
+            <p>בריטריט ילמד לאמה גלן את תרגול פאלדן להמו - תרגול של שימוש באנרגיה ובחוכמה הנשית ליצירת ביטחון ויציבות בחיי היום יום.</p>
+            <p>בעולם הבודהיזם הטנטרי, השימוש באנרגיה הנשית להשגת יציבות וביטחון בעולם החולין נחשב לתנאי לתרגול מדיטטיבי שנושא פרי. בעולמנו, המלא במורכבויות ובאתגרים, היכולת לפגוש את המציאות היומיומית בפתיחות ובנינוחות היא חלק חשוב שמאפשר למדיטציה להבשיל. פאלדן להמו היא אחת משומרות הדהרמה המרכזיות של שושלת הדלאי לאמות, ותרגולה עובר בשושלת מימיו של הדלאי לאמה הראשון.</p>
+            <p>במהלך הריטריט יעביר לאמה גלן את חניכת פאלדן להמו.</p>
           </div>
         </div>
       </SectionFrame>

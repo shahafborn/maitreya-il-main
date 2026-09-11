@@ -35,9 +35,6 @@ export { default as medicalTree } from "./medical-tree-thangka.jpg";
 // second image Shahaf supplied (vault: marketing/lhamo-latso-shahaf-v2.jpg), replacing the
 // Gemini-generated scene (kept in the vault as lhamo-latso-generated.jpg).
 export { default as lhamoLatso } from "./lhamo-latso.jpg";
-// Palden Lhamo thangka (Shahaf, 2026-09-11): the goddess on her mule. Source 392x500
-// (vault: marketing/palden-lhamo-thangka-source.jpg), upscaled with Gemini, restoration prompt.
-export { default as paldenLhamo } from "./palden-lhamo.jpg";
 export { default as ngakpaMeadow } from "@/assets/heart-of-wisdom-retreat/ngakpa-meadow.jpg";
 export { default as prayerFlagsBg } from "@/assets/heart-of-wisdom-retreat/prayer-flags.jpg";
 export { default as venuePhoto } from "@/assets/heart-of-wisdom-retreat/antakarana-venue.jpg";
