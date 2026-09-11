@@ -279,12 +279,12 @@ const HealingKundaliniRetreat = () => {
       <RetreatHero
         image={hkrHero}
         mobileImage={hkrHeroMobile}
-        imageAlt="אמיטאיוס, בודהה החיים הארוכים, בתוך הילה של קשת בענן"
+        imageAlt="ציור קיר טיבטי של יוגים במדיטציה"
         title="תרגולי מדיטציה וקונדליני לריפוי"
         subtitle="שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, בליווי חניכה לפאלדן להמו"
         accent="עם לאמה גלן"
         dateLine="2-4 בדצמבר 2026 | מרכז אנטאקראנה, תל אביב"
-        objectPosition="center 30%"
+        objectPosition="62% 40%"
       />
 
       <AboutSection

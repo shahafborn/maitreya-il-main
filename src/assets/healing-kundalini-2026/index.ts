@@ -8,8 +8,13 @@
  * Everything else is reused from the Heart of Wisdom (May 2026) page, which was
  * also held at Antakarana. Do NOT change the exported identifiers.
  */
-export { default as hkrHero } from "./hero-amitayus.jpg";
-export { default as hkrHeroMobile } from "./hero-amitayus-mobile.jpg";
+// Hero option B (Shahaf, 2026-09-11): a Tibetan mural of yogis - the seated one in the
+// meditation belt reads as tummo. Source 956x640 (vault: teachers-visit-nov-dec-2026/marketing/hero-yogi-mural-source.jpg), upscaled to 2528px with Gemini (faithful restoration prompt, checked against the original at pixel level).
+export { default as hkrHero } from "./hero-mural.jpg";
+export { default as hkrHeroMobile } from "./hero-mural-mobile.jpg";
+// Option A kept: the Sangha's rainbow Amitayus graphic.
+export { default as hkrHeroAmitayus } from "./hero-amitayus.jpg";
+export { default as hkrHeroAmitayusMobile } from "./hero-amitayus-mobile.jpg";
 
 export { default as lamaGlennPhoto } from "@/assets/retreat/lama-glenn-big.jpg";
 export { default as druponPhoto } from "@/assets/retreat/drupon-chongwol.png";
