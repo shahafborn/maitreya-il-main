@@ -306,8 +306,8 @@ const HealingKundaliniRetreat = () => {
           photo leads, centred title, prose below. */}
       <SectionFrame tone="cream" maxWidth="xl">
         {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
-        {/* 75% of the tree's half width (max-w-sm = 384px), per Shahaf. */}
-        <figure className="max-w-[288px] mx-auto mb-12 md:mb-16">
+        {/* Sized by Shahaf: 384px x 0.75 x 1.25 = 360px. */}
+        <figure className="max-w-[360px] mx-auto mb-12 md:mb-16">
           <img
             src={vajrayoginiChannel}
             alt="ואג׳ראיוגיני והערוץ המרכזי"
