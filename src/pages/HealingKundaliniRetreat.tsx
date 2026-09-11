@@ -308,7 +308,7 @@ const HealingKundaliniRetreat = () => {
         <img
           src={medicalTree}
           alt="תנקה רפואית טיבטית: עץ הבריאות והמחלה"
-          className="w-full max-w-3xl mx-auto block rounded-lg shadow-xl mb-12 md:mb-16"
+          className="w-full max-w-sm mx-auto block rounded-lg shadow-xl mb-12 md:mb-16"
         />
         <div className="max-w-3xl mx-auto">
           <SectionTitle className="text-center mb-10">על התרגול</SectionTitle>
