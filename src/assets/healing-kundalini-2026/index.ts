@@ -31,6 +31,10 @@ export { default as medicineMandala } from "./medicine-buddha-mandala.jpg";
 // tree of Tibetan physiology, which is the illness-to-balance chain the prose describes.
 // Source 815x1126: vault teachers-visit-nov-dec-2026/marketing/medical-tree-thangka-source.jpg
 export { default as medicalTree } from "./medical-tree-thangka.jpg";
+// Palden Lhamo block (Shahaf, 2026-09-11): Lhamo Latso, her oracle lake in Tibet. A new
+// image generated with Gemini from a text description of the real place; Shahaf's reference
+// photo is only in the vault (marketing/lhamo-latso-reference-photo.jpg), never on the site.
+export { default as lhamoLatso } from "./lhamo-latso.jpg";
 export { default as ngakpaMeadow } from "@/assets/heart-of-wisdom-retreat/ngakpa-meadow.jpg";
 export { default as prayerFlagsBg } from "@/assets/heart-of-wisdom-retreat/prayer-flags.jpg";
 export { default as venuePhoto } from "@/assets/heart-of-wisdom-retreat/antakarana-venue.jpg";

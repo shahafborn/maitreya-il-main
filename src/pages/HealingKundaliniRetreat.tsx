@@ -52,6 +52,7 @@ import {
   druponPhoto,
   cloudsBg,
   medicalTree,
+  lhamoLatso,
   prayerFlagsBg,
   venuePhoto,
   hkrGalleryImages,
@@ -343,11 +344,23 @@ const HealingKundaliniRetreat = () => {
         </div>
       </SectionFrame>
 
-      {/* Palden Lhamo jenang. Text-only for now: no image of the deity exists in
-          the Sangha's material yet. When one lands, switch to the side-by-side
-          grid used for White Manjushri on HeartOfWisdomRetreat. */}
+      {/* Palden Lhamo jenang. Her oracle lake leads the block (no image of the
+          deity herself exists in the Sangha's material). */}
       <SectionFrame tone="stone" size="md" maxWidth="lg">
         <div className="max-w-3xl mx-auto">
+          <figure className="mb-10">
+            <img
+              src={lhamoLatso}
+              alt="אגם להמו לה-צו בטיבט"
+              className="w-full block rounded-lg shadow-xl"
+            />
+            <figcaption
+              className="mt-4 text-sm text-center leading-relaxed"
+              style={{ color: RETREAT_THEME.WARM_GRAY, fontFamily: RETREAT_FONTS.sans }}
+            >
+              אגם להמו לה-צו - האגם הקדוש של פאלדן להמו בטיבט, הידוע בחזיונות הנבואיים הנשקפים במימיו
+            </figcaption>
+          </figure>
           <h2
             className="text-xl md:text-2xl font-bold mb-2"
             style={{ fontFamily: RETREAT_FONTS.serif }}
