@@ -31,6 +31,10 @@ export { default as medicineMandala } from "./medicine-buddha-mandala.jpg";
 // tree of Tibetan physiology, which is the illness-to-balance chain the prose describes.
 // Source 815x1126: vault teachers-visit-nov-dec-2026/marketing/medical-tree-thangka-source.jpg
 export { default as medicalTree } from "./medical-tree-thangka.jpg";
+// Option D (Shahaf, 2026-09-11), in use: Vajrayogini with the chakras and seed syllables -
+// the subtle body the kundalini work is done on. Source 3505x2480
+// (vault: marketing/vajrayogini-chakras-source.jpg).
+export { default as vajrayoginiChakras } from "./vajrayogini-chakras.jpg";
 // Palden Lhamo block (Shahaf, 2026-09-11): Lhamo Latso, her oracle lake in Tibet - the
 // second image Shahaf supplied (vault: marketing/lhamo-latso-shahaf-v2.jpg), replacing the
 // Gemini-generated scene (kept in the vault as lhamo-latso-generated.jpg).

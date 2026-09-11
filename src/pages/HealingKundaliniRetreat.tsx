@@ -51,7 +51,7 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  medicalTree,
+  vajrayoginiChakras,
   lhamoLatso,
   prayerFlagsBg,
   venuePhoto,
@@ -306,17 +306,17 @@ const HealingKundaliniRetreat = () => {
           photo leads, centred title, prose below. */}
       <SectionFrame tone="cream" maxWidth="xl">
         {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
-        <figure className="max-w-sm mx-auto mb-12 md:mb-16">
+        <figure className="max-w-2xl mx-auto mb-12 md:mb-16">
           <img
-            src={medicalTree}
-            alt="עץ הרפואה הטיבטי"
+            src={vajrayoginiChakras}
+            alt="ואג׳ראיוגיני עם מרכזי האנרגיה וההברות"
             className="w-full block rounded-lg shadow-xl"
           />
           <figcaption
             className="mt-4 text-sm text-center leading-relaxed"
             style={{ color: RETREAT_THEME.WARM_GRAY, fontFamily: RETREAT_FONTS.sans }}
           >
-            עץ הרפואה הטיבטי - ייצוג חזותי של מערכת הרפואה הטיבטית
+            ואג׳ראיוגיני והגוף העדין - הערוץ המרכזי, מרכזי האנרגיה וההברות, המפה שעליה נעשית עבודת הקונדליני
           </figcaption>
         </figure>
         <div className="max-w-3xl mx-auto">
