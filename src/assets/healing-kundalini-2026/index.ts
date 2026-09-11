@@ -1,0 +1,33 @@
+/**
+ * Asset re-exports for the "Meditation and Kundalini for Healing" retreat page
+ * (Lama Glenn Mullin, Antakarana Center Tel Aviv, 2-4 Dec 2026).
+ *
+ * Hero: the Sangha's own rainbow Amitayus graphic (public/media/articles/
+ * Amitayus-Rainbow-FINAL.png, used for the Nov 2025 healing course), cut into a
+ * wide banner (sky extended with a blurred copy) and a portrait cut for phones.
+ * Everything else is reused from the Heart of Wisdom (May 2026) page, which was
+ * also held at Antakarana. Do NOT change the exported identifiers.
+ */
+export { default as hkrHero } from "./hero-amitayus.jpg";
+export { default as hkrHeroMobile } from "./hero-amitayus-mobile.jpg";
+
+export { default as lamaGlennPhoto } from "@/assets/retreat/lama-glenn-big.jpg";
+export { default as druponPhoto } from "@/assets/retreat/drupon-chongwol.png";
+
+// Reused from Heart of Wisdom: soft clouds behind the About text, a yogi in a
+// meadow above "on the practice", prayer flags behind the closing call, and the
+// real Antakarana room photo behind the venue block.
+export { default as cloudsBg } from "@/assets/heart-of-wisdom-retreat/clouds-bg.jpg";
+export { default as ngakpaMeadow } from "@/assets/heart-of-wisdom-retreat/ngakpa-meadow.jpg";
+export { default as prayerFlagsBg } from "@/assets/heart-of-wisdom-retreat/prayer-flags.jpg";
+export { default as venuePhoto } from "@/assets/heart-of-wisdom-retreat/antakarana-venue.jpg";
+
+import g1 from "@/assets/retreat/gallery-1.jpg";
+import g2 from "@/assets/retreat/gallery-2.jpg";
+import g3 from "@/assets/retreat/gallery-3.jpg";
+import g4 from "@/assets/retreat/gallery-4.jpg";
+import g5 from "@/assets/retreat/gallery-5.jpg";
+import g6 from "@/assets/retreat/gallery-6.jpg";
+import g7 from "@/assets/retreat/gallery-7.jpg";
+import g8 from "@/assets/retreat/gallery-8.jpg";
+export const hkrGalleryImages = [g1, g2, g3, g4, g5, g6, g7, g8];

@@ -96,6 +96,7 @@ export function getRoutes() {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });
   };
+  retreat("/events/healing-kundalini-retreat", null, 0.9);
   retreat("/events/death-dying-enlightenment", null, 0.9);
   retreat("/events/yamantaka-online-2026", null, 0.9);
   retreat("/events/uma-zub-tri", null, 0.7);
