@@ -425,12 +425,13 @@ const HealingKundaliniRetreat = () => {
       <GalleryCarousel
         title="מהריטריטים שלנו"
         images={hkrGalleryImages}
+        alt="מריטריטים קודמים של מאיטרייה סנגהה"
       />
 
       <VideoSection
         title="הכירו את לאמה גלן מולין"
         subtitle="לאמה גלן על טנטרה בודהיסטית בחיי היומיום"
-        youtubeUrl="https://www.youtube.com/embed/r6IniYsqRcw?start=1"
+        embedUrl="https://www.youtube.com/embed/r6IniYsqRcw?start=1"
         iframeTitle="לאמה גלן מולין - טנטרה בודהיסטית"
       />
 
@@ -456,15 +457,21 @@ const HealingKundaliniRetreat = () => {
       <MailingListSignup
         heading="הישארו מעודכנים"
         subheading="הירשמו לרשימת התפוצה שלנו וקבלו עדכונים על ריטריטים, סדנאות ואירועים נוספים"
-        lang="he"
+        placeholder="כתובת אימייל"
+        ctaLabel="הרשמה"
+        successMessage="תודה! נרשמת בהצלחה"
+        errorMessage="שגיאה בהרשמה, נסו שוב"
+        language="he"
+        tag="Hebrew"
       />
 
       <RegistrationModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onOpenChange={setModalOpen}
+        // The recommended dana is chosen in advance; the person only changes it if they want to.
+        preselectedTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
         config={registrationConfig}
         copy={registrationCopy}
-        initialTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
       />
 
       {paymentStatus && (
