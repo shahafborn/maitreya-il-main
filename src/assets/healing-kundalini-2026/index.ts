@@ -23,6 +23,10 @@ export { default as druponPhoto } from "@/assets/retreat/drupon-chongwol.png";
 // meadow above "on the practice", prayer flags behind the closing call, and the
 // real Antakarana room photo behind the venue block.
 export { default as cloudsBg } from "@/assets/heart-of-wisdom-retreat/clouds-bg.jpg";
+// "On the practice" image (Shahaf, 2026-09-11): the Medicine Buddha mandala - his palace
+// ringed by the medicinal herbs, the healing tradition drawn as a map. Source: vault
+// teachers-visit-nov-dec-2026/marketing/medicine-buddha-mandala-source.jpg (3516x4231).
+export { default as medicineMandala } from "./medicine-buddha-mandala.jpg";
 export { default as ngakpaMeadow } from "@/assets/heart-of-wisdom-retreat/ngakpa-meadow.jpg";
 export { default as prayerFlagsBg } from "@/assets/heart-of-wisdom-retreat/prayer-flags.jpg";
 export { default as venuePhoto } from "@/assets/heart-of-wisdom-retreat/antakarana-venue.jpg";

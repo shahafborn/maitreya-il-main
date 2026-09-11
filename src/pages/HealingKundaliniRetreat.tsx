@@ -51,7 +51,7 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  ngakpaMeadow,
+  medicineMandala,
   prayerFlagsBg,
   venuePhoto,
   hkrGalleryImages,
@@ -304,10 +304,11 @@ const HealingKundaliniRetreat = () => {
       {/* "On the practice": same editorial layout as Heart of Wisdom - a large
           photo leads, centred title, prose below. */}
       <SectionFrame tone="cream" maxWidth="xl">
+        {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
         <img
-          src={ngakpaMeadow}
-          alt="יוגי במדיטציה מול רכס הרים"
-          className="w-full rounded-lg shadow-xl mb-12 md:mb-16"
+          src={medicineMandala}
+          alt="מנדלת בודהת הרפואה: ארמונו מוקף בצמחי המרפא"
+          className="w-full max-w-3xl mx-auto block rounded-lg shadow-xl mb-12 md:mb-16"
         />
         <div className="max-w-3xl mx-auto">
           <SectionTitle className="text-center mb-10">על התרגול</SectionTitle>
