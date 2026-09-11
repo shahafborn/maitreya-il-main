@@ -27,6 +27,10 @@ export { default as cloudsBg } from "@/assets/heart-of-wisdom-retreat/clouds-bg.
 // ringed by the medicinal herbs, the healing tradition drawn as a map. Source: vault
 // teachers-visit-nov-dec-2026/marketing/medicine-buddha-mandala-source.jpg (3516x4231).
 export { default as medicineMandala } from "./medicine-buddha-mandala.jpg";
+// Option C (Shahaf, 2026-09-11): the medical thangka "Root of Health and Disease" - the
+// tree of Tibetan physiology, which is the illness-to-balance chain the prose describes.
+// Source 815x1126: vault teachers-visit-nov-dec-2026/marketing/medical-tree-thangka-source.jpg
+export { default as medicalTree } from "./medical-tree-thangka.jpg";
 export { default as ngakpaMeadow } from "@/assets/heart-of-wisdom-retreat/ngakpa-meadow.jpg";
 export { default as prayerFlagsBg } from "@/assets/heart-of-wisdom-retreat/prayer-flags.jpg";
 export { default as venuePhoto } from "@/assets/heart-of-wisdom-retreat/antakarana-venue.jpg";

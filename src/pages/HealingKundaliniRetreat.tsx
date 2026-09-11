@@ -51,7 +51,7 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  medicineMandala,
+  medicalTree,
   prayerFlagsBg,
   venuePhoto,
   hkrGalleryImages,
@@ -306,8 +306,8 @@ const HealingKundaliniRetreat = () => {
       <SectionFrame tone="cream" maxWidth="xl">
         {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
         <img
-          src={medicineMandala}
-          alt="מנדלת בודהת הרפואה: ארמונו מוקף בצמחי המרפא"
+          src={medicalTree}
+          alt="תנקה רפואית טיבטית: עץ הבריאות והמחלה"
           className="w-full max-w-3xl mx-auto block rounded-lg shadow-xl mb-12 md:mb-16"
         />
         <div className="max-w-3xl mx-auto">
