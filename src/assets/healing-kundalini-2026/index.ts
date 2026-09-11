@@ -50,6 +50,9 @@ export { default as amitayusAntique } from "./amitayus-antique.jpg";
 // Transformation", LACMA M.91.118 - the traditional diagram of the subtle body and its chakras.
 // Source 1255x2100 (vault: marketing/cosmic-man-six-chakras-lacma-source.jpg).
 export { default as cosmicManChakras } from "./cosmic-man-chakras.jpg";
+// Option I (Shahaf, 2026-09-11), IN USE: Vajrayogini with the central channel only, cut from
+// the chakras-and-syllables diagram (the side columns dropped), white on both sides.
+export { default as vajrayoginiChannel } from "./vajrayogini-channel.jpg";
 // Palden Lhamo block (Shahaf, 2026-09-11): Lhamo Latso, her oracle lake in Tibet - the
 // second image Shahaf supplied (vault: marketing/lhamo-latso-shahaf-v2.jpg), replacing the
 // Gemini-generated scene (kept in the vault as lhamo-latso-generated.jpg).

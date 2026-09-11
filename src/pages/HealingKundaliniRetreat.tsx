@@ -51,7 +51,7 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  cosmicManChakras,
+  vajrayoginiChannel,
   lhamoLatso,
   prayerFlagsBg,
   venuePhoto,
@@ -308,15 +308,15 @@ const HealingKundaliniRetreat = () => {
         {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
         <figure className="max-w-sm mx-auto mb-12 md:mb-16">
           <img
-            src={cosmicManChakras}
-            alt="האדם הקוסמי: ציור מסורתי של הגוף העדין ושש הצ׳אקרות"
+            src={vajrayoginiChannel}
+            alt="ואג׳ראיוגיני והערוץ המרכזי"
             className="w-full block rounded-lg shadow-xl"
           />
           <figcaption
             className="mt-4 text-sm text-center leading-relaxed"
             style={{ color: RETREAT_THEME.WARM_GRAY, fontFamily: RETREAT_FONTS.sans }}
           >
-            הגוף העדין ושש הצ׳אקרות - ציור מסורתי של מפת האנרגיה שעליה נעשית עבודת הקונדליני
+            ואג׳ראיוגיני והערוץ המרכזי - הגוף העדין שעליו נעשית עבודת הקונדליני
           </figcaption>
         </figure>
         <div className="max-w-3xl mx-auto">
