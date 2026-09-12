@@ -818,7 +818,7 @@ const SixYogasNigumaRetreat = () => {
               <span className="text-lg font-normal mr-1">₪</span>
             </p>
             <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>לאדם | הכל כלול | עד 4 תשלומים</p>
-            <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_Quad")}>להרשמה עם לינה</CTAButton>
+            <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_Quad")}>להרשמה לריטריט</CTAButton>
           </div>
 
           <div className="max-w-2xl mx-auto mt-6 bg-white rounded-lg p-8 md:p-10 text-center shadow-sm">
