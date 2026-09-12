@@ -29,7 +29,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { OtherEvents } from "@/components/retreat/OtherEvents";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
-import yogiMural from "@/assets/healing-kundalini-2026/hero-mural.jpg";
+import nigumaMural from "@/assets/healing-kundalini-2026/niguma-mural.jpg";
 import vajrayoginiFigure from "@/assets/healing-kundalini-2026/vajrayogini-channel.jpg";
 import lamaGlennPhoto from "@/assets/retreat/lama-glenn-big.jpg";
 import druponPhoto from "@/assets/retreat/drupon-chongwol.png";
@@ -950,8 +950,8 @@ const SixYogasNigumaRetreat = () => {
 
           <div className="max-w-2xl mx-auto mb-12">
             <img
-              src={yogiMural}
-              alt="ציור קיר טיבטי של יוגים במדיטציה"
+              src={nigumaMural}
+              alt="ציור קיר טיבטי: שני יוגים במדיטציה לצד פרח לוטוס"
               className="w-full rounded-lg shadow-md"
             />
           </div>
