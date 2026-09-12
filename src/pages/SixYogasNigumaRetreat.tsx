@@ -803,47 +803,48 @@ const SixYogasNigumaRetreat = () => {
             המחיר כולל לינה ל-6 לילות, ארוחות מלאות והשתתפות בכל השיעורים והתרגולים
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {[
-              { type: "4 בחדר", price: "3,800", note: "חדר משותף לארבעה", sub: "לאדם | הכל כלול", featured: true, roomKey: "EGN_2026_Quad" as RoomType },
-              { type: "ללא לינה, כל הריטריט", price: "1,950", note: "כולל ארוחת צהריים וכיבוד", sub: "לאדם | ששת ימי הלימוד", roomKey: "EGN_2026_NoLodging" as RoomType },
-            ].map((option) => (
-              <div
-                key={option.type}
-                className={`bg-white rounded-lg p-8 text-center transition-shadow flex flex-col ${
-                  option.featured ? "shadow-lg ring-2" : "shadow-sm hover:shadow-md"
-                }`}
-                style={option.featured ? { borderColor: GOLD, boxShadow: `0 0 0 2px ${GOLD}` } : {}}
-              >
-                {/* Badge area - fixed height so content below aligns */}
-                <div className="h-8 mb-2 flex items-center justify-center">
-                  {option.featured && (
-                    <span className="inline-block px-3 py-1 text-xs font-bold text-white rounded-full" style={{ backgroundColor: GOLD }}>
-                      לינה מלאה
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-                  {option.type}
-                </h3>
-                <p className="text-base mb-6" style={{ color: WARM_GRAY }}>{option.note}</p>
-                <p className="text-4xl font-bold mb-1">
-                  {option.price}
-                  <span className="text-lg font-normal mr-1">₪</span>
-                </p>
-                <p className="text-sm mb-2" style={{ color: WARM_GRAY }}>{option.sub}</p>
-                <div className="mb-6" />
-                <div className="mt-auto">
-                  <CTAButton className="!text-base !px-8 !py-3 w-full" onClick={() => openRegistration(option.roomKey)}>להרשמה</CTAButton>
-                </div>
-              </div>
-            ))}
+          {/* Full lodging is the retreat; the no-lodging ticket is the alternative -
+              so the cards stack, the first wide and prominent, the second compact. */}
+          <div className="max-w-2xl mx-auto bg-white rounded-lg p-8 md:p-10 text-center shadow-lg" style={{ boxShadow: `0 0 0 2px ${GOLD}` }}>
+            <span className="inline-block px-3 py-1 text-xs font-bold text-white rounded-full mb-4" style={{ backgroundColor: GOLD }}>
+              לינה מלאה
+            </span>
+            <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+              4 בחדר
+            </h3>
+            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | 6 לילות, ארוחות מלאות וכל השיעורים והתרגולים</p>
+            <p className="text-5xl font-bold mb-1">
+              3,800
+              <span className="text-lg font-normal mr-1">₪</span>
+            </p>
+            <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>לאדם | הכל כלול | עד 4 תשלומים</p>
+            <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_Quad")}>להרשמה</CTAButton>
+          </div>
+
+          <div className="max-w-md mx-auto mt-6 bg-white rounded-lg px-6 py-5 text-center shadow-sm">
+            <h3 className="text-lg font-bold mb-1" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+              ללא לינה, כל הריטריט
+            </h3>
+            <p className="text-sm mb-3" style={{ color: WARM_GRAY }}>ששת ימי הלימוד, כולל ארוחת צהריים וכיבוד</p>
+            <p className="text-2xl font-bold mb-3">
+              1,950
+              <span className="text-base font-normal mr-1">₪</span>
+              <span className="text-sm font-normal mr-2" style={{ color: WARM_GRAY }}>לאדם | עד 3 תשלומים</span>
+            </p>
+            <button
+              type="button"
+              onClick={() => openRegistration("EGN_2026_NoLodging")}
+              className="px-7 py-2 text-sm font-semibold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+              style={{ borderColor: GOLD, color: "#B8860B", backgroundColor: "transparent" }}
+            >
+              להרשמה ללא לינה
+            </button>
           </div>
           <p className="text-base md:text-lg mt-8 text-center" style={{ color: WARM_GRAY }}>
             מספר המקומות מוגבל מאוד - מומלץ להירשם בהקדם
           </p>
           <p className="text-base mt-3 text-center" style={{ color: WARM_GRAY }}>
-            ניתן לשלם בתשלומים - עד 4 תשלומים ללינה מלאה, עד 3 ללא לינה
+            ניתן לשלם בתשלומים
           </p>
         </div>
       </section>
