@@ -1162,7 +1162,7 @@ const SixYogasNigumaRetreat = () => {
             מספר המקומות מוגבל מאוד - מומלץ להירשם בהקדם
           </p>
           <p className="text-base mt-3 text-center" style={{ color: WARM_GRAY }}>
-            ניתן לשלם בתשלומים
+            ניתן לשלם בתשלומים - עד 4 תשלומים ללינה מלאה, עד 3 ללא לינה
           </p>
         </div>
       </section>
