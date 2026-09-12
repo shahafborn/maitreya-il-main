@@ -887,66 +887,6 @@ const SixYogasNigumaRetreat = () => {
         </div>
       </section>
 
-      {/* ── Teachers ── */}
-      <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-16" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-            המורים
-          </h2>
-
-          {/* Lama Glenn - photo right, text left (RTL: photo on right visually) */}
-          <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12 mb-20">
-            <div className="flex-shrink-0">
-              <img
-                src={lamaGlennPhoto}
-                alt="לאמה גלן מולין"
-                className="w-64 h-72 md:w-80 md:h-96 rounded-lg object-cover shadow-xl"
-              />
-            </div>
-            <div className="text-center md:text-start flex-1">
-              <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-                לאמה גלן מולין
-              </h3>
-              <div className="w-12 h-[2px] mb-5 mx-auto md:mx-0 md:ms-0" style={{ backgroundColor: GOLD }} />
-              <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
-                לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
-                הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
-                הם לינג רינפוצ׳ה השישי וטריג׳נג רינפוצ׳ה - מורי השורש האישיים של
-                הדלאי לאמה ה-14. לאמה גלן מלמד בודהיזם טיבטי מעל שלושים שנה
-                לאלפי תלמידים בכל רחבי העולם. הוא חוקר, סופר, ומתרגם ידוע - שכתב
-                מעל 30 ספרים בנושאי בודהיזם טיבטי וטנטרה בודהיסטית שפורסמו בכל
-                רחבי העולם.
-              </p>
-            </div>
-          </div>
-
-          {/* Drupon - flipped: photo left, text right (RTL: photo on left visually) */}
-          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            <div className="flex-shrink-0">
-              <img
-                src={druponPhoto}
-                alt="דרופון צ׳ונגוואל-לה"
-                className="w-52 h-60 md:w-64 md:h-80 rounded-lg object-cover shadow-xl"
-              />
-            </div>
-            <div className="text-center md:text-start flex-1">
-              <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-                דרופון צ׳ונגוואל-לה
-              </h3>
-              <div className="w-12 h-[2px] mb-5 mx-auto md:mx-0 md:ms-0" style={{ backgroundColor: GOLD }} />
-              <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
-                דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
-                לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
-                כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה
-                בהדרכת מורה השורש שלו, לאמה גלן. דרופון צ׳ונגוואל-לה מלמד
-                תלמידים ברחבי העולם - בקוריאה, ארה״ב, רוסיה, ישראל, דרום אמריקה
-                ועוד.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── The Six Yogas ── */}
       <section className="py-16 md:py-24">
         <div className="max-w-3xl mx-auto px-6">
@@ -1006,6 +946,66 @@ const SixYogasNigumaRetreat = () => {
                 <p>את ששת היוגות של ניגומה נלמד בהקשר של התרגול הטנטרי של ואג׳ראיוגיני - המאפשר לנו להשתמש באש התשוקה וההיקשרות ולהתמיר אותה לחוכמה עילאית. תרגול ואג׳ראיוגיני ידוע כתרגול מהיר ועוצמתי במיוחד, והוא תרגול עיקרי בכל הזרמים של הבודהיזם הטיבטי - כולל בשושלת הדלאי לאמות.</p>
                 <p>במהלך הריטריט יעביר לאמה גלן את העצמת ואג׳ראיוגיני למשתתפים, וילמד סדהנה קצרה של אחת-עשרה היוגות של ואג׳ראיוגיני - התרגול היומי שמלווה את המתרגל אחרי הריטריט.</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Teachers ── */}
+      <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-16" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+            המורים
+          </h2>
+
+          {/* Lama Glenn - photo right, text left (RTL: photo on right visually) */}
+          <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12 mb-20">
+            <div className="flex-shrink-0">
+              <img
+                src={lamaGlennPhoto}
+                alt="לאמה גלן מולין"
+                className="w-64 h-72 md:w-80 md:h-96 rounded-lg object-cover shadow-xl"
+              />
+            </div>
+            <div className="text-center md:text-start flex-1">
+              <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+                לאמה גלן מולין
+              </h3>
+              <div className="w-12 h-[2px] mb-5 mx-auto md:mx-0 md:ms-0" style={{ backgroundColor: GOLD }} />
+              <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
+                לאמה גלן מולין הינו מורה וותיק ואהוב של טנטרה בודהיסטית וטומו.
+                הוא תלמידם הישיר של הוד קדושתו הדלאי לאמה ה-14, ומורי השורש שלו
+                הם לינג רינפוצ׳ה השישי וטריג׳נג רינפוצ׳ה - מורי השורש האישיים של
+                הדלאי לאמה ה-14. לאמה גלן מלמד בודהיזם טיבטי מעל שלושים שנה
+                לאלפי תלמידים בכל רחבי העולם. הוא חוקר, סופר, ומתרגם ידוע - שכתב
+                מעל 30 ספרים בנושאי בודהיזם טיבטי וטנטרה בודהיסטית שפורסמו בכל
+                רחבי העולם.
+              </p>
+            </div>
+          </div>
+
+          {/* Drupon - flipped: photo left, text right (RTL: photo on left visually) */}
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex-shrink-0">
+              <img
+                src={druponPhoto}
+                alt="דרופון צ׳ונגוואל-לה"
+                className="w-52 h-60 md:w-64 md:h-80 rounded-lg object-cover shadow-xl"
+              />
+            </div>
+            <div className="text-center md:text-start flex-1">
+              <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+                דרופון צ׳ונגוואל-לה
+              </h3>
+              <div className="w-12 h-[2px] mb-5 mx-auto md:mx-0 md:ms-0" style={{ backgroundColor: GOLD }} />
+              <p className="text-lg leading-[1.9]" style={{ color: WARM_GRAY }}>
+                דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן
+                לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש
+                כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה
+                בהדרכת מורה השורש שלו, לאמה גלן. דרופון צ׳ונגוואל-לה מלמד
+                תלמידים ברחבי העולם - בקוריאה, ארה״ב, רוסיה, ישראל, דרום אמריקה
+                ועוד.
+              </p>
             </div>
           </div>
         </div>
