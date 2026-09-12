@@ -53,9 +53,12 @@ export { default as cosmicManChakras } from "./cosmic-man-chakras.jpg";
 // Option I (Shahaf, 2026-09-11), IN USE: Vajrayogini with the central channel only, cut from
 // the chakras-and-syllables diagram (the side columns dropped), white on both sides.
 export { default as vajrayoginiChannel } from "./vajrayogini-channel.jpg";
-// Ein Gedi page, six-yogas section (Shahaf, 2026-09-12): a mural of two seated yogis by a
-// lotus, from his Inbox (vault: marketing/niguma-mural-source.jpg).
+// Ein Gedi page, six-yogas section (Shahaf, 2026-09-12): two seated yogis by a lotus, cut from
+// the wider mural in his Inbox (Object-080_Fig-10.jpg; vault: marketing/two-yogis-mural-source.jpg).
 export { default as nigumaMural } from "./niguma-mural.jpg";
+// Ein Gedi page, empowerment block (Shahaf, 2026-09-12): the Vajrayogini thangka printed for
+// the Nov 2025 poster - Dropbox: _LG&C Visits/LG&C 11-2025 Visit/VY/vy/Vajrayogini_for_print_02.png.
+export { default as vajrayoginiThangka } from "./vajrayogini-thangka.jpg";
 // Palden Lhamo block (Shahaf, 2026-09-11): Lhamo Latso, her oracle lake in Tibet - the
 // second image Shahaf supplied (vault: marketing/lhamo-latso-shahaf-v2.jpg), replacing the
 // Gemini-generated scene (kept in the vault as lhamo-latso-generated.jpg).

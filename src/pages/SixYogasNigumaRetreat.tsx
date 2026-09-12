@@ -29,8 +29,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { OtherEvents } from "@/components/retreat/OtherEvents";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
-import yogiMural from "@/assets/healing-kundalini-2026/hero-mural.jpg";
-import vajrayoginiFigure from "@/assets/healing-kundalini-2026/vajrayogini-channel.jpg";
+import nigumaMural from "@/assets/healing-kundalini-2026/niguma-mural.jpg";
+import vajrayoginiThangka from "@/assets/healing-kundalini-2026/vajrayogini-thangka.jpg";
 import lamaGlennPhoto from "@/assets/retreat/lama-glenn-big.jpg";
 import druponPhoto from "@/assets/retreat/drupon-chongwol.png";
 import venuePhoto1 from "@/assets/retreat/venue-eingedi-1.jpg";
@@ -950,8 +950,8 @@ const SixYogasNigumaRetreat = () => {
 
           <div className="max-w-2xl mx-auto mb-12">
             <img
-              src={yogiMural}
-              alt="ציור קיר טיבטי של יוגים במדיטציה"
+              src={nigumaMural}
+              alt="ציור קיר טיבטי: שני יוגים במדיטציה לצד פרח לוטוס"
               className="w-full rounded-lg shadow-md"
             />
           </div>
@@ -986,7 +986,7 @@ const SixYogasNigumaRetreat = () => {
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-center">
             <div className="mx-auto md:mx-0 w-[220px] md:w-[260px] shrink-0">
-              <img src={vajrayoginiFigure} alt="ואג׳ראיוגיני והערוץ המרכזי" className="w-full rounded-lg shadow-md" />
+              <img src={vajrayoginiThangka} alt="ואג׳ראיוגיני - תנקה טיבטית" className="w-full rounded-lg shadow-md" />
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
