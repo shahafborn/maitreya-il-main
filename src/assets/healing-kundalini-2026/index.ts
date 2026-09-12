@@ -53,8 +53,9 @@ export { default as cosmicManChakras } from "./cosmic-man-chakras.jpg";
 // Option I (Shahaf, 2026-09-11), IN USE: Vajrayogini with the central channel only, cut from
 // the chakras-and-syllables diagram (the side columns dropped), white on both sides.
 export { default as vajrayoginiChannel } from "./vajrayogini-channel.jpg";
-// Ein Gedi page, six-yogas section (Shahaf, 2026-09-12): two seated yogis by a lotus, cut from
-// the wider mural in his Inbox (Object-080_Fig-10.jpg; vault: marketing/two-yogis-mural-source.jpg).
+// Ein Gedi page, six-yogas section (Shahaf, 2026-09-12): two seated yogis by a lotus - Shahaf's own
+// crop (Inbox yogis.png, 638x380), Gemini-upscaled with a restoration prompt and trimmed back to his
+// exact framing (vault: marketing/two-yogis-mural-shahaf-crop.jpg + -upscaled-gemini.jpg).
 export { default as nigumaMural } from "./niguma-mural.jpg";
 // Ein Gedi page, empowerment block (Shahaf, 2026-09-12): the Vajrayogini thangka printed for
 // the Nov 2025 poster - Dropbox: _LG&C Visits/LG&C 11-2025 Visit/VY/vy/Vajrayogini_for_print_02.png.
