@@ -503,7 +503,7 @@ const SixYogasNigumaRetreat = () => {
               הדרך הנשגבת להארה של דאקיני החוכמה
             </p>
             <p className="text-lg md:text-xl text-white/80 mb-2 md:max-w-2xl">
-              כולל העצמת ואג׳ראיוגיני
+              ריטריט מיוחד בים המלח | כולל העצמת ואג׳ראיוגיני
             </p>
             <p className="text-xl md:text-2xl font-semibold mb-4" style={{ color: GOLD, textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}>
               עם לאמה גלן מולין
@@ -738,7 +738,7 @@ const SixYogasNigumaRetreat = () => {
               </h3>
               <div className="space-y-6">
                 {[
-                  { days: "יום ראשון, 6 בדצמבר", practice: "הגעה, התמקמות ופתיחת הריטריט", times: "הגעה: 14:00 | אחה״צ: 14:30-18:15" },
+                  { days: "יום ראשון, 6 בדצמבר", practice: "הגעה, התמקמות ותחילת לימוד ששת היוגות", times: "הגעה: 14:00 | אחה״צ: 14:30-18:15" },
                   { days: "שני עד שישי, 7-11 בדצמבר", practice: "ששת היוגות של ניגומה", times: "בוקר: 9:30-12:30 | אחה״צ: 14:30-18:15" },
                   { days: "שבת, 12 בדצמבר", practice: "סיום", times: "בוקר: 9:30-12:30 | סיום: 15:00" },
                 ].map((block, i) => (
