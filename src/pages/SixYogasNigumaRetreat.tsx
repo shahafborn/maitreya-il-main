@@ -20,6 +20,7 @@ declare global {
 }
 
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
@@ -328,10 +329,10 @@ const SixYogasNigumaRetreat = () => {
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
 
-  useEffect(() => {
-    if (paymentStatus === "success") window.gtag?.("event", "payment_success");
-    else if (paymentStatus === "failed") window.gtag?.("event", "payment_failed");
-  }, [paymentStatus]);
+  // Meta pixel: InitiateCheckout is fired by the shared modal on submit; Purchase fires here on
+  // return from Cardcom (the hook also logs payment_success / payment_failed to gtag) with the same
+  // purchase-<reg_token> id that n8n sends server-side, so Meta dedupes the pair.
+  useRetreatPurchaseTracking({ paymentStatus, contentName: registrationConfig.contentName, storagePrefix: registrationConfig.storagePrefix });
 
   // The payment runs inside an iframe in the dialog, so Cardcom's redirect back
   // lands inside that frame. Same origin, so climb out and show the result on the page.

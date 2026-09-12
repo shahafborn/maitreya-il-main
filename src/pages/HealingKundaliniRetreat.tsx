@@ -44,6 +44,7 @@ import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
   hkrHero,
@@ -230,6 +231,9 @@ const HealingKundaliniRetreat = () => {
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
+  // Meta pixel: InitiateCheckout is fired by the shared modal on submit; Purchase fires here on
+  // return from Cardcom with the same purchase-<reg_token> id that n8n sends server-side (deduped).
+  useRetreatPurchaseTracking({ paymentStatus, contentName: registrationConfig.contentName, storagePrefix: registrationConfig.storagePrefix });
 
   // The test link opens the form straight away, on the hidden test option.
   useEffect(() => {
