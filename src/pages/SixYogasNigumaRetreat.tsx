@@ -8,9 +8,9 @@
  * same Esalen-style layout, same modal and gallery code. Content source (vault):
  * teachers-visit-nov-dec-2026/marketing/ein-gedi-landing-page-content.md
  *
- * Registration: the modal posts to n8n EGN_Register, which mints a Cardcom page
- * per person (DDE pattern) and returns cardcom_url; the browser is redirected
- * there. Tier ids are the codes n8n charges by - the page never sends an amount.
+ * Registration: the shared RegistrationModal (embedPayment) posts to n8n EGN_Register,
+ * which mints a Cardcom page per person (DDE pattern); the payment loads inside the
+ * dialog. Tier ids are the codes n8n charges by - the page never sends an amount.
  * Hidden test tier (1 NIS) via ?test=<TEST_KEY>.
  */
 declare global {
@@ -22,11 +22,13 @@ declare global {
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
-import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
+import { X, ChevronRight, ChevronLeft, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { RegistrationModal } from "@/components/retreat/RegistrationModal";
+import type { RegistrationConfig } from "@/components/retreat/types";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/healing-kundalini-2026/hero-niguma.jpg";
 import heroImageMobile from "@/assets/healing-kundalini-2026/hero-niguma-mobile.jpg";
@@ -59,20 +61,90 @@ const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EGN_Register";
 const TEST_KEY = "q8w3zr";
 const TEST_TIER: RoomType = "EGN_2026_Test";
 
+const registrationConfig: RegistrationConfig = {
+  title: "הרשמה לריטריט",
+  subtitle: "ששת היוגות של ניגומה | 6-12 בדצמבר 2026",
+  webhookUrl: N8N_WEBHOOK_URL,
+  contentName: "Six Yogas of Niguma Retreat",
+  currency: "ILS",
+  lang: "he",
+  dir: "rtl",
+  // Tier ids are the codes n8n charges by; amounts and installment caps live in EGN_Register.
+  tiers: [
+    { id: "EGN_2026_Quad", title: "4 בחדר", note: "לינה מלאה, 6 לילות - עד 4 תשלומים", priceDisplay: "4,100", priceValue: 4100, currencySymbol: "₪" },
+    { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
+    { id: "EGN_2026_Test", title: "בדיקת תשלום", note: "1 ש״ח", hidden: true, priceDisplay: "1", priceValue: 1, currencySymbol: "₪" },
+  ],
+  showTierSelect: true,
+  tierSelectLabel: "אופן ההשתתפות",
+  termsUrl: "https://maitreya.org.il/events/ein-gedi-healing-retreat/terms",
+  askGender: true,
+  askFoodPref: true,
+  askPrevExp: true,
+  storagePrefix: "egn26",
+  extraPayload: { source: "six-yogas-niguma-retreat" },
+  embedPayment: true,
+};
+
+const registrationCopy = {
+  tierSelectPlaceholder: "בחרו",
+  firstNameLabel: "שם פרטי",
+  firstNamePlaceholder: "שם פרטי",
+  lastNameLabel: "שם משפחה",
+  lastNamePlaceholder: "שם משפחה",
+  emailLabel: "אימייל",
+  phoneLabel: "טלפון",
+  phonePlaceholder: "050-1234567",
+  genderLabel: "מגדר",
+  genderMale: "גבר",
+  genderFemale: "אישה",
+  foodLabel: "העדפת אוכל",
+  foodRegular: "רגיל",
+  foodVegetarian: "צמחוני",
+  foodVegan: "טבעוני",
+  foodPlaceholder: "בחרו",
+  prevExpLabel: "ניסיון קודם בלימודים בודהיסטים",
+  prevExpPlaceholder: "בחרו",
+  prevExpExtensive: "רב",
+  prevExpIntermediate: "בינוני",
+  prevExpLimited: "מועט",
+  prevExpNone: "ללא",
+  messageLabel: "הודעה למארגנים",
+  messagePlaceholder: "רוצים לשתף אותנו במשהו?",
+  cityLabel: "עיר מגורים",
+  cityPlaceholder: "באיזו עיר אתם גרים?",
+  rideShareLabel: "אשמח להציע טרמפ למשתתפים אחרים מהאזור שלי",
+  termsPrefix: "אני מאשר/ת את",
+  termsLinkLabel: "תנאי הריטריט וההרשמה",
+  termsSuffix: "ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.",
+  submitLabel: "שליחה ומעבר לתרומה",
+  submittingLabel: "שולח...",
+  submitFootnote: "התשלום מתבצע כאן בעמוד, בעמוד סליקה מאובטח. ההרשמה תסתיים רק לאחר התשלום.",
+  amountNote: "כל סכום, כפי יכולתכם.",
+  paymentTitle: "תשלום",
+  paymentNote:
+    "התשלום נגבה על ידי מאיטרייה סנגהה ישראל (ע״ר) באמצעות קארדקום. אפשר לשלם בכרטיס אשראי או בביט, ובתשלומים. הקבלה תישלח לאימייל שמילאתם.",
+  errTier: "יש לבחור אפשרות",
+  errFname: "יש למלא שם פרטי",
+  errLname: "יש למלא שם משפחה",
+  errEmail: "יש למלא אימייל",
+  errEmailInvalid: "כתובת אימייל לא תקינה",
+  errPhone: "יש למלא טלפון",
+  errPhoneInvalid: "מספר טלפון לא תקין (למשל 0501234567)",
+  errGender: "יש לבחור מגדר",
+  errFood: "יש לבחור העדפת אוכל",
+  errPrevExp: "יש לבחור ניסיון קודם",
+  errCity: "יש למלא עיר מגורים",
+  errConfirmed: "יש לאשר את התנאים",
+  errServer: "שגיאה בשרת, נסו שוב",
+  errNoPaymentUrl: "לא התקבל קישור לתשלום",
+  errGeneric: "שגיאה בשליחת הטופס",
+};
+
+
 type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Test" | "";
 
-const ROOM_OPTIONS: { value: RoomType; label: string; price: string }[] = [
-  { value: "EGN_2026_Quad", label: "4 בחדר", price: "4,100₪ לאדם" },
-  { value: "EGN_2026_NoLodging", label: "ללא לינה, כל הריטריט", price: "1,950₪" },
-];
-// Hidden: reached only through the ?test= link.
-const TEST_OPTION = { value: "EGN_2026_Test" as RoomType, label: "בדיקת תשלום", price: "1₪" };
 
-const ROOM_PRICES: Record<Exclude<RoomType, "">, number> = {
-  EGN_2026_Quad: 4100,
-  EGN_2026_NoLodging: 1950,
-  EGN_2026_Test: 1,
-};
 
 const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery9, gallery10, gallery7, gallery5, gallery6, gallery11, gallery12, gallery13, gallery14, gallery15];
 
@@ -107,365 +179,6 @@ const CTAButton = ({ children, className = "", onClick }: { children: React.Reac
     {children}
   </button>
 );
-
-/* ── Registration Modal ── */
-const RegistrationModal = ({ open, onOpenChange, preselectedRoom, testMode }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  preselectedRoom: RoomType;
-  testMode: boolean;
-}) => {
-  const options = testMode ? [...ROOM_OPTIONS, TEST_OPTION] : ROOM_OPTIONS;
-  const [roomType, setRoomType] = useState<RoomType>(preselectedRoom);
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("");
-  const [foodPref, setFoodPref] = useState("");
-  const [prevExp, setPrevExp] = useState("");
-  const [message, setMessage] = useState("");
-  const [confirmed, setConfirmed] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const formRef = useRef<HTMLFormElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const roomRef = useRef<HTMLSelectElement>(null);
-  const confirmRef = useRef<HTMLLabelElement>(null);
-
-  // Sync preselectedRoom when modal opens
-  useEffect(() => {
-    if (open) setRoomType(preselectedRoom);
-  }, [open, preselectedRoom]);
-
-  const scrollToField = (el: HTMLElement | null) => {
-    if (!el) return;
-    const container = scrollContainerRef.current;
-    if (container) {
-      const containerRect = container.getBoundingClientRect();
-      const elRect = el.getBoundingClientRect();
-      const offset = elRect.top - containerRect.top + container.scrollTop - containerRect.height / 3;
-      container.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
-    }
-    setTimeout(() => {
-      if (el instanceof HTMLSelectElement || el instanceof HTMLInputElement) el.focus();
-    }, 350);
-  };
-
-  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  const isValidPhone = (v: string) => /^0[2-9]\d{7,8}$/.test(v.replace(/[-\s]/g, ""));
-
-  const validateAndScroll = (): boolean => {
-    const errors: Record<string, string> = {};
-
-    if (!roomType) errors.roomType = "יש לבחור אופן השתתפות";
-    if (!fname.trim()) errors.fname = "יש למלא שם פרטי";
-    if (!lname.trim()) errors.lname = "יש למלא שם משפחה";
-    if (!email.trim()) errors.email = "יש למלא אימייל";
-    else if (!isValidEmail(email)) errors.email = "כתובת אימייל לא תקינה";
-    if (!phone.trim()) errors.phone = "יש למלא טלפון";
-    else if (!isValidPhone(phone)) errors.phone = "מספר טלפון לא תקין (למשל 0501234567)";
-    if (!gender) errors.gender = "יש לבחור מגדר";
-    if (!foodPref) errors.foodPref = "יש לבחור העדפת אוכל";
-    if (!prevExp) errors.prevExp = "יש לבחור ניסיון קודם";
-    if (!confirmed) errors.confirmed = "יש לאשר את התנאים";
-
-    setFieldErrors(errors);
-    setError("");
-
-    if (Object.keys(errors).length > 0) {
-      // Scroll to first error field
-      const fieldOrder = ["roomType", "fname", "lname", "email", "phone", "gender", "foodPref", "prevExp", "confirmed"];
-      const firstErrorKey = fieldOrder.find((k) => errors[k]);
-      const selectorMap: Record<string, string> = {
-        roomType: "[data-field='roomType']",
-        fname: "[data-field='fname']",
-        lname: "[data-field='lname']",
-        email: "[data-field='email']",
-        phone: "[data-field='phone']",
-        gender: "[data-field='gender']",
-        foodPref: "[data-field='foodPref']",
-        prevExp: "[data-field='prevExp']",
-        confirmed: "[data-field='confirmed']",
-      };
-      if (firstErrorKey) {
-        const el = formRef.current?.querySelector(selectorMap[firstErrorKey]) as HTMLElement;
-        scrollToField(el);
-      }
-      return false;
-    }
-
-    return true;
-  };
-
-  const fieldErrorClass = (field: string) =>
-    fieldErrors[field] ? "border-red-400 ring-1 ring-red-400" : "";
-
-  const FieldError = ({ field }: { field: string }) =>
-    fieldErrors[field] ? <p className="text-xs text-red-500 mt-1">{fieldErrors[field]}</p> : null;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setFieldErrors({});
-
-    if (!validateAndScroll()) return;
-
-    window.gtag?.("event", "registration_submitted", { room_type: roomType });
-
-    const price = roomType ? ROOM_PRICES[roomType] : 0;
-    const regToken = crypto.randomUUID();
-    // Deterministic event IDs derived from reg_token so client-side pixel
-    // and server-side CAPI (fired from n8n) dedupe on the same value.
-    const icEventId = `ic-${regToken}`;
-    const purchaseEventId = `purchase-${regToken}`;
-    trackMeta(
-      "InitiateCheckout",
-      {
-        value: price,
-        currency: "ILS",
-        content_name: "Six Yogas of Niguma Retreat",
-        content_ids: roomType ? [roomType] : [],
-        num_items: 1,
-      },
-      icEventId,
-    );
-    try {
-      sessionStorage.setItem(
-        "egn_pending_purchase",
-        JSON.stringify({ value: price, roomType, event_id: purchaseEventId, ts: Date.now() }),
-      );
-    } catch {
-      /* sessionStorage may be unavailable */
-    }
-
-    setSubmitting(true);
-
-    try {
-      const res = await fetch(N8N_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          reg_token: regToken,
-          field_event: roomType,
-          full_name: `${fname} ${lname}`.trim(),
-          email,
-          phone,
-          gender,
-          food_pref: foodPref,
-          prev_exp: prevExp,
-          message,
-        }),
-      });
-
-      if (!res.ok) throw new Error("שגיאה בשרת, נסו שוב");
-
-      const data = await res.json();
-      if (data.cardcom_url) {
-        window.gtag?.("event", "payment_redirect", { room_type: roomType });
-        window.location.href = data.cardcom_url;
-      } else {
-        throw new Error("לא התקבל קישור לתשלום");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "שגיאה בשליחת הטופס");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const inputClass = "w-full px-4 py-3 rounded-lg border border-stone-300 bg-white text-base focus:outline-none focus:ring-2 focus:ring-[#C9A961] focus:border-transparent transition-shadow";
-  const selectClass = `${inputClass} appearance-none pr-10`;
-  const labelClass = "block text-sm font-semibold mb-1.5 text-stone-700";
-
-  const SelectWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className="relative">
-      {children}
-      <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: WARM_GRAY }} />
-    </div>
-  );
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        dir="rtl"
-        className="max-w-lg md:max-w-2xl max-h-[90vh] p-0 gap-0 rounded-xl border-0 overflow-hidden"
-        style={{ fontFamily: "'Open Sans', 'Heebo', sans-serif" }}
-      >
-        <div ref={scrollContainerRef} className="max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
-          <DialogHeader className="text-center sm:text-center">
-            <DialogTitle className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif", color: DARK }}>
-              הרשמה לריטריט
-            </DialogTitle>
-            <DialogDescription className="text-sm mt-1" style={{ color: WARM_GRAY }}>
-              ששת היוגות של ניגומה | 6-12 בדצמבר 2026
-            </DialogDescription>
-          </DialogHeader>
-        </div>
-
-        {/* Form */}
-        <form ref={formRef} onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4">
-          {/* Room Type */}
-          <div data-field="roomType">
-            <label className={labelClass}>אופן ההשתתפות *</label>
-            <SelectWrapper>
-              <select
-                ref={roomRef}
-                value={roomType}
-                onChange={(e) => { const val = e.target.value as RoomType; setRoomType(val); if (val) window.gtag?.("event", "room_type_selected", { room_type: val }); setFieldErrors((p) => ({ ...p, roomType: "" })); }}
-                className={`${selectClass} ${fieldErrorClass("roomType")}`}
-              >
-                <option value="">בחרו</option>
-                {options.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label} - {opt.price}
-                  </option>
-                ))}
-              </select>
-            </SelectWrapper>
-            <FieldError field="roomType" />
-          </div>
-
-          {/* Name fields - two columns */}
-          <div className="grid grid-cols-2 gap-3">
-            <div data-field="fname">
-              <label className={labelClass}>שם פרטי *</label>
-              <input type="text" value={fname} onChange={(e) => { setFname(e.target.value); setFieldErrors((p) => ({ ...p, fname: "" })); }} className={`${inputClass} ${fieldErrorClass("fname")}`} placeholder="שם פרטי" />
-              <FieldError field="fname" />
-            </div>
-            <div data-field="lname">
-              <label className={labelClass}>שם משפחה *</label>
-              <input type="text" value={lname} onChange={(e) => { setLname(e.target.value); setFieldErrors((p) => ({ ...p, lname: "" })); }} className={`${inputClass} ${fieldErrorClass("lname")}`} placeholder="שם משפחה" />
-              <FieldError field="lname" />
-            </div>
-          </div>
-
-          {/* Email */}
-          <div data-field="email">
-            <label className={labelClass}>אימייל *</label>
-            <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: "" })); }} className={`${inputClass} ${fieldErrorClass("email")}`} placeholder="your@email.com" dir="ltr" style={{ textAlign: "left" }} />
-            <FieldError field="email" />
-          </div>
-
-          {/* Phone */}
-          <div data-field="phone">
-            <label className={labelClass}>טלפון *</label>
-            <input type="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setFieldErrors((p) => ({ ...p, phone: "" })); }} className={`${inputClass} ${fieldErrorClass("phone")}`} placeholder="050-1234567" dir="ltr" style={{ textAlign: "left" }} />
-            <FieldError field="phone" />
-          </div>
-
-          {/* Gender + Food Pref - two columns */}
-          <div className="grid grid-cols-2 gap-3">
-            <div data-field="gender">
-              <label className={labelClass}>מגדר (לשיבוץ חדרים) *</label>
-              <div className={`flex gap-4 mt-2 p-2 rounded-lg ${fieldErrors.gender ? "ring-1 ring-red-400" : ""}`}>
-                {[{ value: "male", label: "גבר" }, { value: "female", label: "אישה" }].map((opt) => (
-                  <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value={opt.value}
-                      checked={gender === opt.value}
-                      onChange={(e) => { setGender(e.target.value); setFieldErrors((p) => ({ ...p, gender: "" })); }}
-                      className="h-4 w-4 accent-[#C9A961]"
-                    />
-                    <span className="text-sm">{opt.label}</span>
-                  </label>
-                ))}
-              </div>
-              <FieldError field="gender" />
-            </div>
-            <div data-field="foodPref">
-              <label className={labelClass}>העדפות בחדר אוכל *</label>
-              <SelectWrapper>
-                <select value={foodPref} onChange={(e) => { setFoodPref(e.target.value); setFieldErrors((p) => ({ ...p, foodPref: "" })); }} className={`${selectClass} ${fieldErrorClass("foodPref")}`}>
-                  <option value="">בחרו</option>
-                  <option value="regular">רגיל</option>
-                  <option value="vegetarian">צמחוני</option>
-                  <option value="vegan">טבעוני</option>
-                </select>
-              </SelectWrapper>
-              <FieldError field="foodPref" />
-            </div>
-          </div>
-
-          {/* Previous Experience */}
-          <div data-field="prevExp">
-            <label className={labelClass}>ניסיון קודם בלימודים בודהיסטים *</label>
-            <SelectWrapper>
-              <select value={prevExp} onChange={(e) => { setPrevExp(e.target.value); setFieldErrors((p) => ({ ...p, prevExp: "" })); }} className={`${selectClass} ${fieldErrorClass("prevExp")}`}>
-                <option value="">בחרו</option>
-                <option value="extensive">רב</option>
-                <option value="intermediate">בינוני</option>
-                <option value="limited">מועט</option>
-                <option value="none">ללא</option>
-              </select>
-            </SelectWrapper>
-            <FieldError field="prevExp" />
-          </div>
-
-          {/* Message to organizers */}
-          <div>
-            <label className={labelClass}>הודעה למארגנים</label>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className={`${inputClass} resize-none`}
-              rows={3}
-              placeholder="רוצים לשתף אותנו במשהו?"
-            />
-          </div>
-
-          {/* Confirmation */}
-          <div data-field="confirmed">
-            <label ref={confirmRef} className={`flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors ${fieldErrors.confirmed ? "ring-1 ring-red-400 rounded-lg" : ""}`}>
-              <input
-                type="checkbox"
-                checked={confirmed}
-                onChange={(e) => { setConfirmed(e.target.checked); setFieldErrors((p) => ({ ...p, confirmed: "" })); }}
-                className="mt-0.5 h-4 w-4 rounded border-stone-300 accent-[#C9A961]"
-              />
-              <span className="text-xs leading-relaxed" style={{ color: WARM_GRAY }}>
-                אני מאשר/ת את <a href="/events/ein-gedi-healing-retreat/terms" target="_blank" rel="noopener noreferrer" className="underline decoration-1 underline-offset-2 hover:text-[#C9A961]">תנאי הריטריט וההרשמה</a> ומסכים/ה לקבל עדכונים מאיטרייה סנגהה ישראל.
-              </span>
-            </label>
-            <FieldError field="confirmed" />
-          </div>
-
-          {/* Network/server error only */}
-          {error && !Object.values(fieldErrors).some(Boolean) && (
-            <p className="text-sm text-red-600 text-center font-medium">{error}</p>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full py-4 text-lg font-bold text-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] disabled:opacity-60 disabled:pointer-events-none flex items-center justify-center gap-2"
-            style={{ backgroundColor: GOLD }}
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                שולח...
-              </>
-            ) : (
-              "שליחה ומעבר לתשלום"
-            )}
-          </button>
-
-          <p className="text-xs text-center" style={{ color: WARM_GRAY }}>
-            לאחר מילוי הטופס תועברו לדף תשלום מאובטח
-          </p>
-        </form>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-};
 
 /* ── Payment Status Modal ── */
 const PaymentStatusModal = ({ status, onClose }: { status: "success" | "failed"; onClose: () => void }) => (
@@ -615,49 +328,16 @@ const SixYogasNigumaRetreat = () => {
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
 
-  const purchaseFiredRef = useRef(false);
   useEffect(() => {
-    if (paymentStatus === "success") {
-      window.gtag?.("event", "payment_success");
-      if (purchaseFiredRef.current) return;
-      try {
-        const raw = sessionStorage.getItem("egn_pending_purchase");
-        if (raw) {
-          const pending = JSON.parse(raw) as { value: number; roomType: string; event_id: string };
-          // Per-event-id guard: only block if this exact event_id already fired.
-          // This still prevents accidental double-fires on refresh, but allows
-          // repeat testing in the same tab (each test has a fresh reg_token).
-          const firedKey = `egn_purchase_fired:${pending.event_id}`;
-          if (sessionStorage.getItem(firedKey) === "1") {
-            purchaseFiredRef.current = true;
-            return;
-          }
-          trackMeta(
-            "Purchase",
-            {
-              value: pending.value,
-              currency: "ILS",
-              content_name: "Six Yogas of Niguma Retreat",
-              content_ids: pending.roomType ? [pending.roomType] : [],
-              num_items: 1,
-            },
-            pending.event_id,
-          );
-          sessionStorage.setItem(firedKey, "1");
-          sessionStorage.removeItem("egn_pending_purchase");
-          purchaseFiredRef.current = true;
-        } else {
-          // Fallback: fire Purchase without value if sessionStorage was cleared
-          // (e.g., user closed and reopened the tab between checkout and payment).
-          trackMeta("Purchase", { currency: "ILS", content_name: "Six Yogas of Niguma Retreat" });
-          purchaseFiredRef.current = true;
-        }
-      } catch {
-        /* ignore */
-      }
-    } else if (paymentStatus === "failed") {
-      window.gtag?.("event", "payment_failed");
-    }
+    if (paymentStatus === "success") window.gtag?.("event", "payment_success");
+    else if (paymentStatus === "failed") window.gtag?.("event", "payment_failed");
+  }, [paymentStatus]);
+
+  // The payment runs inside an iframe in the dialog, so Cardcom's redirect back
+  // lands inside that frame. Same origin, so climb out and show the result on the page.
+  useEffect(() => {
+    if (!paymentStatus) return;
+    if (window.top && window.top !== window.self) window.top.location.href = window.location.href;
   }, [paymentStatus]);
 
   const trackEvent = (event: string, params?: Record<string, string>) => {
@@ -1404,7 +1084,7 @@ const SixYogasNigumaRetreat = () => {
       </footer>
 
       {/* ── Registration Modal ── */}
-      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedRoom={preselectedRoom} testMode={testMode} />
+      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedTierId={preselectedRoom || "EGN_2026_Quad"} config={registrationConfig} copy={registrationCopy} />
 
       {/* ── Payment Status Modal ── */}
       {paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
