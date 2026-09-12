@@ -96,8 +96,12 @@ export function getRoutes() {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });
   };
-  retreat("/events/six-yogas-niguma-retreat", null, 0.9);
-  retreat("/events/healing-kundalini-retreat", null, 0.9);
+  // December 2026 pages: live for proofreading but UNLISTED for now - pre-rendered, yet kept out of
+  // the sitemap, llms.txt and the events list (their content/ entries are parked in the vault).
+  // Flip back to retreat(...) and restore the two content/he/events files to list them.
+  for (const p of ["/events/six-yogas-niguma-retreat", "/events/healing-kundalini-retreat"]) {
+    routes.push({ path: p, lang: "he", alternates: { he: p }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
+  }
   retreat("/events/death-dying-enlightenment", null, 0.9);
   retreat("/events/yamantaka-online-2026", null, 0.9);
   retreat("/events/uma-zub-tri", null, 0.7);
