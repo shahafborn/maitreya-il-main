@@ -812,7 +812,7 @@ const SixYogasNigumaRetreat = () => {
             <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
               לינה בחדר ל-4
             </h3>
-            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | 6 לילות, ארוחות מלאות וכל השיעורים והתרגולים</p>
+            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | ששת ימי הלימוד, ארוחות מלאות וכל השיעורים והתרגולים</p>
             <p className="text-4xl font-bold mb-1">
               3,800
               <span className="text-lg font-normal mr-1">₪</span>
