@@ -28,7 +28,8 @@ import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { OtherEvents } from "@/components/retreat/OtherEvents";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
-import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
+import heroImage from "@/assets/healing-kundalini-2026/hero-niguma.jpg";
+import heroImageMobile from "@/assets/healing-kundalini-2026/hero-niguma-mobile.jpg";
 import nigumaMural from "@/assets/healing-kundalini-2026/niguma-mural.jpg";
 import vajrayoginiThangka from "@/assets/healing-kundalini-2026/vajrayogini-thangka.jpg";
 import lamaGlennPhoto from "@/assets/retreat/lama-glenn-big.jpg";
@@ -798,10 +799,18 @@ const SixYogasNigumaRetreat = () => {
 
       {/* ── Hero Image (full-width, not background) ── */}
       <section className="relative">
+        {/* Phone: an upper-body cut with her face in the top third, clear of the title. Desktop: the full panel zoomed to width. */}
+        <img
+          src={heroImageMobile}
+          alt="ניגומה - ציור טיבטי"
+          className="w-full h-[60vh] object-cover md:hidden"
+          style={{ objectPosition: "center 12%" }}
+        />
         <img
           src={heroImage}
-          alt="נוף ים המלח"
-          className="w-full h-[50vh] md:h-[65vh] object-cover"
+          alt="ניגומה - ציור טיבטי"
+          className="w-full h-[65vh] object-cover hidden md:block"
+          style={{ objectPosition: "center 32%" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 md:from-black/70 via-black/35 md:via-black/40 via-[75%] to-transparent" />
         <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">

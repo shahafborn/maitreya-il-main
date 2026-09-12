@@ -60,6 +60,11 @@ export { default as nigumaMural } from "./niguma-mural.jpg";
 // Ein Gedi page, empowerment block (Shahaf, 2026-09-12): the Vajrayogini thangka printed for
 // the Nov 2025 poster - Dropbox: _LG&C Visits/LG&C 11-2025 Visit/VY/vy/Vajrayogini_for_print_02.png.
 export { default as vajrayoginiThangka } from "./vajrayogini-thangka.jpg";
+// Ein Gedi page hero (Shahaf, 2026-09-12): the Niguma painting from his Inbox (niguma.jpg, a
+// mounted thangka photo), cropped to the painted panel; the hero zooms into it at full width (object-cover).
+// Panel: vault marketing/niguma-painting-panel.jpg.
+export { default as heroNiguma } from "./hero-niguma.jpg";
+export { default as heroNigumaMobile } from "./hero-niguma-mobile.jpg";
 // Palden Lhamo block (Shahaf, 2026-09-11): Lhamo Latso, her oracle lake in Tibet - the
 // second image Shahaf supplied (vault: marketing/lhamo-latso-shahaf-v2.jpg), replacing the
 // Gemini-generated scene (kept in the vault as lhamo-latso-generated.jpg).
