@@ -707,7 +707,7 @@ const SixYogasNigumaRetreat = () => {
               </h3>
               <div className="space-y-4 text-lg leading-[1.8]" style={{ color: "#3D3830" }}>
                 <p>הריטריט מתחיל ביום ראשון, 6 בדצמבר, בשעה 14:00, ומסתיים ביום שבת, 12 בדצמבר 2026, בשעה 15:00.</p>
-                <p>יום ראשון הוא יום ההגעה וההתמקמות; ששת ימי הלימוד הם שני עד שבת.</p>
+                <p>הלימוד מתחיל ביום ראשון אחר הצהריים, מיד אחרי ההגעה וההתמקמות.</p>
               </div>
               <h3 className="text-sm font-bold tracking-[0.15em] uppercase mt-8 mb-4" style={{ color: WARM_GRAY, letterSpacing: "0.15em" }}>
                 ארוחות
@@ -738,7 +738,7 @@ const SixYogasNigumaRetreat = () => {
               </h3>
               <div className="space-y-6">
                 {[
-                  { days: "יום ראשון, 6 בדצמבר", practice: "הגעה והתמקמות", times: "פתיחה: 17:00" },
+                  { days: "יום ראשון, 6 בדצמבר", practice: "הגעה, התמקמות ופתיחת הריטריט", times: "הגעה: 14:00 | אחה״צ: 14:30-18:15" },
                   { days: "שני עד שישי, 7-11 בדצמבר", practice: "ששת היוגות של ניגומה", times: "בוקר: 9:30-12:30 | אחה״צ: 14:30-18:15" },
                   { days: "שבת, 12 בדצמבר", practice: "סיום", times: "בוקר: 9:30-12:30 | סיום: 15:00" },
                 ].map((block, i) => (
