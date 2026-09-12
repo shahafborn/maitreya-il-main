@@ -72,7 +72,7 @@ const registrationConfig: RegistrationConfig = {
   dir: "rtl",
   // Tier ids are the codes n8n charges by; amounts and installment caps live in EGN_Register.
   tiers: [
-    { id: "EGN_2026_Quad", title: "4 בחדר", note: "לינה מלאה, 6 לילות - עד 4 תשלומים", priceDisplay: "4,100", priceValue: 4100, currencySymbol: "₪" },
+    { id: "EGN_2026_Quad", title: "4 בחדר", note: "לינה מלאה, 6 לילות - עד 4 תשלומים", priceDisplay: "3,800", priceValue: 3800, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     { id: "EGN_2026_Test", title: "בדיקת תשלום", note: "1 ש״ח", hidden: true, priceDisplay: "1", priceValue: 1, currencySymbol: "₪" },
   ],
@@ -805,7 +805,7 @@ const SixYogasNigumaRetreat = () => {
 
           <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {[
-              { type: "4 בחדר", price: "4,100", note: "חדר משותף לארבעה", sub: "לאדם | הכל כלול", featured: true, roomKey: "EGN_2026_Quad" as RoomType },
+              { type: "4 בחדר", price: "3,800", note: "חדר משותף לארבעה", sub: "לאדם | הכל כלול", featured: true, roomKey: "EGN_2026_Quad" as RoomType },
               { type: "ללא לינה, כל הריטריט", price: "1,950", note: "כולל ארוחת צהריים וכיבוד", sub: "לאדם | ששת ימי הלימוד", roomKey: "EGN_2026_NoLodging" as RoomType },
             ].map((option) => (
               <div
