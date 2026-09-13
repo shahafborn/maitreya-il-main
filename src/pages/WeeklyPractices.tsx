@@ -409,6 +409,22 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
+  {
+    // TODAY ONLY (2026-09-13): no Green Tara. Shahaf cancelled it on the day.
+    // Listed LAST on purpose - effectiveSchedule() applies active overrides in
+    // array order, so this empties the Sunday evening cell that the Death,
+    // Dying and Enlightenment override above fills with the 20:30 Green Tara.
+    // Sunday afternoon is untouched, so the 16:00 course still shows. The whole
+    // entry stops matching on 2026-09-14 and Green Tara returns at 20:30 by
+    // itself - no redeploy needed. The Google Calendar instance for today was
+    // deleted separately (series untouched).
+    from: "2026-09-13",
+    to: "2026-09-13",
+    note: "עדכון להיום, יום ראשון 13.9: תרגול טארה הירוקה מבוטל הערב. המפגש עם לאמה גלן ב-16:00 מתקיים כרגיל.",
+    days: {
+      "ראשון": { evening: [] },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
