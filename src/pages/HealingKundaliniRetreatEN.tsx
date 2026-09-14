@@ -182,6 +182,7 @@ const whatsIncluded = [
   "The Palden Lhamo empowerment",
   "Practical guidance for the healing and kundalini (tummo) practices",
   "Recordings of all sessions, to watch or review in your own time",
+  "Live translation on Zoom into Russian, Spanish and Portuguese",
   "Opportunity to continue practicing in a weekly practice group after the retreat",
 ];
 
@@ -378,8 +379,9 @@ const HealingKundaliniRetreatEN = () => {
             </p>
           </div>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-            The retreat is taught in English and is suitable for beginners and
-            advanced practitioners alike.
+            The retreat is taught in English, with live translation on Zoom
+            into Russian, Spanish and Portuguese. It is suitable for beginners
+            and advanced practitioners alike.
           </p>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
             A detailed schedule and the Zoom link will be sent before the retreat.
