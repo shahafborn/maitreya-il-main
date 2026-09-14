@@ -91,6 +91,15 @@ const registrationConfig: RegistrationConfig = {
   // Tier ids are the codes n8n charges by; amounts live in EGN_EN_Register.
   tiers: [
     {
+      id: ZOOM_TIER_ID,
+      title: "Zoom Participation",
+      note: "Every session live from Ein Gedi, plus the recordings",
+      priceDisplay: "360",
+      priceValue: 360,
+      currencySymbol: "$",
+      perPersonLabel: "per person",
+    },
+    {
       id: ROOM_TIER_ID,
       title: "Shared Room (4 beds), Full Board",
       note: "One bed per person | 6 nights, all meals and all sessions",
@@ -100,15 +109,6 @@ const registrationConfig: RegistrationConfig = {
       badge: "In Person at Ein Gedi",
       perPersonLabel: "per person | all inclusive",
       footnote: "Very few beds available",
-    },
-    {
-      id: ZOOM_TIER_ID,
-      title: "Zoom Participation",
-      note: "Every session live from Ein Gedi, plus the recordings",
-      priceDisplay: "360",
-      priceValue: 360,
-      currencySymbol: "$",
-      perPersonLabel: "per person",
     },
     {
       id: TEST_TIER_ID,
@@ -226,12 +226,12 @@ const scheduleBlocks = [
   {
     days: "Sunday, December 6",
     practice: "Arrival, settling in, and the start of the Six Yogas teachings",
-    times: "Arrival: 2:00 PM | Afternoon session: 2:30-6:15 PM",
+    times: "Arrival: 1:00 PM | Afternoon session: 2:00-6:00 PM",
   },
   {
     days: "Monday to Friday, December 7-11",
     practice: "The Six Yogas of Niguma",
-    times: "Morning: 9:30 AM-12:30 PM | Afternoon: 2:30-6:15 PM",
+    times: "Morning: 9:30 AM-12:30 PM | Afternoon: 2:30-6:00 PM",
   },
   {
     days: "Saturday, December 12",
@@ -361,10 +361,10 @@ const SixYogasNigumaRetreatEN = () => {
         ctaLabel="Register for the Retreat"
         onCtaClick={() => open()}
         paragraphs={[
-          "Tantric Buddhism teaches powerful meditation techniques that lead to a deep understanding of human existence, to freedom from suffering, and to the development of love and wisdom. The special means of Tantric Buddhism let us use the deep processes of body and mind to reach unique states of consciousness. These states free us from the ordinary, limiting ways of perceiving, and let us act from a mind that benefits ourselves and others - and ultimately reach full enlightenment in a single lifetime.",
+          "Tantric Buddhism teaches powerful meditation techniques that lead to a deep understanding of human existence, to freedom from suffering, and to the development of compassion and wisdom. The special means of Tantric Buddhism let us use the deep processes of body and mind to reach unique states of consciousness. These states free us from the ordinary, limiting ways of perceiving, and let us act from a mind that benefits ourselves and others - and ultimately reach full enlightenment in a single lifetime.",
           "The Six Yogas of Niguma are among the most important practices of the yogis and practitioners of the Tantric Buddhist traditions of Asia, and have been practiced continuously for over a thousand years - including in the lineage of the Dalai Lamas of Tibet. Only in recent years have they begun to be taught in the West. This is a rare opportunity to learn this powerful system of inner transformation directly from the heart of the lineage.",
           "In the retreat, Lama Glenn Mullin - a personal student of the Dalai Lama and an international teacher of Tibetan Buddhism - will teach the Six Yogas step by step: teaching, practical guidance and guided practice.",
-          "We are especially glad to hold this retreat in the Dead Sea region - a place of great power, which has served as a site of spiritual practice for saints and practitioners since the dawn of history. And this time during Hanukkah, the festival of light and fire - a time especially suited to the practices of inner fire.",
+          "We are especially glad to hold this retreat in the Dead Sea region - a place of great spiritual power, which has served as a site of spiritual practice for saints and practitioners since the dawn of history. And this time during Hanukkah, the holiday of light and fire - a time especially suited to the practices of inner fire.",
           "The retreat is suitable for beginners and advanced practitioners alike. It is taught in English, in person at Ein Gedi and live on Zoom.",
         ]}
       />
@@ -491,21 +491,6 @@ const SixYogasNigumaRetreatEN = () => {
                 The retreat begins on Sunday, December 6, at 2:00 PM and ends on
                 Saturday, December 12, 2026, at 3:00 PM (Israel time).
               </p>
-              <p>
-                Teaching starts on Sunday afternoon, right after arrival and
-                settling in.
-              </p>
-            </div>
-            <h3
-              className="text-sm font-bold tracking-[0.15em] uppercase mt-8 mb-4"
-              style={{ color: RETREAT_THEME.WARM_GRAY }}
-            >
-              Meals (guests at Ein Gedi)
-            </h3>
-            <div className="text-lg leading-[1.8]" style={{ color: RETREAT_THEME.BODY }}>
-              <p>Breakfast: 8:00-9:15 AM</p>
-              <p>Lunch: 12:30-1:30 PM</p>
-              <p>Dinner: 6:30-7:30 PM</p>
             </div>
           </div>
           <img
