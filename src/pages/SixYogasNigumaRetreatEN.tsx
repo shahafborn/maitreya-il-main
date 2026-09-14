@@ -317,7 +317,7 @@ const SixYogasNigumaRetreatEN = () => {
           <>
             The profound path to enlightenment of the wisdom dakini
             <br />
-            Includes the Vajrayogini empowerment
+            Including Vajrayogini empowerment
           </>
         }
         accent="with Lama Glenn Mullin"
