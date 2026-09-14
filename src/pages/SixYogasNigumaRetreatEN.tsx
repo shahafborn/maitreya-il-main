@@ -573,12 +573,10 @@ const SixYogasNigumaRetreatEN = () => {
               Session Start Times by Time Zone
             </p>
             <p className="mb-2">
-              Morning: 09:30 IST (Israel) / 07:30 GMT (London) / 02:30 EST (New
-              York) / 18:30 AEDT (Sydney)
+              Morning: 02:30 EST (New York) / 07:30 GMT (London) / 09:30 IST (Israel) / 16:30 KST (Korea)
             </p>
             <p>
-              Afternoon: 14:30 IST (Israel) / 12:30 GMT (London) / 07:30 EST
-              (New York) / 23:30 AEDT (Sydney)
+              Afternoon: 07:30 EST (New York) / 12:30 GMT (London) / 14:30 IST (Israel) / 21:30 KST (Korea)
             </p>
           </div>
 

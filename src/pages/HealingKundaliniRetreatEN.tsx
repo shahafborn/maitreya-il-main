@@ -193,7 +193,7 @@ const whatsIncluded = [
   "The Palden Lhamo empowerment",
   "Practical guidance for the healing and kundalini (tummo) practices",
   "Recordings of all sessions, to watch or review in your own time",
-  "Opportunity to continue practicing with Drupon Chongwol-la in a weekly practice group",
+  "Opportunity to continue practicing in a weekly practice group after the retreat",
 ];
 
 /* ── Component ── */
@@ -345,7 +345,7 @@ const HealingKundaliniRetreatEN = () => {
 
       <ScheduleBlock
         eyebrow="Retreat Schedule"
-        intro="Three days of teaching, guided practice and practical guidance, streamed live from Tel Aviv, with a long lunch break and short breaks during the sessions. The Palden Lhamo empowerment takes place during the retreat."
+        intro="Three days of teaching, guided practice and practical guidance, streamed live, with a long lunch break and short breaks during the sessions. The Palden Lhamo empowerment takes place during the retreat."
         days={scheduleDays}
         notes={[
           "The retreat is taught in English and is suitable for beginners and advanced practitioners alike.",
@@ -356,27 +356,15 @@ const HealingKundaliniRetreatEN = () => {
       {/* ── Zoom block ── */}
       <SectionFrame tone="none" maxWidth="md">
         <div className="max-w-lg mx-auto space-y-8 text-center" style={{ color: RETREAT_THEME.BODY }}>
-          <div>
-            <h3 className="font-semibold text-lg mb-3">Joining on Zoom</h3>
-            <p className="text-lg leading-relaxed">
-              Every session is streamed live from the retreat hall at the
-              Antakarana Center in Tel Aviv. Zoom participants take part in the
-              teachings, the guided practices and the Palden Lhamo empowerment
-              together with the group in the room.
-            </p>
-          </div>
-
           <div className="bg-stone-50 rounded-xl p-5 text-base" style={{ color: "#8C8279" }}>
             <p className="font-semibold mb-1" style={{ color: "#5C5549" }}>
               Session Start Times by Time Zone
             </p>
             <p className="mb-2">
-              Morning: 09:30 IST (Israel) / 07:30 GMT (London) / 02:30 EST (New
-              York) / 18:30 AEDT (Sydney)
+              Morning: 02:30 EST (New York) / 07:30 GMT (London) / 09:30 IST (Israel) / 16:30 KST (Korea)
             </p>
             <p>
-              Afternoon: 14:00 IST (Israel) / 12:00 GMT (London) / 07:00 EST
-              (New York) / 23:00 AEDT (Sydney)
+              Afternoon: 07:00 EST (New York) / 12:00 GMT (London) / 14:00 IST (Israel) / 21:00 KST (Korea)
             </p>
           </div>
 
@@ -390,8 +378,7 @@ const HealingKundaliniRetreatEN = () => {
           </div>
 
           <p className="text-base" style={{ color: "#8C8279" }}>
-            A Zoom link will be sent after registration. A detailed schedule
-            will be sent before the retreat.
+            A detailed schedule and the Zoom link will be sent before the retreat.
           </p>
         </div>
       </SectionFrame>
