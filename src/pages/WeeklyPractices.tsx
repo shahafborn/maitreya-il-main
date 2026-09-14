@@ -238,14 +238,17 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // active together from 17.9 to 18.10; effectiveSchedule() merges active
     // overrides per day and collects every note, so the two banners both show.
     //
-    // The afternoon cell RE-LISTS the standing 16-17 Tummo (Naropa), because a
-    // provided period replaces the standing cell rather than adding to it.
-    // Chongwol-la's hour is set 15-16 so it lands clear of that Tummo; if the
-    // session turns out to run longer (the Mahamudra clarifications ran 80-135
-    // minutes) the two will overlap and this needs revisiting.
+    // The afternoon cell RE-LISTS the Tummo (Naropa), because a provided period
+    // replaces the standing cell rather than adding to it - and MOVES it from
+    // 16-17 to 17-18 for these six weeks (Shahaf, 2026-09-14), so the
+    // clarification has room to run past the hour. Chongwol-la gave a start time
+    // only; the Mahamudra clarifications ran 80-135 minutes, so the real length
+    // is still unknown and is being asked (task: maitreya-dde-clarification-
+    // length.md). Until it is known the cell shows 15-16, with the 16-17 hour
+    // left clear as headroom rather than claimed.
     from: "2026-09-17",
     to: "2026-10-22",
-    note: "שימו לב: בימי חמישי, מ-17.9 עד 22.10, מתקיים ב-15:00 מפגש הבהרות ותרגול מודרך עם דרופון צ׳ונגוואל-לה לנרשמי הסדרה \"מוות, לחיות לנוכח המוות, והארה\", בחדר זום אחר.",
+    note: "שימו לב: בימי חמישי, מ-17.9 עד 22.10, מתקיים ב-15:00 מפגש הבהרות ותרגול מודרך עם דרופון צ׳ונגוואל-לה לנרשמי הסדרה \"מוות, לחיות לנוכח המוות, והארה\", בחדר זום אחר. בשבועות אלה תרגול הטומו (נארופה) עובר ל-17:00.",
     days: {
       "חמישי": {
         afternoon: [
@@ -256,7 +259,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             categories: ["basic"],
             url: "/events/death-dying-enlightenment",
           },
-          { time: "16-17", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
+          { time: "17-18", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
         ],
       },
     },
