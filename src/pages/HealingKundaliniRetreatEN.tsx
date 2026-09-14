@@ -1,5 +1,5 @@
 /**
- * Meditation and Kundalini Practices for Healing - retreat (English / Zoom)
+ * Tantric Meditations and Kundalini Practices for Healing - retreat (English / Zoom)
  * =========================================================================
  * English twin of HealingKundaliniRetreat.tsx: the 3-day Antakarana retreat
  * (Tel Aviv, Wed-Fri 2-4 Dec 2026) streamed live on Zoom for people abroad.
@@ -61,9 +61,9 @@ const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
 const seo: SEOConfig = {
   title:
-    "Meditation and Kundalini Practices for Healing with Lama Glenn | December 2-4, 2026 | Maitreya Sangha Israel",
+    "Tantric Meditations and Kundalini Practices for Healing with Lama Glenn | December 2-4, 2026 | Maitreya Sangha Israel",
   description:
-    "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn Mullin, including the Palden Lhamo initiation. Live on Zoom from Tel Aviv, December 2-4, 2026.",
+    "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn Mullin, including the Palden Lhamo empowerment. Live on Zoom from Tel Aviv, December 2-4, 2026.",
   keywords:
     "retreat, healing, kundalini, tummo, Buddhism, tantra, Lama Glenn, Palden Lhamo, meditation, Zoom, Maitreya Sangha",
   url: "https://maitreya.org.il/events/en/healing-kundalini-retreat",
@@ -73,7 +73,7 @@ const seo: SEOConfig = {
 
 const registrationConfig: RegistrationConfig = {
   title: "Registration for the Online Retreat",
-  subtitle: "Meditation and Kundalini Practices for Healing | December 2-4, 2026 | Zoom",
+  subtitle: "Tantric Meditations and Kundalini Practices for Healing | December 2-4, 2026 | Zoom",
   webhookUrl: N8N_WEBHOOK_URL,
   contentName: "Healing Kundalini Retreat 2026 EN",
   currency: "USD",
@@ -190,7 +190,7 @@ const scheduleDays = [
 
 const whatsIncluded = [
   "Three days of teaching and practice with Lama Glenn Mullin, live on Zoom",
-  "The Palden Lhamo initiation",
+  "The Palden Lhamo empowerment",
   "Practical guidance for the healing and kundalini (tummo) practices",
   "Recordings of all sessions, to watch or review in your own time",
   "Opportunity to continue practicing with Drupon Chongwol-la in a weekly practice group",
@@ -263,12 +263,12 @@ const HealingKundaliniRetreatEN = () => {
           "The Buddhist tradition is rich in knowledge and in profound meditation practices for healing body and mind. Buddhism recognizes the deep relationship between body and mind, and between a person and their environment - and the ways these inter-relations contribute to health or to illness.",
           "Over the generations in Asia, practitioners, physicians and healers have used the Buddhist healing methods to heal themselves and others: healing the mind of negative emotions and harmful tendencies, and healing the body through deep yogic work with the body's inner energetic systems.",
           "In Tibetan Buddhism, many traditions of these yogic practices are still taught today. They are known as Tummo or Chandali. In these practices one learns to work directly with the energies of the body (the prana, or chi) and with its essences (the bindu, or ojas): to balance and purify the nervous system and the hormonal system, to release patterns that do not serve us, and to reach deep, healing states of mind.",
-          "In this retreat Lama Glenn will teach the yogic and meditative practices of Buddhist healing, as they have been taught for more than a thousand years in the Tibetan tradition and especially in the tradition of the Dalai Lamas. The three days will include teaching, practical guidance, guided practice, and the Palden Lhamo initiation.",
+          "In this retreat Lama Glenn will teach the yogic and meditative practices of Buddhist healing, as they have been taught for more than a thousand years in the Tibetan tradition and especially in the tradition of the Dalai Lamas. The three days will include teaching, practical guidance, guided practice, and the Palden Lhamo empowerment.",
           "The retreat is suitable for beginners and advanced practitioners alike, and is taught in English.",
         ]}
       />
 
-      {/* Palden Lhamo initiation. Her oracle lake leads the block. */}
+      {/* Palden Lhamo empowerment. Her oracle lake leads the block. */}
       <SectionFrame tone="stone" size="md" maxWidth="lg">
         <div className="max-w-3xl mx-auto">
           <figure className="mb-10">
@@ -316,7 +316,7 @@ const HealingKundaliniRetreatEN = () => {
               powerful for attaining health, abundance and happiness while
               progressing on the path to enlightenment.
             </p>
-            <p>During the retreat Lama Glenn will give the Palden Lhamo initiation.</p>
+            <p>During the retreat Lama Glenn will give the Palden Lhamo empowerment.</p>
           </div>
         </div>
       </SectionFrame>
@@ -345,7 +345,7 @@ const HealingKundaliniRetreatEN = () => {
 
       <ScheduleBlock
         eyebrow="Retreat Schedule"
-        intro="Three days of teaching, guided practice and practical guidance, streamed live from Tel Aviv, with a long lunch break and short breaks during the sessions. The Palden Lhamo initiation takes place during the retreat."
+        intro="Three days of teaching, guided practice and practical guidance, streamed live from Tel Aviv, with a long lunch break and short breaks during the sessions. The Palden Lhamo empowerment takes place during the retreat."
         days={scheduleDays}
         notes={[
           "The retreat is taught in English and is suitable for beginners and advanced practitioners alike.",
@@ -361,7 +361,7 @@ const HealingKundaliniRetreatEN = () => {
             <p className="text-lg leading-relaxed">
               Every session is streamed live from the retreat hall at the
               Antakarana Center in Tel Aviv. Zoom participants take part in the
-              teachings, the guided practices and the Palden Lhamo initiation
+              teachings, the guided practices and the Palden Lhamo empowerment
               together with the group in the room.
             </p>
           </div>
@@ -428,7 +428,7 @@ const HealingKundaliniRetreatEN = () => {
       <FinalCTA
         bgImage={prayerFlagsBg}
         title="Join the Retreat"
-        body="Three days of deep teaching and practice of the healing methods of Tantric Buddhism, with the Palden Lhamo initiation, live on Zoom"
+        body="Three days of deep teaching and practice of the healing methods of Tantric Buddhism, with the Palden Lhamo empowerment, live on Zoom"
         ctaLabel="Register for the Online Retreat"
         onCtaClick={open}
         footnote="Recordings included"
@@ -483,7 +483,7 @@ const HealingKundaliniRetreatEN = () => {
           status={paymentStatus}
           dir="ltr"
           successTitle="Registration Successful!"
-          successBody="Thank you for registering for the Meditation and Kundalini Practices for Healing retreat. A confirmation email with details will be sent to you shortly."
+          successBody="Thank you for registering for the Tantric Meditations and Kundalini Practices for Healing retreat. A confirmation email with details will be sent to you shortly."
           successDetails={{
             heading: "Retreat Details",
             lines: ["December 2-4, 2026", "Live on Zoom"],

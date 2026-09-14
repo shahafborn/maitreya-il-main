@@ -685,12 +685,12 @@ const SixYogasNigumaRetreatEN = () => {
         events={[
           {
             image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "Meditation and Kundalini Practices for Healing",
-            title: "Meditation and Kundalini Practices for Healing",
+            imageAlt: "Tantric Meditations and Kundalini Practices for Healing",
+            title: "Tantric Meditations and Kundalini Practices for Healing",
             dateLabel: "December 2-4, 2026 | Live on Zoom from Tel Aviv",
             endDate: "2026-12-04",
             description:
-              "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn, including the Palden Lhamo initiation",
+              "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn, including the Palden Lhamo empowerment",
             ctaLabel: "Learn More",
             href: "/events/en/healing-kundalini-retreat",
           },
