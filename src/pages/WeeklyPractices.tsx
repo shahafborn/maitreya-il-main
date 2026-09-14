@@ -205,8 +205,8 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // move he made by hand on 23.8). Overlaps the retreat window above, which
     // only touches `morning`; this one only touches `afternoon`/`evening`, and
     // effectiveSchedule() merges active overrides per day, so both apply.
-    // Drupon Chongwol-la's weekly clarification session for the course has no
-    // time yet - add it here when Shahaf has it.
+    // Drupon Chongwol-la's weekly clarification now has a time and lives in its
+    // own block below - it runs a week past this window, so it cannot ride here.
     from: "2026-09-13",
     to: "2026-10-18",
     note: "שימו לב: בימי ראשון, מ-13.9 עד 18.10, מתקיימת ב-16:00 סדרת המפגשים \"מוות, לחיות לנוכח המוות, והארה\" עם לאמה גלן, ותרגול טארה הירוקה עובר ל-20:30.",
@@ -222,6 +222,42 @@ const WEEK_OVERRIDES: WeekOverride[] = [
           },
         ],
         evening: [{ time: "20:30-21:30", title: "טארה הירוקה", categories: ["basic"], beginner: true }],
+      },
+    },
+  },
+  {
+    // DEATH, DYING AND ENLIGHTENMENT - Drupon Chongwol-la's weekly clarification
+    // and guided practice, for course registrants. Settled with him on WhatsApp
+    // 2026-09-14: Thursdays 15:00 Israel (21:00 Korea, 08:00 New York), six
+    // sessions 17.9 to 22.10. He offered 15:00 or Friday evening; Friday was out
+    // (erev Shabbat), and he said anything later than 15:00 is hard for him.
+    //
+    // Its OWN window rather than a day added to the Sunday block above: that one
+    // ends 18.10 with the last teaching session, and stretching it to 22.10 would
+    // advertise a seventh Sunday session that does not exist. Both blocks are
+    // active together from 17.9 to 18.10; effectiveSchedule() merges active
+    // overrides per day and collects every note, so the two banners both show.
+    //
+    // The afternoon cell RE-LISTS the standing 16-17 Tummo (Naropa), because a
+    // provided period replaces the standing cell rather than adding to it.
+    // Chongwol-la's hour is set 15-16 so it lands clear of that Tummo; if the
+    // session turns out to run longer (the Mahamudra clarifications ran 80-135
+    // minutes) the two will overlap and this needs revisiting.
+    from: "2026-09-17",
+    to: "2026-10-22",
+    note: "שימו לב: בימי חמישי, מ-17.9 עד 22.10, מתקיים ב-15:00 מפגש הבהרות ותרגול מודרך עם דרופון צ׳ונגוואל-לה לנרשמי הסדרה \"מוות, לחיות לנוכח המוות, והארה\", בחדר זום אחר.",
+    days: {
+      "חמישי": {
+        afternoon: [
+          {
+            time: "15-16",
+            title: "הבהרות ותרגול - מוות, לחיות לנוכח המוות, והארה",
+            subtitle: "עם דרופון צ׳ונגוואל-לה, לנרשמי הסדרה, 17.9-22.10",
+            categories: ["basic"],
+            url: "/events/death-dying-enlightenment",
+          },
+          { time: "16-17", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
+        ],
       },
     },
   },
