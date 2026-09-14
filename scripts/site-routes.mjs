@@ -99,8 +99,11 @@ export function getRoutes() {
   // December 2026 pages: live for proofreading but UNLISTED for now - pre-rendered, yet kept out of
   // the sitemap, llms.txt and the events list (their content/ entries are parked in the vault).
   // Flip back to retreat(...) and restore the two content/he/events files to list them.
-  for (const p of ["/events/six-yogas-niguma-retreat", "/events/healing-kundalini-retreat"]) {
-    routes.push({ path: p, lang: "he", alternates: { he: p }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
+  for (const slug of ["six-yogas-niguma-retreat", "healing-kundalini-retreat"]) {
+    const he = `/events/${slug}`;
+    const en = `/events/en/${slug}`;
+    routes.push({ path: he, lang: "he", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
+    routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
   }
   retreat("/events/death-dying-enlightenment", null, 0.9);
   retreat("/events/yamantaka-online-2026", null, 0.9);

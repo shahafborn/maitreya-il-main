@@ -24,6 +24,8 @@ const HeartOfWisdomRetreatEN = lazy(() => import("./pages/HeartOfWisdomRetreatEN
 const HealingKundaliniRetreat = lazy(() => import("./pages/HealingKundaliniRetreat"));
 const SixYogasNigumaRetreat = lazy(() => import("./pages/SixYogasNigumaRetreat"));
 const EinGediHealingRetreatEN = lazy(() => import("./pages/EinGediHealingRetreatEN"));
+const HealingKundaliniRetreatEN = lazy(() => import("./pages/HealingKundaliniRetreatEN"));
+const SixYogasNigumaRetreatEN = lazy(() => import("./pages/SixYogasNigumaRetreatEN"));
 const UmaZubTri = lazy(() => import("./pages/UmaZubTri"));
 const YamantakaOnlineRetreat = lazy(() => import("./pages/YamantakaOnlineRetreat"));
 const DeathDyingEnlightenment = lazy(() => import("./pages/DeathDyingEnlightenment"));
@@ -124,6 +126,8 @@ const AppRoutes = () => (
       <Route path="/events/heart-of-wisdom-retreat" element={<HeartOfWisdomRetreat />} />
       <Route path="/events/en/heart-of-wisdom-retreat" element={<HeartOfWisdomRetreatEN />} />
       <Route path="/events/en/ein-gedi-healing-retreat" element={<EinGediHealingRetreatEN />} />
+      <Route path="/events/en/healing-kundalini-retreat" element={<HealingKundaliniRetreatEN />} />
+      <Route path="/events/en/six-yogas-niguma-retreat" element={<SixYogasNigumaRetreatEN />} />
 
       {/* Uma Zub Tri online course (Hebrew, public) */}
       <Route path="/events/uma-zub-tri" element={<UmaZubTri />} />

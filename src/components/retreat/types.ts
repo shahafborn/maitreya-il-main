@@ -122,6 +122,12 @@ export interface RegistrationConfig {
   /** Extra fields to collect. When omitted, minimal: first/last/email/phone. */
   askGender?: boolean;
   askFoodPref?: boolean;
+  /**
+   * Limits askGender / askFoodPref to these tier ids. For a page that sells
+   * both a bed and Zoom seats: room-sharing and meals only matter to the people
+   * who sleep there, so a Zoom registrant is not asked.
+   */
+  residentialTierIds?: string[];
   askPrevExp?: boolean;
   /** City text input (used by urban / commuter retreats for ride-sharing). */
   askCity?: boolean;

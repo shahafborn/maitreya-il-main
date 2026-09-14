@@ -39,8 +39,12 @@ export const PricingCard = ({ tier, ctaLabel, onSelect }: PricingCardProps) => (
       </p>
     )}
     <p className="text-4xl font-bold mb-1">
+      {/* "$" reads before the number; the shekel sign stays after it, as in Hebrew. */}
+      {tier.currencySymbol === "$" && <span className="text-lg font-normal mr-0.5">$</span>}
       {tier.priceDisplay}
-      {tier.currencySymbol && <span className="text-lg font-normal mr-1">{tier.currencySymbol}</span>}
+      {tier.currencySymbol && tier.currencySymbol !== "$" && (
+        <span className="text-lg font-normal mr-1">{tier.currencySymbol}</span>
+      )}
     </p>
     <p className="text-sm mb-2" style={{ color: RETREAT_THEME.WARM_GRAY }}>
       {tier.perPersonLabel}

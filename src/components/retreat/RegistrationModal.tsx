@@ -136,6 +136,11 @@ export const RegistrationModal = ({
   const topTiers = config.tiers.filter((t) => !t.variantOf && !t.hidden);
   const singleTier = topTiers.length === 1;
   const [tierId, setTierId] = useState<string>(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
+  // Room-sharing and meal questions belong to the residential tiers only (see
+  // residentialTierIds). Without that list they follow the config flags as is.
+  const residential = !config.residentialTierIds || config.residentialTierIds.includes(tierId);
+  const askGender = Boolean(config.askGender && residential);
+  const askFoodPref = Boolean(config.askFoodPref && residential);
   const [variantId, setVariantId] = useState("");
   /** Only used by tiers marked openAmount: the sum the payer types. */
   const [amount, setAmount] = useState("");
@@ -243,8 +248,8 @@ export const RegistrationModal = ({
       if (!phone.trim()) errors.phone = copy.errPhone;
       else if (!isValidPhone(phone)) errors.phone = copy.errPhoneInvalid;
     }
-    if (config.askGender && !gender) errors.gender = copy.errGender;
-    if (config.askFoodPref && !foodPref) errors.foodPref = copy.errFood;
+    if (askGender && !gender) errors.gender = copy.errGender;
+    if (askFoodPref && !foodPref) errors.foodPref = copy.errFood;
     if (config.askPrevExp && !prevExp) errors.prevExp = copy.errPrevExp;
     if (config.askCity && !city.trim()) errors.city = copy.errCity ?? "";
     if (config.askCountry && !country.trim()) errors.country = copy.errCountry ?? "";
@@ -305,8 +310,8 @@ export const RegistrationModal = ({
           email,
           ...(config.askPhone !== false && { phone }),
           ...(config.askCountry && { country }),
-          ...(config.askGender && { gender }),
-          ...(config.askFoodPref && { food_pref: foodPref }),
+          ...(askGender && { gender }),
+          ...(askFoodPref && { food_pref: foodPref }),
           ...(config.askPrevExp && { prev_exp: prevExp }),
           ...(config.askCity && { city }),
           ...(config.askRideShare && { can_offer_ride: canOfferRide }),
@@ -404,8 +409,9 @@ export const RegistrationModal = ({
                   style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.GOLD_DARK }}
                 >
                   {/* An open-amount tier has no fixed price: show the sum the payer typed. */}
+                  {selectedTier.currencySymbol === "$" ? "$" : ""}
                   {openAmount && amount ? Number(amount).toLocaleString("en-US") : selectedTier.priceDisplay}
-                  {selectedTier.currencySymbol ?? ""}
+                  {selectedTier.currencySymbol && selectedTier.currencySymbol !== "$" ? selectedTier.currencySymbol : ""}
                 </p>
               </div>
               {selectedTier.note && (
@@ -487,7 +493,7 @@ export const RegistrationModal = ({
                       {topTiers.map((t) => (
                         <option key={t.id} value={t.id}>
                           {t.title}
-                          {t.priceDisplay ? ` - ${t.priceDisplay}${t.currencySymbol ?? ""}` : ""}
+                          {t.priceDisplay ? (t.currencySymbol === "$" ? ` - $${t.priceDisplay}` : ` - ${t.priceDisplay}${t.currencySymbol ?? ""}`) : ""}
                         </option>
                       ))}
                     </select>
@@ -631,9 +637,9 @@ export const RegistrationModal = ({
               </div>
             )}
 
-            {(config.askGender || config.askFoodPref) && (
+            {(askGender || askFoodPref) && (
               <div className="grid grid-cols-2 gap-3">
-                {config.askGender && (
+                {askGender && (
                   <div data-field="gender">
                     <label className={labelClass}>{copy.genderLabel} *</label>
                     <div
@@ -662,7 +668,7 @@ export const RegistrationModal = ({
                     <FieldError field="gender" />
                   </div>
                 )}
-                {config.askFoodPref && (
+                {askFoodPref && (
                   <div data-field="foodPref">
                     <label className={labelClass}>{copy.foodLabel} *</label>
                     <SelectWrapper>
