@@ -70,9 +70,9 @@ const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
 const seo: SEOConfig = {
   title:
-    "The Six Yogas of Niguma: Retreat with Lama Glenn in Ein Gedi | December 6-12, 2026 | Maitreya Sangha Israel",
+    "The Six Yogas of Niguma: Retreat with Lama Glenn | December 6-12, 2026 | Maitreya Sangha Israel",
   description:
-    "Six days of teaching and practice of the Six Yogas of Niguma - the sublime path to enlightenment of the wisdom dakini - with Lama Glenn Mullin, including the Vajrayogini empowerment. Ein Gedi, Dead Sea, or live on Zoom. December 6-12, 2026.",
+    "Six days of teaching and practice of the Six Yogas of Niguma - the profound path to enlightenment of the wisdom dakini - with Lama Glenn Mullin, including the Vajrayogini empowerment. Dead Sea, Israel or live on Zoom. December 6-12, 2026.",
   keywords:
     "Six Yogas of Niguma, Niguma, tummo, Vajrayogini, retreat, Ein Gedi, Dead Sea, Hanukkah, Lama Glenn, Tibetan Buddhism, tantra, Zoom, Maitreya Sangha",
   url: "https://maitreya.org.il/events/en/six-yogas-niguma-retreat",
@@ -313,9 +313,15 @@ const SixYogasNigumaRetreatEN = () => {
         mobileImage={heroNigumaMobile}
         imageAlt="Niguma - Tibetan painting"
         title="The Six Yogas of Niguma"
-        subtitle="The sublime path to enlightenment of the wisdom dakini | Includes the Vajrayogini empowerment"
+        subtitle={
+          <>
+            The profound path to enlightenment of the wisdom dakini
+            <br />
+            Includes the Vajrayogini empowerment
+          </>
+        }
         accent="with Lama Glenn Mullin"
-        dateLine="December 6-12, 2026, during Hanukkah | Ein Gedi Field School, Dead Sea | In person or live on Zoom"
+        dateLine="December 6-12, 2026 | The Dead Sea, Israel | Live on Zoom or In-Person"
         objectPosition="center 32%"
       />
 
@@ -336,8 +342,8 @@ const SixYogasNigumaRetreatEN = () => {
           className="text-lg md:text-xl leading-[1.8] text-center mb-8"
           style={{ color: RETREAT_THEME.BODY }}
         >
-          <strong>Lama Glenn Mullin,</strong> a student of the Dalai Lama and an
-          international teacher of Tibetan Buddhism, will teach us the path of
+          <strong>Lama Glenn Mullin,</strong> an international teacher of
+          Tibetan Buddhism, will teach us the path of
           the Six Yogas in depth in this special retreat by the Dead Sea - and
           you can join from anywhere in the world.
         </p>

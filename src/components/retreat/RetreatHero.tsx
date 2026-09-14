@@ -1,11 +1,12 @@
+import type { ReactNode } from "react";
 import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
 
 interface RetreatHeroProps {
   image: string;
   imageAlt: string;
   title: string;
-  /** Primary subtitle line (white). */
-  subtitle: string;
+  /** Primary subtitle line (white). A node is allowed so a long line can break where it reads best. */
+  subtitle: ReactNode;
   /** Optional accent subtitle (gold) - typically the teacher name. */
   accent?: string;
   /** Date/venue line (muted white). */
