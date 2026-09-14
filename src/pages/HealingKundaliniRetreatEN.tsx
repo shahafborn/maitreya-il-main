@@ -6,7 +6,8 @@
  * Fixed $180 USD, single tier, recordings of every session included.
  *
  * Language: English (LTR). Same shared components as the Hebrew page; the venue
- * block is replaced by a Zoom block (time zones, recordings, link by email).
+ * block is replaced by a Zoom block (time zones, recordings, link by email), and
+ * the "On the practice" block was dropped by Shahaf on 2026-09-15.
  * Content source (vault): teachers-visit-nov-dec-2026/marketing/tel-aviv-landing-page-content.md
  *
  * Registration: RegistrationModal (embedPayment) posts to n8n HKR_EN_Register,
@@ -43,7 +44,6 @@ import {
   lamaGlennPhoto,
   druponPhoto,
   cloudsBg,
-  vajrayoginiChannel,
   lhamoLatso,
   prayerFlagsBg,
   hkrGalleryImages,
@@ -234,21 +234,6 @@ const HealingKundaliniRetreatEN = () => {
 
   const closePaymentStatus = () => setSearchParams({}, { replace: true });
 
-  const goldBtn = {
-    borderColor: RETREAT_THEME.GOLD_DARK,
-    color: RETREAT_THEME.GOLD_DARK,
-    backgroundColor: "transparent",
-    fontFamily: RETREAT_FONTS.sans,
-  } as const;
-  const hoverIn = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
-    e.currentTarget.style.color = "#fff";
-  };
-  const hoverOut = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = "transparent";
-    e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
-  };
-
   return (
     <RetreatLayout
       lang="en"
@@ -262,8 +247,8 @@ const HealingKundaliniRetreatEN = () => {
         image={hkrHero}
         mobileImage={hkrHeroMobile}
         imageAlt="Tibetan mural of yogis in meditation"
-        title="Meditation and Kundalini Practices for Healing"
-        subtitle="Three days of teaching and practice of the healing methods of Tantric Buddhism, including the Palden Lhamo initiation"
+        title="Tantric Meditations and Kundalini Practices for Healing"
+        subtitle="Three days of teaching and practice of the healing methods of Tantric Buddhism, including the Palden Lhamo empowerment"
         accent="with Lama Glenn"
         dateLine="December 2-4, 2026 | Live on Zoom from Tel Aviv"
         objectPosition="62% 40%"
@@ -275,74 +260,13 @@ const HealingKundaliniRetreatEN = () => {
         ctaLabel="Register for the Online Retreat"
         onCtaClick={open}
         paragraphs={[
-          "The Buddhist tradition is rich in knowledge and in profound meditation practices for healing body and mind. Buddhism recognizes the deep connection between body and mind, and between a person and their surroundings - and the ways these connections contribute to health or to illness.",
-          "Over the generations, practitioners, physicians and healers have used the Buddhist healing methods to heal themselves and others: healing the mind of negative emotions and harmful tendencies, and healing the body through deep yogic work with the breath and with the body's inner, energetic systems.",
-          "In Tibetan Buddhism, many traditions of these yogic practices are still taught today. They are known as working with the kundalini - chandali in Sanskrit, tummo in Tibetan. In these practices one learns to work directly with the energies of the body (the prana, or chi) and with its essences (the bindu, or ojas): to balance and purify the nervous system and the hormonal system, to release patterns that do not serve us, and to reach deep, healing states of mind.",
+          "The Buddhist tradition is rich in knowledge and in profound meditation practices for healing body and mind. Buddhism recognizes the deep relationship between body and mind, and between a person and their environment - and the ways these inter-relations contribute to health or to illness.",
+          "Over the generations in Asia, practitioners, physicians and healers have used the Buddhist healing methods to heal themselves and others: healing the mind of negative emotions and harmful tendencies, and healing the body through deep yogic work with the body's inner energetic systems.",
+          "In Tibetan Buddhism, many traditions of these yogic practices are still taught today. They are known as working with the Kundalini - Chandali in Sanskrit, Tummo in Tibetan. In these practices one learns to work directly with the energies of the body (the prana, or chi) and with its essences (the bindu, or ojas): to balance and purify the nervous system and the hormonal system, to release patterns that do not serve us, and to reach deep, healing states of mind.",
           "In this retreat Lama Glenn will teach the yogic and meditative practices of Buddhist healing, as they have been taught for more than a thousand years in the Tibetan tradition and especially in the tradition of the Dalai Lamas. The three days will include teaching, practical guidance, guided practice, and the Palden Lhamo initiation.",
           "The retreat is suitable for beginners and advanced practitioners alike, and is taught in English.",
         ]}
       />
-
-      {/* "On the practice": a large photo leads, centred title, prose below. */}
-      <SectionFrame tone="cream" maxWidth="xl">
-        {/* A portrait thangka, so it sits at text width rather than full-bleed. */}
-        <figure className="max-w-[360px] mx-auto mb-12 md:mb-16">
-          <img
-            src={vajrayoginiChannel}
-            alt="The chakra system and the central channel"
-            className="w-full block rounded-lg shadow-xl"
-          />
-          <figcaption
-            className="mt-4 text-sm text-center leading-relaxed"
-            style={{ color: RETREAT_THEME.WARM_GRAY, fontFamily: RETREAT_FONTS.sans }}
-          >
-            The chakra system and the central channel - the subtle body on which
-            the kundalini (chandali, or tummo) work is done
-          </figcaption>
-        </figure>
-        <div className="max-w-3xl mx-auto">
-          <SectionTitle className="text-center mb-10">On the Practice</SectionTitle>
-          <div
-            className="space-y-6 text-lg leading-[1.9]"
-            style={{ color: RETREAT_THEME.BODY, fontFamily: RETREAT_FONTS.sans }}
-          >
-            <p>
-              Tibetan medicine teaches that illness does not begin in the body
-              alone. It arises from the interplay of body, environment and mind.
-              When our system runs on patterns that do not serve us, an
-              imbalance forms, and the imbalance opens the door to illness.
-            </p>
-            <p>
-              Healing follows the same logic. If unhelpful conditions and
-              patterns open the way to illness, conscious change can open the
-              way to healing - and become in itself a source of beneficial
-              energy. The Buddhist healing practices are built on this
-              principle.
-            </p>
-            <p>
-              The practice works on two levels. The first is creative
-              visualization: light, color and mantra, through which we heal the
-              systems of the body - represented symbolically by the four elements
-              (earth, water, fire and air) - and bring them back into balance.
-              The second is direct work with the channels and energy centers -
-              the inner work of the kundalini (chandali, or tummo), which the
-              Tibetan tradition has preserved as a living and precise lineage.
-            </p>
-          </div>
-          <div className="mt-10 flex justify-center">
-            <button
-              type="button"
-              onClick={open}
-              className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer"
-              style={goldBtn}
-              onMouseEnter={hoverIn}
-              onMouseLeave={hoverOut}
-            >
-              Register for the Online Retreat
-            </button>
-          </div>
-        </div>
-      </SectionFrame>
 
       {/* Palden Lhamo initiation. Her oracle lake leads the block. */}
       <SectionFrame tone="stone" size="md" maxWidth="lg">
@@ -362,7 +286,7 @@ const HealingKundaliniRetreatEN = () => {
             </figcaption>
           </figure>
           <h2 className="text-xl md:text-2xl font-bold mb-2" style={{ fontFamily: RETREAT_FONTS.serif }}>
-            The Practice and Initiation of Palden Lhamo
+            Palden Lhamo Empowerment and Practice
           </h2>
           <p className="text-lg font-semibold mb-6" style={{ color: RETREAT_THEME.GOLD_DARK }}>
             A practice for developing confidence and stability in everyday life
