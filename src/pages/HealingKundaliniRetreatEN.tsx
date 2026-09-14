@@ -22,7 +22,6 @@ import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
-import { ScheduleBlock } from "@/components/retreat/ScheduleBlock";
 import { WhatsIncluded } from "@/components/retreat/WhatsIncluded";
 import { PricingGrid } from "@/components/retreat/PricingGrid";
 import { GalleryCarousel } from "@/components/retreat/GalleryCarousel";
@@ -33,7 +32,7 @@ import { MailingListSignup } from "@/components/retreat/MailingListSignup";
 import { OtherEvents } from "@/components/retreat/OtherEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
-import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
+import { SectionFrame, SectionTitle, SectionEyebrow } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
@@ -169,23 +168,13 @@ const registrationCopy = {
   errGeneric: "Error submitting the form",
 };
 
-// Hours follow the Hebrew page (Israel time); the final timetable is sent to participants.
-const scheduleDays = [
-  {
-    label: "Wednesday, December 2, 2026",
-    time: "09:30 AM-6:00 PM Israel time",
-    description: "Morning: 09:30-12:00 | Lunch break: 12:00-14:00 | Afternoon: 14:00-18:00",
-  },
-  {
-    label: "Thursday, December 3, 2026",
-    time: "09:30 AM-6:00 PM Israel time",
-    description: "Morning: 09:30-12:00 | Lunch break: 12:00-14:00 | Afternoon: 14:00-18:00",
-  },
-  {
-    label: "Friday, December 4, 2026",
-    time: "09:30 AM-2:00 PM Israel time",
-    description: "Morning: 09:30-12:00 | Closing: 14:00, before Shabbat",
-  },
+// Same hours on all three days (Shahaf, 2026-09-15): two sessions a day, shown per
+// time zone because most participants are abroad. Israel is UTC+2 in December.
+const sessionRows = [
+  { zone: "New York (EST)", morning: "2:30-5:00 AM", afternoon: "7:00-11:00 AM" },
+  { zone: "London (GMT)", morning: "7:30-10:00 AM", afternoon: "12:00-4:00 PM" },
+  { zone: "Israel (IST)", morning: "9:30 AM-12:00 PM", afternoon: "2:00-6:00 PM" },
+  { zone: "Korea (KST)", morning: "4:30-7:00 PM", afternoon: "9:00 PM-1:00 AM" },
 ];
 
 const whatsIncluded = [
@@ -343,31 +332,43 @@ const HealingKundaliniRetreatEN = () => {
         />
       </SectionFrame>
 
-      <ScheduleBlock
-        eyebrow="Retreat Schedule"
-        intro="Three days of teaching, guided practice and practical guidance, streamed live, with a long lunch break and short breaks during the sessions. The Palden Lhamo empowerment takes place during the retreat."
-        days={scheduleDays}
-        notes={[
-          "The retreat is taught in English and is suitable for beginners and advanced practitioners alike.",
-          "* The schedule shown is approximate. The final schedule will be sent to participants before the retreat.",
-        ]}
-      />
+      {/* ── Schedule: one timetable, read in your own time zone ── */}
+      <SectionFrame tone="cream" maxWidth="md">
+        <SectionEyebrow className="text-center block mb-10">Retreat Schedule</SectionEyebrow>
+        <p className="text-center text-lg mb-6 leading-[1.8]" style={{ color: RETREAT_THEME.BODY }}>
+          Three days of teaching, guided practice and practical guidance,
+          streamed live, with a long break between the two daily sessions and
+          short breaks during them. The Palden Lhamo empowerment takes place
+          during the retreat.
+        </p>
+        <p className="text-center text-lg font-semibold mb-8" style={{ fontFamily: RETREAT_FONTS.serif }}>
+          Wednesday to Friday, December 2-4, 2026 - the same schedule on all three days
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full max-w-2xl mx-auto text-base border-collapse">
+            <thead>
+              <tr style={{ color: RETREAT_THEME.GOLD_DARK }}>
+                <th className="text-left py-2 pr-4 font-semibold">Your time zone</th>
+                <th className="text-left py-2 pr-4 font-semibold">Morning session</th>
+                <th className="text-left py-2 font-semibold">Afternoon session</th>
+              </tr>
+            </thead>
+            <tbody style={{ color: RETREAT_THEME.BODY }}>
+              {sessionRows.map((r) => (
+                <tr key={r.zone} className="border-t" style={{ borderColor: "rgba(201,169,97,0.35)" }}>
+                  <td className="py-3 pr-4 font-semibold whitespace-nowrap">{r.zone}</td>
+                  <td className="py-3 pr-4 whitespace-nowrap">{r.morning}</td>
+                  <td className="py-3 whitespace-nowrap">{r.afternoon}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-center mt-3" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+          Korea: the afternoon session runs into the early hours of the next day.
+        </p>
 
-      {/* ── Zoom block ── */}
-      <SectionFrame tone="none" maxWidth="md">
-        <div className="max-w-lg mx-auto space-y-8 text-center" style={{ color: RETREAT_THEME.BODY }}>
-          <div className="bg-stone-50 rounded-xl p-5 text-base" style={{ color: "#8C8279" }}>
-            <p className="font-semibold mb-1" style={{ color: "#5C5549" }}>
-              Session Start Times by Time Zone
-            </p>
-            <p className="mb-2">
-              Morning: 02:30 EST (New York) / 07:30 GMT (London) / 09:30 IST (Israel) / 16:30 KST (Korea)
-            </p>
-            <p>
-              Afternoon: 07:00 EST (New York) / 12:00 GMT (London) / 14:00 IST (Israel) / 21:00 KST (Korea)
-            </p>
-          </div>
-
+        <div className="max-w-lg mx-auto space-y-6 text-center mt-12" style={{ color: RETREAT_THEME.BODY }}>
           <div>
             <MonitorPlay className="mx-auto mb-3 h-8 w-8" style={{ color: RETREAT_THEME.GOLD }} />
             <p className="text-lg leading-relaxed">
@@ -376,9 +377,16 @@ const HealingKundaliniRetreatEN = () => {
               and catch up on sessions that fall at night where you are.
             </p>
           </div>
-
-          <p className="text-base" style={{ color: "#8C8279" }}>
+          <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+            The retreat is taught in English and is suitable for beginners and
+            advanced practitioners alike.
+          </p>
+          <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
             A detailed schedule and the Zoom link will be sent before the retreat.
+          </p>
+          <p className="text-sm" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+            * The schedule shown is approximate. The final schedule will be sent
+            to participants before the retreat.
           </p>
         </div>
       </SectionFrame>
