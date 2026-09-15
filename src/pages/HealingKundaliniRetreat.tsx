@@ -1,5 +1,5 @@
 /**
- * Meditation and Kundalini for Healing - retreat (Hebrew)
+ * Buddhist Meditations and Kundalini for Healing - retreat (Hebrew)
  * =======================================================
  *
  * Urban, dana-based, 3-day retreat at Antakarana Center, Tel Aviv.
@@ -75,7 +75,7 @@ const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 const CONTACT_PHONE = "054-4905031";
 
 const seo: SEOConfig = {
-  title: "תרגולי מדיטציה וקונדליני לריפוי עם לאמה גלן | 2-4 בדצמבר 2026 | מאיטרייה סנגהה ישראל",
+  title: "מדיטציות בודהיסטיות וקונדליני לריפוי עם לאמה גלן | 2-4 בדצמבר 2026 | מאיטרייה סנגהה ישראל",
   description:
     "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי עם לאמה גלן, כולל חניכה לפאלדן להמו. תל אביב, 2-4 בדצמבר 2026.",
   keywords:
@@ -88,7 +88,7 @@ const seo: SEOConfig = {
 
 const registrationConfig: RegistrationConfig = {
   title: "הרשמה לריטריט",
-  subtitle: "תרגולי מדיטציה וקונדליני לריפוי | 2-4 בדצמבר 2026",
+  subtitle: "מדיטציות בודהיסטיות וקונדליני לריפוי | 2-4 בדצמבר 2026",
   webhookUrl: N8N_WEBHOOK_URL,
   contentName: "Healing Kundalini Retreat 2026",
   currency: "ILS",
@@ -285,7 +285,7 @@ const HealingKundaliniRetreat = () => {
         image={hkrHero}
         mobileImage={hkrHeroMobile}
         imageAlt="ציור קיר טיבטי של יוגים במדיטציה"
-        title="תרגולי מדיטציה וקונדליני לריפוי"
+        title="מדיטציות בודהיסטיות וקונדליני לריפוי"
         subtitle="שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, בליווי חניכה לפאלדן להמו"
         accent="עם לאמה גלן"
         dateLine="2-4 בדצמבר 2026 | מרכז אנטאקראנה, תל אביב"
@@ -507,7 +507,7 @@ const HealingKundaliniRetreat = () => {
           status={paymentStatus}
           dir="rtl"
           successTitle="ההרשמה בוצעה בהצלחה!"
-          successBody="תודה שנרשמתם לריטריט תרגולי מדיטציה וקונדליני לריפוי. אישור הרשמה ופרטים נוספים יישלחו אליכם במייל."
+          successBody="תודה שנרשמתם לריטריט מדיטציות בודהיסטיות וקונדליני לריפוי. אישור הרשמה ופרטים נוספים יישלחו אליכם במייל."
           successDetails={{
             heading: "פרטי הריטריט",
             lines: ["2-4 בדצמבר 2026", "מרכז אנטאקראנה, רחוב יצחק שדה 29, תל אביב"],
