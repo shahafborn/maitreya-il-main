@@ -453,13 +453,18 @@ export const RegistrationModal = ({
         <div ref={scrollContainerRef} className="max-h-[90vh] overflow-y-auto">
           <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
             <DialogHeader className="text-center sm:text-center">
+              {/* "Register for the retreat" leads; the retreat's own name sits right
+                  under it, large and dark enough not to get lost. */}
               <DialogTitle
-                className="text-2xl font-bold"
+                className="text-2xl md:text-3xl font-bold"
                 style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.DARK }}
               >
                 {config.title}
               </DialogTitle>
-              <DialogDescription className="text-sm mt-1" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+              <DialogDescription
+                className="text-lg md:text-xl font-semibold mt-1.5 leading-snug"
+                style={{ color: RETREAT_THEME.DARK, fontFamily: RETREAT_FONTS.serif }}
+              >
                 {config.subtitle}
               </DialogDescription>
             </DialogHeader>
