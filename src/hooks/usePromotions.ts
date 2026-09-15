@@ -18,7 +18,26 @@ export interface Promotion {
   updated_at: string;
 }
 
-/** Active promotions filtered by user's detected region. */
+/** Today in Israel as YYYY-MM-DD, to compare against the dates stored on a promotion. */
+const todayInIsrael = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jerusalem",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
+/**
+ * A promotion for an event that is over hides itself, without anyone having to
+ * remember to switch it off: once the last day has passed it drops out. A
+ * promotion with no dates at all is evergreen and always shows.
+ */
+export function hasEnded(p: Pick<Promotion, "event_date" | "event_end_date">, today = todayInIsrael()) {
+  const last = (p.event_end_date ?? p.event_date ?? "").slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(last) && last < today;
+}
+
+/** Active promotions filtered by user's detected region, minus anything already over. */
 export function useActivePromotions() {
   const { countryCode, loading: geoLoading } = useCountryCode();
 
@@ -37,7 +56,7 @@ export function useActivePromotions() {
 
   const userRegion = countryCode === "IL" ? "il" : "international";
   const filtered = (query.data ?? []).filter(
-    (p) => p.region === "all" || p.region === userRegion,
+    (p) => (p.region === "all" || p.region === userRegion) && !hasEnded(p),
   );
 
   return {

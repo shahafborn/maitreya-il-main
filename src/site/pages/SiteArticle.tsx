@@ -53,7 +53,7 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
         <h1 className="font-heading text-3xl md:text-4xl font-bold text-primary mb-8 leading-tight">
           {article.title}
         </h1>
-        <Markdown>{article.body}</Markdown>
+        <Markdown lang={lang}>{article.body}</Markdown>
       </article>
     </SiteLayout>
   );

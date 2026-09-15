@@ -5,6 +5,8 @@
  */
 import { Children, isValidElement, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
+import { VisitPromo } from "./VisitPromo";
+import type { SiteLang } from "./content";
 
 /**
  * Content files reference images as clean "/media/..." paths (editor-friendly,
@@ -19,6 +21,13 @@ const resolveSrc = (src?: string) =>
  * text is the URL) renders as an embedded player - this is how the WordPress
  * articles' interview videos migrate (content/README.md documents the rule).
  */
+/**
+ * A paragraph that is nothing but [[visit-promo]] becomes the current visit's
+ * box (VisitPromo), which lives in one content file and hides itself once the
+ * visit is over. Articles carry the marker, never the promo text.
+ */
+const VISIT_PROMO_RE = /^\[\[visit-promo\]\]$/;
+
 const YT_RE =
   /^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=([\w-]{6,})(?:[&?]\S*)?|youtu\.be\/([\w-]{6,})(?:\?\S*)?)$/;
 
@@ -52,7 +61,7 @@ const YouTubeEmbed = ({ url }: { url: string }) => {
   );
 };
 
-export const Markdown = ({ children }: { children: string }) => (
+export const Markdown = ({ children, lang = "he" }: { children: string; lang?: SiteLang }) => (
   <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary prose-img:rounded-lg prose-img:shadow-md">
     <ReactMarkdown
       components={{
@@ -60,6 +69,7 @@ export const Markdown = ({ children }: { children: string }) => (
         p: ({ children: pChildren }) => {
           const text = flattenText(pChildren).trim();
           if (YT_RE.test(text)) return <YouTubeEmbed url={text} />;
+          if (VISIT_PROMO_RE.test(text)) return <VisitPromo lang={lang} />;
           return <p>{pChildren}</p>;
         },
       }}
