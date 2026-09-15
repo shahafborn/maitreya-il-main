@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getArticle, sitePath, SITE_ORIGIN, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
+import { VisitPromo } from "../VisitPromo";
 
 export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
   const { slug = "" } = useParams();
@@ -54,6 +55,15 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
           {article.title}
         </h1>
         <Markdown lang={lang}>{article.body}</Markdown>
+        {/*
+          Every article carries the current visit's box. An article can place it
+          itself with the [[visit-promo]] marker (the older ones do, where their
+          old hand-written promo used to sit); anything without the marker -
+          including every article written from now on - gets it here, at the end.
+          VisitPromo hides itself once the visit is over, so this stays correct
+          without anyone revisiting the articles.
+        */}
+        {!/^\[\[visit-promo\]\]$/m.test(article.body) && <VisitPromo lang={lang} />}
       </article>
     </SiteLayout>
   );
