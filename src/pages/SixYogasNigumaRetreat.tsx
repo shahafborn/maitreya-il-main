@@ -72,7 +72,7 @@ const registrationConfig: RegistrationConfig = {
   dir: "rtl",
   // Tier ids are the codes n8n charges by; amounts and installment caps live in EGN_Register.
   tiers: [
-    { id: "EGN_2026_Quad", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות - עד 5 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
+    { id: "EGN_2026_Quad", title: "לינה בחדר ל-4 (מחיר מוקדם)", note: "מחיר מוקדם עד 5.10.2026 | 6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     { id: "EGN_2026_Test", title: "בדיקת תשלום", note: "1 ש״ח", hidden: true, priceDisplay: "1", priceValue: 1, currencySymbol: "₪" },
   ],
