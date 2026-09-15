@@ -1083,7 +1083,7 @@ const SixYogasNigumaRetreat = () => {
       </footer>
 
       {/* ── Registration Modal ── */}
-      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedTierId={preselectedRoom || "EGN_2026_Quad"} config={registrationConfig} copy={registrationCopy} />
+      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedTierId={preselectedRoom || undefined} config={registrationConfig} copy={registrationCopy} />
 
       {/* ── Payment Status Modal ── */}
       {paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
