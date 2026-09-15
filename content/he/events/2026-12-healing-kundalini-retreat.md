@@ -1,0 +1,10 @@
+---
+title: "תרגולי מדיטציה וקונדליני לריפוי"
+start: 2026-12-02
+end: 2026-12-04
+location: "מרכז אנטאקראנה, תל אביב"
+teacher: "לאמה גלן מולין"
+url: "/events/healing-kundalini-retreat"
+image: "/media/site/event-healing-kundalini.jpg"
+summary: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו."
+---

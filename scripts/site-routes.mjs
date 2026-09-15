@@ -96,13 +96,13 @@ export function getRoutes() {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });
   };
-  // December 2026 pages: live for proofreading but UNLISTED for now - pre-rendered, yet kept out of
-  // the sitemap, llms.txt and the events list (their content/ entries are parked in the vault).
-  // Flip back to retreat(...) and restore the two content/he/events files to list them.
+  // December 2026 pages: the Hebrew pages are LISTED (sitemap, llms.txt, events list via
+  // content/he/events) since 2026-09-15; the English twins stay pre-rendered but UNLISTED
+  // (noindex, no content/en entry) until Shahaf opens them - drop `noindex` on the en line then.
   for (const slug of ["six-yogas-niguma-retreat", "healing-kundalini-retreat"]) {
     const he = `/events/${slug}`;
     const en = `/events/en/${slug}`;
-    routes.push({ path: he, lang: "he", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
+    routes.push({ path: he, lang: "he", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event" });
     routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
   }
   retreat("/events/death-dying-enlightenment", null, 0.9);
