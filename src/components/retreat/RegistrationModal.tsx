@@ -463,7 +463,7 @@ export const RegistrationModal = ({
               </DialogTitle>
               <DialogDescription
                 className="text-lg md:text-xl font-semibold mt-1.5 leading-snug"
-                style={{ color: RETREAT_THEME.DARK, fontFamily: RETREAT_FONTS.serif }}
+                style={{ color: RETREAT_THEME.GOLD_DARK, fontFamily: RETREAT_FONTS.serif }}
               >
                 {config.subtitle}
               </DialogDescription>
