@@ -122,7 +122,7 @@ const registrationConfig: RegistrationConfig = {
   ],
   showTierSelect: true,
   tierSelectLabel: "How will you join?",
-  termsUrl: "https://maitreya.org.il/events/ein-gedi-healing-retreat/terms",
+  termsUrl: "https://maitreya.org.il/events/six-yogas-niguma-retreat/terms",
   askGender: true,
   askFoodPref: true,
   residentialTierIds: [ROOM_TIER_ID],

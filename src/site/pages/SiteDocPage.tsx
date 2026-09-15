@@ -14,12 +14,14 @@ interface SiteDocPageProps {
   name: string;
   /** Public path of this page (for canonical / og:url). */
   path: string;
+  /** Terms pages: robots noindex, kept out of the sitemap (scripts/site-routes.mjs). */
+  noindex?: boolean;
 }
 
-export const SiteDocPage = ({ lang, name, path }: SiteDocPageProps) => {
+export const SiteDocPage = ({ lang, name, path, noindex }: SiteDocPageProps) => {
   const { meta, body } = getPage(lang, name);
   return (
-    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={path}>
+    <SiteLayout lang={lang} title={meta.title ?? ""} description={meta.description} path={path} noindex={noindex}>
       <article className="container max-w-3xl py-16">
         <h1 className="font-heading text-3xl md:text-4xl font-bold text-primary mb-10 leading-tight">
           {meta.heading || meta.title}

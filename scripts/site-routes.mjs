@@ -110,8 +110,14 @@ export function getRoutes() {
   retreat("/events/uma-zub-tri", null, 0.7);
   retreat("/events/ein-gedi-healing-retreat", "/events/en/ein-gedi-healing-retreat", 0.7);
   retreat("/events/heart-of-wisdom-retreat", "/events/en/heart-of-wisdom-retreat", 0.7);
-  for (const terms of ["/events/ein-gedi-healing-retreat/terms", "/events/online-terms"]) {
-    routes.push({ path: terms, lang: "he", alternates: { he: terms }, priority: 0.2, changefreq: "yearly", kind: "page" });
+  // Terms pages: pre-rendered so the form link works, but noindex and out of the sitemap -
+  // small print reached from a registration form, never a Google landing page.
+  for (const terms of [
+    "/events/ein-gedi-healing-retreat/terms",
+    "/events/six-yogas-niguma-retreat/terms",
+    "/events/online-terms",
+  ]) {
+    routes.push({ path: terms, lang: "he", alternates: { he: terms }, priority: 0.2, changefreq: "yearly", kind: "page", noindex: true });
   }
 
   return routes;

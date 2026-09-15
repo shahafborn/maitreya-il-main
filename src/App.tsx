@@ -143,12 +143,18 @@ const AppRoutes = () => (
       <Route path="/practices" element={<WeeklyPractices variant="sangha" />} />
       <Route path="/weekly-practice" element={<WeeklyPractices variant="public" />} />
 
-      {/* Terms pages (migrated from WordPress): linked from the registration forms */}
+      {/* Terms pages (migrated from WordPress): linked from the registration forms.
+          All of them are noindex - they are legal small print reached from a form,
+          not pages anyone should land on from Google. Also kept out of the sitemap. */}
       <Route
         path="/events/ein-gedi-healing-retreat/terms"
-        element={<SiteDocPage lang="he" name="ein-gedi-terms" path="/events/ein-gedi-healing-retreat/terms" />}
+        element={<SiteDocPage lang="he" name="ein-gedi-terms" path="/events/ein-gedi-healing-retreat/terms" noindex />}
       />
-      <Route path="/events/online-terms" element={<SiteDocPage lang="he" name="online-terms" path="/events/online-terms" />} />
+      <Route
+        path="/events/six-yogas-niguma-retreat/terms"
+        element={<SiteDocPage lang="he" name="six-yogas-niguma-terms" path="/events/six-yogas-niguma-retreat/terms" noindex />}
+      />
+      <Route path="/events/online-terms" element={<SiteDocPage lang="he" name="online-terms" path="/events/online-terms" noindex />} />
 
       {/*
         Site pages (the WordPress replacement) - public, bilingual.
