@@ -74,6 +74,20 @@ export interface PricingTier {
   openAmountMin?: number;
   /** Largest accepted amount. Guards typos and crafted requests. */
   openAmountMax?: number;
+  /**
+   * Prefills the amount field when this tier is chosen, still editable.
+   * For the test tiers: the payer opens the link and can just pay, without
+   * having to remember what the smallest accepted sum is.
+   */
+  openAmountDefault?: number;
+  /**
+   * Per-tier overrides for the amount field's label, hint and out-of-range
+   * message. A page whose tiers have different bounds (an open dana of 1-20,000
+   * beside a 0.10-5 test payment) cannot describe both in one shared string.
+   */
+  openAmountLabel?: string;
+  openAmountNote?: string;
+  openAmountError?: string;
 }
 
 export interface SEOConfig {

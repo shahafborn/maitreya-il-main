@@ -135,6 +135,15 @@ export const RegistrationModal = ({
   // `hidden` ones are not offered at all - they arrive preselected from a link.
   const topTiers = config.tiers.filter((t) => !t.variantOf && !t.hidden);
   const singleTier = topTiers.length === 1;
+  /**
+   * What the amount field starts on for a given tier: the tier's own
+   * openAmountDefault, or empty. Switching tiers re-runs this, so a sum typed
+   * for one option never carries over to another.
+   */
+  const defaultAmountFor = (id: string) => {
+    const t = config.tiers.find((x) => x.id === id);
+    return t?.openAmount && t.openAmountDefault != null ? String(t.openAmountDefault) : "";
+  };
   const [tierId, setTierId] = useState<string>(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
   // Room-sharing and meal questions belong to the residential tiers only (see
   // residentialTierIds). Without that list they follow the config flags as is.
@@ -171,9 +180,10 @@ export const RegistrationModal = ({
       setPaymentUrl("");
       return;
     }
-    setTierId(preselectedTierId ?? (singleTier ? topTiers[0].id : ""));
+    const openingTierId = preselectedTierId ?? (singleTier ? topTiers[0].id : "");
+    setTierId(openingTierId);
     setVariantId("");
-    setAmount("");
+    setAmount(defaultAmountFor(openingTierId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preselectedTierId, singleTier, config.tiers]);
 
@@ -202,6 +212,10 @@ export const RegistrationModal = ({
   const openAmount = Boolean(parentTier?.openAmount);
   const amountMin = parentTier?.openAmountMin ?? 1;
   const amountMax = parentTier?.openAmountMax ?? 100000;
+  /** A tier may describe its own amount field; otherwise the page's shared copy is used. */
+  const amountLabel = parentTier?.openAmountLabel ?? copy.amountLabel;
+  const amountNote = parentTier?.openAmountNote ?? copy.amountNote;
+  const amountRangeError = parentTier?.openAmountError ?? copy.errAmountRange ?? "";
   /** Whole shekels normally; a tier whose minimum is under one shekel (test payments) takes decimals. */
   const wholeAmounts = amountMin >= 1;
   /** What actually gets submitted: the follow-up choice when there is one. */
@@ -238,7 +252,7 @@ export const RegistrationModal = ({
       const n = Number(amount);
       if (!amount.trim()) errors.amount = copy.errAmount ?? "";
       else if (!Number.isFinite(n) || (wholeAmounts && !Number.isInteger(n)) || n < amountMin || n > amountMax)
-        errors.amount = copy.errAmountRange ?? "";
+        errors.amount = amountRangeError;
     }
     if (!fname.trim()) errors.fname = copy.errFname;
     if (!lname.trim()) errors.lname = copy.errLname;
@@ -490,7 +504,8 @@ export const RegistrationModal = ({
                       onChange={(e) => {
                         setTierId(e.target.value);
                         setVariantId("");
-                        setFieldErrors((p) => ({ ...p, tierId: "", variantId: "" }));
+                        setAmount(defaultAmountFor(e.target.value));
+                        setFieldErrors((p) => ({ ...p, tierId: "", variantId: "", amount: "" }));
                       }}
                       className={`${selectClass} ${fieldErrorClass("tierId")}`}
                     >
@@ -532,7 +547,7 @@ export const RegistrationModal = ({
                 )}
                 {openAmount && (
                   <div data-field="amount" className="mt-4">
-                    <label className={labelClass}>{copy.amountLabel} *</label>
+                    <label className={labelClass}>{amountLabel} *</label>
                     <div className="relative">
                       <input
                         type="text"
@@ -562,9 +577,9 @@ export const RegistrationModal = ({
                       )}
                     </div>
                     <FieldError field="amount" />
-                    {copy.amountNote && (
+                    {amountNote && (
                       <p className="text-xs mt-1" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-                        {copy.amountNote}
+                        {amountNote}
                       </p>
                     )}
                   </div>
