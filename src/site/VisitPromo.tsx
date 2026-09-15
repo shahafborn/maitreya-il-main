@@ -38,7 +38,14 @@ export const VisitPromo = ({ lang }: { lang: SiteLang }) => {
           {meta.heading}
         </h3>
       )}
-      <div className="prose prose-lg max-w-none font-body prose-p:my-2 prose-ul:my-2 prose-li:my-1 prose-a:text-accent hover:prose-a:text-secondary [&_ul]:list-disc [&_ul]:ps-5 [&_li]:marker:text-accent">
+      {/*
+        The box is `not-prose`, which switches OFF every prose rule for
+        everything inside it - so the content is styled with plain utilities
+        here. In particular the links need their own colour and underline:
+        with prose disabled they would render as bold body text and not look
+        clickable at all.
+      */}
+      <div className="font-body text-lg leading-relaxed text-foreground/90 [&_p]:my-2 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:ps-5 [&_li]:my-1 [&_li]:marker:text-accent [&_a]:text-accent [&_a]:underline [&_a]:decoration-accent/50 [&_a]:underline-offset-4 [&_a:hover]:text-secondary [&_a:hover]:decoration-secondary">
         <ReactMarkdown>{body}</ReactMarkdown>
       </div>
     </aside>
