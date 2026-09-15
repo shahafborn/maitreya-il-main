@@ -72,7 +72,7 @@ const registrationConfig: RegistrationConfig = {
   dir: "rtl",
   // Tier ids are the codes n8n charges by; amounts and installment caps live in EGN_Register.
   tiers: [
-    { id: "EGN_2026_Quad", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות - עד 4 תשלומים", priceDisplay: "3,800", priceValue: 3800, currencySymbol: "₪" },
+    { id: "EGN_2026_Quad", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות - עד 4 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     { id: "EGN_2026_Test", title: "בדיקת תשלום", note: "1 ש״ח", hidden: true, priceDisplay: "1", priceValue: 1, currencySymbol: "₪" },
   ],
@@ -813,10 +813,14 @@ const SixYogasNigumaRetreat = () => {
               לינה בחדר ל-4
             </h3>
             <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | ששת ימי הלימוד, ארוחות מלאות וכל השיעורים והתרגולים</p>
+            <p className="text-sm font-bold mb-2" style={{ color: GOLD }}>
+              מחיר מוקדם מיוחד עד תום החגים - 5 באוקטובר 2026
+            </p>
             <p className="text-4xl font-bold mb-1">
-              3,800
+              3,700
               <span className="text-lg font-normal mr-1">₪</span>
             </p>
+            <p className="text-sm mb-1" style={{ color: WARM_GRAY }}>במקום 3,950 ₪</p>
             <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>לאדם | הכל כלול | עד 4 תשלומים</p>
             <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_Quad")}>להרשמה לריטריט</CTAButton>
           </div>
