@@ -97,6 +97,10 @@ const registrationConfig: RegistrationConfig = {
   askGender: true,
   askFoodPref: true,
   askPrevExp: true,
+  // Ein Gedi is a two-hour drive for most people: ask where they live and who
+  // can offer a ride, and the organisers build the ride list from the sheet.
+  askCity: true,
+  askRideShare: true,
   storagePrefix: "egn26",
   extraPayload: { source: "six-yogas-niguma-retreat" },
   embedPayment: true,
