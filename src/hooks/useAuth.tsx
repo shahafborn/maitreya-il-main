@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { User, Session, AuthResponse } from "@supabase/supabase-js";
 import { getCountryCode } from "@/hooks/useCountryCode";
+import { OAUTH_REDIRECT_KEY, buildCallbackUrl } from "@/lib/authRedirect";
 
 interface AuthContextType {
   user: User | null;
@@ -99,13 +100,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async (redirectTo?: string) => {
-    // Store the intended destination so /auth/callback can navigate there
+    // Store the intended destination so /auth/callback can navigate there.
+    // localStorage is lost when the sign-in finishes in a different browser
+    // than it started in (phones, where a link opened inside WhatsApp or Gmail
+    // hands the OAuth round trip to Safari or Chrome), so the destination also
+    // rides along in the callback address itself.
     if (redirectTo) {
-      localStorage.setItem("oauth_redirect", redirectTo);
+      localStorage.setItem(OAUTH_REDIRECT_KEY, redirectTo);
     }
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin + import.meta.env.BASE_URL + "auth/callback" },
+      options: { redirectTo: buildCallbackUrl(redirectTo) },
     });
   };
 

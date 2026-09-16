@@ -7,6 +7,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 
+/** This page's own destination, so the sign-in comes back here and not to
+ *  wherever the callback's fallback happens to lead. */
+const HEALING_LIBRARY_PATH = "/discover/healing-retreat";
+
 const Register = () => {
   useDocumentTitle("Register | Maitreya Sangha Israel");
   const { signUp, signIn, signInWithGoogle } = useAuth();
@@ -56,7 +60,7 @@ const Register = () => {
       nudgeConsent();
       return;
     }
-    signInWithGoogle();
+    signInWithGoogle(HEALING_LIBRARY_PATH);
   };
 
   return (
@@ -99,7 +103,7 @@ const Register = () => {
 
             <Button
               type="button"
-              onClick={isLogin ? () => signInWithGoogle() : handleGoogleSignIn}
+              onClick={isLogin ? () => signInWithGoogle(HEALING_LIBRARY_PATH) : handleGoogleSignIn}
               variant="outline"
               className={`w-full py-3 text-base rounded-full font-bold mb-4 transition-all duration-300 ${
                 !isLogin && !consent ? "opacity-50" : ""
