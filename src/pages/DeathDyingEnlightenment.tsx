@@ -35,6 +35,7 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
+import { OtherEvents } from "@/components/retreat/OtherEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -526,6 +527,34 @@ const DeathDyingEnlightenment = () => {
       />
 
       {/* ── Mailing List ── */}
+      {/* ── Other Events - the December 2026 retreats. OtherEvents hides a card
+           by itself once its endDate has passed, so this needs no cleanup. ── */}
+      <OtherEvents
+        heading="אירועים קרובים"
+        events={[
+          {
+            image: "/og-healing-kundalini-retreat.jpg",
+            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
+            title: "תרגולי מדיטציה וקונדליני לריפוי",
+            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
+            endDate: "2026-12-04",
+            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
+            ctaLabel: "לפרטים נוספים",
+            href: "/events/healing-kundalini-retreat",
+          },
+          {
+            image: "/og-six-yogas-niguma.jpg",
+            imageAlt: "ששת היוגות של ניגומה",
+            title: "ששת היוגות של ניגומה",
+            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
+            endDate: "2026-12-12",
+            description: "שישה ימי לימוד ותרגול של ששת היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
+            ctaLabel: "לפרטים נוספים",
+            href: "/events/six-yogas-niguma-retreat",
+          },
+        ]}
+      />
+
       <MailingListSignup
         heading="הישארו מעודכנים"
         subheading="הירשמו לרשימת התפוצה שלנו וקבלו עדכונים על סדרות לימוד, ריטריטים ואירועים נוספים"

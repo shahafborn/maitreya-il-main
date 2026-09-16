@@ -13,7 +13,6 @@ import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { OtherEvents } from "@/components/retreat/OtherEvents";
-import { howPromoCard } from "@/assets/heart-of-wisdom-retreat";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
 import threeDeities from "@/assets/retreat/three-deities.jpg";
@@ -1348,14 +1347,24 @@ const EinGediRetreatV2 = () => {
         heading="אירועים קרובים"
         events={[
           {
-            image: howPromoCard,
-            imageAlt: "מהמודרה - לב החוכמה",
-            title: "מהמודרה - לב החוכמה",
-            dateLabel: "28-30 במאי 2026",
-            endDate: "2026-05-30",
-            description: "שלושה ימי לימוד ותרגול של שיטות החוכמה הייחודיות של הבודהיזם הטנטרי, בליווי חניכה למנג׳ושרי הלבן",
+            image: "/og-healing-kundalini-retreat.jpg",
+            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
+            title: "תרגולי מדיטציה וקונדליני לריפוי",
+            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
+            endDate: "2026-12-04",
+            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
             ctaLabel: "לפרטים נוספים",
-            href: "/events/heart-of-wisdom-retreat",
+            href: "/events/healing-kundalini-retreat",
+          },
+          {
+            image: "/og-six-yogas-niguma.jpg",
+            imageAlt: "ששת היוגות של ניגומה",
+            title: "ששת היוגות של ניגומה",
+            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
+            endDate: "2026-12-12",
+            description: "שישה ימי לימוד ותרגול של ששת היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
+            ctaLabel: "לפרטים נוספים",
+            href: "/events/six-yogas-niguma-retreat",
           },
         ]}
       />
