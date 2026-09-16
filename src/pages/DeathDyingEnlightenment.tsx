@@ -25,6 +25,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
+import type { EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
 import { WhatsIncluded } from "@/components/retreat/WhatsIncluded";
@@ -69,6 +70,25 @@ const seo: SEOConfig = {
   // JPEG: WhatsApp drops og:images over 600KB.
   ogImage: "https://maitreya.org.il/og-death-dying-enlightenment.jpg",
   locale: "he_IL",
+};
+
+/**
+ * The machine-readable twin of the page. Six Sunday sessions at 16:00 Israel;
+ * the page does not state a session length, so endDate is the last session's
+ * date alone rather than an invented finish time. Online, so the location is
+ * the page itself - never the Zoom link, which is not public.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "מוות, לחיות לנוכח המוות, והארה",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-09-13T16:00:00+03:00",
+  endDate: "2026-10-18",
+  place: { kind: "online", url: seo.url },
+  performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
+  // validFrom = the day this page went live with its registration open.
+  offers: [{ name: "דאנה מומלצת", price: 350, validFrom: "2026-09-06" }],
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -265,6 +285,7 @@ const DeathDyingEnlightenment = () => {
       lang="he"
       dir="rtl"
       seo={seo}
+      eventJsonLd={eventJsonLd}
       navCtaLabel="להרשמה"
       onNavCtaClick={open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}

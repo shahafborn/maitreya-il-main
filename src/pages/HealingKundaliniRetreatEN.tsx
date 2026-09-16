@@ -35,6 +35,7 @@ import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle, SectionEyebrow } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
@@ -68,6 +69,26 @@ const seo: SEOConfig = {
   url: "https://maitreya.org.il/events/en/healing-kundalini-retreat",
   ogImage: "https://maitreya.org.il/og-healing-kundalini-retreat.jpg", // the Hebrew card is visual only
   locale: "en_US",
+};
+
+/**
+ * The machine-readable twin of the page. The ONLINE twin of the Hebrew Tel Aviv
+ * retreat - this page sells a Zoom seat only, so the location is virtual. Hours
+ * from the Hebrew page's daily schedule.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "Tantric Meditations and Kundalini Practices for Healing",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-12-02T09:30:00+02:00",
+  endDate: "2026-12-04T18:00:00+02:00",
+  place: { kind: "online", url: seo.url },
+  performers: ["Lama Glenn Mullin", "Drupon Chongwol-la"],
+  currency: "USD",
+  // validFrom = the day this page went live with its registration open.
+  offers: [{ name: "Zoom Participation", price: 180, validFrom: "2026-09-11" }],
+  inLanguage: "en",
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -196,6 +217,7 @@ const HealingKundaliniRetreatEN = () => {
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
   // Purchase pixel: same purchase-<reg_token> id as the server-side event from n8n (deduped).
   useRetreatPurchaseTracking({
     paymentStatus,

@@ -5,6 +5,7 @@ declare global {
 }
 
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd } from "@/components/retreat/hooks/useEventJsonLd";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
@@ -747,6 +748,23 @@ const EinGediRetreatV2 = () => {
     url: "https://maitreya.org.il/events/ein-gedi-healing-retreat",
     ogImage: "https://maitreya.org.il/og-ein-gedi-healing-retreat.png",
     locale: "he_IL",
+  });
+
+  // Structured data, added 2026-09-16. This file is otherwise frozen (see the
+  // retreat README): the only change is this additive hook call, no component
+  // was backported. Dates only - the page states no daily hours. No `offers`:
+  // the retreat is over and registration is closed, so an InStock price would
+  // be a false statement on a page that is still indexed.
+  useEventJsonLd({
+    name: "ריטריט ריפוי בודהיסטי בים המלח",
+    description:
+      "שישה ימים של תרגולי ריפוי והארכת חיים ממסורת הבודהיזם הטנטרי הטיבטי עם לאמה גלן מולין ודרופון צ׳ונגוואל-לה - ריטריט מדיטציה ותרגול יחודי באחד מאתרי הריפוי העתיקים בעולם - ים המלח.",
+    url: "https://maitreya.org.il/events/ein-gedi-healing-retreat",
+    image: "https://maitreya.org.il/og-ein-gedi-healing-retreat.png",
+    startDate: "2026-06-01",
+    endDate: "2026-06-06",
+    place: { kind: "venue", name: "בית ספר שדה עין גדי", locality: "עין גדי", region: "ים המלח" },
+    performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
   });
 
   return (

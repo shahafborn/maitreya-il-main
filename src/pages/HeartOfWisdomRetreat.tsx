@@ -59,6 +59,7 @@ import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
   howHero,
@@ -90,6 +91,23 @@ const seo: SEOConfig = {
   url: "https://maitreya.org.il/events/heart-of-wisdom-retreat",
   ogImage: "https://maitreya.org.il/og-heart-of-wisdom-retreat.png",
   locale: "he_IL",
+};
+
+/**
+ * The machine-readable twin of the page. Hours from the daily schedule below
+ * (09:30 start, and the last day closes at 16:00). No `offers`: the retreat is
+ * over and registration is closed, so an InStock price would be a false
+ * statement about a page that is still indexed.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "ריטריט מהמודרה: לב החוכמה",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-05-28T09:30:00+03:00",
+  endDate: "2026-05-30T16:00:00+03:00",
+  place: { kind: "venue", name: "מרכז אנטאקראנה", street: "יצחק שדה 29", locality: "תל אביב" },
+  performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -205,6 +223,7 @@ const HeartOfWisdomRetreat = () => {
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
 
   // Purchase pixel disabled - only Ein Gedi HE fires Purchase to keep
   // campaign optimization signal clean. Re-enable when this page gets its

@@ -138,7 +138,7 @@ For dana-based retreats where Cardcom shows both a fixed and an open amount on i
 5. Add a lazy import and route in `src/App.tsx` (public events block, alongside Ein Gedi).
 6. Add a page-header comment: what retreat, language, content source in the vault, assets location, registration config summary.
 7. Run verification: `npm run test`, `npx tsc --noEmit`, `./node_modules/.bin/vite build` — all must pass.
-8. Call **both** SEO hooks in the component: `useRetreatSEO(seo)` and `useEventJsonLd(eventJsonLd)`. The second one is **mandatory for anything with a date** - retreat, course, online series - and is what makes Google show dates and venue inside the search result, and lets AI crawlers read the facts instead of guessing them out of Hebrew prose. Take every field from what the page already says; never invent a time (a date alone is valid).
+8. Wire the structured data. If the page uses `RetreatLayout`, pass `eventJsonLd={eventJsonLd}` next to `seo={seo}`; if it calls `useRetreatSEO` directly, call `useEventJsonLd(eventJsonLd)` next to it. The second one is **mandatory for anything with a date** - retreat, course, online series - and is what makes Google show dates and venue inside the search result, and lets AI crawlers read the facts instead of guessing them out of Hebrew prose. Take every field from what the page already says; never invent a time (a date alone is valid). A finished event gets **no `offers`** - registration is closed, and an in-stock price on a past retreat is a false statement on a page that stays indexed.
 9. Update `docs/README.md` with the new page entry.
 
 ## Adding a new language

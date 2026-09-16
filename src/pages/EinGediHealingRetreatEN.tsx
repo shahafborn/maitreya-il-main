@@ -34,6 +34,7 @@ import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { MonitorPlay } from "lucide-react";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
   heroImage,
@@ -61,6 +62,25 @@ const seo: SEOConfig = {
   url: "https://maitreya.org.il/events/en/ein-gedi-healing-retreat",
   ogImage: "https://maitreya.org.il/og-ein-gedi-healing-retreat.png", // no English card exists; the Hebrew one is visual only
   locale: "en_US",
+};
+
+/**
+ * The machine-readable twin of the page. The ONLINE twin of the Hebrew Ein Gedi
+ * retreat - this page sells a Zoom seat only, so the location is virtual. Dates
+ * only, since the page states no daily hours. No `offers`: the retreat is over
+ * and registration is closed.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "The Path of Tantric Healing",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-06-01",
+  endDate: "2026-06-06",
+  place: { kind: "online", url: seo.url },
+  performers: ["Lama Glenn Mullin", "Drupon Chongwol-la"],
+  currency: "USD",
+  inLanguage: "en",
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -189,6 +209,7 @@ const EinGediHealingRetreatEN = () => {
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
 
   // Purchase pixel disabled - only Ein Gedi HE fires Purchase to keep
   // campaign optimization signal clean. Re-enable when this page gets its

@@ -38,6 +38,7 @@ import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { GoldDot } from "@/components/retreat/GoldDot";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import { yamantakaHero, yamantakaHeroMobile, yamantakaThangka, druponPhoto } from "@/assets/yamantaka-online-2026";
 
@@ -73,6 +74,28 @@ const seo: SEOConfig = {
   // 1200x630 PNG of this thangka lands around 1.5MB. This one is ~257KB.
   ogImage: "https://maitreya.org.il/og-yamantaka-online-2026.jpg",
   locale: "he_IL",
+};
+
+/**
+ * The machine-readable twin of the page. Dates only, no times: the retreat runs
+ * Monday to Friday with four sessions a day, and the page itself warns that the
+ * hours shift by an hour when Israel leaves summer time at the end of October -
+ * a single startDate with a clock time would be wrong for half the retreat.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "ריטריט יאמנטקה",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-09-01",
+  endDate: "2026-11-20",
+  place: { kind: "online", url: seo.url },
+  performers: ["דרופון צ׳ונגוואל-לה"],
+  // validFrom = the day this page went live with its registration open.
+  offers: [
+    { name: "דאנה לחודש אחד", price: 300, validFrom: "2026-08-19" },
+    { name: "דאנה לשלושת החודשים", price: 750, validFrom: "2026-08-19" },
+  ],
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -243,6 +266,7 @@ const YamantakaOnlineRetreat = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
 
   // The payment happens inside an iframe on this same page, so Cardcom's
   // redirect back lands *inside* that frame. Same origin, so we can climb out

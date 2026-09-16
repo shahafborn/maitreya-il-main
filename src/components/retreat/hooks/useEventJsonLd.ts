@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 
 const ATTR = "data-event-jsonld";
-const ORGANIZER_NAME = "מאיטרייה סנגהה ישראל";
+const ORGANIZER_NAME_HE = "מאיטרייה סנגהה ישראל";
+const ORGANIZER_NAME_EN = "Maitreya Sangha Israel";
 const ORGANIZER_URL = "https://maitreya.org.il";
 
 /** One price tier as the page presents it. */
 export type EventOffer = {
   /** The tier's name on the page, e.g. "לינה בחדר ל-4 (מחיר מוקדם)". */
   name?: string;
-  /** Amount in ILS. */
+  /** Amount, in the event's `currency` (ILS unless stated). */
   price: number;
   /** ISO date the tier opened for registration - the day the page went live. */
   validFrom?: string;
@@ -16,17 +17,20 @@ export type EventOffer = {
   validThrough?: string;
 };
 
+export type EventVenue = {
+  /** The venue's name, e.g. "בית ספר שדה עין גדי". */
+  name: string;
+  /** Street and number, when the page states one. */
+  street?: string;
+  locality: string;
+  region?: string;
+};
+
 export type EventPlace =
-  | {
-      kind: "venue";
-      /** The venue's name, e.g. "בית ספר שדה עין גדי". */
-      name: string;
-      /** Street and number, when the page states one. */
-      street?: string;
-      locality: string;
-      region?: string;
-    }
-  | { kind: "online"; url: string };
+  | ({ kind: "venue" } & EventVenue)
+  | { kind: "online"; url: string }
+  /** Both at once - the page sells a seat in the room and a Zoom seat. */
+  | ({ kind: "mixed"; url: string } & EventVenue);
 
 export type EventJsonLdConfig = {
   /** The retreat's own name - the page's H1, not the SEO title. */
@@ -45,6 +49,8 @@ export type EventJsonLdConfig = {
   /** Teacher names, in the order the page presents them. */
   performers?: string[];
   offers?: EventOffer[];
+  /** ISO 4217. Defaults to ILS; the English pages sell in USD. */
+  currency?: "ILS" | "USD";
   /** BCP-47, defaults to "he". */
   inLanguage?: string;
 };
@@ -81,27 +87,41 @@ export type EventJsonLdConfig = {
  *   offers: [{ name: "לינה בחדר ל-4 (מחיר מוקדם)", price: 3700, validThrough: "2026-10-05" }],
  * });
  */
-export function useEventJsonLd(event: EventJsonLdConfig) {
+export function useEventJsonLd(event: EventJsonLdConfig | undefined) {
   // Serialised so the effect re-runs on a real change, not on every render.
-  const key = JSON.stringify(event);
+  // `undefined` is allowed so RetreatLayout can call the hook unconditionally
+  // for pages that have no date (rules of hooks).
+  const key = event ? JSON.stringify(event) : "";
 
   useEffect(() => {
+    if (!key) return;
     const cfg = JSON.parse(key) as EventJsonLdConfig;
+
+    const virtual = (url: string) => ({ "@type": "VirtualLocation", url });
+    const physical = (place: EventVenue) => ({
+      "@type": "Place",
+      name: place.name,
+      address: {
+        "@type": "PostalAddress",
+        ...(place.street ? { streetAddress: place.street } : {}),
+        addressLocality: place.locality,
+        ...(place.region ? { addressRegion: place.region } : {}),
+        addressCountry: "IL",
+      },
+    });
 
     const location =
       cfg.place.kind === "online"
-        ? { "@type": "VirtualLocation", url: cfg.place.url }
-        : {
-            "@type": "Place",
-            name: cfg.place.name,
-            address: {
-              "@type": "PostalAddress",
-              ...(cfg.place.street ? { streetAddress: cfg.place.street } : {}),
-              addressLocality: cfg.place.locality,
-              ...(cfg.place.region ? { addressRegion: cfg.place.region } : {}),
-              addressCountry: "IL",
-            },
-          };
+        ? virtual(cfg.place.url)
+        : cfg.place.kind === "mixed"
+          ? [physical(cfg.place), virtual(cfg.place.url)]
+          : physical(cfg.place);
+
+    const attendanceMode = {
+      online: "https://schema.org/OnlineEventAttendanceMode",
+      mixed: "https://schema.org/MixedEventAttendanceMode",
+      venue: "https://schema.org/OfflineEventAttendanceMode",
+    }[cfg.place.kind];
 
     const jsonLd = {
       "@context": "https://schema.org",
@@ -113,12 +133,13 @@ export function useEventJsonLd(event: EventJsonLdConfig) {
       startDate: cfg.startDate,
       endDate: cfg.endDate,
       eventStatus: "https://schema.org/EventScheduled",
-      eventAttendanceMode:
-        cfg.place.kind === "online"
-          ? "https://schema.org/OnlineEventAttendanceMode"
-          : "https://schema.org/OfflineEventAttendanceMode",
+      eventAttendanceMode: attendanceMode,
       location,
-      organizer: { "@type": "Organization", name: ORGANIZER_NAME, url: ORGANIZER_URL },
+      organizer: {
+        "@type": "Organization",
+        name: (cfg.inLanguage ?? "he").startsWith("en") ? ORGANIZER_NAME_EN : ORGANIZER_NAME_HE,
+        url: ORGANIZER_URL,
+      },
       inLanguage: cfg.inLanguage ?? "he",
       ...(cfg.performers?.length
         ? { performer: cfg.performers.map((name) => ({ "@type": "Person", name })) }
@@ -129,7 +150,7 @@ export function useEventJsonLd(event: EventJsonLdConfig) {
               "@type": "Offer",
               ...(offer.name ? { name: offer.name } : {}),
               price: offer.price,
-              priceCurrency: "ILS",
+              priceCurrency: cfg.currency ?? "ILS",
               availability: "https://schema.org/InStock",
               url: cfg.url,
               ...(offer.validFrom ? { validFrom: offer.validFrom } : {}),

@@ -20,6 +20,7 @@
 import { useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
+import type { EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
 import { WhatsIncluded } from "@/components/retreat/WhatsIncluded";
@@ -57,6 +58,23 @@ const seo: SEOConfig = {
   url: "https://maitreya.org.il/events/uma-zub-tri",
   ogImage: "https://maitreya.org.il/og-uma-zub-tri.png",
   locale: "he_IL",
+};
+
+/**
+ * The machine-readable twin of the page. Six Saturday sessions at 16:00 Israel,
+ * 1 Aug - 5 Sep 2026; the page states no session length, so endDate is the last
+ * session's date alone. No `offers`: the series has finished and registration is
+ * closed, and an InStock price on a past event would be a false statement.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "UMA ZUB TRI",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-08-01T16:00:00+03:00",
+  endDate: "2026-09-05",
+  place: { kind: "online", url: seo.url },
+  performers: ["לאמה גלן מולין"],
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -189,6 +207,7 @@ const UmaZubTri = () => {
       lang="he"
       dir="rtl"
       seo={seo}
+      eventJsonLd={eventJsonLd}
       navCtaLabel="להרשמה"
       onNavCtaClick={open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}

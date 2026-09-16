@@ -39,6 +39,7 @@ import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { MonitorPlay } from "lucide-react";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
   howHero,
@@ -63,6 +64,26 @@ const seo: SEOConfig = {
   url: "https://maitreya.org.il/events/en/heart-of-wisdom-retreat",
   ogImage: "https://maitreya.org.il/og-heart-of-wisdom-retreat.png", // no English card exists; the Hebrew one is visual only
   locale: "en_US",
+};
+
+/**
+ * The machine-readable twin of the page. This is the ONLINE twin of the Hebrew
+ * retreat - the English page sells a Zoom seat only, so the location is virtual
+ * even though the retreat itself ran in a room in Tel Aviv. Hours from the
+ * Hebrew page's schedule (09:30 start, 16:00 finish on the last day). No
+ * `offers`: the retreat is over and registration is closed.
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "Mahamudra: Heart of Wisdom Retreat",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-05-28T09:30:00+03:00",
+  endDate: "2026-05-30T16:00:00+03:00",
+  place: { kind: "online", url: seo.url },
+  performers: ["Lama Glenn Mullin", "Drupon Chongwol-la"],
+  currency: "USD",
+  inLanguage: "en",
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -161,6 +182,7 @@ const HeartOfWisdomRetreatEN = () => {
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
 
   // Purchase pixel disabled - only Ein Gedi HE fires Purchase to keep
   // campaign optimization signal clean. Re-enable when this page gets its

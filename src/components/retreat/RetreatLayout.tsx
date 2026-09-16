@@ -4,11 +4,17 @@ import maitreyaLogo from "@/assets/maitreya-logo.png";
 import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
 import type { RetreatLang, RetreatDir, SEOConfig } from "./types";
 import { useRetreatSEO } from "./hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "./hooks/useEventJsonLd";
 
 interface RetreatLayoutProps {
   lang: RetreatLang;
   dir: RetreatDir;
   seo: SEOConfig;
+  /**
+   * schema.org Event data. Mandatory for any page with a date on it - see
+   * "Adding a new retreat page" in this folder's README.
+   */
+  eventJsonLd?: EventJsonLdConfig;
   /** CTA label shown in the sticky nav (e.g. "להרשמה"). */
   navCtaLabel: string;
   /** Called when the nav CTA is clicked. */
@@ -37,12 +43,14 @@ export const RetreatLayout = ({
   lang,
   dir,
   seo,
+  eventJsonLd,
   navCtaLabel,
   onNavCtaClick,
   footerText,
   children,
 }: RetreatLayoutProps) => {
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
 
   return (
     <div

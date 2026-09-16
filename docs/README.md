@@ -19,7 +19,7 @@ Single entry point for developers (and coding agents) landing in this repo. All 
 ## Component libraries
 
 - [`src/components/retreat/`](../src/components/retreat/README.md) — shared retreat landing page components (layout, hero, teacher card, schedule, pricing, dana, gallery carousel, registration + Cardcom flow, Meta pixel dedup). Used by all retreat pages.
-  - **Event structured data:** `hooks/useEventJsonLd.ts` emits the schema.org `Event` block (dates, venue, teachers, prices) into `<head>`; the pre-renderer copies it into the static HTML. **Mandatory on every page with a date** - it is what makes Google eligible to show dates and venue inside the search result, and what lets AI crawlers read the facts instead of inferring them from Hebrew prose. Added 2026-09-16 on the two December pages; the older event pages do not have it yet.
+  - **Event structured data:** `hooks/useEventJsonLd.ts` emits the schema.org `Event` block (dates, venue, teachers, prices) into `<head>`; the pre-renderer copies it into the static HTML. **Mandatory on every page with a date** - it is what makes Google eligible to show dates and venue inside the search result, and what lets AI crawlers read the facts instead of inferring them from Hebrew prose. Added 2026-09-16 and now on **all 11 event pages** (7 Hebrew, 4 English). Pages using `RetreatLayout` pass it as the `eventJsonLd` prop; pages that call `useRetreatSEO` directly call the hook next to it. Past events carry no `offers` - registration is closed, and an in-stock price on a finished retreat would be a false statement on a page Google still indexes.
 
 ## Landing pages
 
