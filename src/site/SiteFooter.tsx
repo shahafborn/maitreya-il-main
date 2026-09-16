@@ -18,7 +18,7 @@ export const SiteFooter = ({ lang }: { lang: SiteLang }) => {
         { label: "תרגול שבועי", to: "/weekly-practice" },
         { label: "מאמרים", to: sitePath("he", "/articles") },
         { label: "אודות", to: sitePath("he", "/about") },
-        { label: "דאנה", to: sitePath("he", "/dana") },
+        { label: "תרומה וסיוע", to: "/support-visit-dec-2026" },
         { label: "צור קשר", to: sitePath("he", "/contact") },
       ]
     : [

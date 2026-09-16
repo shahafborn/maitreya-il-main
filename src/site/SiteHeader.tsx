@@ -18,6 +18,10 @@ interface NavItem {
 
 // Paths are built with sitePath so the URL scheme lives in one place (content.ts)
 const NAV: Record<SiteLang, NavItem[]> = {
+  // The Hebrew nav carries the December visit's support page instead of the
+  // standing /dana page (Shahaf, 2026-09-16). /dana still exists and stays
+  // indexed - it is simply out of the menu while the visit is on, so this needs
+  // putting back after December (task: visit-support-page-retire).
   he: [
     { label: "בית", to: sitePath("he") },
     { label: "אירועים", to: sitePath("he", "/events") },
@@ -25,7 +29,7 @@ const NAV: Record<SiteLang, NavItem[]> = {
     { label: "מאמרים", to: sitePath("he", "/articles") },
     { label: "גלריה", to: sitePath("he", "/gallery") },
     { label: "אודות", to: sitePath("he", "/about") },
-    { label: "דאנה", to: sitePath("he", "/dana") },
+    { label: "תרומה וסיוע", to: "/support-visit-dec-2026" },
     { label: "צור קשר", to: sitePath("he", "/contact") },
   ],
   en: [

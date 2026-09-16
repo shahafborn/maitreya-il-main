@@ -209,6 +209,21 @@ export const SiteHome = ({ lang }: { lang: SiteLang }) => {
               <Arrow className="h-4 w-4" />
             </Link>
           </div>
+
+          {/* The December visit runs on volunteers and gifts. Hebrew only, and
+              only while the visit is on - it retires with the page it points to
+              (task: visit-support-page-retire). */}
+          {lang === "he" && (
+            <p className="font-body text-base text-muted-foreground text-center mt-4">
+              הביקור של דצמבר מאורגן בהתנדבות מלאה.{" "}
+              <Link
+                to="/support-visit-dec-2026"
+                className="underline underline-offset-4 hover:text-secondary transition-colors"
+              >
+                אפשר לעזור ולתמוך
+              </Link>
+            </p>
+          )}
         </div>
       </section>
 

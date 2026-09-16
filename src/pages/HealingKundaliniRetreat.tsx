@@ -534,27 +534,6 @@ const HealingKundaliniRetreat = () => {
         ]}
       />
 
-      {/* ── Support the visit: volunteering + dana. The retreats pay for
-           themselves at or below cost, so the visit itself leans on hands and
-           gifts. Deliberately quiet and last: it must not compete with the
-           registration button above it. ── */}
-      <section className="py-12 border-t border-stone-200">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h3 className="text-xl font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-            רוצים לקחת חלק בביקור?
-          </h3>
-          <p className="text-lg mb-5" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-            הביקור מאורגן בהתנדבות מלאה ובאהבה. אפשר לעזור בהכנות ובאירועים, ואפשר לתמוך בתרומה.
-          </p>
-          <a
-            href="/support-visit-dec-2026"
-            className="inline-block underline decoration-1 underline-offset-4 text-lg transition-colors hover:text-[#C9A961]"
-          >
-            לתמיכה ולהתנדבות בביקור
-          </a>
-        </div>
-      </section>
-
       <MailingListSignup
         heading="הישארו מעודכנים"
         subheading="הירשמו לרשימת התפוצה שלנו וקבלו עדכונים על ריטריטים, סדנאות ואירועים נוספים"
