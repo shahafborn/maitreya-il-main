@@ -160,6 +160,17 @@ export function useEventJsonLd(event: EventJsonLdConfig | undefined) {
         : {}),
     };
 
+    // The pre-renderer bakes this block into the static HTML, and React then
+    // hydrates over it and runs this effect - so without clearing first, a
+    // browser (and Google's renderer) ends up with the SAME event declared
+    // twice. Caught 2026-09-16: the live Rich Results Test reported "2 valid
+    // items" for one retreat. Drop any Event block already in the head, our own
+    // from a previous run or the pre-rendered one, but leave `data-site-head`
+    // blocks alone - those belong to the site pages' own SEO layer.
+    document.head
+      .querySelectorAll('script[type="application/ld+json"]:not([data-site-head])')
+      .forEach((el) => el.remove());
+
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.setAttribute(ATTR, "");
