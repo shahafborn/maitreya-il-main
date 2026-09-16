@@ -76,7 +76,7 @@ export type EventJsonLdConfig = {
  *
  * @example
  * useEventJsonLd({
- *   name: "ששת היוגות של ניגומה",
+ *   name: "שש היוגות של ניגומה",
  *   description: seo.description,
  *   url: seo.url,
  *   image: seo.ogImage,
