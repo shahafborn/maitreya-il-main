@@ -817,16 +817,26 @@ export const RegistrationModal = ({
                   className="text-xs leading-relaxed"
                   style={{ color: RETREAT_THEME.WARM_GRAY }}
                 >
-                  {copy.termsPrefix}{" "}
-                  <a
-                    href={config.termsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline decoration-1 underline-offset-2 hover:text-[#C9A961]"
-                  >
-                    {copy.termsLinkLabel}
-                  </a>{" "}
-                  {copy.termsSuffix}
+                  {/* An empty termsLinkLabel means the consent line is a plain
+                      sentence with nothing to link to - a donation form agrees to
+                      updates, it does not accept retreat terms. Every page that
+                      DOES have terms is untouched. */}
+                  {copy.termsLinkLabel ? (
+                    <>
+                      {copy.termsPrefix}{" "}
+                      <a
+                        href={config.termsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline decoration-1 underline-offset-2 hover:text-[#C9A961]"
+                      >
+                        {copy.termsLinkLabel}
+                      </a>{" "}
+                      {copy.termsSuffix}
+                    </>
+                  ) : (
+                    copy.termsPrefix
+                  )}
                 </span>
               </label>
               <FieldError field="confirmed" />

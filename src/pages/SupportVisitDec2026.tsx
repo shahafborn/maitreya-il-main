@@ -70,6 +70,8 @@ const danaConfig: RegistrationConfig = {
   ],
   showTierSelect: true,
   tierSelectLabel: "סכום התרומה",
+  // Nothing links to it any more (the consent line is plain text), but the
+  // shared config requires a value.
   termsUrl: "https://maitreya.org.il/dana",
   askPhone: true,
   storagePrefix: "visitdana26",
@@ -89,9 +91,11 @@ const danaCopy = {
   phonePlaceholder: "050-1234567",
   messageLabel: "הודעה (לא חובה)",
   messagePlaceholder: "רוצים לשתף אותנו במשהו?",
-  termsPrefix: "קראתי על",
-  termsLinkLabel: "מסורת הדאנה",
-  termsSuffix: "ומסכים/ה לקבל עדכונים ממאיטרייה סנגהה ישראל.",
+  // Shahaf's wording, 2026-09-16: one plain sentence, no link. An empty
+  // termsLinkLabel is what tells the modal to skip the link entirely.
+  termsPrefix: "אני מסכים/ה לקבל עדכונים ממאיטרייה סנגהה ישראל",
+  termsLinkLabel: "",
+  termsSuffix: "",
   submitLabel: "מעבר לתרומה",
   submittingLabel: "שולח...",
   submitFootnote: "התשלום מתבצע כאן בעמוד, בעמוד סליקה מאובטח.",
