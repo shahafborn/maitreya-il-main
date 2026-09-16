@@ -131,12 +131,33 @@ function toEvent({ slug, content }: { slug: string; content: PageContent }): Eve
   };
 }
 
-/** Events split into upcoming (end >= today, soonest first) and past (latest first). */
+/**
+ * Events split into upcoming (end >= today) and past (latest first).
+ *
+ * Upcoming puts everything that has NOT started yet first, soonest first, and
+ * anything already under way after it (Shahaf, 2026-09-16 - the Death and Dying
+ * series, six Sundays that began on 13.9, was sitting above the December
+ * retreats on both the home page and the events page).
+ *
+ * The reasoning is what a visitor can act on: a course you can still book from
+ * the beginning belongs above one that is halfway through. It is derived from
+ * the dates rather than pinned per event, so it keeps holding as events come
+ * and go - nothing to remember in December.
+ *
+ * Used by SiteHome and SiteEventsIndex, so both surfaces stay in one order.
+ */
 export function getEvents(lang: SiteLang): { upcoming: EventItem[]; past: EventItem[] } {
   const today = new Date().toISOString().slice(0, 10);
   const all = filesUnder(`/content/${lang}/events/`).map(toEvent);
+  const started = (e: EventItem) => e.start <= today;
   return {
-    upcoming: all.filter((e) => e.end >= today).sort((a, b) => a.start.localeCompare(b.start)),
+    upcoming: all
+      .filter((e) => e.end >= today)
+      .sort((a, b) =>
+        started(a) !== started(b)
+          ? Number(started(a)) - Number(started(b))
+          : a.start.localeCompare(b.start),
+      ),
     past: all.filter((e) => e.end < today).sort((a, b) => b.start.localeCompare(a.start)),
   };
 }
