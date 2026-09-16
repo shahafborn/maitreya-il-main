@@ -13,7 +13,7 @@ export type EventOffer = {
   price: number;
   /** ISO date the tier opened for registration - the day the page went live. */
   validFrom?: string;
-  /** ISO date the price stops being valid, e.g. "2026-10-05" for an early bird. */
+  /** ISO date the price stops being valid, e.g. "2026-10-04" for an early bird. */
   validThrough?: string;
 };
 
@@ -84,7 +84,7 @@ export type EventJsonLdConfig = {
  *   endDate: "2026-12-12T15:00:00+02:00",
  *   place: { kind: "venue", name: "בית ספר שדה עין גדי", locality: "עין גדי", region: "ים המלח" },
  *   performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
- *   offers: [{ name: "לינה בחדר ל-4 (מחיר מוקדם)", price: 3700, validThrough: "2026-10-05" }],
+ *   offers: [{ name: "לינה בחדר ל-4 (מחיר מוקדם)", price: 3700, validThrough: "2026-10-04" }],
  * });
  */
 export function useEventJsonLd(event: EventJsonLdConfig | undefined) {
