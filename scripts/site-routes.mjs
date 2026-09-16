@@ -92,6 +92,9 @@ export function getRoutes() {
   // /weekly-practice = the public schedule (no links, join form): indexed, in the sitemap.
   routes.push({ path: "/practices", lang: "he", alternates: { he: "/practices" }, priority: 0.9, changefreq: "weekly", kind: "app", noindex: true });
   routes.push({ path: "/weekly-practice", lang: "he", alternates: { he: "/weekly-practice" }, priority: 0.9, changefreq: "weekly", kind: "page" });
+  // Support page for the December 2026 visit: volunteering form + dana. Hebrew only
+  // (Shahaf, 2026-09-16), and tied to this visit rather than standing, so it retires with it.
+  routes.push({ path: "/support-visit-dec-2026", lang: "he", alternates: { he: "/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
   const retreat = (he, en, priority = 0.8) => {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });
