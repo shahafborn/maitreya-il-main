@@ -153,12 +153,12 @@ const SupportVisitDec2026 = () => {
       description={SEO.description}
       path="/support-visit-dec-2026"
     >
-      <article className="mx-auto max-w-3xl px-5 py-10 md:py-14">
-        <h1 className="font-heading text-3xl md:text-4xl leading-tight mb-6">
+      <article className="container max-w-3xl py-16">
+        <h1 className="font-heading text-4xl font-bold text-primary mb-10">
           תמכו בביקור לאמה גלן בישראל - דצמבר 2026
         </h1>
 
-        <div className="font-body text-lg leading-relaxed space-y-4">
+        <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
           <p>
             ביקור של לאמה גלן מולין ודרופון צ׳ונגוואל-לה בישראל הוא פרויקט גדול. שני ריטריטים,
             משתתפים רבים מכל רחבי הארץ, טיסות ואירוח, מקומות, ציוד, תרגום, הגברה, כיבוד, ביטוח וכל
@@ -175,11 +175,11 @@ const SupportVisitDec2026 = () => {
 
         {/* ── Volunteering ── */}
         <section id="volunteer" className="mt-12 scroll-mt-24">
-          <h2 className="font-heading text-2xl md:text-3xl mb-4 flex items-center gap-3">
+          <h2 className="font-heading text-3xl font-bold text-primary mb-4 flex items-center gap-3">
             <HandHeart className="h-7 w-7" aria-hidden />
             בואו להתנדב בביקור
           </h2>
-          <div className="font-body text-lg leading-relaxed space-y-4 mb-6">
+          <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary mb-6">
             <p>
               אנחנו זקוקים להרבה ידיים - גם בהכנות לקראת הביקור וגם במהלך האירועים עצמם: לוגיסטיקה,
               פרסום, קבלת אורחים, ציוד, כיבוד ועוד.
@@ -191,11 +191,11 @@ const SupportVisitDec2026 = () => {
 
         {/* ── Dana ── */}
         <section id="dana" className="mt-14 scroll-mt-24">
-          <h2 className="font-heading text-2xl md:text-3xl mb-4 flex items-center gap-3">
+          <h2 className="font-heading text-3xl font-bold text-primary mb-4 flex items-center gap-3">
             <HeartHandshake className="h-7 w-7" aria-hidden />
             דאנה - תרומה לביקור
           </h2>
-          <div className="font-body text-lg leading-relaxed space-y-4">
+          <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
             <p>
               לביקור כזה יש הוצאות רבות: טיסות ואירוח של המורים, ביטוח, שכירת המקומות, תרגום, ציוד,
               הגברה והסעדה.
@@ -216,7 +216,7 @@ const SupportVisitDec2026 = () => {
           </button>
         </section>
 
-        <div className="font-body text-lg leading-relaxed mt-14 space-y-4">
+        <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary mt-14">
           <p>תודה על כל עזרה ועל כל נתינה. הן מה שמאפשרות לדהרמה להגיע לכאן ולהמשיך ולפרוח.</p>
           <p className="text-base opacity-75">
             הביקור מאורגן בהתנדבות מלאה ובאהבה על ידי מאיטרייה סנגהה ישראל, קהילת התלמידים הישראלית
