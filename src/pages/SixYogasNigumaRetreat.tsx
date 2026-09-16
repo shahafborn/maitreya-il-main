@@ -20,6 +20,7 @@ declare global {
 }
 
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -61,6 +62,35 @@ const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EGN_Register";
 /** Test payments: `?test=q8w3zr` preselects a hidden 1 NIS option (refund from Cardcom). */
 const TEST_KEY = "q8w3zr";
 const TEST_TIER: RoomType = "EGN_2026_Test";
+
+/**
+ * The machine-readable twin of the page: start and end from the arrival block
+ * ("מתחיל ביום ראשון... בשעה 12:00, ומסתיים ביום שבת... בשעה 15:00"), venue from
+ * the location section, prices from the tiers above. The early-bird `validThrough`
+ * is the 5.10.2026 flip, which also lives in the n8n EGN_Register options -
+ * change both together (task `six-yogas-end-early-bird-price`).
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "ששת היוגות של ניגומה",
+  description:
+    "שישה ימי לימוד ותרגול של ששת היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - עם לאמה גלן מולין, כולל העצמת ואג׳ראיוגיני. בית ספר שדה עין גדי, ים המלח, בחנוכה, 6-12 בדצמבר 2026.",
+  url: "https://maitreya.org.il/events/six-yogas-niguma-retreat",
+  image: "https://maitreya.org.il/og-six-yogas-niguma.jpg",
+  startDate: "2026-12-06T12:00:00+02:00",
+  endDate: "2026-12-12T15:00:00+02:00",
+  place: {
+    kind: "venue",
+    name: "בית ספר שדה עין גדי",
+    locality: "עין גדי",
+    region: "ים המלח",
+  },
+  performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
+  // validFrom = the day this page went live with its registration open.
+  offers: [
+    { name: "לינה בחדר ל-4 (מחיר מוקדם)", price: 3700, validFrom: "2026-09-12", validThrough: "2026-10-05" },
+    { name: "ללא לינה, כל הריטריט", price: 1950, validFrom: "2026-09-12" },
+  ],
+};
 
 const registrationConfig: RegistrationConfig = {
   title: "הרשמה לריטריט",
@@ -470,15 +500,17 @@ const SixYogasNigumaRetreat = () => {
   }, [isPaused, lightboxIndex, nextSlide]);
 
   // Page SEO through the shared hook (adds canonical, site name and twitter tags)
+  // Description, url and image come from eventJsonLd above so the prose tags and
+  // the structured block can never drift apart.
   useRetreatSEO({
     title: "ששת היוגות של ניגומה: ריטריט עם לאמה גלן בעין גדי | 6-12 בדצמבר 2026 | מאיטרייה סנגהה ישראל",
-    description:
-      "שישה ימי לימוד ותרגול של ששת היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - עם לאמה גלן מולין, כולל העצמת ואג׳ראיוגיני. בית ספר שדה עין גדי, ים המלח, בחנוכה, 6-12 בדצמבר 2026.",
+    description: eventJsonLd.description,
     keywords: "ששת היוגות של ניגומה, ניגומה, טומו, ואג׳ראיוגיני, ריטריט, עין גדי, ים המלח, חנוכה, לאמה גלן, בודהיזם טיבטי, טנטרה, מאיטרייה סנגהה",
-    url: "https://maitreya.org.il/events/six-yogas-niguma-retreat",
-    ogImage: "https://maitreya.org.il/og-six-yogas-niguma.jpg",
+    url: eventJsonLd.url,
+    ogImage: eventJsonLd.image,
     locale: "he_IL",
   });
+  useEventJsonLd(eventJsonLd);
 
   return (
     <div dir="rtl" style={{ backgroundColor: CREAM, color: DARK, fontFamily: "'Open Sans', 'Heebo', sans-serif" }} className="min-h-screen">

@@ -38,6 +38,7 @@ src/components/retreat/
   GoldDot.tsx                   Bullet dot
   hooks/
     useRetreatSEO.ts            Sets document.title + meta tags from SEOConfig
+    useEventJsonLd.ts           Emits the schema.org Event block (MANDATORY on event pages)
     useRetreatCarousel.ts       Infinite scroll + touch + pause logic
     useMetaPixelRetreat.ts      fireInitiateCheckout + useRetreatPurchaseTracking
 ```
@@ -132,12 +133,13 @@ For dana-based retreats where Cardcom shows both a fixed and an open amount on i
 
 1. Create `src/pages/<NameRetreat>.tsx`. Start from `HeartOfWisdomRetreat.tsx` as a reference.
 2. Create `src/assets/<name-retreat>/index.ts` that re-exports the assets used by the page. Use placeholders from `src/assets/retreat/` if real assets are pending.
-3. Fill content config objects inline in the page file: `seo`, `registrationConfig`, `registrationCopy`, `scheduleDays`, `whatsIncluded`.
+3. Fill content config objects inline in the page file: `seo`, `eventJsonLd`, `registrationConfig`, `registrationCopy`, `scheduleDays`, `whatsIncluded`.
 4. Compose sections inside `<RetreatLayout>`.
 5. Add a lazy import and route in `src/App.tsx` (public events block, alongside Ein Gedi).
 6. Add a page-header comment: what retreat, language, content source in the vault, assets location, registration config summary.
 7. Run verification: `npm run test`, `npx tsc --noEmit`, `./node_modules/.bin/vite build` — all must pass.
-8. Update `docs/README.md` with the new page entry.
+8. Call **both** SEO hooks in the component: `useRetreatSEO(seo)` and `useEventJsonLd(eventJsonLd)`. The second one is **mandatory for anything with a date** - retreat, course, online series - and is what makes Google show dates and venue inside the search result, and lets AI crawlers read the facts instead of guessing them out of Hebrew prose. Take every field from what the page already says; never invent a time (a date alone is valid).
+9. Update `docs/README.md` with the new page entry.
 
 ## Adding a new language
 

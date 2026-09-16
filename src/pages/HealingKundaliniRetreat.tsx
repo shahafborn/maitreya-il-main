@@ -44,6 +44,7 @@ import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
+import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
@@ -84,6 +85,30 @@ const seo: SEOConfig = {
   // JPEG: WhatsApp drops og:images over 600KB.
   ogImage: "https://maitreya.org.il/og-healing-kundalini-retreat.jpg",
   locale: "he_IL",
+};
+
+/**
+ * The machine-readable twin of the page: dates and hours from the daily schedule
+ * below, venue from the "how to get there" block, dana from the participation
+ * section (650 is the suggested amount stated on the page; any amount is accepted
+ * at registration, which schema.org has no way to express).
+ */
+const eventJsonLd: EventJsonLdConfig = {
+  name: "תרגולי מדיטציה וקונדליני לריפוי",
+  description: seo.description,
+  url: seo.url,
+  image: seo.ogImage,
+  startDate: "2026-12-02T09:30:00+02:00",
+  endDate: "2026-12-04T18:00:00+02:00",
+  place: {
+    kind: "venue",
+    name: "מרכז אנטאקראנה",
+    street: "יצחק שדה 29",
+    locality: "תל אביב",
+  },
+  performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
+  // validFrom = the day this page went live with its registration open.
+  offers: [{ name: "דאנא מומלצת", price: 650, validFrom: "2026-09-11" }],
 };
 
 const registrationConfig: RegistrationConfig = {
@@ -238,6 +263,7 @@ const HealingKundaliniRetreat = () => {
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
+  useEventJsonLd(eventJsonLd);
   // Meta pixel: InitiateCheckout is fired by the shared modal on submit; Purchase fires here on
   // return from Cardcom with the same purchase-<reg_token> id that n8n sends server-side (deduped).
   useRetreatPurchaseTracking({ paymentStatus, contentName: registrationConfig.contentName, storagePrefix: registrationConfig.storagePrefix });
