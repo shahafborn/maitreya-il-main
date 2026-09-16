@@ -49,12 +49,14 @@ const danaConfig: RegistrationConfig = {
   currency: "ILS",
   lang: "he",
   dir: "rtl",
+  // The modal renders each option as "title - price", and the payment step the
+  // same way, so the title must NOT be the amount or it reads "50 ₪ - 50₪".
   tiers: [
-    { id: "VISIT_DANA_50", title: "50 ₪", priceDisplay: "50", priceValue: 50, currencySymbol: "₪" },
-    { id: "VISIT_DANA_100", title: "100 ₪", priceDisplay: "100", priceValue: 100, currencySymbol: "₪" },
-    { id: "VISIT_DANA_180", title: "180 ₪", priceDisplay: "180", priceValue: 180, currencySymbol: "₪" },
-    { id: "VISIT_DANA_250", title: "250 ₪", priceDisplay: "250", priceValue: 250, currencySymbol: "₪" },
-    { id: "VISIT_DANA_500", title: "500 ₪", priceDisplay: "500", priceValue: 500, currencySymbol: "₪" },
+    { id: "VISIT_DANA_50", title: "תרומה", priceDisplay: "50", priceValue: 50, currencySymbol: "₪" },
+    { id: "VISIT_DANA_100", title: "תרומה", priceDisplay: "100", priceValue: 100, currencySymbol: "₪" },
+    { id: "VISIT_DANA_180", title: "תרומה", priceDisplay: "180", priceValue: 180, currencySymbol: "₪" },
+    { id: "VISIT_DANA_250", title: "תרומה", priceDisplay: "250", priceValue: 250, currencySymbol: "₪" },
+    { id: "VISIT_DANA_500", title: "תרומה", priceDisplay: "500", priceValue: 500, currencySymbol: "₪" },
     {
       id: "VISIT_DANA_OPEN",
       title: "סכום אחר",
