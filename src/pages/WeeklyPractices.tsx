@@ -464,6 +464,26 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       "ראשון": { evening: [] },
     },
   },
+  {
+    // THIS SATURDAY ONLY (2026-09-19): the Saturday morning Tummo is a sangha
+    // session - טומו עם הסנגהה at 10-11 - instead of יסודות הטומו at 08-09
+    // (Shahaf, 2026-09-18, one week only). Chongwol-la's 09-11 Tummo is not
+    // running this Saturday either: its 19.9 calendar instance is already gone
+    // from the Ongoing Practices calendar, and the series resumes 26.9 at 09:00.
+    // The whole morning cell is therefore replaced by the single 10-11 session,
+    // and the entry stops matching on 20.9 - the standing schedule returns by
+    // itself, no redeploy needed. Google Calendar instance patched separately.
+    from: "2026-09-18",
+    to: "2026-09-19",
+    note: "שימו לב: בשבת הקרובה תרגול הטומו של הבוקר הוא טומו עם הסנגהה, ב-10:00-11:00, במקום יסודות הטומו ב-08:00.",
+    days: {
+      "שבת": {
+        morning: [
+          { time: "10-11", title: "טומו עם הסנגהה", categories: ["tummo"] },
+        ],
+      },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
