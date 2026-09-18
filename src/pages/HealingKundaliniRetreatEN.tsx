@@ -113,11 +113,21 @@ const registrationConfig: RegistrationConfig = {
     {
       id: TEST_TIER_ID,
       title: "Payment test",
-      note: "$1",
+      note: "Any amount, pre-filled with $0.01",
       hidden: true,
-      priceDisplay: "1",
-      priceValue: 1,
+      priceDisplay: "0.01",
+      priceValue: 0.01,
       currencySymbol: "$",
+      // Testers abroad prove the real card path on their own card, so the charge has
+      // to be trivial and refundable. openAmountMin below 1 also switches the field to
+      // decimals (wholeAmounts = amountMin >= 1), which whole-shekel dana tiers rely on.
+      openAmount: true,
+      openAmountMin: 0.01,
+      openAmountMax: 100,
+      openAmountDefault: 0.01,
+      openAmountLabel: "Test amount (USD)",
+      openAmountNote: "Anything from $0.01. Refund it from Cardcom afterwards.",
+      openAmountError: "Enter an amount between $0.01 and $100",
     },
   ],
   showTierSelect: false,
@@ -177,6 +187,7 @@ const registrationCopy = {
   errLname: "Last name is required",
   errEmail: "Email is required",
   errEmailInvalid: "Please enter a valid email address",
+  errEmailTooLong: "That address is too long for our payment provider - please use a shorter one",
   errPhone: "Phone is required",
   errPhoneInvalid: "Please enter a valid phone number",
   errGender: "Please select gender",

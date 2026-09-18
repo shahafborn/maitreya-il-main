@@ -99,14 +99,14 @@ export function getRoutes() {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });
   };
-  // December 2026 pages: the Hebrew pages are LISTED (sitemap, llms.txt, events list via
-  // content/he/events) since 2026-09-15; the English twins stay pre-rendered but UNLISTED
-  // (noindex, no content/en entry) until Shahaf opens them - drop `noindex` on the en line then.
+  // December 2026 pages: Hebrew LISTED since 2026-09-15, English opened 2026-09-18
+  // when the English promotion started - both now carry their content/en/events entry,
+  // so they reach the sitemap, llms.txt and the English events list alike.
   for (const slug of ["six-yogas-niguma-retreat", "healing-kundalini-retreat"]) {
     const he = `/events/${slug}`;
     const en = `/events/en/${slug}`;
     routes.push({ path: he, lang: "he", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event" });
-    routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event", noindex: true });
+    routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event" });
   }
   retreat("/events/death-dying-enlightenment", null, 0.9);
   retreat("/events/yamantaka-online-2026", null, 0.9);

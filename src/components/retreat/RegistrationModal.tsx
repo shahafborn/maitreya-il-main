@@ -65,6 +65,8 @@ interface RegistrationModalCopy {
   errLname: string;
   errEmail: string;
   errEmailInvalid: string;
+  /** Shown when the address is well-formed but longer than Cardcom's 50-character limit. */
+  errEmailTooLong?: string;
   errPhone: string;
   errPhoneInvalid: string;
   errGender: string;
@@ -238,7 +240,13 @@ export const RegistrationModal = ({
     }, 350);
   };
 
+  // Cardcom caps Document.Email and CardOwnerEmailValue at 50 characters. Past that it
+  // rejects the payment-page request, and because the email box is hidden in the frame
+  // (IsHideCardOwnerEmail) the payer cannot see or fix what went wrong - they just get
+  // an opaque failure. Catch it here, where there is still something to click.
+  const CARDCOM_EMAIL_MAX = 50;
   const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const isEmailTooLong = (v: string) => v.length > CARDCOM_EMAIL_MAX;
   const isValidPhone = (v: string) =>
     config.phoneInternational
       ? /^\d{7,15}$/.test(v)
@@ -258,6 +266,10 @@ export const RegistrationModal = ({
     if (!lname.trim()) errors.lname = copy.errLname;
     if (!email.trim()) errors.email = copy.errEmail;
     else if (!isValidEmail(email)) errors.email = copy.errEmailInvalid;
+    // A too-long address IS valid - saying "invalid" would send them hunting for a
+    // typo that is not there. Fall back to the generic line only if a page has not
+    // given this one its own wording.
+    else if (isEmailTooLong(email)) errors.email = copy.errEmailTooLong ?? copy.errEmailInvalid;
     if (config.askPhone !== false) {
       if (!phone.trim()) errors.phone = copy.errPhone;
       else if (!isValidPhone(phone)) errors.phone = copy.errPhoneInvalid;
