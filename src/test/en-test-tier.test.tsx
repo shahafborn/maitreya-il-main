@@ -13,6 +13,13 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { registrationConfig as sixYogasConfig } from "@/pages/SixYogasNigumaRetreatEN";
 
+// Importing the page module pulls in MailingListSignup -> lib/supabase, which
+// throws at import time when the Supabase env vars are absent. They are absent
+// in CI, so stub the module rather than requiring secrets to run a UI test.
+vi.mock("@/lib/supabase", () => ({
+  supabase: { from: () => ({ insert: async () => ({ error: null }) }) },
+}));
+
 const TEST_TIER_ID = "EGN_EN_2026_Test";
 
 const copy = {
