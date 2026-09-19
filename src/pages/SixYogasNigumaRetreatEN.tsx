@@ -61,9 +61,16 @@ import {
 /* ── Constants ── */
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EGN_EN_Register";
-/** Test payments: `?test=k4t9wz` preselects a hidden $1 option (refund from Cardcom). */
+/**
+ * Test payments (refund from Cardcom afterwards). Two hidden one-cent tickets,
+ * one per route, because the confirmation email differs:
+ *   `?test=k4t9wz`      -> Zoom route (Zoom confirmation)
+ *   `?test=k4t9wz-room` -> in-person route (room confirmation, gender + food asked)
+ */
 const TEST_KEY = "k4t9wz";
+const TEST_ROOM_KEY = "k4t9wz-room";
 const TEST_TIER_ID = "EGN_EN_2026_Test";
+const TEST_ROOM_TIER_ID = "EGN_EN_2026_TestRoom";
 const ROOM_TIER_ID = "EGN_EN_2026_Room";
 const ZOOM_TIER_ID = "EGN_EN_2026_Zoom";
 
@@ -162,13 +169,31 @@ export const registrationConfig: RegistrationConfig = {
       openAmountNote: "Anything from $0.01. Refund it from Cardcom afterwards.",
       openAmountError: "Enter an amount between $0.01 and $100",
     },
+    {
+      // The in-person twin of the test ticket: same open amount, but n8n tags it
+      // as a room so the paid flow sends the room confirmation email.
+      id: TEST_ROOM_TIER_ID,
+      title: "Payment test (in person)",
+      note: "Any amount, pre-filled with $0.01",
+      hidden: true,
+      priceDisplay: "0.01",
+      priceValue: 0.01,
+      currencySymbol: "$",
+      openAmount: true,
+      openAmountMin: 0.01,
+      openAmountMax: 100,
+      openAmountDefault: 0.01,
+      openAmountLabel: "Test amount (USD)",
+      openAmountNote: "Anything from $0.01. Refund it from Cardcom afterwards.",
+      openAmountError: "Enter an amount between $0.01 and $100",
+    },
   ],
   showTierSelect: true,
   tierSelectLabel: "How will you join?",
   termsUrl: "https://maitreya.org.il/events/six-yogas-niguma-retreat/terms",
   askGender: true,
   askFoodPref: true,
-  residentialTierIds: [ROOM_TIER_ID],
+  residentialTierIds: [ROOM_TIER_ID, TEST_ROOM_TIER_ID],
   askPrevExp: true,
   askCity: false,
   askRideShare: false,
@@ -289,7 +314,10 @@ const scheduleBlocks = [
 const SixYogasNigumaRetreatEN = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
-  const testMode = searchParams.get("test") === TEST_KEY;
+  const testParam = searchParams.get("test");
+  const testTierId =
+    testParam === TEST_KEY ? TEST_TIER_ID : testParam === TEST_ROOM_KEY ? TEST_ROOM_TIER_ID : undefined;
+  const testMode = testTierId !== undefined;
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -305,11 +333,11 @@ const SixYogasNigumaRetreatEN = () => {
 
   // The test link opens the form straight away, on the hidden test option.
   useEffect(() => {
-    if (testMode && !paymentStatus) {
-      setPreselectedTier(TEST_TIER_ID);
+    if (testTierId && !paymentStatus) {
+      setPreselectedTier(testTierId);
       setModalOpen(true);
     }
-  }, [testMode, paymentStatus]);
+  }, [testTierId, paymentStatus]);
 
   // The payment happens inside an iframe on this page, so Cardcom's redirect
   // back lands inside that frame. Same origin, so we climb out.
@@ -322,7 +350,7 @@ const SixYogasNigumaRetreatEN = () => {
 
   const open = (tierId?: string) => {
     window.gtag?.("event", "registration_modal_open", { page: "six-yogas-niguma-retreat-en" });
-    setPreselectedTier(testMode ? TEST_TIER_ID : tierId);
+    setPreselectedTier(testMode ? testTierId : tierId);
     setModalOpen(true);
   };
 
