@@ -503,12 +503,23 @@ export const RegistrationModal = ({
                 {/* A hidden tier arrives preselected from a link, so there is
                     nothing to choose between - name it and move on. */}
                 {lockedTier ? (
-                  <p
-                    className="text-sm py-2"
-                    style={{ color: RETREAT_THEME.MAROON }}
-                  >
-                    {lockedTier.title}
-                  </p>
+                  <div className="py-2">
+                    <p className="text-sm" style={{ color: RETREAT_THEME.MAROON }}>
+                      {lockedTier.title}
+                      {/* A fixed-price hidden tier (a private offer) states its price
+                          here, since the pricing grid never showed it. Open-amount
+                          tiers (the test tickets) have their own amount field. */}
+                      {!lockedTier.openAmount && lockedTier.priceDisplay && (
+                        <span className="font-semibold">
+                          {" "}- {lockedTier.currencySymbol ?? ""}{lockedTier.priceDisplay}
+                          {lockedTier.perPersonLabel ? ` ${lockedTier.perPersonLabel}` : ""}
+                        </span>
+                      )}
+                    </p>
+                    {!lockedTier.openAmount && lockedTier.note && (
+                      <p className="text-xs mt-1 text-muted-foreground">{lockedTier.note}</p>
+                    )}
+                  </div>
                 ) : (
                   <SelectWrapper>
                     <select
