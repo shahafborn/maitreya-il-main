@@ -816,7 +816,13 @@ const SixYogasNigumaRetreatEN = () => {
         onOpenChange={setModalOpen}
         preselectedTierId={preselectedTier}
         config={registrationConfig}
-        copy={registrationCopy}
+        copy={
+          // The no-lodging form is locked on its option (no bed), so the room
+          // remark on the gender label would be wrong there.
+          preselectedTier === NO_LODGING_TIER_ID
+            ? { ...registrationCopy, genderLabel: "Gender" }
+            : registrationCopy
+        }
       />
 
       {/* ── Payment Status ── */}
