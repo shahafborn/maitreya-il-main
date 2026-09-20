@@ -341,7 +341,13 @@ const SixYogasNigumaRetreatEN = () => {
   const ticketParam = searchParams.get("ticket");
   // A tier reached by private link: the test tickets, or the no-lodging offer.
   const linkTierId = ticketParam === NO_LODGING_KEY ? NO_LODGING_TIER_ID : testTierId;
-  const linkMode = linkTierId !== undefined;
+  const testMode = testTierId !== undefined;
+  const noLodgingLink = linkTierId === NO_LODGING_TIER_ID;
+  // The private no-lodging link also shows its option as a third card in the
+  // pricing grid, next to Zoom and the room, so the offer reads as a real choice.
+  const gridTiers = registrationConfig.tiers.filter(
+    (t) => !t.hidden || (noLodgingLink && t.id === NO_LODGING_TIER_ID),
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -374,7 +380,9 @@ const SixYogasNigumaRetreatEN = () => {
 
   const open = (tierId?: string) => {
     window.gtag?.("event", "registration_modal_open", { page: "six-yogas-niguma-retreat-en" });
-    setPreselectedTier(linkMode ? linkTierId : tierId);
+    // Test links always lock on the test ticket. The no-lodging link opens on its
+    // option from the generic buttons, but a click on a specific card wins.
+    setPreselectedTier(testMode ? testTierId : tierId ?? linkTierId);
     setModalOpen(true);
   };
 
@@ -700,7 +708,7 @@ const SixYogasNigumaRetreatEN = () => {
         <PricingGrid
           title="Registration"
           subtitle="Join us at Ein Gedi, or via Zoom from anywhere in the world"
-          tiers={registrationConfig.tiers.filter((t) => !t.hidden)}
+          tiers={gridTiers}
           ctaLabel="Register Now"
           onSelect={(tierId) => open(tierId)}
           notes={[
