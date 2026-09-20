@@ -16,7 +16,7 @@
  * are the codes n8n charges by - the page never sends an amount. Gender and food
  * preference are asked only on the room tier (residentialTierIds).
  * Hidden test tier ($1) via ?test=<TEST_KEY>.
- * Hidden no-lodging tier ($725, in person, no overnight stay) via
+ * Hidden no-lodging tier ($750, in person, no overnight stay) via
  * ?ticket=<NO_LODGING_KEY> - offered one-to-one, never on the public page.
  */
 
@@ -164,8 +164,8 @@ export const registrationConfig: RegistrationConfig = {
       title: "No Lodging, Full Retreat",
       note: "All sessions, lunch and refreshments | no overnight stay",
       hidden: true,
-      priceDisplay: "725",
-      priceValue: 725,
+      priceDisplay: "750",
+      priceValue: 750,
       currencySymbol: "$",
       badge: "In Person at Ein Gedi",
       perPersonLabel: "per person",
