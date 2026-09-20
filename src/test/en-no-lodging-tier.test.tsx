@@ -5,8 +5,15 @@
  * (never on the pricing grid or in the modal's first select), and it is priced
  * as a fixed $725 - not an open amount like the test tickets it sits next to.
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { registrationConfig } from "@/pages/SixYogasNigumaRetreatEN";
+
+// Importing the page module pulls in MailingListSignup -> lib/supabase, which
+// throws at import time when the Supabase env vars are absent. They are absent
+// in CI (this suite failed the 2026-09-20 deploy for exactly that), so stub it.
+vi.mock("@/lib/supabase", () => ({
+  supabase: { from: () => ({ insert: async () => ({ error: null }) }) },
+}));
 
 const NO_LODGING_TIER_ID = "EGN_EN_2026_NoLodging";
 
