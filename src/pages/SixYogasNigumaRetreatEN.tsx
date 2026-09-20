@@ -3,7 +3,7 @@
  * ====================================================
  * English twin of SixYogasNigumaRetreat.tsx (6-12 Dec 2026, Hanukkah), for
  * people abroad. Two ways in: a bed in a shared 4-person room at Ein Gedi Field
- * School with full board ($1,200), or live on Zoom ($360). Both include the
+ * School with full board ($1,300), or live on Zoom ($360). Both include the
  * Vajrayogini empowerment and recordings of every session.
  *
  * Language: English (LTR). Composed from the shared retreat components, the way
@@ -113,7 +113,7 @@ const eventJsonLd: EventJsonLdConfig = {
   // validFrom = the day this page went live with its registration open.
   offers: [
     { name: "Zoom Participation", price: 360, validFrom: "2026-09-12" },
-    { name: "Shared Room (4 beds), Full Board", price: 1200, validFrom: "2026-09-12" },
+    { name: "Shared Room (4 beds), Full Board", price: 1300, validFrom: "2026-09-20" },
   ],
   inLanguage: "en",
 };
@@ -143,8 +143,8 @@ export const registrationConfig: RegistrationConfig = {
       id: ROOM_TIER_ID,
       title: "Shared Room (4 beds), Full Board",
       note: "One bed per person | 6 nights, all meals and all sessions",
-      priceDisplay: "1,200",
-      priceValue: 1200,
+      priceDisplay: "1,300",
+      priceValue: 1300,
       currencySymbol: "$",
       badge: "In Person at Ein Gedi",
       perPersonLabel: "per person | all inclusive",
