@@ -343,11 +343,14 @@ const SixYogasNigumaRetreatEN = () => {
   const linkTierId = ticketParam === NO_LODGING_KEY ? NO_LODGING_TIER_ID : testTierId;
   const testMode = testTierId !== undefined;
   const noLodgingLink = linkTierId === NO_LODGING_TIER_ID;
-  // The private no-lodging link also shows its option as a third card in the
-  // pricing grid, next to Zoom and the room, so the offer reads as a real choice.
-  const gridTiers = registrationConfig.tiers.filter(
-    (t) => !t.hidden || (noLodgingLink && t.id === NO_LODGING_TIER_ID),
-  );
+  // The private no-lodging link also shows its option in the pricing grid, as
+  // the MIDDLE card (Zoom | No Lodging | Room), so the offer reads as a real
+  // choice between the two public ones.
+  const gridTiers = noLodgingLink
+    ? [ZOOM_TIER_ID, NO_LODGING_TIER_ID, ROOM_TIER_ID].map(
+        (id) => registrationConfig.tiers.find((t) => t.id === id)!,
+      )
+    : registrationConfig.tiers.filter((t) => !t.hidden);
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
