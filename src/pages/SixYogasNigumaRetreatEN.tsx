@@ -16,6 +16,8 @@
  * are the codes n8n charges by - the page never sends an amount. Gender and food
  * preference are asked only on the room tier (residentialTierIds).
  * Hidden test tier ($1) via ?test=<TEST_KEY>.
+ * Hidden no-lodging tier ($725, in person, no overnight stay) via
+ * ?ticket=<NO_LODGING_KEY> - offered one-to-one, never on the public page.
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -73,6 +75,13 @@ const TEST_TIER_ID = "EGN_EN_2026_Test";
 const TEST_ROOM_TIER_ID = "EGN_EN_2026_TestRoom";
 const ROOM_TIER_ID = "EGN_EN_2026_Room";
 const ZOOM_TIER_ID = "EGN_EN_2026_Zoom";
+/**
+ * Private offer: the full retreat in person without a bed (all sessions, lunch
+ * and refreshments). Not on the pricing grid, not in the structured data; the
+ * link `?ticket=<NO_LODGING_KEY>` opens the form locked on it.
+ */
+const NO_LODGING_KEY = "dayguest-r7m2";
+const NO_LODGING_TIER_ID = "EGN_EN_2026_NoLodging";
 
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
@@ -151,6 +160,17 @@ export const registrationConfig: RegistrationConfig = {
       footnote: "Very few beds available",
     },
     {
+      id: NO_LODGING_TIER_ID,
+      title: "No Lodging, Full Retreat",
+      note: "All sessions, lunch and refreshments | no overnight stay",
+      hidden: true,
+      priceDisplay: "725",
+      priceValue: 725,
+      currencySymbol: "$",
+      badge: "In Person at Ein Gedi",
+      perPersonLabel: "per person",
+    },
+    {
       id: TEST_TIER_ID,
       title: "Payment test",
       note: "Any amount, pre-filled with $0.01",
@@ -193,7 +213,8 @@ export const registrationConfig: RegistrationConfig = {
   termsUrl: "https://maitreya.org.il/events/six-yogas-niguma-retreat/terms",
   askGender: true,
   askFoodPref: true,
-  residentialTierIds: [ROOM_TIER_ID, TEST_ROOM_TIER_ID],
+  // Lunch is included on the no-lodging ticket, so it gets the meal question too.
+  residentialTierIds: [ROOM_TIER_ID, TEST_ROOM_TIER_ID, NO_LODGING_TIER_ID],
   askPrevExp: true,
   askCity: false,
   askRideShare: false,
@@ -317,7 +338,10 @@ const SixYogasNigumaRetreatEN = () => {
   const testParam = searchParams.get("test");
   const testTierId =
     testParam === TEST_KEY ? TEST_TIER_ID : testParam === TEST_ROOM_KEY ? TEST_ROOM_TIER_ID : undefined;
-  const testMode = testTierId !== undefined;
+  const ticketParam = searchParams.get("ticket");
+  // A tier reached by private link: the test tickets, or the no-lodging offer.
+  const linkTierId = ticketParam === NO_LODGING_KEY ? NO_LODGING_TIER_ID : testTierId;
+  const linkMode = linkTierId !== undefined;
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -331,13 +355,13 @@ const SixYogasNigumaRetreatEN = () => {
     storagePrefix: registrationConfig.storagePrefix,
   });
 
-  // The test link opens the form straight away, on the hidden test option.
+  // A private link opens the form straight away, locked on its hidden option.
   useEffect(() => {
-    if (testTierId && !paymentStatus) {
-      setPreselectedTier(testTierId);
+    if (linkTierId && !paymentStatus) {
+      setPreselectedTier(linkTierId);
       setModalOpen(true);
     }
-  }, [testTierId, paymentStatus]);
+  }, [linkTierId, paymentStatus]);
 
   // The payment happens inside an iframe on this page, so Cardcom's redirect
   // back lands inside that frame. Same origin, so we climb out.
@@ -350,7 +374,7 @@ const SixYogasNigumaRetreatEN = () => {
 
   const open = (tierId?: string) => {
     window.gtag?.("event", "registration_modal_open", { page: "six-yogas-niguma-retreat-en" });
-    setPreselectedTier(testMode ? testTierId : tierId);
+    setPreselectedTier(linkMode ? linkTierId : tierId);
     setModalOpen(true);
   };
 
