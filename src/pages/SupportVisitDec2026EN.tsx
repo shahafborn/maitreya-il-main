@@ -48,7 +48,6 @@ const danaConfig: RegistrationConfig = {
   // The modal renders each option as "title - price", so the title is the word,
   // not the number (or it reads "$50 - $50").
   tiers: [
-    { id: "VISIT_DANA_USD_25", title: "Donation", priceDisplay: "25", priceValue: 25, currencySymbol: "$" },
     { id: "VISIT_DANA_USD_50", title: "Donation", priceDisplay: "50", priceValue: 50, currencySymbol: "$" },
     { id: "VISIT_DANA_USD_100", title: "Donation", priceDisplay: "100", priceValue: 100, currencySymbol: "$" },
     { id: "VISIT_DANA_USD_180", title: "Donation", priceDisplay: "180", priceValue: 180, currencySymbol: "$" },
@@ -162,18 +161,10 @@ const SupportVisitDec2026EN = () => {
 
         <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
           <p>
-            The visit of Lama Glenn Mullin and Drupon Chongwol-la to Israel is a large
-            undertaking: two retreats, participants from across the country and from
-            abroad, flights and accommodation, venues, equipment, translation, sound,
-            insurance, and everything else it takes for the teachings to happen.
-          </p>
-          <p>
-            All of it is done by volunteers, with love - members of the community who give
-            their time so that the Dharma can reach here.
-          </p>
-          <p>
-            Every contribution, large or small, is needed and appreciated - a direct
-            offering to the Dharma and to work dedicated to all living beings.
+            Lama Glenn Mullin and Drupon Chongwol-la's visit to Israel in December 2026 - two
+            retreats, in Tel Aviv and by the Dead Sea - is organised entirely by volunteers,
+            with love. We hold the teachings on dana wherever we can, and otherwise at cost,
+            so that they stay accessible to everyone who wishes to learn and practice.
           </p>
         </div>
 
@@ -185,18 +176,13 @@ const SupportVisitDec2026EN = () => {
           </h2>
           <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
             <p>
-              A visit like this carries many costs: the teachers' flights and lodging,
-              insurance, venue rental, translation, equipment, refreshments and food, and
-              more.
+              A visit like this carries real costs: the teachers' flights and lodging, venues,
+              translation, equipment and insurance. Your donation is what makes it possible in
+              practice - any amount, as you are able.
             </p>
             <p>
-              We try to hold everything on dana, and where that is not possible, at cost -
-              and sometimes below cost - so that the teachings stay accessible to everyone
-              who wishes to learn and practice.
-            </p>
-            <p>
-              Your donation is what makes this visit possible in practice. Any amount, as
-              you are able.
+              Every gift, large or small, is a direct offering to the Dharma and to work
+              dedicated to all living beings. Thank you.
             </p>
           </div>
           <button
@@ -213,13 +199,8 @@ const SupportVisitDec2026EN = () => {
         </section>
 
         <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary mt-14">
-          <p>
-            Thank you for every gift. It is what allows the Dharma to reach here and to keep
-            flourishing.
-          </p>
           <p className="text-base opacity-75">
-            The visit is organised entirely by volunteers, with love, by Maitreya Sangha
-            Israel - the Israeli student community of Lama Glenn Mullin.
+            Maitreya Sangha Israel - the Israeli student community of Lama Glenn Mullin.
           </p>
           <p className="text-base">
             <Link to="/en/events" className="underline underline-offset-4">
@@ -227,6 +208,7 @@ const SupportVisitDec2026EN = () => {
             </Link>
           </p>
         </div>
+
       </article>
 
       <RegistrationModal open={danaOpen} onOpenChange={setDanaOpen} config={danaConfig} copy={danaCopy} />
