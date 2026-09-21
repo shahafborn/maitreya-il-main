@@ -1,23 +1,27 @@
 /**
- * Tantric Meditations and Kundalini Practices for Healing - retreat (English / Zoom)
+ * Tantric Meditations and Kundalini Practices for Healing - retreat (English)
  * =========================================================================
  * English twin of HealingKundaliniRetreat.tsx: the 3-day Antakarana retreat
- * (Tel Aviv, Wed-Fri 2-4 Dec 2026) streamed live on Zoom for people abroad.
- * Fixed $180 USD, single tier, recordings of every session included.
+ * (Tel Aviv, Wed-Fri 2-4 Dec 2026), live on Zoom for people abroad ($180 USD,
+ * recordings of every session included) or in person in the hall in Tel Aviv
+ * ($250 USD, added 2026-09-21 by Shahaf). The Hebrew page is dana-based; the
+ * English in-person seat is a fixed price like everything else on this page.
  *
  * Language: English (LTR). Same shared components as the Hebrew page; the venue
- * block is replaced by a Zoom block (time zones, recordings, link by email), and
- * the "On the practice" block was dropped by Shahaf on 2026-09-15.
+ * block is replaced by a schedule block (in-person hours + time zones, recordings,
+ * link by email), and the "On the practice" block was dropped by Shahaf on 2026-09-15.
  * Content source (vault): teachers-visit-nov-dec-2026/marketing/tel-aviv-landing-page-content.md
  *
  * Registration: RegistrationModal (embedPayment) posts to n8n HKR_EN_Register,
  * which mints a USD Cardcom page per person (HKR pattern, ISOCoinId 2).
- * Hidden test tier ($1) via ?test=<TEST_KEY>.
+ * Hidden test tiers (any amount, one cent by default):
+ *   `?test=<TEST_KEY>`          -> Zoom route (Zoom confirmation)
+ *   `?test=<TEST_KEY>-inperson` -> in-person route (in-person confirmation)
  */
 
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { MonitorPlay } from "lucide-react";
+import { MapPin, MonitorPlay } from "lucide-react";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -52,10 +56,13 @@ import {
 /* ── Constants ── */
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/HKR_EN_Register";
-/** Test payments: `?test=p2n7vc` preselects a hidden $1 option (refund from Cardcom). */
+/** Test payments: `?test=p2n7vc` preselects a hidden one-cent option (refund from Cardcom). */
 const TEST_KEY = "p2n7vc";
+const TEST_INPERSON_KEY = "p2n7vc-inperson";
 const TEST_TIER_ID = "HKR_EN_2026_Test";
+const TEST_INPERSON_TIER_ID = "HKR_EN_2026_TestInPerson";
 const ZOOM_TIER_ID = "HKR_EN_2026_Zoom";
+const INPERSON_TIER_ID = "HKR_EN_2026_InPerson";
 
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
@@ -63,7 +70,7 @@ const seo: SEOConfig = {
   title:
     "Tantric Meditations and Kundalini Practices for Healing with Lama Glenn | December 2-4, 2026 | Maitreya Sangha Israel",
   description:
-    "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn Mullin, including the Palden Lhamo empowerment. Live on Zoom from Tel Aviv, December 2-4, 2026.",
+    "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn Mullin, including the Palden Lhamo empowerment. In person in Tel Aviv or live on Zoom, December 2-4, 2026.",
   keywords:
     "retreat, healing, kundalini, tummo, Buddhism, tantra, Lama Glenn, Palden Lhamo, meditation, Zoom, Maitreya Sangha",
   url: "https://maitreya.org.il/events/en/healing-kundalini-retreat",
@@ -72,9 +79,10 @@ const seo: SEOConfig = {
 };
 
 /**
- * The machine-readable twin of the page. The ONLINE twin of the Hebrew Tel Aviv
- * retreat - this page sells a Zoom seat only, so the location is virtual. Hours
- * from the Hebrew page's daily schedule.
+ * The machine-readable twin of the page. Since 2026-09-21 this page sells BOTH
+ * a seat in the hall in Tel Aviv and a Zoom seat, so the attendance mode is
+ * mixed and the location carries the venue and the virtual room together.
+ * Hours from the Hebrew page's daily schedule.
  */
 const eventJsonLd: EventJsonLdConfig = {
   name: "Tantric Meditations and Kundalini Practices for Healing",
@@ -83,17 +91,26 @@ const eventJsonLd: EventJsonLdConfig = {
   image: seo.ogImage,
   startDate: "2026-12-02T09:30:00+02:00",
   endDate: "2026-12-04T18:00:00+02:00",
-  place: { kind: "online", url: seo.url },
+  place: {
+    kind: "mixed",
+    url: seo.url,
+    name: "Antakarana Center",
+    street: "29 Yitzhak Sadeh St",
+    locality: "Tel Aviv",
+  },
   performers: ["Lama Glenn Mullin", "Drupon Chongwol-la"],
   currency: "USD",
-  // validFrom = the day this page went live with its registration open.
-  offers: [{ name: "Zoom Participation", price: 180, validFrom: "2026-09-11" }],
+  // validFrom = the day each option went live with its registration open.
+  offers: [
+    { name: "Zoom Participation", price: 180, validFrom: "2026-09-11" },
+    { name: "In Person, Tel Aviv", price: 250, validFrom: "2026-09-21" },
+  ],
   inLanguage: "en",
 };
 
 const registrationConfig: RegistrationConfig = {
-  title: "Registration for the Online Retreat",
-  subtitle: "Tantric Meditations and Kundalini Practices for Healing | December 2-4, 2026 | Zoom",
+  title: "Retreat Registration",
+  subtitle: "Tantric Meditations and Kundalini Practices for Healing | December 2-4, 2026",
   webhookUrl: N8N_WEBHOOK_URL,
   contentName: "Healing Kundalini Retreat 2026 EN",
   currency: "USD",
@@ -108,6 +125,16 @@ const registrationConfig: RegistrationConfig = {
       priceDisplay: "180",
       priceValue: 180,
       currencySymbol: "$",
+      perPersonLabel: "per person",
+    },
+    {
+      id: INPERSON_TIER_ID,
+      title: "In Person, Tel Aviv",
+      note: "All three days in the hall at the Antakarana Center, plus the recordings",
+      priceDisplay: "250",
+      priceValue: 250,
+      currencySymbol: "$",
+      badge: "In Person in Tel Aviv",
       perPersonLabel: "per person",
     },
     {
@@ -129,8 +156,27 @@ const registrationConfig: RegistrationConfig = {
       openAmountNote: "Anything from $0.01. Refund it from Cardcom afterwards.",
       openAmountError: "Enter an amount between $0.01 and $100",
     },
+    {
+      // The in-person twin of the test ticket: same open amount, but n8n treats it
+      // as an in-person seat so the paid flow sends the in-person confirmation.
+      id: TEST_INPERSON_TIER_ID,
+      title: "Payment test (in person)",
+      note: "Any amount, pre-filled with $0.01",
+      hidden: true,
+      priceDisplay: "0.01",
+      priceValue: 0.01,
+      currencySymbol: "$",
+      openAmount: true,
+      openAmountMin: 0.01,
+      openAmountMax: 100,
+      openAmountDefault: 0.01,
+      openAmountLabel: "Test amount (USD)",
+      openAmountNote: "Anything from $0.01. Refund it from Cardcom afterwards.",
+      openAmountError: "Enter an amount between $0.01 and $100",
+    },
   ],
-  showTierSelect: false,
+  showTierSelect: true,
+  tierSelectLabel: "How will you join?",
   termsUrl: "https://maitreya.org.il/events/online-terms",
   askGender: false,
   askFoodPref: false,
@@ -210,7 +256,7 @@ const sessionRows = [
 ];
 
 const whatsIncluded = [
-  "Three days of teaching and practice with Lama Glenn Mullin, live on Zoom",
+  "Three days of teaching and practice with Lama Glenn Mullin, in person in Tel Aviv or live on Zoom",
   "The Palden Lhamo empowerment",
   "Practical guidance for the healing and kundalini (tummo) practices",
   "Recordings of all sessions, to watch or review in your own time",
@@ -223,8 +269,12 @@ const whatsIncluded = [
 const HealingKundaliniRetreatEN = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
-  const testMode = searchParams.get("test") === TEST_KEY;
+  const testParam = searchParams.get("test");
+  const testTierId =
+    testParam === TEST_KEY ? TEST_TIER_ID : testParam === TEST_INPERSON_KEY ? TEST_INPERSON_TIER_ID : undefined;
+  const testMode = testTierId !== undefined;
   const [modalOpen, setModalOpen] = useState(false);
+  const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
   useRetreatSEO(seo);
@@ -236,10 +286,13 @@ const HealingKundaliniRetreatEN = () => {
     storagePrefix: registrationConfig.storagePrefix,
   });
 
-  // The test link opens the form straight away, on the hidden test option.
+  // A test link opens the form straight away, locked on its hidden test option.
   useEffect(() => {
-    if (testMode && !paymentStatus) setModalOpen(true);
-  }, [testMode, paymentStatus]);
+    if (testTierId && !paymentStatus) {
+      setPreselectedTier(testTierId);
+      setModalOpen(true);
+    }
+  }, [testTierId, paymentStatus]);
 
   // The payment happens inside an iframe on this page, so Cardcom's redirect
   // back lands inside that frame. Same origin, so we climb out.
@@ -250,8 +303,11 @@ const HealingKundaliniRetreatEN = () => {
     }
   }, [paymentStatus]);
 
-  const open = () => {
+  const open = (tierId?: string) => {
     window.gtag?.("event", "registration_modal_open", { page: "healing-kundalini-retreat-en" });
+    // Test links always lock on their test ticket. A click on a pricing card
+    // preselects that option; the generic buttons open on "Choose".
+    setPreselectedTier(testMode ? testTierId : tierId);
     setModalOpen(true);
   };
 
@@ -263,7 +319,7 @@ const HealingKundaliniRetreatEN = () => {
       dir="ltr"
       seo={seo}
       navCtaLabel="Register"
-      onNavCtaClick={open}
+      onNavCtaClick={() => open()}
       footerText={`© ${new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.`}
     >
       <RetreatHero
@@ -273,21 +329,21 @@ const HealingKundaliniRetreatEN = () => {
         title="Tantric Meditations and Kundalini Practices for Healing"
         subtitle="Three days of teaching and practice of the healing methods of Tantric Buddhism, including the Palden Lhamo empowerment"
         accent="with Lama Glenn"
-        dateLine="December 2-4, 2026 | Live on Zoom from Tel Aviv"
+        dateLine="December 2-4, 2026 | Antakarana Center, Tel Aviv | In Person or Live on Zoom"
         objectPosition="62% 40%"
       />
 
       <AboutSection
         eyebrow="Healing Body and Mind"
         softBgImage={cloudsBg}
-        ctaLabel="Register for the Online Retreat"
-        onCtaClick={open}
+        ctaLabel="Register for the Retreat"
+        onCtaClick={() => open()}
         paragraphs={[
           "The Buddhist tradition is rich in knowledge and in profound meditation practices for healing body and mind. Buddhism recognizes the deep relationship between body and mind, and between a person and their environment - and the ways these inter-relations contribute to health or to illness.",
           "Over the generations in Asia, practitioners, physicians and healers have used the Buddhist healing methods to heal themselves and others: healing the mind of negative emotions and harmful tendencies, and healing the body through deep yogic work with the body's inner energetic systems.",
           "In Tibetan Buddhism, many traditions of these yogic practices are still taught today. They are known as Tummo or Chandali. In these practices one learns to work directly with the energies of the body (the prana, or chi) and with its essences (the bindu, or ojas): to balance and purify the nervous system and the hormonal system, to release patterns that do not serve us, and to reach deep, healing states of mind.",
           "In this retreat Lama Glenn will teach the yogic and meditative practices of Buddhist healing, as they have been taught for more than a thousand years in the Tibetan tradition and especially in the tradition of the Dalai Lamas. The three days will include teaching, practical guidance, guided practice, and the Palden Lhamo empowerment.",
-          "The retreat is suitable for beginners and advanced practitioners alike, and is taught in English.",
+          "The retreat is suitable for beginners and advanced practitioners alike, and is taught in English. You can join in person at the Antakarana Center in Tel Aviv, or live on Zoom from anywhere in the world.",
         ]}
       />
 
@@ -366,18 +422,36 @@ const HealingKundaliniRetreatEN = () => {
         />
       </SectionFrame>
 
-      {/* ── Schedule: one timetable, read in your own time zone ── */}
+      {/* ── Schedule: in person in Tel Aviv, or one timetable read in your own time zone ── */}
       <SectionFrame tone="cream" maxWidth="md">
         <SectionEyebrow className="text-center block mb-10">Retreat Schedule</SectionEyebrow>
         <p className="text-center text-lg mb-6 leading-[1.8]" style={{ color: RETREAT_THEME.BODY }}>
-          Three days of teaching, guided practice and practical guidance,
-          streamed live, with a long break between the two daily sessions and
-          short breaks during them. The Palden Lhamo empowerment takes place
-          during the retreat.
+          Three days of teaching, guided practice and practical guidance, in the
+          hall in Tel Aviv and streamed live on Zoom, with a long break between
+          the two daily sessions and short breaks during them. The Palden Lhamo
+          empowerment takes place during the retreat.
         </p>
         <p className="text-center text-lg font-semibold mb-8" style={{ fontFamily: RETREAT_FONTS.serif }}>
           Wednesday to Friday, December 2-4, 2026 - the same schedule on all three days
         </p>
+
+        <div className="max-w-lg mx-auto text-center mb-10" style={{ color: RETREAT_THEME.BODY }}>
+          <MapPin className="mx-auto mb-3 h-8 w-8" style={{ color: RETREAT_THEME.GOLD }} />
+          <h3 className="font-semibold text-lg mb-2" style={{ fontFamily: RETREAT_FONTS.serif }}>
+            In person in Tel Aviv
+          </h3>
+          <p className="text-lg leading-relaxed">
+            Antakarana Center, 29 Yitzhak Sadeh St, Tel Aviv - central and easy
+            to reach. Sessions run 9:30 AM-12:00 PM and 2:00-6:00 PM Israel time,
+            with a two-hour lunch break; Friday ends at 5:00 PM. An urban
+            retreat, without lodging: you arrive in the morning and go home in
+            the evening.
+          </p>
+        </div>
+
+        <h3 className="font-semibold text-lg mb-4 text-center" style={{ fontFamily: RETREAT_FONTS.serif }}>
+          On Zoom, in your time zone
+        </h3>
         <div className="overflow-x-auto">
           <table className="w-full max-w-2xl mx-auto text-base border-collapse">
             <thead>
@@ -417,7 +491,9 @@ const HealingKundaliniRetreatEN = () => {
             and advanced practitioners alike.
           </p>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-            A detailed schedule and the Zoom link will be sent before the retreat.
+            A detailed schedule will be sent before the retreat, with the Zoom
+            link for online participants and directions for those joining in
+            Tel Aviv.
           </p>
           <p className="text-sm" style={{ color: RETREAT_THEME.WARM_GRAY }}>
             * The schedule shown is approximate. The final schedule will be sent
@@ -431,11 +507,12 @@ const HealingKundaliniRetreatEN = () => {
       <div ref={ctaSectionRef}>
         <PricingGrid
           title="Registration"
-          subtitle="Join the retreat via Zoom from anywhere in the world"
+          subtitle="Join us in Tel Aviv, or via Zoom from anywhere in the world"
           tiers={registrationConfig.tiers.filter((t) => !t.hidden)}
           ctaLabel="Register Now"
-          onSelect={() => open()}
+          onSelect={(tierId) => open(tierId)}
           notes={[
+            "The in-person seat covers all sessions in the hall at the Antakarana Center and the recordings. No meals are served: there is a two-hour lunch break, a kitchenette on site, and a coffee and tea corner throughout the retreat.",
             "Secure payment in US dollars, processed via Cardcom.",
             "We want everyone who is interested to be able to participate and benefit from the Dharma. If you would like to join but cannot afford the registration fee due to life circumstances, please contact us at maitreyasanghaisrael@gmail.com",
           ]}
@@ -458,9 +535,9 @@ const HealingKundaliniRetreatEN = () => {
       <FinalCTA
         bgImage={prayerFlagsBg}
         title="Join the Retreat"
-        body="Three days of deep teaching and practice of the healing methods of Tantric Buddhism, with the Palden Lhamo empowerment, live on Zoom"
-        ctaLabel="Register for the Online Retreat"
-        onCtaClick={open}
+        body="Three days of deep teaching and practice of the healing methods of Tantric Buddhism, with the Palden Lhamo empowerment - in person in Tel Aviv or live on Zoom"
+        ctaLabel="Register for the Retreat"
+        onCtaClick={() => open()}
         footnote="Recordings included"
       />
 
@@ -503,7 +580,7 @@ const HealingKundaliniRetreatEN = () => {
       <RegistrationModal
         open={modalOpen}
         onOpenChange={setModalOpen}
-        preselectedTierId={testMode ? TEST_TIER_ID : ZOOM_TIER_ID}
+        preselectedTierId={preselectedTier}
         config={registrationConfig}
         copy={registrationCopy}
       />
@@ -516,7 +593,7 @@ const HealingKundaliniRetreatEN = () => {
           successBody="Thank you for registering for the Tantric Meditations and Kundalini Practices for Healing retreat. A confirmation email with details will be sent to you shortly."
           successDetails={{
             heading: "Retreat Details",
-            lines: ["December 2-4, 2026", "Live on Zoom"],
+            lines: ["December 2-4, 2026", "Antakarana Center, Tel Aviv, or live on Zoom"],
           }}
           failedTitle="Payment Error"
           failedBody="The payment was not completed. You can try again or contact us."
