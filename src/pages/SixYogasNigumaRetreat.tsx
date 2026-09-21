@@ -12,7 +12,7 @@
  * which mints a Cardcom page per person (DDE pattern); the payment loads inside the
  * dialog. Tier ids are the codes n8n charges by - the page never sends an amount.
  * Hidden test tier (1 NIS) via ?test=<TEST_KEY>.
- * Private team ticket (3,000 NIS, full lodging) via ?ticket=<TEAM_KEY> - for the
+ * Private team ticket (3,000 NIS, room for two, full board) via ?ticket=<TEAM_KEY> - for the
  * visit's operations team only, never on the public page.
  */
 declare global {
@@ -66,7 +66,7 @@ const TEST_KEY = "q8w3zr";
 const TEST_TIER: RoomType = "EGN_2026_Test";
 /**
  * Private offer for the visit's operations team (צוות תפעול הביקור): the full
- * retreat with lodging at a team price. Not on the pricing cards, not in the
+ * retreat in a room for two, full board, at a team price. Not on the pricing cards, not in the
  * structured data; the link `?ticket=<TEAM_KEY>` opens the form locked on it.
  */
 const TEAM_KEY = "tzevet-m8k2";
@@ -114,8 +114,8 @@ export const registrationConfig: RegistrationConfig = {
   tiers: [
     { id: "EGN_2026_Quad", title: "לינה בחדר ל-4 (מחיר מוקדם)", note: "מחיר מוקדם עד 4.10.2026 | 6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
-    // Operations-team ticket: same room and board as EGN_2026_Quad, team price. Link only.
-    { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-4", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
+    // Operations-team ticket: a room for TWO, full board, team price. Link only.
+    { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-2", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
       title: "בדיקת תשלום",
