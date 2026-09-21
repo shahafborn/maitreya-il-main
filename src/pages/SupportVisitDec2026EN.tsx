@@ -103,7 +103,7 @@ const danaCopy = {
   errAmountRange: "Please enter a whole number between 1 and 20,000",
   paymentTitle: "Donate to the Visit",
   paymentNote:
-    "Donations are collected by Maitreya Sangha Israel (a registered non-profit) through Cardcom, in US dollars, by credit card. A receipt is sent to the email you entered.",
+    "Donations are collected by Maitreya Sangha Israel (a registered non-profit) through Cardcom, in US dollars, by credit card, Google Pay or Apple Pay. A receipt is sent to the email you entered.",
   errTier: "Please choose an amount",
   errFname: "First name is required",
   errLname: "Last name is required",
@@ -161,14 +161,18 @@ const SupportVisitDec2026EN = () => {
 
         <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
           <p>
-            For a few days this December, the Dharma comes to us. Lama Glenn Mullin and Drupon
-            Chongwol-la travel halfway around the world to teach two retreats - in a hall in
-            Tel Aviv and on the shore of the Dead Sea - and a small community of volunteers
-            turns those rooms into a place where the teachings can be received.
+            The visit of Lama Glenn Mullin and Drupon Chongwol-la to Israel is a large
+            undertaking: two retreats, participants from across the country and from
+            abroad, flights and accommodation, venues, equipment, translation, sound,
+            insurance, and everything else it takes for the teachings to happen.
           </p>
           <p>
-            Nobody is paid for this. The retreats are priced at cost, and sometimes below it,
-            so that no one who longs to learn and practice is turned away.
+            All of it is done by volunteers, with love - members of the community who give
+            their time so that the Dharma can reach here.
+          </p>
+          <p>
+            Every contribution, large or small, is needed and appreciated - a direct
+            offering to the Dharma and to work dedicated to all living beings.
           </p>
         </div>
 
@@ -176,21 +180,22 @@ const SupportVisitDec2026EN = () => {
         <section id="dana" className="mt-12 scroll-mt-24">
           <h2 className="font-heading text-3xl font-bold text-primary mb-4 flex items-center gap-3">
             <HeartHandshake className="h-7 w-7" aria-hidden />
-            What your gift makes possible
+            Dana - Donate to the Visit
           </h2>
           <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
             <p>
-              Flights and a place to sleep for the teachers. Halls to sit in. Translation, so
-              the words land. Sound, so they carry. Insurance, so it can happen at all. These
-              are the plain costs behind a week of teaching, and they do not cover themselves.
+              A visit like this carries many costs: the teachers' flights and lodging,
+              insurance, venue rental, translation, equipment, refreshments and food, and
+              more.
             </p>
             <p>
-              In the Buddhist tradition, dana - generosity - is the first of the perfections,
-              the ground everything else grows from. To give towards a teaching is to become
-              part of it: every session held, every empowerment received, every person who
-              leaves lighter than they came carries a share of your gift.
+              We keep the retreats at cost - and sometimes below cost - so that the teachings
+              stay as accessible as possible to everyone who wishes to learn and practice.
             </p>
-            <p>Whatever amount is right for you is the right amount.</p>
+            <p>
+              Your donation is what makes this visit possible in practice. Any amount, as
+              you are able.
+            </p>
           </div>
           <button
             type="button"
@@ -201,14 +206,19 @@ const SupportVisitDec2026EN = () => {
             Donate
           </button>
           <p className="mt-3 text-sm opacity-75 font-body">
-            Secure payment in US dollars by credit card. A receipt is emailed to you.
+            Secure payment in US dollars by credit card, Google Pay or Apple Pay. A receipt is
+            emailed to you.
           </p>
         </section>
 
         <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary mt-14">
-          <p>Thank you for helping the Dharma reach here, and keep flourishing.</p>
+          <p>
+            Thank you for every gift. It is what allows the Dharma to reach here and to keep
+            flourishing.
+          </p>
           <p className="text-base opacity-75">
-            Maitreya Sangha Israel - the Israeli student community of Lama Glenn Mullin.
+            The visit is organised entirely by volunteers, with love, by Maitreya Sangha
+            Israel - the Israeli student community of Lama Glenn Mullin.
           </p>
           <p className="text-base">
             <Link to="/en/events" className="underline underline-offset-4">
@@ -216,7 +226,6 @@ const SupportVisitDec2026EN = () => {
             </Link>
           </p>
         </div>
-
       </article>
 
       <RegistrationModal open={danaOpen} onOpenChange={setDanaOpen} config={danaConfig} copy={danaCopy} />
