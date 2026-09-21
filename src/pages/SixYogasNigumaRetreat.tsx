@@ -115,7 +115,7 @@ export const registrationConfig: RegistrationConfig = {
     { id: "EGN_2026_Quad", title: "לינה בחדר ל-4 (מחיר מוקדם)", note: "מחיר מוקדם עד 4.10.2026 | 6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     // Operations-team ticket: same room and board as EGN_2026_Quad, team price. Link only.
-    { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-4", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 5 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
+    { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-4", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
       title: "בדיקת תשלום",
