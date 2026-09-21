@@ -94,7 +94,9 @@ export function getRoutes() {
   routes.push({ path: "/weekly-practice", lang: "he", alternates: { he: "/weekly-practice" }, priority: 0.9, changefreq: "weekly", kind: "page" });
   // Support page for the December 2026 visit: volunteering form + dana. Hebrew only
   // (Shahaf, 2026-09-16), and tied to this visit rather than standing, so it retires with it.
-  routes.push({ path: "/support-visit-dec-2026", lang: "he", alternates: { he: "/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
+  // English twin since 2026-09-21: donations only (USD), linked from the English newsletter.
+  routes.push({ path: "/support-visit-dec-2026", lang: "he", alternates: { he: "/support-visit-dec-2026", en: "/en/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
+  routes.push({ path: "/en/support-visit-dec-2026", lang: "en", alternates: { he: "/support-visit-dec-2026", en: "/en/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
   const retreat = (he, en, priority = 0.8) => {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
     if (en) routes.push({ path: en, lang: "en", alternates: { he, en }, priority, changefreq: "monthly", kind: "event" });

@@ -31,6 +31,7 @@ const YamantakaOnlineRetreat = lazy(() => import("./pages/YamantakaOnlineRetreat
 const DeathDyingEnlightenment = lazy(() => import("./pages/DeathDyingEnlightenment"));
 const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 const SupportVisitDec2026 = lazy(() => import("./pages/SupportVisitDec2026"));
+const SupportVisitDec2026EN = lazy(() => import("./pages/SupportVisitDec2026EN"));
 
 // Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
 const SiteHome = lazy(() => import("./site/pages/SiteHome"));
@@ -146,6 +147,7 @@ const AppRoutes = () => (
 
       {/* Support the December 2026 visit: volunteering + dana for the visit itself. */}
       <Route path="/support-visit-dec-2026" element={<SupportVisitDec2026 />} />
+      <Route path="/en/support-visit-dec-2026" element={<SupportVisitDec2026EN />} />
 
       {/* Terms pages (migrated from WordPress): linked from the registration forms.
           All of them are noindex - they are legal small print reached from a form,
