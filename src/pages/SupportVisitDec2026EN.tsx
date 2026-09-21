@@ -163,8 +163,8 @@ const SupportVisitDec2026EN = () => {
           <p>
             Lama Glenn Mullin and Drupon Chongwol-la's visit to Israel in December 2026 - two
             retreats, in Tel Aviv and by the Dead Sea - is organised entirely by volunteers,
-            with love. We hold the teachings on dana wherever we can, and otherwise at cost,
-            so that they stay accessible to everyone who wishes to learn and practice.
+            with love. We keep the retreats at cost, so that the teachings stay as accessible
+            as possible to everyone who wishes to learn and practice.
           </p>
         </div>
 
