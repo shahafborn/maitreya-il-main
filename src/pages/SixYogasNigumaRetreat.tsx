@@ -12,6 +12,8 @@
  * which mints a Cardcom page per person (DDE pattern); the payment loads inside the
  * dialog. Tier ids are the codes n8n charges by - the page never sends an amount.
  * Hidden test tier (1 NIS) via ?test=<TEST_KEY>.
+ * Private team ticket (3,000 NIS, full lodging) via ?ticket=<TEAM_KEY> - for the
+ * visit's operations team only, never on the public page.
  */
 declare global {
   interface Window {
@@ -62,6 +64,13 @@ const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/EGN_Register";
 /** Test payments: `?test=q8w3zr` preselects a hidden 1 NIS option (refund from Cardcom). */
 const TEST_KEY = "q8w3zr";
 const TEST_TIER: RoomType = "EGN_2026_Test";
+/**
+ * Private offer for the visit's operations team (צוות תפעול הביקור): the full
+ * retreat with lodging at a team price. Not on the pricing cards, not in the
+ * structured data; the link `?ticket=<TEAM_KEY>` opens the form locked on it.
+ */
+const TEAM_KEY = "tzevet-m8k2";
+const TEAM_TIER: RoomType = "EGN_2026_Team";
 
 /**
  * The machine-readable twin of the page: start and end from the arrival block
@@ -92,7 +101,8 @@ const eventJsonLd: EventJsonLdConfig = {
   ],
 };
 
-const registrationConfig: RegistrationConfig = {
+// Exported so the test suite can assert on the hidden tiers - see src/test/he-team-tier.test.tsx.
+export const registrationConfig: RegistrationConfig = {
   title: "הרשמה לריטריט",
   subtitle: "שש היוגות של ניגומה | 6-12 בדצמבר 2026",
   webhookUrl: N8N_WEBHOOK_URL,
@@ -104,6 +114,8 @@ const registrationConfig: RegistrationConfig = {
   tiers: [
     { id: "EGN_2026_Quad", title: "לינה בחדר ל-4 (מחיר מוקדם)", note: "מחיר מוקדם עד 4.10.2026 | 6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
+    // Operations-team ticket: same room and board as EGN_2026_Quad, team price. Link only.
+    { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-4", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 5 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
       title: "בדיקת תשלום",
@@ -194,7 +206,7 @@ const registrationCopy = {
 };
 
 
-type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Test" | "";
+type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Test" | "";
 
 
 
@@ -376,6 +388,9 @@ const MailingListSignup = () => {
 const SixYogasNigumaRetreat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const testMode = searchParams.get("test") === TEST_KEY;
+  const teamLink = searchParams.get("ticket") === TEAM_KEY;
+  // A tier reached by private link: the test ticket, or the team offer.
+  const linkTier: RoomType = testMode ? TEST_TIER : teamLink ? TEAM_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
@@ -399,7 +414,9 @@ const SixYogasNigumaRetreat = () => {
   const openRegistration = (room: RoomType = "") => {
     trackEvent("registration_modal_open", room ? { room_type: room } : undefined);
     trackMeta("Lead", room ? { content_name: room } : undefined);
-    setPreselectedRoom(room);
+    // The test link always locks on the test ticket. The team link opens on its
+    // option from the generic buttons, but a click on a specific card wins.
+    setPreselectedRoom(testMode ? TEST_TIER : room || linkTier);
     setModalOpen(true);
   };
 
@@ -407,11 +424,11 @@ const SixYogasNigumaRetreat = () => {
     setSearchParams({}, { replace: true });
   };
 
-  // The test link opens the form straight away on the hidden 1 NIS option.
+  // A private link opens the form straight away, locked on its hidden option.
   useEffect(() => {
-    if (testMode && !paymentStatus) { setPreselectedRoom(TEST_TIER); setModalOpen(true); }
+    if (linkTier && !paymentStatus) { setPreselectedRoom(linkTier); setModalOpen(true); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [testMode]);
+  }, [linkTier]);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);

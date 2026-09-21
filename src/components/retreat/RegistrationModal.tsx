@@ -511,7 +511,10 @@ export const RegistrationModal = ({
                           tiers (the test tickets) have their own amount field. */}
                       {!lockedTier.openAmount && lockedTier.priceDisplay && (
                         <span className="font-semibold">
-                          {" "}- {lockedTier.currencySymbol ?? ""}{lockedTier.priceDisplay}
+                          {/* Same currency order as the select below: $750, but 3,000₪. */}
+                          {" "}- {lockedTier.currencySymbol === "$"
+                            ? `$${lockedTier.priceDisplay}`
+                            : `${lockedTier.priceDisplay}${lockedTier.currencySymbol ?? ""}`}
                           {lockedTier.perPersonLabel ? ` ${lockedTier.perPersonLabel}` : ""}
                         </span>
                       )}
