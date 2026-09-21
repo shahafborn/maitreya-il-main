@@ -161,10 +161,14 @@ const SupportVisitDec2026EN = () => {
 
         <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
           <p>
-            Lama Glenn Mullin and Drupon Chongwol-la's visit to Israel in December 2026 - two
-            retreats, in Tel Aviv and by the Dead Sea - is organised entirely by volunteers,
-            with love. We keep the retreats at cost, so that the teachings stay as accessible
-            as possible to everyone who wishes to learn and practice.
+            For a few days this December, the Dharma comes to us. Lama Glenn Mullin and Drupon
+            Chongwol-la travel halfway around the world to teach two retreats - in a hall in
+            Tel Aviv and on the shore of the Dead Sea - and a small community of volunteers
+            turns those rooms into a place where the teachings can be received.
+          </p>
+          <p>
+            Nobody is paid for this. The retreats are priced at cost, and sometimes below it,
+            so that no one who longs to learn and practice is turned away.
           </p>
         </div>
 
@@ -172,18 +176,21 @@ const SupportVisitDec2026EN = () => {
         <section id="dana" className="mt-12 scroll-mt-24">
           <h2 className="font-heading text-3xl font-bold text-primary mb-4 flex items-center gap-3">
             <HeartHandshake className="h-7 w-7" aria-hidden />
-            Dana - Donate to the Visit
+            What your gift makes possible
           </h2>
           <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary">
             <p>
-              A visit like this carries real costs: the teachers' flights and lodging, venues,
-              translation, equipment and insurance. Your donation is what makes it possible in
-              practice - any amount, as you are able.
+              Flights and a place to sleep for the teachers. Halls to sit in. Translation, so
+              the words land. Sound, so they carry. Insurance, so it can happen at all. These
+              are the plain costs behind a week of teaching, and they do not cover themselves.
             </p>
             <p>
-              Every gift, large or small, is a direct offering to the Dharma and to work
-              dedicated to all living beings. Thank you.
+              In the Buddhist tradition, dana - generosity - is the first of the perfections,
+              the ground everything else grows from. To give towards a teaching is to become
+              part of it: every session held, every empowerment received, every person who
+              leaves lighter than they came carries a share of your gift.
             </p>
+            <p>Whatever amount is right for you is the right amount.</p>
           </div>
           <button
             type="button"
@@ -199,6 +206,7 @@ const SupportVisitDec2026EN = () => {
         </section>
 
         <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary mt-14">
+          <p>Thank you for helping the Dharma reach here, and keep flourishing.</p>
           <p className="text-base opacity-75">
             Maitreya Sangha Israel - the Israeli student community of Lama Glenn Mullin.
           </p>
