@@ -64,6 +64,13 @@ export interface PricingTier {
    */
   hidden?: boolean;
   /**
+   * Puts a hidden tier in a named group (a key of RegistrationConfig.tierGroups).
+   * A link that opens the form on that group offers its tiers as a choice among
+   * themselves, instead of locking on one - e.g. a scholarship link with $108,
+   * $54 and an open amount.
+   */
+  group?: string;
+  /**
    * No fixed price: the payer types the amount in the form, and *that* number
    * is what n8n charges. Set on the parent tier; its variants inherit it.
    * Note that priceValue stays 0 here and is not the charge - see the comment
@@ -129,6 +136,12 @@ export interface RegistrationConfig {
   showTierSelect?: boolean;
   /** Label for the tier <select> (e.g. "סוג חדר"). */
   tierSelectLabel?: string;
+  /**
+   * Private groups of hidden tiers (see PricingTier.group), keyed by group
+   * name: the select's label while the group is on offer, and an optional
+   * heading + note shown above it.
+   */
+  tierGroups?: Record<string, { selectLabel: string; heading?: string; note?: string }>;
   /** Label for the second select that opens for tiers that have variants. */
   variantSelectLabel?: string;
   /** Link to T&C page. */

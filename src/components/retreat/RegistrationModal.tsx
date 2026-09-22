@@ -109,6 +109,11 @@ interface RegistrationModalProps {
   onOpenChange: (open: boolean) => void;
   /** Optional pre-selected tier id. */
   preselectedTierId?: string;
+  /**
+   * Opens the form on a private group of hidden tiers (config.tierGroups):
+   * the select offers that group's tiers instead of the public ones.
+   */
+  tierGroup?: string;
   config: RegistrationConfig;
   copy: RegistrationModalCopy;
 }
@@ -130,12 +135,17 @@ export const RegistrationModal = ({
   open,
   onOpenChange,
   preselectedTierId,
+  tierGroup,
   config,
   copy,
 }: RegistrationModalProps) => {
   // Tiers marked `variantOf` are follow-up choices, not top-level ones, and
-  // `hidden` ones are not offered at all - they arrive preselected from a link.
-  const topTiers = config.tiers.filter((t) => !t.variantOf && !t.hidden);
+  // `hidden` ones are not offered at all - they arrive preselected from a link,
+  // or, when the link names their group, are offered among themselves.
+  const group = tierGroup ? config.tierGroups?.[tierGroup] : undefined;
+  const topTiers = group
+    ? config.tiers.filter((t) => !t.variantOf && t.group === tierGroup)
+    : config.tiers.filter((t) => !t.variantOf && !t.hidden);
   const singleTier = topTiers.length === 1;
   /**
    * What the amount field starts on for a given tier: the tier's own
@@ -187,7 +197,7 @@ export const RegistrationModal = ({
     setVariantId("");
     setAmount(defaultAmountFor(openingTierId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, preselectedTierId, singleTier, config.tiers]);
+  }, [open, preselectedTierId, tierGroup, singleTier, config.tiers]);
 
   // The payment step must open at the top. The Cardcom frame focuses its card
   // field a moment after it loads, and the browser scrolls to that - so reset
@@ -209,7 +219,7 @@ export const RegistrationModal = ({
    * line naming it, since it is not one choice among several - it is the only
    * thing this link does.
    */
-  const lockedTier = parentTier?.hidden ? parentTier : undefined;
+  const lockedTier = parentTier?.hidden && !(group && parentTier.group === tierGroup) ? parentTier : undefined;
   /** Variants inherit openAmount from their parent rather than repeating it. */
   const openAmount = Boolean(parentTier?.openAmount);
   const amountMin = parentTier?.openAmountMin ?? 1;
@@ -381,7 +391,9 @@ export const RegistrationModal = ({
     <div className="relative">
       {children}
       <ChevronDown
-        className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
+        // At the end of the line: left in Hebrew, right in English (on the left
+        // it covered the first letter of the English options).
+        className={`absolute ${config.dir === "ltr" ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none`}
         style={{ color: RETREAT_THEME.WARM_GRAY }}
       />
     </div>
@@ -499,7 +511,19 @@ export const RegistrationModal = ({
           <form ref={formRef} onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4">
             {config.showTierSelect && (
               <div data-field="tierId">
-                <label className={labelClass}>{config.tierSelectLabel} *</label>
+                {/* A private group (e.g. a scholarship link) says what it is
+                    before asking which of its options. */}
+                {group?.heading && (
+                  <p className="text-base font-semibold" style={{ color: RETREAT_THEME.MAROON }}>
+                    {group.heading}
+                  </p>
+                )}
+                {group?.note && (
+                  <p className="text-sm mt-1 mb-4" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                    {group.note}
+                  </p>
+                )}
+                <label className={labelClass}>{group?.selectLabel ?? config.tierSelectLabel} *</label>
                 {/* A hidden tier arrives preselected from a link, so there is
                     nothing to choose between - name it and move on. */}
                 {lockedTier ? (
@@ -590,7 +614,8 @@ export const RegistrationModal = ({
                           setAmount(clean);
                           setFieldErrors((p) => ({ ...p, amount: "" }));
                         }}
-                        className={`${inputClass} ${fieldErrorClass("amount")}`}
+                        // In English the number starts where the currency sign sits, so leave it room.
+                        className={`${inputClass} ${config.dir === "ltr" && parentTier?.currencySymbol ? "pl-8" : ""} ${fieldErrorClass("amount")}`}
                         placeholder={String(amountMin)}
                       />
                       {parentTier?.currencySymbol && (

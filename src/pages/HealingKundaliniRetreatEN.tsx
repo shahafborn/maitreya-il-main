@@ -17,6 +17,8 @@
  * Hidden test tiers (any amount, one cent by default):
  *   `?test=<TEST_KEY>`          -> Zoom route (Zoom confirmation)
  *   `?test=<TEST_KEY>-inperson` -> in-person route (in-person confirmation)
+ * Hidden scholarship options (Zoom by dana: $108 / $54 / any amount) via
+ * `?ticket=<SCHOLARSHIP_KEY>`.
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -64,6 +66,13 @@ const TEST_TIER_ID = "HKR_EN_2026_Test";
 const TEST_INPERSON_TIER_ID = "HKR_EN_2026_TestInPerson";
 const ZOOM_TIER_ID = "HKR_EN_2026_Zoom";
 const INPERSON_TIER_ID = "HKR_EN_2026_InPerson";
+/**
+ * Private scholarship link (Shahaf, 2026-09-22): a Zoom place by dana - $108,
+ * $54 or any amount. `?ticket=<SCHOLARSHIP_KEY>` opens the form offering the
+ * three among themselves; sent to whoever asks for a scholarship.
+ */
+const SCHOLARSHIP_KEY = "dana-h3w6";
+const SCHOLARSHIP_GROUP = "scholarship";
 
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
@@ -109,7 +118,8 @@ const eventJsonLd: EventJsonLdConfig = {
   inLanguage: "en",
 };
 
-const registrationConfig: RegistrationConfig = {
+// Exported for src/test/en-scholarship-link.test.tsx.
+export const registrationConfig: RegistrationConfig = {
   title: "Retreat Registration",
   subtitle: "Tantric Meditations and Kundalini Practices for Healing | December 2-4, 2026",
   webhookUrl: N8N_WEBHOOK_URL,
@@ -137,6 +147,44 @@ const registrationConfig: RegistrationConfig = {
       currencySymbol: "$",
       badge: "In Person in Tel Aviv",
       perPersonLabel: "per person",
+    },
+    // The scholarship link's three options (Zoom). Charged by HKR_EN_Register;
+    // the paid flow treats them as Zoom places.
+    {
+      id: "HKR_EN_2026_Dana108",
+      title: "Dana",
+      note: "Scholarship place | all three days live on Zoom, plus the recordings",
+      hidden: true,
+      group: SCHOLARSHIP_GROUP,
+      priceDisplay: "108",
+      priceValue: 108,
+      currencySymbol: "$",
+    },
+    {
+      id: "HKR_EN_2026_Dana54",
+      title: "Dana",
+      note: "Scholarship place | all three days live on Zoom, plus the recordings",
+      hidden: true,
+      group: SCHOLARSHIP_GROUP,
+      priceDisplay: "54",
+      priceValue: 54,
+      currencySymbol: "$",
+    },
+    {
+      id: "HKR_EN_2026_DanaOpen",
+      title: "Dana of any amount you choose",
+      note: "Scholarship place | all three days live on Zoom, plus the recordings",
+      hidden: true,
+      group: SCHOLARSHIP_GROUP,
+      priceDisplay: "",
+      priceValue: 0,
+      currencySymbol: "$",
+      openAmount: true,
+      openAmountMin: 1,
+      openAmountMax: 20000,
+      openAmountLabel: "Amount (USD)",
+      openAmountNote: "Any amount from $1.",
+      openAmountError: "Enter an amount between $1 and $20,000",
     },
     {
       id: TEST_TIER_ID,
@@ -178,6 +226,13 @@ const registrationConfig: RegistrationConfig = {
   ],
   showTierSelect: true,
   tierSelectLabel: "How will you join?",
+  tierGroups: {
+    [SCHOLARSHIP_GROUP]: {
+      selectLabel: "Your dana",
+      heading: "Scholarship place - live on Zoom",
+      note: "We never want the cost to keep anyone from the teachings. This place includes all three days live on Zoom and all the recordings. Give what feels right for you.",
+    },
+  },
   termsUrl: "https://maitreya.org.il/events/online-terms",
   askGender: false,
   askFoodPref: false,
@@ -274,6 +329,9 @@ const HealingKundaliniRetreatEN = () => {
   const testTierId =
     testParam === TEST_KEY ? TEST_TIER_ID : testParam === TEST_INPERSON_KEY ? TEST_INPERSON_TIER_ID : undefined;
   const testMode = testTierId !== undefined;
+  const scholarshipLink = searchParams.get("ticket") === SCHOLARSHIP_KEY;
+  /** Set while the form offers the scholarship options instead of the public ones. */
+  const [tierGroup, setTierGroup] = useState<string | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -300,6 +358,15 @@ const HealingKundaliniRetreatEN = () => {
     }
   }, [testTierId, paymentStatus]);
 
+  // The scholarship link opens the form on its three dana options.
+  useEffect(() => {
+    if (scholarshipLink && !testMode && !paymentStatus) {
+      setTierGroup(SCHOLARSHIP_GROUP);
+      setPreselectedTier(undefined);
+      setModalOpen(true);
+    }
+  }, [scholarshipLink, testMode, paymentStatus]);
+
   // The payment happens inside an iframe on this page, so Cardcom's redirect
   // back lands inside that frame. Same origin, so we climb out.
   useEffect(() => {
@@ -314,6 +381,9 @@ const HealingKundaliniRetreatEN = () => {
     // Test links always lock on their test ticket. A click on a pricing card
     // preselects that option; the generic buttons open on "Choose".
     setPreselectedTier(testMode ? testTierId : tierId);
+    // The scholarship link's generic buttons reopen its dana options; a
+    // pricing card still opens that card's option.
+    setTierGroup(scholarshipLink && !testMode && !tierId ? SCHOLARSHIP_GROUP : undefined);
     setModalOpen(true);
   };
 
@@ -593,6 +663,7 @@ const HealingKundaliniRetreatEN = () => {
           open={modalOpen}
           onOpenChange={setModalOpen}
           preselectedTierId={preselectedTier}
+          tierGroup={tierGroup}
           config={registrationConfig}
           copy={registrationCopy}
         />

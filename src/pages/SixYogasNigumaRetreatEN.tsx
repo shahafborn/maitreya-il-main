@@ -18,6 +18,8 @@
  * Hidden test tier ($1) via ?test=<TEST_KEY>.
  * Hidden no-lodging tier ($750, in person, no overnight stay) via
  * ?ticket=<NO_LODGING_KEY> - offered one-to-one, never on the public page.
+ * Hidden scholarship options (Zoom by dana: $108 / $54 / any amount) via
+ * ?ticket=<SCHOLARSHIP_KEY>.
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -83,6 +85,13 @@ const ZOOM_TIER_ID = "EGN_EN_2026_Zoom";
  */
 const NO_LODGING_KEY = "dayguest-r7m2";
 const NO_LODGING_TIER_ID = "EGN_EN_2026_NoLodging";
+/**
+ * Private scholarship link (Shahaf, 2026-09-22): a Zoom place by dana - $108,
+ * $54 or any amount. `?ticket=<SCHOLARSHIP_KEY>` opens the form offering the
+ * three among themselves; sent to whoever asks for a scholarship.
+ */
+const SCHOLARSHIP_KEY = "dana-z5k8";
+const SCHOLARSHIP_GROUP = "scholarship";
 
 const CONTACT_EMAIL = "maitreyasanghaisrael@gmail.com";
 
@@ -171,6 +180,44 @@ export const registrationConfig: RegistrationConfig = {
       badge: "In Person at Ein Gedi",
       perPersonLabel: "per person",
     },
+    // The scholarship link's three options (Zoom). Charged by EGN_EN_Register;
+    // the paid flow treats them as Zoom places.
+    {
+      id: "EGN_EN_2026_Dana108",
+      title: "Dana",
+      note: "Scholarship place | every session live on Zoom, plus the recordings",
+      hidden: true,
+      group: SCHOLARSHIP_GROUP,
+      priceDisplay: "108",
+      priceValue: 108,
+      currencySymbol: "$",
+    },
+    {
+      id: "EGN_EN_2026_Dana54",
+      title: "Dana",
+      note: "Scholarship place | every session live on Zoom, plus the recordings",
+      hidden: true,
+      group: SCHOLARSHIP_GROUP,
+      priceDisplay: "54",
+      priceValue: 54,
+      currencySymbol: "$",
+    },
+    {
+      id: "EGN_EN_2026_DanaOpen",
+      title: "Dana of any amount you choose",
+      note: "Scholarship place | every session live on Zoom, plus the recordings",
+      hidden: true,
+      group: SCHOLARSHIP_GROUP,
+      priceDisplay: "",
+      priceValue: 0,
+      currencySymbol: "$",
+      openAmount: true,
+      openAmountMin: 1,
+      openAmountMax: 20000,
+      openAmountLabel: "Amount (USD)",
+      openAmountNote: "Any amount from $1.",
+      openAmountError: "Enter an amount between $1 and $20,000",
+    },
     {
       id: TEST_TIER_ID,
       title: "Payment test",
@@ -211,6 +258,13 @@ export const registrationConfig: RegistrationConfig = {
   ],
   showTierSelect: true,
   tierSelectLabel: "How will you join?",
+  tierGroups: {
+    [SCHOLARSHIP_GROUP]: {
+      selectLabel: "Your dana",
+      heading: "Scholarship place - live on Zoom",
+      note: "We never want the cost to keep anyone from the teachings. This place includes every session live on Zoom and all the recordings. Give what feels right for you.",
+    },
+  },
   termsUrl: "https://maitreya.org.il/events/six-yogas-niguma-retreat/terms",
   askGender: true,
   askFoodPref: true,
@@ -344,6 +398,9 @@ const SixYogasNigumaRetreatEN = () => {
   const linkTierId = ticketParam === NO_LODGING_KEY ? NO_LODGING_TIER_ID : testTierId;
   const testMode = testTierId !== undefined;
   const noLodgingLink = linkTierId === NO_LODGING_TIER_ID;
+  const scholarshipLink = ticketParam === SCHOLARSHIP_KEY;
+  /** Set while the form offers the scholarship options instead of the public ones. */
+  const [tierGroup, setTierGroup] = useState<string | undefined>(undefined);
   // The private no-lodging link also shows its option in the pricing grid, as
   // the MIDDLE card (Zoom | No Lodging | Room), so the offer reads as a real
   // choice between the two public ones.
@@ -378,6 +435,15 @@ const SixYogasNigumaRetreatEN = () => {
     }
   }, [linkTierId, paymentStatus]);
 
+  // The scholarship link opens the form on its three dana options.
+  useEffect(() => {
+    if (scholarshipLink && !paymentStatus) {
+      setTierGroup(SCHOLARSHIP_GROUP);
+      setPreselectedTier(undefined);
+      setModalOpen(true);
+    }
+  }, [scholarshipLink, paymentStatus]);
+
   // The payment happens inside an iframe on this page, so Cardcom's redirect
   // back lands inside that frame. Same origin, so we climb out.
   useEffect(() => {
@@ -392,6 +458,9 @@ const SixYogasNigumaRetreatEN = () => {
     // Test links always lock on the test ticket. The no-lodging link opens on its
     // option from the generic buttons, but a click on a specific card wins.
     setPreselectedTier(testMode ? testTierId : tierId ?? linkTierId);
+    // The scholarship link's generic buttons reopen its dana options; a
+    // pricing card still opens that card's option.
+    setTierGroup(scholarshipLink && !testMode && !tierId ? SCHOLARSHIP_GROUP : undefined);
     setModalOpen(true);
   };
 
@@ -826,6 +895,7 @@ const SixYogasNigumaRetreatEN = () => {
         open={modalOpen}
         onOpenChange={setModalOpen}
         preselectedTierId={preselectedTier}
+        tierGroup={tierGroup}
         config={registrationConfig}
         copy={
           // The no-lodging form is locked on its option (no bed), so the room
