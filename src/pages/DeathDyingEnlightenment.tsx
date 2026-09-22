@@ -23,7 +23,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import type { EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
@@ -35,12 +35,13 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import { ddeHero, ddeHeroMobile, ddeLampsBg, lamaGlennPhoto, druponPhoto, ddeGalleryImages } from "@/assets/death-dying-2026";
 
 /* ── Constants ── */
@@ -242,6 +243,13 @@ const DeathDyingEnlightenment = () => {
   const testMode = searchParams.get("test") === TEST_KEY;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* The event's own end date, the one already declared to Google above,
+     decides whether this page still sells. Once it has passed, every way
+     into the registration form goes and the upcoming-events cards take the
+     place of the first CTA, under the hero. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   // The test link opens the form straight away, on the hidden test option.
   useEffect(() => {
@@ -287,8 +295,8 @@ const DeathDyingEnlightenment = () => {
       dir="rtl"
       seo={seo}
       eventJsonLd={eventJsonLd}
-      navCtaLabel="להרשמה"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "לאירועים" : "להרשמה"}
+      onNavCtaClick={concluded ? () => navigate("/events") : open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}
     >
       {/* ── Hero ── */}
@@ -302,6 +310,17 @@ const DeathDyingEnlightenment = () => {
         dateLine="6 מפגשים שבועיים | בימי ראשון, החל מ-13 בספטמבר 2026 | בשידור חי בזום"
         objectPosition="center 35%"
       />
+
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/death-dying-enlightenment"
+          ended={{
+            eyebrow: "הסדרה הסתיימה",
+            line: "סדרת הלימוד התקיימה בספטמבר-אוקטובר 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
 
       {/* ── Key info strip ── */}
       <SectionFrame tone="cream" maxWidth="md" size="md">
@@ -317,18 +336,20 @@ const DeathDyingEnlightenment = () => {
         >
           בעוד שהתרבות המערבית רואה במוות את הטאבו האחרון, המסורת הטיבטית משלבת את ההתבוננות במוות בחיי היומיום. מודעות ערה לארעיות של חיינו, כך מלמדת המסורת, אינה מקור לפחד אלא המפתח לחיים מלאים, שמחים ומשמעותיים. בסדרה זו נלמד עם לאמה גלן מולין את המדיטציות הבודהיסטיות על המוות, על הארעיות ועל ההארה, ונתרגל אותן יחד בהדרכת דרופון צ׳ונגוואל-לה.
         </p>
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={open}
-            className="px-8 py-3 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
-            style={goldBtn}
-            onMouseEnter={hoverIn}
-            onMouseLeave={hoverOut}
-          >
-            להרשמה לסדרה
-          </button>
-        </div>
+        {!concluded && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={open}
+              className="px-8 py-3 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+              style={goldBtn}
+              onMouseEnter={hoverIn}
+              onMouseLeave={hoverOut}
+            >
+              להרשמה לסדרה
+            </button>
+          </div>
+        )}
       </SectionFrame>
 
       {/* ── About ── */}
@@ -346,18 +367,20 @@ const DeathDyingEnlightenment = () => {
           </p>
           <p>הסדרה מתאימה למתרגלים מתחילים ומתקדמים, ותלווה בתרגום לעברית.</p>
         </div>
-        <div className="mt-10 flex justify-center">
-          <button
-            type="button"
-            onClick={open}
-            className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
-            style={goldBtn}
-            onMouseEnter={hoverIn}
-            onMouseLeave={hoverOut}
-          >
-            להרשמה לסדרה
-          </button>
-        </div>
+        {!concluded && (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={open}
+              className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
+              style={goldBtn}
+              onMouseEnter={hoverIn}
+              onMouseLeave={hoverOut}
+            >
+              להרשמה לסדרה
+            </button>
+          </div>
+        )}
       </SectionFrame>
 
       {/* ── The two books ── */}
@@ -477,6 +500,7 @@ const DeathDyingEnlightenment = () => {
       <WhatsIncluded eyebrow="מה כוללת הסדרה" items={whatsIncluded} />
 
       {/* ── Dana / registration ── */}
+      {!concluded && (
       <div ref={ctaSectionRef}>
         <DanaSection
           title="הרשמה והשתתפות"
@@ -490,6 +514,7 @@ const DeathDyingEnlightenment = () => {
           onCtaClick={open}
         />
       </div>
+      )}
 
       {/* ── Gallery ── */}
       <GalleryCarousel
@@ -507,6 +532,7 @@ const DeathDyingEnlightenment = () => {
       />
 
       {/* ── Final CTA ── */}
+      {!concluded && (
       <FinalCTA
         bgImage={ddeLampsBg}
         title="הצטרפו לסדרה"
@@ -514,12 +540,13 @@ const DeathDyingEnlightenment = () => {
         ctaLabel="להרשמה לסדרה"
         onCtaClick={open}
       />
+      )}
 
       {/* ── Contact ── */}
       <InfoFooter
         contact={{
           heading: "צרו קשר",
-          label: "לשאלות, בירורים והרשמה:",
+          label: concluded ? "לשאלות ובירורים:" : "לשאלות, בירורים והרשמה:",
           email: CONTACT_EMAIL,
           phone: CONTACT_PHONE,
           phoneLabel: "טלפון:",
@@ -527,33 +554,9 @@ const DeathDyingEnlightenment = () => {
       />
 
       {/* ── Mailing List ── */}
-      {/* ── Other Events - the December 2026 retreats. OtherEvents hides a card
-           by itself once its endDate has passed, so this needs no cleanup. ── */}
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
-            title: "תרגולי מדיטציה וקונדליני לריפוי",
-            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
-            endDate: "2026-12-04",
-            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/healing-kundalini-retreat",
-          },
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "שש היוגות של ניגומה",
-            title: "שש היוגות של ניגומה",
-            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
-            endDate: "2026-12-12",
-            description: "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── on a finished page the same cards already sit
+           under the hero, where a reader actually meets them. ── */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/death-dying-enlightenment" />}
 
       <MailingListSignup
         heading="הישארו מעודכנים"
@@ -566,18 +569,21 @@ const DeathDyingEnlightenment = () => {
         tag="Hebrew"
       />
 
-      {/* ── Registration Modal ── */}
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        // The recommended dana is chosen in advance; the person only changes it if they want to.
-        preselectedTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {/* ── Registration Modal ── not rendered at all once the series is over,
+           so no deep link or stale payment return can open the form. ── */}
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          // The recommended dana is chosen in advance; the person only changes it if they want to.
+          preselectedTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
       {/* ── Payment Status ── */}
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="rtl"

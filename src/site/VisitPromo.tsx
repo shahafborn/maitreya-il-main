@@ -13,19 +13,29 @@
  */
 import ReactMarkdown from "react-markdown";
 import { getPage, type SiteLang } from "./content";
-
-/** Today in Israel as YYYY-MM-DD - the dates in the content files are local dates. */
-const todayInIsrael = () =>
-  new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Jerusalem",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+import { todayInIsrael } from "./today";
 
 export const isVisitPromoLive = (lang: SiteLang, today = todayInIsrael()) => {
   const until = String(getPage(lang, "visit-promo").meta.until ?? "").trim();
   return /^\d{4}-\d{2}-\d{2}$/.test(until) && today <= until;
+};
+
+/**
+ * One sentence about the visit that is running, or null when none is.
+ *
+ * The retreat pages put it above their upcoming-events cards. It lives in the
+ * same file as the box, under the same `until` date, so it disappears with the
+ * visit instead of becoming a sentence about a visit that already happened.
+ *
+ * It is a sentence rather than the section's heading on purpose: the cards show
+ * everything that is coming up, and not everything coming up belongs to a visit
+ * (the Death and Dying course runs online, outside it). A heading naming the
+ * visit would be making a claim about the cards underneath it.
+ */
+export const visitBlurb = (lang: SiteLang): string | null => {
+  if (!isVisitPromoLive(lang)) return null;
+  const blurb = String(getPage(lang, "visit-promo").meta.blurb ?? "").trim();
+  return blurb || null;
 };
 
 export const VisitPromo = ({ lang }: { lang: SiteLang }) => {

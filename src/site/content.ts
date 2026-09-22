@@ -162,18 +162,30 @@ export function getEvents(lang: SiteLang): { upcoming: EventItem[]; past: EventI
   };
 }
 
-/** Format an ISO date range for display, e.g. "1-6.6.2026" / "28-30.5.2026". */
+/**
+ * Format an ISO date range for display: "1-6.6.2026" in Hebrew, and
+ * "June 1-6, 2026" in English. A numeric range like 2-4.12.2026 reads as a typo
+ * to an English reader, and these ranges now carry the cards on the English
+ * retreat pages, not only the events list.
+ */
 export function formatEventDates(ev: EventItem, lang: SiteLang): string {
   if (!ev.start) return "";
   const s = new Date(ev.start + "T00:00:00");
   const e = new Date((ev.end || ev.start) + "T00:00:00");
   const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+  const locale = lang === "he" ? "he-IL" : "en-US";
   if (ev.start === ev.end || !ev.end) {
-    return s.toLocaleDateString(lang === "he" ? "he-IL" : "en-US", {
+    return s.toLocaleDateString(locale, {
       day: "numeric",
       month: "long",
       year: "numeric",
     });
+  }
+  if (lang === "en") {
+    const month = (d: Date) => d.toLocaleDateString(locale, { month: "long" });
+    return sameMonth
+      ? `${month(s)} ${s.getDate()}-${e.getDate()}, ${e.getFullYear()}`
+      : `${month(s)} ${s.getDate()} - ${month(e)} ${e.getDate()}, ${e.getFullYear()}`;
   }
   if (sameMonth) {
     return `${s.getDate()}-${e.getDate()}.${s.getMonth() + 1}.${s.getFullYear()}`;

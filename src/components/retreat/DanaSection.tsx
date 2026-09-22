@@ -6,18 +6,25 @@ interface DanaSectionProps {
   title: string;
   /** Paragraph(s) explaining the dana tradition. */
   paragraphs: ReactNode[];
-  /** Large suggested amount line (e.g. "תרומה מומלצת: 650 ש״ח"). */
-  suggestedLine: string;
+  /**
+   * Large suggested amount line (e.g. "תרומה מומלצת: 650 ש״ח"). Omit on a
+   * finished retreat: the section goes on explaining what dana is, but an
+   * amount for something nobody can join any more is a price, not a teaching.
+   */
+  suggestedLine?: string;
   /** Short footer note (e.g. "כל סכום יתקבל בברכה"). */
   footerNote?: string;
-  /** CTA label. */
-  ctaLabel: string;
-  onCtaClick: () => void;
+  /** CTA label. Omit, together with onCtaClick, for a section with no call to action. */
+  ctaLabel?: string;
+  onCtaClick?: () => void;
 }
 
 /**
  * Dana-based contribution section for retreats that don't use fixed pricing.
  * Highlighted stone-colored panel with a large suggested-amount line and CTA.
+ *
+ * With no suggestedLine and no ctaLabel it becomes what a finished retreat
+ * keeps: the explanation of dana on its own, with nothing to click.
  */
 export const DanaSection = ({
   title,
@@ -45,20 +52,22 @@ export const DanaSection = ({
       </div>
       {/* The amount box is a button too - people tap the number expecting the form
           (Shahaf's request, 2026-09-06), so it opens the same dialog as the CTA. */}
-      <button
-        type="button"
-        onClick={onCtaClick}
-        className="block w-full my-10 py-6 px-6 rounded-lg bg-white shadow-sm text-xl md:text-2xl font-bold text-center transition-all duration-200 hover:shadow-md hover:scale-[1.02] focus:outline-none focus-visible:ring-2"
-        style={{ color: RETREAT_THEME.GOLD, fontFamily: RETREAT_FONTS.serif }}
-      >
-        {suggestedLine}
-      </button>
+      {suggestedLine && (
+        <button
+          type="button"
+          onClick={onCtaClick}
+          className="block w-full my-10 py-6 px-6 rounded-lg bg-white shadow-sm text-xl md:text-2xl font-bold text-center transition-all duration-200 hover:shadow-md hover:scale-[1.02] focus:outline-none focus-visible:ring-2"
+          style={{ color: RETREAT_THEME.GOLD, fontFamily: RETREAT_FONTS.serif }}
+        >
+          {suggestedLine}
+        </button>
+      )}
       {footerNote && (
         <p className="text-base mb-8" style={{ color: RETREAT_THEME.WARM_GRAY }}>
           {footerNote}
         </p>
       )}
-      <CTAButton onClick={onCtaClick}>{ctaLabel}</CTAButton>
+      {ctaLabel && onCtaClick && <CTAButton onClick={onCtaClick}>{ctaLabel}</CTAButton>}
     </div>
   </section>
 );

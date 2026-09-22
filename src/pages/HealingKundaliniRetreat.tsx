@@ -25,7 +25,7 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -39,7 +39,7 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -48,6 +48,7 @@ import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import {
   hkrHero,
   hkrHeroMobile,
@@ -262,6 +263,13 @@ const HealingKundaliniRetreat = () => {
   const testMode = searchParams.get("test") === TEST_KEY;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* The event's own end date, the one already declared to Google above,
+     decides whether this page still sells. Once it has passed, every way
+     into the registration form goes and the upcoming-events cards take the
+     place of the first CTA, under the hero. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -311,8 +319,8 @@ const HealingKundaliniRetreat = () => {
       lang="he"
       dir="rtl"
       seo={seo}
-      navCtaLabel="להרשמה"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "לאירועים" : "להרשמה"}
+      onNavCtaClick={concluded ? () => navigate("/events") : open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}
     >
       <RetreatHero
@@ -326,11 +334,22 @@ const HealingKundaliniRetreat = () => {
         objectPosition="62% 40%"
       />
 
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/healing-kundalini-retreat"
+          ended={{
+            eyebrow: "הריטריט הסתיים",
+            line: "הריטריט התקיים בדצמבר 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
+
       <AboutSection
         eyebrow="ריפוי הגוף והתודעה"
         softBgImage={cloudsBg}
-        ctaLabel="להרשמה לריטריט"
-        onCtaClick={open}
+        ctaLabel={concluded ? undefined : "להרשמה לריטריט"}
+        onCtaClick={concluded ? undefined : open}
         paragraphs={[
           "המסורת הבודהיסטית מלאה בידע רב ובתרגולי מדיטציה מעמיקים לריפוי הגוף והתודעה. הבודהיזם מכיר בקשר העמוק בין הגוף לתודעה, ובקשר בין האדם לסביבתו, ובדרכים שבהן הקשרים האלה תורמים לבריאות או למחלה.",
           "במשך הדורות השתמשו מתרגלים, רופאים והילרים בשיטות הריפוי הבודהיסטיות לריפוי עצמי ולריפוי אחרים: ריפוי התודעה מרגשות שליליים ומנטיות מזיקות, וריפוי הגוף דרך עבודה יוגית מעמיקה עם הנשימה ועם המערכות הפנימיות והאנרגטיות של הגוף.",
@@ -368,18 +387,20 @@ const HealingKundaliniRetreat = () => {
             <p>מכאן גם הריפוי. אם תנאים ודפוסים לא מיטיבים פותחים את הדרך למחלה - שינוי מודע יכול גם לפתוח את הדרך לריפוי, ולהיות בעצמו מקור לאנרגיה מיטיבה. על העיקרון הזה בנויים תרגולי הריפוי הבודהיסטיים.</p>
             <p>התרגול עובד בשני רבדים. הראשון הוא דמיון יוצר: אור, צבע ומנטרה, שדרכם מרפאים את מערכות הגוף, המיוצגות בצורה סמלית על ידי ארבעת היסודות (אדמה, מים, אש ואוויר), ומחזירים אותן לאיזון. הרובד השני הוא העבודה הישירה עם הערוצים ומרכזי האנרגיה - זו העבודה הפנימית של הקונדליני (צ׳אנדלי או טומו), שהמסורת הטיבטית שמרה כמסורת חיה ומדויקת.</p>
           </div>
-          <div className="mt-10 flex justify-center">
-            <button
-              type="button"
-              onClick={open}
-              className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer"
-              style={goldBtn}
-              onMouseEnter={hoverIn}
-              onMouseLeave={hoverOut}
-            >
-              להרשמה לריטריט
-            </button>
-          </div>
+          {!concluded && (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={open}
+                className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer"
+                style={goldBtn}
+                onMouseEnter={hoverIn}
+                onMouseLeave={hoverOut}
+              >
+                להרשמה לריטריט
+              </button>
+            </div>
+          )}
         </div>
       </SectionFrame>
 
@@ -475,12 +496,18 @@ const HealingKundaliniRetreat = () => {
           title="השתתפות בדאנא"
           paragraphs={[
             "🪷 ההשתתפות בלימוד היא בדאנא - תרומה מתוך נדיבות הלב.",
-            "במסורת הבודהיסטית, הלימודים עוברים בדאנא - נדיבות הדדית בין המורה לתלמיד. התלמיד מקבל את הלימוד, והמורה מקבל את התמיכה שמאפשרת לו להמשיך ללמד. תרומתכם מאפשרת את קיום הלימוד ואת המשך הפעילות של הסנגהה. תרומת הדאנא תתבצע בזמן ההרשמה לריטריט באתר.",
+            concluded
+              ? "במסורת הבודהיסטית, הלימודים עוברים בדאנא - נדיבות הדדית בין המורה לתלמיד. התלמיד מקבל את הלימוד, והמורה מקבל את התמיכה שמאפשרת לו להמשיך ללמד. תרומתכם מאפשרת את קיום הלימוד ואת המשך הפעילות של הסנגהה."
+              : "במסורת הבודהיסטית, הלימודים עוברים בדאנא - נדיבות הדדית בין המורה לתלמיד. התלמיד מקבל את הלימוד, והמורה מקבל את התמיכה שמאפשרת לו להמשיך ללמד. תרומתכם מאפשרת את קיום הלימוד ואת המשך הפעילות של הסנגהה. תרומת הדאנא תתבצע בזמן ההרשמה לריטריט באתר.",
           ]}
-          suggestedLine="תרומה מומלצת להשתתפות בהוצאות הריטריט: 650 ש״ח"
-          footerNote="🪷 כל סכום תרומה יתקבל בברכה, כדי לאפשר לכל המעוניין להשתתף. מספר המקומות מוגבל - מומלץ להירשם בהקדם."
-          ctaLabel="להרשמה לריטריט"
-          onCtaClick={open}
+          suggestedLine={concluded ? undefined : "תרומה מומלצת להשתתפות בהוצאות הריטריט: 650 ש״ח"}
+          footerNote={
+            concluded
+              ? undefined
+              : "🪷 כל סכום תרומה יתקבל בברכה, כדי לאפשר לכל המעוניין להשתתף. מספר המקומות מוגבל - מומלץ להירשם בהקדם."
+          }
+          ctaLabel={concluded ? undefined : "להרשמה לריטריט"}
+          onCtaClick={concluded ? undefined : open}
         />
       </div>
 
@@ -497,42 +524,30 @@ const HealingKundaliniRetreat = () => {
         iframeTitle="לאמה גלן מולין - טנטרה בודהיסטית"
       />
 
-      <FinalCTA
-        bgImage={prayerFlagsBg}
-        title="הצטרפו לריטריט"
-        body="שלושה ימי עומק של לימוד ותרגול שיטות הריפוי של הבודהיזם הטנטרי, עם חניכה לפאלדן להמו, בלב תל אביב"
-        ctaLabel="להרשמה לריטריט"
-        onCtaClick={open}
-        footnote="מספר המקומות מוגבל"
-      />
+      {!concluded && (
+        <FinalCTA
+          bgImage={prayerFlagsBg}
+          title="הצטרפו לריטריט"
+          body="שלושה ימי עומק של לימוד ותרגול שיטות הריפוי של הבודהיזם הטנטרי, עם חניכה לפאלדן להמו, בלב תל אביב"
+          ctaLabel="להרשמה לריטריט"
+          onCtaClick={open}
+          footnote="מספר המקומות מוגבל"
+        />
+      )}
 
       <InfoFooter
         contact={{
           heading: "צרו קשר",
-          label: "לשאלות, בירורים והרשמה:",
+          label: concluded ? "לשאלות ובירורים:" : "לשאלות, בירורים והרשמה:",
           email: CONTACT_EMAIL,
           phone: CONTACT_PHONE,
           phoneLabel: "טלפון:",
         }}
       />
 
-      {/* ── Other Events - the December 2026 retreats. OtherEvents hides a card
-           by itself once its endDate has passed, so this needs no cleanup. ── */}
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "שש היוגות של ניגומה",
-            title: "שש היוגות של ניגומה",
-            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
-            endDate: "2026-12-12",
-            description: "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── on a finished page the same cards already sit
+           under the hero, where a reader actually meets them. ── */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/healing-kundalini-retreat" />}
 
       <MailingListSignup
         heading="הישארו מעודכנים"
@@ -545,16 +560,20 @@ const HealingKundaliniRetreat = () => {
         tag="Hebrew"
       />
 
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        // The recommended dana is chosen in advance; the person only changes it if they want to.
-        preselectedTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {/* Not rendered at all once the event is over, so no deep link -
+          a ?test= or a stale payment return - can open the form. */}
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          // The recommended dana is chosen in advance; the person only changes it if they want to.
+          preselectedTierId={testMode ? TEST_TIER_ID : DEFAULT_TIER_ID}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="rtl"

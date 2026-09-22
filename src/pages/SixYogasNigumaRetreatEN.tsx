@@ -21,7 +21,7 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { MonitorPlay } from "lucide-react";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
@@ -35,7 +35,8 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
+import { hasEnded } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle, SectionEyebrow } from "@/components/retreat/SectionFrame";
@@ -354,6 +355,11 @@ const SixYogasNigumaRetreatEN = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* The retreat's own end date, the one already declared to Google above,
+     decides whether this page still sells. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -411,8 +417,8 @@ const SixYogasNigumaRetreatEN = () => {
       lang="en"
       dir="ltr"
       seo={seo}
-      navCtaLabel="Register"
-      onNavCtaClick={() => open()}
+      navCtaLabel={concluded ? "Events" : "Register"}
+      onNavCtaClick={concluded ? () => navigate("/en/events") : () => open()}
       footerText={`© ${new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.`}
     >
       {/* ── Hero ── */}
@@ -432,6 +438,17 @@ const SixYogasNigumaRetreatEN = () => {
         dateLine="December 6-12, 2026 | The Dead Sea, Israel | Live on Zoom or In-Person"
         objectPosition="center 32%"
       />
+
+      {concluded && (
+        <UpcomingEvents
+          lang="en"
+          currentUrl="/events/en/six-yogas-niguma-retreat"
+          ended={{
+            eyebrow: "This retreat has ended",
+            line: "It took place in December 2026 and registration is closed.",
+          }}
+        />
+      )}
 
       {/* ── Key info strip ── */}
       <SectionFrame tone="cream" maxWidth="md" size="md">
@@ -455,25 +472,27 @@ const SixYogasNigumaRetreatEN = () => {
           the Six Yogas in depth in this special retreat by the Dead Sea - and
           you can join from anywhere in the world.
         </p>
-        <div className="text-center">
-          <button
-            className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
-            style={goldBtn}
-            onMouseEnter={hoverIn}
-            onMouseLeave={hoverOut}
-            onClick={() => open()}
-          >
-            Register
-          </button>
-        </div>
+        {!concluded && (
+          <div className="text-center">
+            <button
+              className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+              style={goldBtn}
+              onMouseEnter={hoverIn}
+              onMouseLeave={hoverOut}
+              onClick={() => open()}
+            >
+              Register
+            </button>
+          </div>
+        )}
       </SectionFrame>
 
       {/* ── About ── */}
       <AboutSection
         eyebrow="About the Retreat"
         bgImage={venuePhoto1}
-        ctaLabel="Register for the Retreat"
-        onCtaClick={() => open()}
+        ctaLabel={concluded ? undefined : "Register for the Retreat"}
+        onCtaClick={concluded ? undefined : () => open()}
         paragraphs={[
           "Tantric Buddhism teaches powerful meditation techniques that lead to a deep understanding of human existence, to freedom from suffering, and to the development of compassion and wisdom. The special means of Tantric Buddhism let us use the deep processes of body and mind to reach unique states of consciousness. These states free us from the ordinary, limiting ways of perceiving, and let us act from a mind that benefits ourselves and others - and ultimately reach full enlightenment in a single lifetime.",
           "The Six Yogas of Niguma are among the most important practices of the yogis and practitioners of the Tantric Buddhist traditions of Asia, and have been practiced continuously for over a thousand years - including in the lineage of the Dalai Lamas of Tibet. Only in recent years have they begun to be taught in the West. This is a rare opportunity to learn this powerful system of inner transformation directly from the heart of the lineage.",
@@ -706,7 +725,8 @@ const SixYogasNigumaRetreatEN = () => {
       {/* ── What's Included ── */}
       <WhatsIncluded eyebrow="What's Included" bgImage={venuePhoto3} items={whatsIncluded} />
 
-      {/* ── Pricing ── */}
+      {/* ── Pricing ── a price for something nobody can join any more is noise */}
+      {!concluded && (
       <div ref={ctaSectionRef}>
         <PricingGrid
           title="Registration"
@@ -721,6 +741,7 @@ const SixYogasNigumaRetreatEN = () => {
           ]}
         />
       </div>
+      )}
 
       {/* ── Venue ── */}
       <VenueSection
@@ -754,6 +775,7 @@ const SixYogasNigumaRetreatEN = () => {
       />
 
       {/* ── Final CTA ── */}
+      {!concluded && (
       <FinalCTA
         bgImage={venuePhoto4}
         title="Join the Retreat"
@@ -762,6 +784,7 @@ const SixYogasNigumaRetreatEN = () => {
         onCtaClick={() => open()}
         footnote="Very few beds available"
       />
+      )}
 
       {/* ── Cancellation + Contact ── */}
       <InfoFooter
@@ -780,23 +803,9 @@ const SixYogasNigumaRetreatEN = () => {
         }}
       />
 
-      {/* ── Other Events ── */}
-      <OtherEvents
-        heading="Upcoming Events"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "Tantric Meditations and Kundalini Practices for Healing",
-            title: "Tantric Meditations and Kundalini Practices for Healing",
-            dateLabel: "December 2-4, 2026 | Live on Zoom from Tel Aviv",
-            endDate: "2026-12-04",
-            description:
-              "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn, including the Palden Lhamo empowerment",
-            ctaLabel: "Learn More",
-            href: "/events/en/healing-kundalini-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── from content/en/events, so it can never point at
+           a retreat that has already happened. ── */}
+      {!concluded && <UpcomingEvents lang="en" currentUrl="/events/en/six-yogas-niguma-retreat" />}
 
       {/* ── Mailing List ── */}
       <MailingListSignup
@@ -810,7 +819,9 @@ const SixYogasNigumaRetreatEN = () => {
         tag="English"
       />
 
-      {/* ── Registration Modal ── */}
+      {/* ── Registration Modal ── not rendered at all once the retreat is over,
+           so no ?ticket= or stale payment return can open the form. ── */}
+      {!concluded && (
       <RegistrationModal
         open={modalOpen}
         onOpenChange={setModalOpen}
@@ -824,9 +835,10 @@ const SixYogasNigumaRetreatEN = () => {
             : registrationCopy
         }
       />
+      )}
 
       {/* ── Payment Status ── */}
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="ltr"

@@ -18,7 +18,7 @@
  */
 
 import { useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import type { EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
@@ -30,12 +30,13 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import {
   umaHero,
   umaManjushri,
@@ -185,6 +186,11 @@ const whatsIncluded = [
 
 const UmaZubTri = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  /* The series' own end date, the one already declared to Google above, decides
+     whether this page still sells. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -209,8 +215,8 @@ const UmaZubTri = () => {
       dir="rtl"
       seo={seo}
       eventJsonLd={eventJsonLd}
-      navCtaLabel="להרשמה"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "לאירועים" : "להרשמה"}
+      onNavCtaClick={concluded ? () => navigate("/events") : open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}
     >
       {/* ── Hero ── */}
@@ -222,6 +228,17 @@ const UmaZubTri = () => {
         accent="עם לאמה גלן מולין"
         dateLine="6 מפגשים שבועיים | החל מ-1 באוגוסט 2026 | בשידור חי בזום"
       />
+
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/uma-zub-tri"
+          ended={{
+            eyebrow: "הסדרה הסתיימה",
+            line: "סדרת הלימוד התקיימה באוגוסט-ספטמבר 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
 
       {/* ── Key info strip ── */}
       <SectionFrame tone="cream" maxWidth="md" size="md">
@@ -237,24 +254,26 @@ const UmaZubTri = () => {
         >
           המסורת הבודהיסטית הטיבטית מציעה דרך ישירה להכיר את הטבע הבהיר, הפתוח והער של התודעה שלנו. בסדרה זו נלמד עם לאמה גלן מולין את מסורת המהמודרה, ונתרגל את כוחם של ההקשבה, ההתבוננות והמדיטציה, שמאפשרים לנו לחוות את האיזון המושלם שבין הריקות ובין השמחה של עצם ההוויה.
         </p>
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={open}
-            className="px-8 py-3 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
-            style={goldBtn}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
-            }}
-          >
-            להרשמה לסדרה
-          </button>
-        </div>
+        {!concluded && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={open}
+              className="px-8 py-3 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+              style={goldBtn}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
+              }}
+            >
+              להרשמה לסדרה
+            </button>
+          </div>
+        )}
       </SectionFrame>
 
       {/* ── About ── */}
@@ -281,24 +300,26 @@ const UmaZubTri = () => {
           </p>
           <p>הסדרה מתאימה למתרגלים מתחילים ומתקדמים, ותלווה בתרגום לעברית.</p>
         </div>
-        <div className="mt-10 flex justify-center">
-          <button
-            type="button"
-            onClick={open}
-            className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
-            style={goldBtn}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
-            }}
-          >
-            להרשמה לסדרה
-          </button>
-        </div>
+        {!concluded && (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={open}
+              className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
+              style={goldBtn}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
+              }}
+            >
+              להרשמה לסדרה
+            </button>
+          </div>
+        )}
       </SectionFrame>
 
       {/* ── Teacher ── */}
@@ -363,20 +384,23 @@ const UmaZubTri = () => {
       {/* ── What's Included ── */}
       <WhatsIncluded eyebrow="מה כוללת הסדרה" items={whatsIncluded} />
 
-      {/* ── Registration ── */}
-      <div ref={ctaSectionRef}>
-        <PricingGrid
-          title="הרשמה והשתתפות"
-          subtitle="הצטרפו לסדרה בזום מכל מקום בעולם"
-          tiers={registrationConfig.tiers}
-          ctaLabel="להרשמה"
-          onSelect={() => open()}
-          notes={[
-            "התשלום מתבצע באופן מאובטח דרך Cardcom. בדף התשלום ניתן לבחור את הסכום המומלץ או להזין סכום אחר.",
-            "רצוננו לאפשר לכל המעוניין להשתתף וללמוד. אם דמי ההשתתפות מהווים קושי בשל נסיבות החיים, כתבו לנו: maitreyasanghaisrael@gmail.com",
-          ]}
-        />
-      </div>
+      {/* ── Registration ── a price for something nobody can join any more is
+           noise on the page, so the whole section goes once it is over. ── */}
+      {!concluded && (
+        <div ref={ctaSectionRef}>
+          <PricingGrid
+            title="הרשמה והשתתפות"
+            subtitle="הצטרפו לסדרה בזום מכל מקום בעולם"
+            tiers={registrationConfig.tiers}
+            ctaLabel="להרשמה"
+            onSelect={() => open()}
+            notes={[
+              "התשלום מתבצע באופן מאובטח דרך Cardcom. בדף התשלום ניתן לבחור את הסכום המומלץ או להזין סכום אחר.",
+              "רצוננו לאפשר לכל המעוניין להשתתף וללמוד. אם דמי ההשתתפות מהווים קושי בשל נסיבות החיים, כתבו לנו: maitreyasanghaisrael@gmail.com",
+            ]}
+          />
+        </div>
+      )}
 
       {/* ── Gallery ── */}
       <GalleryCarousel
@@ -394,52 +418,30 @@ const UmaZubTri = () => {
       />
 
       {/* ── Final CTA ── */}
-      <FinalCTA
-        bgImage={umaPrayerFlagsBg}
-        title="הצטרפו לסדרה"
-        body="שישה שבועות של לימוד ותרגול מסורת המהמודרה, בהדרכת לאמה גלן מולין, בשידור חי בזום מכל מקום בעולם"
-        ctaLabel="להרשמה לסדרה"
-        onCtaClick={open}
-        footnote="מספר המקומות מוגבל"
-      />
+      {!concluded && (
+        <FinalCTA
+          bgImage={umaPrayerFlagsBg}
+          title="הצטרפו לסדרה"
+          body="שישה שבועות של לימוד ותרגול מסורת המהמודרה, בהדרכת לאמה גלן מולין, בשידור חי בזום מכל מקום בעולם"
+          ctaLabel="להרשמה לסדרה"
+          onCtaClick={open}
+          footnote="מספר המקומות מוגבל"
+        />
+      )}
 
       {/* ── Contact ── */}
       <InfoFooter
         contact={{
           heading: "צרו קשר",
-          label: "לשאלות, בירורים והרשמה:",
+          label: concluded ? "לשאלות ובירורים:" : "לשאלות, בירורים והרשמה:",
           email: CONTACT_EMAIL,
         }}
       />
 
       {/* ── Mailing List ── */}
-      {/* ── Other Events - the December 2026 retreats. OtherEvents hides a card
-           by itself once its endDate has passed, so this needs no cleanup. ── */}
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
-            title: "תרגולי מדיטציה וקונדליני לריפוי",
-            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
-            endDate: "2026-12-04",
-            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/healing-kundalini-retreat",
-          },
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "שש היוגות של ניגומה",
-            title: "שש היוגות של ניגומה",
-            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
-            endDate: "2026-12-12",
-            description: "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── on a finished page the same cards already sit under
+           the hero, where a reader actually meets them. ── */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/uma-zub-tri" />}
 
       <MailingListSignup
         heading="הישארו מעודכנים"
@@ -452,16 +454,18 @@ const UmaZubTri = () => {
         tag="Hebrew"
       />
 
-      {/* ── Registration Modal ── */}
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {/* ── Registration Modal ── not rendered at all once the series is over. ── */}
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
       {/* ── Payment Status ── */}
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="rtl"

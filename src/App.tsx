@@ -17,7 +17,6 @@ import { takePrerendered, releasePrerendered } from "./prerendered";
 const CourseRegister = lazy(() => import("./pages/CourseRegister"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const EinGediRetreat = lazy(() => import("./pages/EinGediRetreat"));
 const EinGediRetreatV2 = lazy(() => import("./pages/EinGediRetreatV2"));
 const HeartOfWisdomRetreat = lazy(() => import("./pages/HeartOfWisdomRetreat"));
 const HeartOfWisdomRetreatEN = lazy(() => import("./pages/HeartOfWisdomRetreatEN"));
@@ -121,7 +120,13 @@ const AppRoutes = () => (
     <Routes>
       {/* Public event pages — no auth required */}
       <Route path="/events/ein-gedi-healing-retreat" element={<EinGediRetreatV2 />} />
-      <Route path="/events/ein-gedi-v1" element={<EinGediRetreat />} />
+      {/* An older draft of the Ein Gedi page, still on a live route. It has its
+          own register button and none of the closing logic, so it points at the
+          real page rather than being kept in step with it. */}
+      <Route
+        path="/events/ein-gedi-v1"
+        element={<Navigate to="/events/ein-gedi-healing-retreat" replace />}
+      />
       <Route path="/events/ein-gedi-v2" element={<EinGediRetreatV2 />} />
       <Route path="/events/healing-kundalini-retreat" element={<HealingKundaliniRetreat />} />
       <Route path="/events/six-yogas-niguma-retreat" element={<SixYogasNigumaRetreat />} />

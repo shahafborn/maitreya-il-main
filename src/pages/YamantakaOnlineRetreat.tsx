@@ -23,7 +23,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -32,7 +32,7 @@ import { ScheduleBlock } from "@/components/retreat/ScheduleBlock";
 import { DanaSection } from "@/components/retreat/DanaSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -41,6 +41,7 @@ import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import { yamantakaHero, yamantakaHeroMobile, yamantakaThangka, druponPhoto } from "@/assets/yamantaka-online-2026";
 
 const N8N_WEBHOOK_URL = "https://tknstk.app.n8n.cloud/webhook/Yamantaka_Register";
@@ -265,6 +266,13 @@ const YamantakaOnlineRetreat = () => {
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
   const openDana = searchParams.get("dana") === OPEN_DANA_KEY;
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  /* The event's own end date, the one already declared to Google above,
+     decides whether this page still sells. Once it has passed, every way
+     into the registration form goes and the upcoming-events cards take the
+     place of the first CTA, under the hero. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -298,8 +306,8 @@ const YamantakaOnlineRetreat = () => {
       lang="he"
       dir="rtl"
       seo={seo}
-      navCtaLabel="להרשמה"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "לאירועים" : "להרשמה"}
+      onNavCtaClick={concluded ? () => navigate("/events") : open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}
     >
       <RetreatHero
@@ -312,14 +320,25 @@ const YamantakaOnlineRetreat = () => {
         dateLine="1 בספטמבר עד 20 בנובמבר 2026 | בימים שני עד שישי | 4 מפגשים מקוונים בכל יום"
       />
 
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/yamantaka-online-2026"
+          ended={{
+            eyebrow: "הריטריט הסתיים",
+            line: "הריטריט התקיים מספטמבר עד נובמבר 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
+
       <AboutSection
         eyebrow="על הריטריט"
         paragraphs={[
           "ריטריט של שלושה חודשים בהובלת דרופון צ׳ונגוואל-לה. הריטריט יעמיק בתרגול מעשי ולימוד של טנטרת היוגה העליונה של יאמנטקה ותרגולים הקשורים למחזור יאמנטקה.",
           "מ-1 בספטמבר 2026 עד 20 בנובמבר 2026.",
         ]}
-        ctaLabel="להרשמה לריטריט"
-        onCtaClick={open}
+        ctaLabel={concluded ? undefined : "להרשמה לריטריט"}
+        onCtaClick={concluded ? undefined : open}
       />
 
       <SectionFrame tone="stone" maxWidth="md">
@@ -388,6 +407,7 @@ const YamantakaOnlineRetreat = () => {
         </ul>
       </SectionFrame>
 
+      {!concluded && (
       <DanaSection
         title="דאנה"
         paragraphs={[
@@ -399,7 +419,9 @@ const YamantakaOnlineRetreat = () => {
         ctaLabel="להרשמה ולתשלום"
         onCtaClick={open}
       />
+      )}
 
+      {!concluded && (
       <FinalCTA
         bgImage={yamantakaHero}
         title="מצטרפים לריטריט"
@@ -407,54 +429,35 @@ const YamantakaOnlineRetreat = () => {
         ctaLabel="להרשמה"
         onCtaClick={open}
       />
+      )}
 
       <InfoFooter
         contact={{
           heading: "צרו קשר",
-          label: "לשאלות, בירורים והרשמה:",
+          label: concluded ? "לשאלות ובירורים:" : "לשאלות, בירורים והרשמה:",
           email: CONTACT_EMAIL,
           phone: CONTACT_PHONE,
           phoneLabel: "טלפון:",
         }}
       />
 
-      {/* ── Other Events - the December 2026 retreats. OtherEvents hides a card
-           by itself once its endDate has passed, so this needs no cleanup. ── */}
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
-            title: "תרגולי מדיטציה וקונדליני לריפוי",
-            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
-            endDate: "2026-12-04",
-            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/healing-kundalini-retreat",
-          },
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "שש היוגות של ניגומה",
-            title: "שש היוגות של ניגומה",
-            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
-            endDate: "2026-12-12",
-            description: "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── on a finished page the same cards already sit
+           under the hero, where a reader actually meets them. ── */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/yamantaka-online-2026" />}
 
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        preselectedTierId={openDana ? OPEN_DANA_TIER_ID : undefined}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {/* Not rendered at all once the event is over, so no deep link -
+          a ?test= or a stale payment return - can open the form. */}
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          preselectedTierId={openDana ? OPEN_DANA_TIER_ID : undefined}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="rtl"

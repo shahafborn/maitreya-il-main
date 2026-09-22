@@ -25,12 +25,13 @@ import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
+import { hasEnded } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import type { RegistrationConfig } from "@/components/retreat/types";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
@@ -387,6 +388,13 @@ const MailingListSignup = () => {
 
 const SixYogasNigumaRetreat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  /* The retreat's own end date, the one already declared to Google above,
+     decides whether this page still sells. Once it has passed, every way into
+     the registration form goes and the upcoming-events cards take the place of
+     the first CTA, under the hero. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
   const testMode = searchParams.get("test") === TEST_KEY;
   const teamLink = searchParams.get("ticket") === TEAM_KEY;
   // A tier reached by private link: the test ticket, or the team offer.
@@ -541,9 +549,9 @@ const SixYogasNigumaRetreat = () => {
           <button
             className="py-2.5 px-6 text-base font-bold text-white rounded-full shadow-md hover:shadow-xl hover:scale-110 hover:brightness-110 transition-all duration-200"
             style={{ backgroundColor: "#B8860B" }}
-            onClick={() => openRegistration()}
+            onClick={concluded ? () => navigate("/events") : () => openRegistration()}
           >
-            להרשמה
+            {concluded ? "לאירועים" : "להרשמה"}
           </button>
         </div>
       </nav>
@@ -583,7 +591,19 @@ const SixYogasNigumaRetreat = () => {
             </p>
           </div>
         </div>
+
       </section>
+
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/six-yogas-niguma-retreat"
+          ended={{
+            eyebrow: "הריטריט הסתיים",
+            line: "הריטריט התקיים בדצמבר 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
 
       {/* ── Key info strip (visual break between two photo stripes) ── */}
       <div className="py-12 md:py-16" style={{ backgroundColor: CREAM }}>
@@ -594,17 +614,19 @@ const SixYogasNigumaRetreat = () => {
           <p className="text-lg md:text-xl leading-[1.8] text-center mb-8" style={{ color: "#3D3830" }}>
             <strong>לאמה גלן מולין,</strong> תלמידו של הדאלאי לאמה, ומורה בינ״ל לבודהיזם טיבטי, ילמד אותנו לעומק את דרך שש היוגות בריטריט מיוחד זה בים המלח.
           </p>
-          <div className="text-center">
-            <button
-              className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
-              style={{ borderColor: "#B8860B", color: "#B8860B", backgroundColor: "transparent" }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#B8860B"; e.currentTarget.style.color = "#fff"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#B8860B"; }}
-              onClick={() => openRegistration()}
-            >
-              להרשמה
-            </button>
-          </div>
+          {!concluded && (
+            <div className="text-center">
+              <button
+                className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+                style={{ borderColor: "#B8860B", color: "#B8860B", backgroundColor: "transparent" }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#B8860B"; e.currentTarget.style.color = "#fff"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#B8860B"; }}
+                onClick={() => openRegistration()}
+              >
+                להרשמה
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -863,7 +885,9 @@ const SixYogasNigumaRetreat = () => {
         </div>
       </section>
 
-      {/* ── Pricing Cards ── */}
+      {/* ── Pricing Cards ── prices for a retreat that has finished are noise
+           on the page, so the whole section goes once it is over. ── */}
+      {!concluded && (
       <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
@@ -915,6 +939,7 @@ const SixYogasNigumaRetreat = () => {
           </p>
         </div>
       </section>
+      )}
 
       {/* ── Venue (photo background + text overlay, Esalen "Campus Features" style) ── */}
       <section className="relative py-20 md:py-28">
@@ -1082,6 +1107,7 @@ const SixYogasNigumaRetreat = () => {
       )}
 
       {/* ── Final CTA ── */}
+      {!concluded && (
       <section className="relative py-20 md:py-28 text-center">
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto4})` }} />
         <div className="absolute inset-0 bg-black/70" />
@@ -1096,6 +1122,7 @@ const SixYogasNigumaRetreat = () => {
           <p className="text-sm text-white/40 mt-8 drop-shadow-sm">מספר המקומות מוגבל</p>
         </div>
       </section>
+      )}
 
       {/* ── Info Footer (cancellation, scholarships, contact) ── */}
       <section className="py-16 md:py-20">
@@ -1127,22 +1154,9 @@ const SixYogasNigumaRetreat = () => {
         </div>
       </section>
 
-      {/* ── Other Events ── */}
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
-            title: "תרגולי מדיטציה וקונדליני לריפוי",
-            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
-            endDate: "2026-12-04",
-            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, בליווי חניכה לפאלדן להמו",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/healing-kundalini-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── on a finished page the same cards already sit
+           under the hero, where a reader actually meets them. ── */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/six-yogas-niguma-retreat" />}
 
       {/* ── Mailing List Signup ── */}
       <MailingListSignup />
@@ -1152,11 +1166,14 @@ const SixYogasNigumaRetreat = () => {
         <p>© {new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.</p>
       </footer>
 
-      {/* ── Registration Modal ── */}
-      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedTierId={preselectedRoom || undefined} config={registrationConfig} copy={registrationCopy} />
+      {/* ── Registration Modal ── not rendered at all once the retreat is over,
+           so no ?ticket= or stale payment return can open the form. ── */}
+      {!concluded && (
+        <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedTierId={preselectedRoom || undefined} config={registrationConfig} copy={registrationCopy} />
+      )}
 
       {/* ── Payment Status Modal ── */}
-      {paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
+      {!concluded && paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
     </div>
   );
 };

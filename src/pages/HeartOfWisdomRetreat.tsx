@@ -37,7 +37,7 @@
  */
 
 import { useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -51,7 +51,7 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -60,6 +60,7 @@ import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPi
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import {
   howHero,
   lamaGlennPhoto,
@@ -220,6 +221,13 @@ const HeartOfWisdomRetreat = () => {
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* The retreat's own end date, the one already declared to Google above,
+     decides whether this page still sells. Once it has passed, every way into
+     the registration form goes and the upcoming-events cards take the place of
+     the first CTA, under the hero. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -240,8 +248,8 @@ const HeartOfWisdomRetreat = () => {
       lang="he"
       dir="rtl"
       seo={seo}
-      navCtaLabel="להרשמה"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "לאירועים" : "להרשמה"}
+      onNavCtaClick={concluded ? () => navigate("/events") : open}
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}
     >
       <RetreatHero
@@ -253,12 +261,23 @@ const HeartOfWisdomRetreat = () => {
         dateLine="28-30 במאי 2026 | מרכז אנטאקראנה, תל אביב"
       />
 
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/heart-of-wisdom-retreat"
+          ended={{
+            eyebrow: "הריטריט הסתיים",
+            line: "הריטריט התקיים במאי 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
+
       {/* Opening framing paragraphs from the 7th Dalai Lama / root-of-suffering intro. */}
       <AboutSection
         eyebrow="הדרך הישירה לחופש"
         softBgImage={cloudsBg}
-        ctaLabel="להרשמה לריטריט"
-        onCtaClick={open}
+        ctaLabel={concluded ? undefined : "להרשמה לריטריט"}
+        onCtaClick={concluded ? undefined : open}
         paragraphs={[
           "הבודהיזם מלמד שהשורש לסבל בחיינו נובע מכך שאנו מזהים את עצמנו עם הדברים הלא נכונים - גופינו, מחשבותינו, רגשותינו, וכל תנאי החיים המשתנים תדיר. הזהות המוטעה הזאת, הנתפסת כ״אני האמיתי״, מונעת מאיתנו לזהות את הטבע האינסופי של התודעה שלנו, ושומרת אותנו במעגלי הסבל.",
           "הטנטרה הבודהיסטית מאפשרת לנו להשתחרר מההזדהויות המוטעות האלו באמצעות שיטות מיומנות, המאפשרות לנו לזהות ולהתחבר ישירות אל האושר, הזוהר והמרחב שבטבע התודעה שלנו. כך אנחנו יכולים להשתחרר מהסבל, ולפעול בעולם מתוך בסיס של חמלה, אושר וחוכמה.",
@@ -290,30 +309,32 @@ const HeartOfWisdomRetreat = () => {
             <p>המסורת מתארת את האיכות הטבעית הזאת של התודעה בדימויים שונים: רחבה כשמיים, יציבה כהר, בהירה כלהבה, שקופה כגביש. מחשבות ורגשות עולים ונעלמים כעננים חולפים או כגלים על פני הים, ומתגלים כחלק מאותה מודעות עצמה - בלי צורך לתפוס אותם ובלי צורך לדחות אותם.</p>
             <p>תרגול המהמודרה נחשב לתרגול הגבוה ביותר במסורת הבודהיסטית - והוא מתורגל ע״י מודטים ויוגים באסיה זה אלפי שנים כמסורת חיה ורבת עוצמה.</p>
           </div>
-          <div className="mt-10 flex justify-center">
-            {/* Outline gold button matching the About section's CTA style. */}
-            <button
-              type="button"
-              onClick={open}
-              className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer"
-              style={{
-                borderColor: RETREAT_THEME.GOLD_DARK,
-                color: RETREAT_THEME.GOLD_DARK,
-                backgroundColor: "transparent",
-                fontFamily: RETREAT_FONTS.sans,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
-                e.currentTarget.style.color = "#fff";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
-              }}
-            >
-              להרשמה לריטריט
-            </button>
-          </div>
+          {!concluded && (
+            <div className="mt-10 flex justify-center">
+              {/* Outline gold button matching the About section's CTA style. */}
+              <button
+                type="button"
+                onClick={open}
+                className="px-10 py-4 text-lg font-semibold rounded-full border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] cursor-pointer"
+                style={{
+                  borderColor: RETREAT_THEME.GOLD_DARK,
+                  color: RETREAT_THEME.GOLD_DARK,
+                  backgroundColor: "transparent",
+                  fontFamily: RETREAT_FONTS.sans,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = RETREAT_THEME.GOLD_DARK;
+                  e.currentTarget.style.color = "#fff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = RETREAT_THEME.GOLD_DARK;
+                }}
+              >
+                להרשמה לריטריט
+              </button>
+            </div>
+          )}
         </div>
       </SectionFrame>
 
@@ -396,17 +417,27 @@ const HeartOfWisdomRetreat = () => {
 
       <WhatsIncluded eyebrow="מה כולל הריטריט" items={whatsIncluded} />
 
+      {/* The dana section outlives the registration (Shahaf, 2026-09-22): it is
+          the one section here that teaches rather than sells, so on a finished
+          page it keeps its explanation and loses the amount, the button and the
+          closing sentence about registering on the site. */}
       <div ref={ctaSectionRef}>
         <DanaSection
           title="השתתפות בדאנא"
           paragraphs={[
             "🪷 ההשתתפות בלימוד היא בדאנא - תרומה מתוך נדיבות הלב.",
-            "במסורת הבודהיסטית, הלימודים עוברים בדאנא - נדיבות הדדית בין המורה לתלמיד. התלמיד מקבל את הלימוד, והמורה מקבל את התמיכה שמאפשרת לו להמשיך ללמד. תרומתכם מאפשרת את קיום הלימוד ואת המשך הפעילות של הסנגהה. תרומת הדאנא תתבצע בזמן ההרשמה לריטריט באתר.",
+            concluded
+              ? "במסורת הבודהיסטית, הלימודים עוברים בדאנא - נדיבות הדדית בין המורה לתלמיד. התלמיד מקבל את הלימוד, והמורה מקבל את התמיכה שמאפשרת לו להמשיך ללמד. תרומתכם מאפשרת את קיום הלימוד ואת המשך הפעילות של הסנגהה."
+              : "במסורת הבודהיסטית, הלימודים עוברים בדאנא - נדיבות הדדית בין המורה לתלמיד. התלמיד מקבל את הלימוד, והמורה מקבל את התמיכה שמאפשרת לו להמשיך ללמד. תרומתכם מאפשרת את קיום הלימוד ואת המשך הפעילות של הסנגהה. תרומת הדאנא תתבצע בזמן ההרשמה לריטריט באתר.",
           ]}
-          suggestedLine="תרומה מומלצת להשתתפות בהוצאות הריטריט: 650 ש״ח"
-          footerNote="🪷 כל סכום תרומה יתקבל בברכה, כדי לאפשר לכל המעוניין להשתתף. מספר המקומות מוגבל - מומלץ להירשם בהקדם."
-          ctaLabel="להרשמה לריטריט"
-          onCtaClick={open}
+          suggestedLine={concluded ? undefined : "תרומה מומלצת להשתתפות בהוצאות הריטריט: 650 ש״ח"}
+          footerNote={
+            concluded
+              ? undefined
+              : "🪷 כל סכום תרומה יתקבל בברכה, כדי לאפשר לכל המעוניין להשתתף. מספר המקומות מוגבל - מומלץ להירשם בהקדם."
+          }
+          ctaLabel={concluded ? undefined : "להרשמה לריטריט"}
+          onCtaClick={concluded ? undefined : open}
         />
       </div>
 
@@ -423,50 +454,30 @@ const HeartOfWisdomRetreat = () => {
         iframeTitle="לאמה גלן מולין - טנטרה בודהיסטית"
       />
 
-      <FinalCTA
-        bgImage={prayerFlagsBg}
-        title="הצטרפו לריטריט"
-        body="שלושה ימי עומק של לימוד ותרגול שיטות החוכמה של הבודהיזם הטנטרי, עם העצמה למנג׳ושרי הלבן, בלב תל אביב"
-        ctaLabel="להרשמה לריטריט"
-        onCtaClick={open}
-        footnote="מספר המקומות מוגבל"
-      />
+      {!concluded && (
+        <FinalCTA
+          bgImage={prayerFlagsBg}
+          title="הצטרפו לריטריט"
+          body="שלושה ימי עומק של לימוד ותרגול שיטות החוכמה של הבודהיזם הטנטרי, עם העצמה למנג׳ושרי הלבן, בלב תל אביב"
+          ctaLabel="להרשמה לריטריט"
+          onCtaClick={open}
+          footnote="מספר המקומות מוגבל"
+        />
+      )}
 
       <InfoFooter
         contact={{
           heading: "צרו קשר",
-          label: "לשאלות, בירורים והרשמה:",
+          label: concluded ? "לשאלות ובירורים:" : "לשאלות, בירורים והרשמה:",
           email: CONTACT_EMAIL,
           phone: CONTACT_PHONE,
           phoneLabel: "טלפון:",
         }}
       />
 
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
-            title: "תרגולי מדיטציה וקונדליני לריפוי",
-            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
-            endDate: "2026-12-04",
-            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/healing-kundalini-retreat",
-          },
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "שש היוגות של ניגומה",
-            title: "שש היוגות של ניגומה",
-            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
-            endDate: "2026-12-12",
-            description: "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* On a finished page the same cards already sit under the hero, where a
+          reader actually meets them - so this slot is for a page still selling. */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/heart-of-wisdom-retreat" />}
 
       <MailingListSignup
         heading="הישארו מעודכנים"
@@ -479,14 +490,18 @@ const HeartOfWisdomRetreat = () => {
         tag="Hebrew"
       />
 
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {/* Not rendered at all once the retreat is over, so no deep link - a
+          ?ticket= or a stale payment return - can open the form. */}
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="rtl"

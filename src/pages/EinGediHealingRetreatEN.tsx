@@ -14,7 +14,7 @@
  */
 
 import { useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -26,8 +26,7 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
-import { howPromoCard } from "@/assets/heart-of-wisdom-retreat";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -36,6 +35,7 @@ import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPi
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import {
   heroImage,
   lamaGlennPhoto,
@@ -207,6 +207,10 @@ const EinGediHealingRetreatEN = () => {
     | null;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* Same rule as the Hebrew page: the retreat's own end date closes it. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -230,8 +234,8 @@ const EinGediHealingRetreatEN = () => {
       lang="en"
       dir="ltr"
       seo={seo}
-      navCtaLabel="Register"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "Events" : "Register"}
+      onNavCtaClick={concluded ? () => navigate("/en/events") : open}
       footerText={`\u00A9 ${new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.`}
     >
       {/* ── Hero ── */}
@@ -245,6 +249,17 @@ const EinGediHealingRetreatEN = () => {
         objectPosition="center 30%"
         mobileImage={medicineBuddha}
       />
+
+      {concluded && (
+        <UpcomingEvents
+          lang="en"
+          currentUrl="/events/en/ein-gedi-healing-retreat"
+          ended={{
+            eyebrow: "This retreat has ended",
+            line: "It took place in June 2026 and registration is closed.",
+          }}
+        />
+      )}
 
       {/* ── Key info strip ── */}
       <SectionFrame tone="cream" maxWidth="md" size="md">
@@ -260,35 +275,37 @@ const EinGediHealingRetreatEN = () => {
           practices for healing, balance, longevity, and deepening the spiritual
           path.
         </p>
-        <div className="text-center">
-          <button
-            className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
-            style={{
-              borderColor: "#B8860B",
-              color: "#B8860B",
-              backgroundColor: "transparent",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#B8860B";
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "#B8860B";
-            }}
-            onClick={open}
-          >
-            Register for the Online Retreat
-          </button>
-        </div>
+        {!concluded && (
+          <div className="text-center">
+            <button
+              className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+              style={{
+                borderColor: "#B8860B",
+                color: "#B8860B",
+                backgroundColor: "transparent",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#B8860B";
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = "#B8860B";
+              }}
+              onClick={open}
+            >
+              Register for the Online Retreat
+            </button>
+          </div>
+        )}
       </SectionFrame>
 
       {/* ── About ── */}
       <AboutSection
         eyebrow="About the Retreat"
         bgImage={heroImage}
-        ctaLabel="Register for the Online Retreat"
-        onCtaClick={open}
+        ctaLabel={concluded ? undefined : "Register for the Online Retreat"}
+        onCtaClick={concluded ? undefined : open}
         paragraphs={[
           <>
             In this retreat, we will learn what healing means according to
@@ -489,20 +506,22 @@ const EinGediHealingRetreatEN = () => {
         items={whatsIncluded}
       />
 
-      {/* ── Pricing ── */}
-      <div ref={ctaSectionRef}>
-        <PricingGrid
-          title="Registration"
-          subtitle="Join the retreat via Zoom from anywhere in the world"
-          tiers={registrationConfig.tiers}
-          ctaLabel="Register Now"
-          onSelect={() => open()}
-          notes={[
-            "Secure payment processed via Cardcom.",
-            "We want everyone who is interested to be able to participate and benefit from the Dharma. If you would like to join but cannot afford the registration fee due to life circumstances, please contact us at maitreyasanghaisrael@gmail.com",
-          ]}
-        />
-      </div>
+      {/* ── Pricing ── a price for something nobody can join any more is noise */}
+      {!concluded && (
+        <div ref={ctaSectionRef}>
+          <PricingGrid
+            title="Registration"
+            subtitle="Join the retreat via Zoom from anywhere in the world"
+            tiers={registrationConfig.tiers}
+            ctaLabel="Register Now"
+            onSelect={() => open()}
+            notes={[
+              "Secure payment processed via Cardcom.",
+              "We want everyone who is interested to be able to participate and benefit from the Dharma. If you would like to join but cannot afford the registration fee due to life circumstances, please contact us at maitreyasanghaisrael@gmail.com",
+            ]}
+          />
+        </div>
+      )}
 
       {/* ── Gallery ── */}
       <GalleryCarousel
@@ -520,14 +539,16 @@ const EinGediHealingRetreatEN = () => {
       />
 
       {/* ── Final CTA ── */}
-      <FinalCTA
-        bgImage={venuePhoto1}
-        title="Join the Healing Retreat"
-        body="Six days of deep healing and longevity practices from Tibetan Buddhist Tantra, with three initiations, live on Zoom"
-        ctaLabel="Register for the Online Retreat"
-        onCtaClick={open}
-        footnote="Limited spots available"
-      />
+      {!concluded && (
+        <FinalCTA
+          bgImage={venuePhoto1}
+          title="Join the Healing Retreat"
+          body="Six days of deep healing and longevity practices from Tibetan Buddhist Tantra, with three initiations, live on Zoom"
+          ctaLabel="Register for the Online Retreat"
+          onCtaClick={open}
+          footnote="Limited spots available"
+        />
+      )}
 
       {/* ── Contact ── */}
       <InfoFooter
@@ -538,22 +559,10 @@ const EinGediHealingRetreatEN = () => {
         }}
       />
 
-      {/* ── Other Events ── */}
-      <OtherEvents
-        heading="Upcoming Events"
-        events={[
-          {
-            image: howPromoCard,
-            imageAlt: "Mahamudra - Heart of Wisdom",
-            title: "Mahamudra - Heart of Wisdom",
-            dateLabel: "May 28-30, 2026",
-            endDate: "2026-05-30",
-            description: "Three days of teaching and practice of the unique wisdom methods of Buddhist Tantra, including a White Manjushri empowerment",
-            ctaLabel: "Learn More",
-            href: "/events/en/heart-of-wisdom-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── one hand-written card for the May retreat, which had
+          already passed, so this block rendered nothing at all. Now it comes
+          from content/en/events, and on a finished page it sits under the hero. */}
+      {!concluded && <UpcomingEvents lang="en" currentUrl="/events/en/ein-gedi-healing-retreat" />}
 
       {/* ── Mailing List ── */}
       <MailingListSignup
@@ -568,15 +577,17 @@ const EinGediHealingRetreatEN = () => {
       />
 
       {/* ── Registration Modal ── */}
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
       {/* ── Payment Status ── */}
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="ltr"

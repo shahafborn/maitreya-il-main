@@ -18,7 +18,7 @@
  */
 
 import { useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -31,8 +31,7 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
-import { einGediPromoCard } from "@/assets/ein-gedi-retreat";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
@@ -41,6 +40,7 @@ import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPi
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
+import { hasEnded } from "@/site/today";
 import {
   howHero,
   lamaGlennPhoto,
@@ -180,6 +180,10 @@ const HeartOfWisdomRetreatEN = () => {
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* Same rule as the Hebrew page: the retreat's own end date closes it. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -200,8 +204,8 @@ const HeartOfWisdomRetreatEN = () => {
       lang="en"
       dir="ltr"
       seo={seo}
-      navCtaLabel="Register"
-      onNavCtaClick={open}
+      navCtaLabel={concluded ? "Events" : "Register"}
+      onNavCtaClick={concluded ? () => navigate("/en/events") : open}
       footerText={`\u00A9 ${new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.`}
     >
       <RetreatHero
@@ -213,11 +217,22 @@ const HeartOfWisdomRetreatEN = () => {
         dateLine="May 28-30, 2026 | Live on Zoom"
       />
 
+      {concluded && (
+        <UpcomingEvents
+          lang="en"
+          currentUrl="/events/en/heart-of-wisdom-retreat"
+          ended={{
+            eyebrow: "This retreat has ended",
+            line: "It took place in May 2026 and registration is closed.",
+          }}
+        />
+      )}
+
       <AboutSection
         eyebrow="The Direct Path to Freedom"
         softBgImage={cloudsBg}
-        ctaLabel="Register for the Online Retreat"
-        onCtaClick={open}
+        ctaLabel={concluded ? undefined : "Register for the Online Retreat"}
+        onCtaClick={concluded ? undefined : open}
         paragraphs={[
           "Buddhism teaches that the root of suffering in our lives comes from identifying with the wrong things - our bodies, thoughts, emotions, and all the ever-changing conditions of life. This mistaken identity, perceived as our \"true self,\" prevents us from recognizing the infinite nature of our consciousness and keeps us in cycles of suffering.",
           "Buddhist Tantra enables us to free ourselves from these mistaken identifications through skillful methods, allowing us to directly recognize and connect with the bliss, luminosity, and spaciousness that are the nature of our mind. In this way we can free ourselves from suffering and act in the world from a basis of compassion, joy, and wisdom.",
@@ -309,19 +324,22 @@ const HeartOfWisdomRetreatEN = () => {
 
       <WhatsIncluded eyebrow="What's Included" items={whatsIncluded} />
 
-      <div ref={ctaSectionRef}>
-        <PricingGrid
-          title="Registration"
-          subtitle="Join the retreat via Zoom from anywhere in the world"
-          tiers={registrationConfig.tiers}
-          ctaLabel="Register Now"
-          onSelect={() => open()}
-          notes={[
-            "Secure payment processed via Cardcom.",
-            "We want everyone who is interested to be able to participate and benefit from the Dharma. If you would like to join but cannot afford the registration fee due to life circumstances, please contact us at maitreyasanghaisrael@gmail.com",
-          ]}
-        />
-      </div>
+      {/* A price for something nobody can join any more is noise on the page. */}
+      {!concluded && (
+        <div ref={ctaSectionRef}>
+          <PricingGrid
+            title="Registration"
+            subtitle="Join the retreat via Zoom from anywhere in the world"
+            tiers={registrationConfig.tiers}
+            ctaLabel="Register Now"
+            onSelect={() => open()}
+            notes={[
+              "Secure payment processed via Cardcom.",
+              "We want everyone who is interested to be able to participate and benefit from the Dharma. If you would like to join but cannot afford the registration fee due to life circumstances, please contact us at maitreyasanghaisrael@gmail.com",
+            ]}
+          />
+        </div>
+      )}
 
       <GalleryCarousel
         title="From Our Retreats"
@@ -336,14 +354,16 @@ const HeartOfWisdomRetreatEN = () => {
         iframeTitle="Lama Glenn Mullin - Buddhist Tantra"
       />
 
-      <FinalCTA
-        bgImage={prayerFlagsBg}
-        title="Join the Retreat"
-        body="Three days of in-depth teaching and practice of the wisdom methods of Buddhist Tantra, with a White Manjushri empowerment, live on Zoom"
-        ctaLabel="Register for the Online Retreat"
-        onCtaClick={open}
-        footnote="Limited spots available"
-      />
+      {!concluded && (
+        <FinalCTA
+          bgImage={prayerFlagsBg}
+          title="Join the Retreat"
+          body="Three days of in-depth teaching and practice of the wisdom methods of Buddhist Tantra, with a White Manjushri empowerment, live on Zoom"
+          ctaLabel="Register for the Online Retreat"
+          onCtaClick={open}
+          footnote="Limited spots available"
+        />
+      )}
 
       <InfoFooter
         contact={{
@@ -353,21 +373,10 @@ const HeartOfWisdomRetreatEN = () => {
         }}
       />
 
-      <OtherEvents
-        heading="Upcoming Events"
-        events={[
-          {
-            image: einGediPromoCard,
-            imageAlt: "The Path of Tantric Healing",
-            title: "The Path of Tantric Healing",
-            dateLabel: "June 1-6, 2026",
-            endDate: "2026-06-06",
-            description: "Six days of deep healing and longevity practices from the Tibetan Buddhist Tantric tradition",
-            ctaLabel: "Learn More",
-            href: "/events/en/ein-gedi-healing-retreat",
-          },
-        ]}
-      />
+      {/* This used to be one hand-written card for the June retreat, which has
+          since passed - so the block rendered nothing and the English page had
+          no cross-promotion at all. It now comes from content/en/events. */}
+      {!concluded && <UpcomingEvents lang="en" currentUrl="/events/en/heart-of-wisdom-retreat" />}
 
       <MailingListSignup
         heading="Stay Updated"
@@ -380,14 +389,16 @@ const HeartOfWisdomRetreatEN = () => {
         tag="English"
       />
 
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="ltr"

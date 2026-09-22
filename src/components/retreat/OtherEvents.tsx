@@ -16,9 +16,24 @@ export interface OtherEvent {
 interface OtherEventsProps {
   heading: string;
   events: OtherEvent[];
+  /** Small line above the heading, e.g. "הריטריט הסתיים" on a finished page. */
+  eyebrow?: string;
+  /** One sentence between the heading and the cards. */
+  intro?: string;
+  /** Section background. Stone by default; cream when the section sits under a photo hero. */
+  tone?: "cream" | "stone";
+  /** Link under the cards, e.g. "לכל האירועים" -> /events. */
+  footerLink?: { label: string; href: string };
 }
 
-export const OtherEvents = ({ heading, events }: OtherEventsProps) => {
+export const OtherEvents = ({
+  heading,
+  events,
+  eyebrow,
+  intro,
+  tone = "stone",
+  footerLink,
+}: OtherEventsProps) => {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
@@ -37,12 +52,29 @@ export const OtherEvents = ({ heading, events }: OtherEventsProps) => {
         : "md:grid-cols-3";
 
   return (
-    <SectionFrame tone="stone" size="md">
+    <SectionFrame tone={tone} size="md">
+      {eyebrow && (
+        <p
+          className="text-center text-sm font-bold tracking-[0.2em] mb-3"
+          style={{ color: RETREAT_THEME.GOLD_DARK }}
+        >
+          {eyebrow}
+        </p>
+      )}
       <SectionTitle className="text-center mb-2">{heading}</SectionTitle>
       <div
-        className="w-12 h-1 rounded-full mx-auto mb-10"
+        className="w-12 h-1 rounded-full mx-auto mb-6"
         style={{ backgroundColor: RETREAT_THEME.GOLD }}
       />
+      {intro && (
+        <p
+          className="text-center text-lg leading-relaxed max-w-2xl mx-auto mb-10"
+          style={{ color: RETREAT_THEME.BODY }}
+        >
+          {intro}
+        </p>
+      )}
+      {!intro && <div className="mb-4" />}
 
       <div
         className={`grid gap-8 ${gridCols} ${activeEvents.length === 1 ? "max-w-lg mx-auto" : ""}`}
@@ -104,6 +136,18 @@ export const OtherEvents = ({ heading, events }: OtherEventsProps) => {
           </div>
         ))}
       </div>
+
+      {footerLink && (
+        <p className="text-center mt-10">
+          <Link
+            to={footerLink.href}
+            className="text-lg font-semibold underline underline-offset-4 transition-colors hover:opacity-80"
+            style={{ color: RETREAT_THEME.GOLD_DARK }}
+          >
+            {footerLink.label}
+          </Link>
+        </p>
+      )}
     </SectionFrame>
   );
 };

@@ -20,7 +20,7 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { MapPin, MonitorPlay } from "lucide-react";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
@@ -33,7 +33,8 @@ import { VideoSection } from "@/components/retreat/VideoSection";
 import { FinalCTA } from "@/components/retreat/FinalCTA";
 import { InfoFooter } from "@/components/retreat/InfoFooter";
 import { MailingListSignup } from "@/components/retreat/MailingListSignup";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
+import { hasEnded } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle, SectionEyebrow } from "@/components/retreat/SectionFrame";
@@ -276,6 +277,11 @@ const HealingKundaliniRetreatEN = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<string | undefined>(undefined);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  /* The retreat's own end date, the one already declared to Google above,
+     decides whether this page still sells. Nothing to switch off by hand. */
+  const concluded = hasEnded(eventJsonLd.endDate);
 
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
@@ -318,8 +324,8 @@ const HealingKundaliniRetreatEN = () => {
       lang="en"
       dir="ltr"
       seo={seo}
-      navCtaLabel="Register"
-      onNavCtaClick={() => open()}
+      navCtaLabel={concluded ? "Events" : "Register"}
+      onNavCtaClick={concluded ? () => navigate("/en/events") : () => open()}
       footerText={`© ${new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.`}
     >
       <RetreatHero
@@ -333,11 +339,22 @@ const HealingKundaliniRetreatEN = () => {
         objectPosition="62% 40%"
       />
 
+      {concluded && (
+        <UpcomingEvents
+          lang="en"
+          currentUrl="/events/en/healing-kundalini-retreat"
+          ended={{
+            eyebrow: "This retreat has ended",
+            line: "It took place in December 2026 and registration is closed.",
+          }}
+        />
+      )}
+
       <AboutSection
         eyebrow="Healing Body and Mind"
         softBgImage={cloudsBg}
-        ctaLabel="Register for the Retreat"
-        onCtaClick={() => open()}
+        ctaLabel={concluded ? undefined : "Register for the Retreat"}
+        onCtaClick={concluded ? undefined : () => open()}
         paragraphs={[
           "The Buddhist tradition is rich in knowledge and in profound meditation practices for healing body and mind. Buddhism recognizes the deep relationship between body and mind, and between a person and their environment - and the ways these inter-relations contribute to health or to illness.",
           "Over the generations in Asia, practitioners, physicians and healers have used the Buddhist healing methods to heal themselves and others: healing the mind of negative emotions and harmful tendencies, and healing the body through deep yogic work with the body's inner energetic systems.",
@@ -504,6 +521,8 @@ const HealingKundaliniRetreatEN = () => {
 
       <WhatsIncluded eyebrow="What's Included" items={whatsIncluded} />
 
+      {/* A price for something nobody can join any more is noise on the page. */}
+      {!concluded && (
       <div ref={ctaSectionRef}>
         <PricingGrid
           title="Registration"
@@ -518,6 +537,7 @@ const HealingKundaliniRetreatEN = () => {
           ]}
         />
       </div>
+      )}
 
       <GalleryCarousel
         title="From Our Retreats"
@@ -532,6 +552,7 @@ const HealingKundaliniRetreatEN = () => {
         iframeTitle="Lama Glenn Mullin - Buddhist Tantra"
       />
 
+      {!concluded && (
       <FinalCTA
         bgImage={prayerFlagsBg}
         title="Join the Retreat"
@@ -540,6 +561,7 @@ const HealingKundaliniRetreatEN = () => {
         onCtaClick={() => open()}
         footnote="Recordings included"
       />
+      )}
 
       <InfoFooter
         contact={{
@@ -549,22 +571,9 @@ const HealingKundaliniRetreatEN = () => {
         }}
       />
 
-      <OtherEvents
-        heading="Upcoming Events"
-        events={[
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "The Six Yogas of Niguma",
-            title: "The Six Yogas of Niguma",
-            dateLabel: "December 6-12, 2026 | Ein Gedi, Dead Sea, or live on Zoom",
-            endDate: "2026-12-12",
-            description:
-              "A six-day retreat with Lama Glenn Mullin on the Six Yogas of Niguma, including the Vajrayogini empowerment - in person at Ein Gedi or on Zoom",
-            ctaLabel: "Learn More",
-            href: "/events/en/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── from content/en/events, so it can never point at
+           a retreat that has already happened. ── */}
+      {!concluded && <UpcomingEvents lang="en" currentUrl="/events/en/healing-kundalini-retreat" />}
 
       <MailingListSignup
         heading="Stay Updated"
@@ -577,15 +586,19 @@ const HealingKundaliniRetreatEN = () => {
         tag="English"
       />
 
-      <RegistrationModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        preselectedTierId={preselectedTier}
-        config={registrationConfig}
-        copy={registrationCopy}
-      />
+      {/* Not rendered at all once the retreat is over, so no deep link or
+          stale payment return can open the form. */}
+      {!concluded && (
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          preselectedTierId={preselectedTier}
+          config={registrationConfig}
+          copy={registrationCopy}
+        />
+      )}
 
-      {paymentStatus && (
+      {!concluded && paymentStatus && (
         <PaymentStatusModal
           status={paymentStatus}
           dir="ltr"

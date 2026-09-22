@@ -7,12 +7,13 @@ declare global {
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd } from "@/components/retreat/hooks/useEventJsonLd";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { OtherEvents } from "@/components/retreat/OtherEvents";
+import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
+import { hasEnded } from "@/site/today";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/retreat/hero-dead-sea-gen.jpeg";
 import threeDeities from "@/assets/retreat/three-deities.jpg";
@@ -588,6 +589,13 @@ const MailingListSignup = () => {
 
 const EinGediRetreatV2 = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  /* The retreat's own end date, the one already declared to Google below,
+     decides whether this page still sells. Once it has passed, every way into
+     the registration form goes and the upcoming-events cards take the place of
+     the first CTA, under the hero. Nothing to switch off by hand. */
+  const concluded = hasEnded("2026-06-06");
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
@@ -778,9 +786,9 @@ const EinGediRetreatV2 = () => {
           <button
             className="py-2.5 px-6 text-base font-bold text-white rounded-full shadow-md hover:shadow-xl hover:scale-110 hover:brightness-110 transition-all duration-200"
             style={{ backgroundColor: "#B8860B" }}
-            onClick={() => openRegistration()}
+            onClick={concluded ? () => navigate("/events") : () => openRegistration()}
           >
-            להרשמה
+            {concluded ? "לאירועים" : "להרשמה"}
           </button>
         </div>
       </nav>
@@ -811,23 +819,36 @@ const EinGediRetreatV2 = () => {
         </div>
       </section>
 
+      {concluded && (
+        <UpcomingEvents
+          lang="he"
+          currentUrl="/events/ein-gedi-healing-retreat"
+          ended={{
+            eyebrow: "הריטריט הסתיים",
+            line: "הריטריט התקיים ביוני 2026 וההרשמה סגורה.",
+          }}
+        />
+      )}
+
       {/* ── Key info strip (visual break between two photo stripes) ── */}
       <div className="py-12 md:py-16" style={{ backgroundColor: CREAM }}>
         <div className="max-w-3xl mx-auto px-6">
           <p className="text-lg md:text-xl leading-[1.8] text-center mb-8" style={{ color: "#3D3830" }}>
             המסורת הבודהיסטית עתיקת היומין מביאה אמצעים רבי עוצמה לריפוי והארה. בריטריט מיוחד זה נלמד עם לאמה גלן מולין, תלמידו האישי של הדלאי לאמה, מהו ריפוי לפי הבודהיזם הטנטרי ונתרגל שלושה מתרגולי הליבה של הריפוי הטנטרי - תרגולים עתיקים ורבי עוצמה לריפוי, לאיזון, להארכת חיים ולהעמקה בדרך הרוחנית.
           </p>
-          <div className="text-center">
-            <button
-              className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
-              style={{ borderColor: "#B8860B", color: "#B8860B", backgroundColor: "transparent" }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#B8860B"; e.currentTarget.style.color = "#fff"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#B8860B"; }}
-              onClick={() => openRegistration()}
-            >
-              להרשמה
-            </button>
-          </div>
+          {!concluded && (
+            <div className="text-center">
+              <button
+                className="py-3 px-8 text-base font-bold rounded-full border-2 transition-all duration-200 hover:scale-105 hover:shadow-md"
+                style={{ borderColor: "#B8860B", color: "#B8860B", backgroundColor: "transparent" }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#B8860B"; e.currentTarget.style.color = "#fff"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#B8860B"; }}
+                onClick={() => openRegistration()}
+              >
+                להרשמה
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1075,7 +1096,9 @@ const EinGediRetreatV2 = () => {
         </div>
       </section>
 
-      {/* ── Pricing Cards ── */}
+      {/* ── Pricing Cards ── room prices for a retreat that has finished are
+           noise on the page, so the whole section goes once it is over. ── */}
+      {!concluded && (
       <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F0EA" }}>
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
@@ -1133,6 +1156,7 @@ const EinGediRetreatV2 = () => {
           </p>
         </div>
       </section>
+      )}
 
       {/* ── Venue (photo background + text overlay, Esalen "Campus Features" style) ── */}
       <section className="relative py-20 md:py-28">
@@ -1297,20 +1321,22 @@ const EinGediRetreatV2 = () => {
       )}
 
       {/* ── Final CTA ── */}
-      <section className="relative py-20 md:py-28 text-center">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto4})` }} />
-        <div className="absolute inset-0 bg-black/70" />
-        <div className="relative z-10 max-w-2xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-            הצטרפו לריטריט
-          </h2>
-          <p className="text-xl text-white/70 mb-10 leading-relaxed drop-shadow-md">
-            שישה ימים של תרגולי ריפוי ממסורת הבודהיזם הטנטרי, על שפת ים המלח, באווירה טבעית ומרפאת
-          </p>
-          <CTAButton className="drop-shadow-lg" onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
-          <p className="text-sm text-white/40 mt-8 drop-shadow-sm">מספר המקומות מוגבל</p>
-        </div>
-      </section>
+      {!concluded && (
+        <section className="relative py-20 md:py-28 text-center">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${venuePhoto4})` }} />
+          <div className="absolute inset-0 bg-black/70" />
+          <div className="relative z-10 max-w-2xl mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 drop-shadow-lg" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
+              הצטרפו לריטריט
+            </h2>
+            <p className="text-xl text-white/70 mb-10 leading-relaxed drop-shadow-md">
+              שישה ימים של תרגולי ריפוי ממסורת הבודהיזם הטנטרי, על שפת ים המלח, באווירה טבעית ומרפאת
+            </p>
+            <CTAButton className="drop-shadow-lg" onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
+            <p className="text-sm text-white/40 mt-8 drop-shadow-sm">מספר המקומות מוגבל</p>
+          </div>
+        </section>
+      )}
 
       {/* ── Info Footer (cancellation, scholarships, contact) ── */}
       <section className="py-16 md:py-20">
@@ -1327,7 +1353,7 @@ const EinGediRetreatV2 = () => {
           <div>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>צרו קשר</h3>
             <p className="text-lg" style={{ color: WARM_GRAY }}>
-              לשאלות, בירורים והרשמה:{" "}
+              {concluded ? "לשאלות ובירורים:" : "לשאלות, בירורים והרשמה:"}{" "}
               <a href="mailto:maitreyasanghaisrael@gmail.com" className="underline decoration-1 underline-offset-4 transition-colors hover:text-[#C9A961]">
                 maitreyasanghaisrael@gmail.com
               </a>
@@ -1342,32 +1368,9 @@ const EinGediRetreatV2 = () => {
         </div>
       </section>
 
-      {/* ── Other Events ── */}
-      <OtherEvents
-        heading="אירועים קרובים"
-        events={[
-          {
-            image: "/og-healing-kundalini-retreat.jpg",
-            imageAlt: "תרגולי מדיטציה וקונדליני לריפוי",
-            title: "תרגולי מדיטציה וקונדליני לריפוי",
-            dateLabel: "2-4 בדצמבר 2026, אנטאקראנה, תל אביב",
-            endDate: "2026-12-04",
-            description: "ריטריט עירוני של שלושה ימי לימוד ותרגול של שיטות הריפוי של הבודהיזם הטנטרי, כולל חניכה לפאלדן להמו",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/healing-kundalini-retreat",
-          },
-          {
-            image: "/og-six-yogas-niguma.jpg",
-            imageAlt: "שש היוגות של ניגומה",
-            title: "שש היוגות של ניגומה",
-            dateLabel: "6-12 בדצמבר 2026, בית ספר שדה עין גדי",
-            endDate: "2026-12-12",
-            description: "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - כולל העצמת ואג׳ראיוגיני, בחנוכה על שפת ים המלח",
-            ctaLabel: "לפרטים נוספים",
-            href: "/events/six-yogas-niguma-retreat",
-          },
-        ]}
-      />
+      {/* ── Other Events ── on a finished page the same cards already sit under
+           the hero, where a reader actually meets them. ── */}
+      {!concluded && <UpcomingEvents lang="he" currentUrl="/events/ein-gedi-healing-retreat" />}
 
       {/* ── Mailing List Signup ── */}
       <MailingListSignup />
@@ -1377,11 +1380,14 @@ const EinGediRetreatV2 = () => {
         <p>© {new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.</p>
       </footer>
 
-      {/* ── Registration Modal ── */}
-      <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedRoom={preselectedRoom} />
+      {/* ── Registration Modal ── not rendered at all once the retreat is over,
+           so no deep link or stale payment return can open the form. ── */}
+      {!concluded && (
+        <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedRoom={preselectedRoom} />
+      )}
 
       {/* ── Payment Status Modal ── */}
-      {paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
+      {!concluded && paymentStatus && <PaymentStatusModal status={paymentStatus} onClose={closePaymentStatus} />}
     </div>
   );
 };
