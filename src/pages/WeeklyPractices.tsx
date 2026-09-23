@@ -160,7 +160,8 @@ const SCHEDULE: DayRow[] = [
  *   2. Under `days`, list each affected day; the periods you provide REPLACE
  *      that day's standing cells for the window (omit a period to keep it as-is,
  *      pass an empty array to clear it).
- *   3. Optional `note` renders a highlighted banner while the override is active.
+ *   3. Optional `note` says why, for the record. It is NOT shown on the page -
+ *      the banners were dropped as redundant (Shahaf, 2026-09-23).
  * Keep the Google Calendar in sync separately via
  * `sangha-gmail-api/scripts/create_practice_calendar.py` or a per-instance edit.
  * Past entries can be left in place (they simply stop matching) or pruned.
@@ -170,7 +171,7 @@ interface WeekOverride {
   from: string;
   /** Inclusive ISO date (YYYY-MM-DD) the override stops showing. */
   to: string;
-  /** Optional highlighted banner shown while the override is active. */
+  /** Optional note on why - a record only, not rendered (since 2026-09-23). */
   note?: string;
   /** Per-day period cells that replace the standing schedule for the window. */
   days: Partial<Record<string, Partial<Record<PeriodKey, Session[]>>>>;
@@ -488,17 +489,17 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // THIS THURSDAY ONLY (2026-09-24): no Death, Dying and Enlightenment
     // clarification - Drupon Chongwol-la is flying (Shahaf, 2026-09-23). Listed
     // AFTER the 17.9-22.10 clarification block so it wins the Thursday afternoon
-    // cell. The Tummo (Naropa) stays at 17:00, its time for the course weeks -
-    // Shahaf chose not to move it back to 16:00 a day before. Stops matching on
-    // 25.9 and the course block returns by itself. The calendar instance for
-    // 24.9 was deleted separately (series untouched).
+    // cell. The Tummo (Naropa) goes back to its standing 16:00 for this day
+    // (Shahaf, 2026-09-23 - first kept at 17:00, then moved the same afternoon).
+    // Stops matching on 25.9 and the course block returns by itself. Calendar:
+    // the clarification's 24.9 instance deleted, the Tummo's moved to 16-17.
     from: "2026-09-23",
     to: "2026-09-24",
-    note: "שימו לב: ביום חמישי הזה, 24.9, אין מפגש הבהרות עם דרופון צ׳ונגוואל-לה. תרגול הטומו (נארופה) מתקיים ב-17:00, כמו בשבועות האלה.",
+    note: "ביום חמישי, 24.9, אין מפגש הבהרות עם דרופון צ׳ונגוואל-לה, והטומו (נארופה) חוזר ל-16:00.",
     days: {
       "חמישי": {
         afternoon: [
-          { time: "17-18", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
+          { time: "16-17", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
         ],
       },
     },
@@ -689,7 +690,7 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
   const linked = variant === "sangha";
 
   // Standing schedule with any active per-week override applied (auto-reverts).
-  const { schedule, notes } = effectiveSchedule(new Date());
+  const { schedule } = effectiveSchedule(new Date());
 
   return (
     <div className="rounded-2xl p-6 shadow-sm md:p-10" style={{ background: COLORS.cardBg }}>
@@ -753,16 +754,8 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
             </p>
           </div>
 
-          {/* Active per-week override notice(s), if any (see WEEK_OVERRIDES). */}
-          {notes.map((n, i) => (
-            <div
-              key={i}
-              className="mt-4 rounded-xl px-4 py-3 text-sm font-semibold leading-snug md:text-base"
-              style={{ background: "#FBF3E2", border: "1px solid #E7D6AE", color: "#7A5A12" }}
-            >
-              {n}
-            </div>
-          ))}
+          {/* No "שימו לב" banners (Shahaf, 2026-09-23: redundant - the timetable
+              below already shows every override). Overrides' `note` is a record only. */}
 
           {/* Legend */}
           <div
