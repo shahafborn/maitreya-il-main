@@ -46,6 +46,7 @@ import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import {
   heroNiguma,
@@ -389,7 +390,7 @@ const scheduleBlocks = [
 
 const SixYogasNigumaRetreatEN = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
   const testParam = searchParams.get("test");
   const testTierId =
     testParam === TEST_KEY ? TEST_TIER_ID : testParam === TEST_ROOM_KEY ? TEST_ROOM_TIER_ID : undefined;
@@ -444,15 +445,6 @@ const SixYogasNigumaRetreatEN = () => {
     }
   }, [scholarshipLink, paymentStatus]);
 
-  // The payment happens inside an iframe on this page, so Cardcom's redirect
-  // back lands inside that frame. Same origin, so we climb out.
-  useEffect(() => {
-    if (!paymentStatus) return;
-    if (window.top && window.top !== window.self) {
-      window.top.location.href = window.location.href;
-    }
-  }, [paymentStatus]);
-
   const open = (tierId?: string) => {
     window.gtag?.("event", "registration_modal_open", { page: "six-yogas-niguma-retreat-en" });
     // Test links always lock on the test ticket. The no-lodging link opens on its
@@ -463,8 +455,6 @@ const SixYogasNigumaRetreatEN = () => {
     setTierGroup(scholarshipLink && !testMode && !tierId ? SCHOLARSHIP_GROUP : undefined);
     setModalOpen(true);
   };
-
-  const closePaymentStatus = () => setSearchParams({}, { replace: true });
 
   const goldBtn = {
     borderColor: RETREAT_THEME.GOLD_DARK,

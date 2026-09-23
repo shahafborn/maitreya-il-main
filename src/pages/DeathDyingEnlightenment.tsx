@@ -24,6 +24,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import type { EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
@@ -239,7 +240,7 @@ const books = [
 
 const DeathDyingEnlightenment = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
   const testMode = searchParams.get("test") === TEST_KEY;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -256,22 +257,10 @@ const DeathDyingEnlightenment = () => {
     if (testMode && !paymentStatus) setModalOpen(true);
   }, [testMode, paymentStatus]);
 
-  // The payment happens inside an iframe on this same page, so Cardcom's
-  // redirect back lands *inside* that frame. Same origin, so we can climb out
-  // and show the result on the whole page instead of inside a small box.
-  useEffect(() => {
-    if (!paymentStatus) return;
-    if (window.top && window.top !== window.self) {
-      window.top.location.href = window.location.href;
-    }
-  }, [paymentStatus]);
-
   const open = () => {
     window.gtag?.("event", "registration_modal_open", { page: "death-dying-enlightenment" });
     setModalOpen(true);
   };
-
-  const closePaymentStatus = () => setSearchParams({}, { replace: true });
 
   const goldBtn = {
     borderColor: RETREAT_THEME.GOLD_DARK,

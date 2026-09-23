@@ -22,6 +22,30 @@ interface PendingPurchase {
   ts: number;
 }
 
+/**
+ * The Meta pixel is installed by GTM, which loads after the app mounts, so a
+ * Purchase fired straight away on the Cardcom return was silently dropped by
+ * trackMeta. Wait (up to `timeoutMs`) until the pixel is there.
+ */
+export function whenMetaPixelReady(run: () => void, timeoutMs = 10000): () => void {
+  const start = Date.now();
+  let timer: number | undefined;
+  const tick = () => {
+    if (typeof window.fbq === "function") return run();
+    if (Date.now() - start >= timeoutMs) return;
+    timer = window.setTimeout(tick, 250);
+  };
+  tick();
+  return () => {
+    if (timer) window.clearTimeout(timer);
+  };
+}
+
+/**
+ * `paymentStatus` must come from usePaymentReturn (state read once per page
+ * load), not straight from the URL - that is what keeps this to one
+ * payment_success / Purchase per real return.
+ */
 export function useRetreatPurchaseTracking(params: {
   paymentStatus: "success" | "failed" | null;
   contentName: string;
@@ -32,43 +56,45 @@ export function useRetreatPurchaseTracking(params: {
   useEffect(() => {
     const { paymentStatus, contentName, storagePrefix } = params;
     if (paymentStatus === "success") {
-      window.gtag?.("event", "payment_success");
       if (purchaseFiredRef.current) return;
-      try {
-        const raw = sessionStorage.getItem(`${storagePrefix}_pending_purchase`);
-        if (raw) {
-          const pending = JSON.parse(raw) as PendingPurchase;
-          const firedKey = `${storagePrefix}_purchase_fired:${pending.event_id}`;
-          if (sessionStorage.getItem(firedKey) === "1") {
-            purchaseFiredRef.current = true;
-            return;
-          }
-          trackMeta(
-            "Purchase",
-            {
-              value: pending.value,
-              currency: "ILS",
-              content_name: contentName,
-              content_ids: pending.tierId ? [pending.tierId] : [],
-              num_items: 1,
-            },
-            pending.event_id,
-          );
-          sessionStorage.setItem(firedKey, "1");
-          sessionStorage.removeItem(`${storagePrefix}_pending_purchase`);
-          purchaseFiredRef.current = true;
-        } else {
-          trackMeta("Purchase", { currency: "ILS", content_name: contentName });
-          purchaseFiredRef.current = true;
-        }
-      } catch {
-        /* sessionStorage unavailable */
-      }
+      purchaseFiredRef.current = true;
+      window.gtag?.("event", "payment_success");
+      // Not cancelled on unmount/re-run on purpose: the ref above already
+      // claimed this return, so a cancelled wait would lose the Purchase.
+      whenMetaPixelReady(() => firePurchase(contentName, storagePrefix));
     } else if (paymentStatus === "failed") {
       window.gtag?.("event", "payment_failed");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.paymentStatus]);
+}
+
+function firePurchase(contentName: string, storagePrefix: string) {
+  try {
+    const raw = sessionStorage.getItem(`${storagePrefix}_pending_purchase`);
+    if (raw) {
+      const pending = JSON.parse(raw) as PendingPurchase;
+      const firedKey = `${storagePrefix}_purchase_fired:${pending.event_id}`;
+      if (sessionStorage.getItem(firedKey) === "1") return;
+      trackMeta(
+        "Purchase",
+        {
+          value: pending.value,
+          currency: "ILS",
+          content_name: contentName,
+          content_ids: pending.tierId ? [pending.tierId] : [],
+          num_items: 1,
+        },
+        pending.event_id,
+      );
+      sessionStorage.setItem(firedKey, "1");
+      sessionStorage.removeItem(`${storagePrefix}_pending_purchase`);
+    } else {
+      trackMeta("Purchase", { currency: "ILS", content_name: contentName });
+    }
+  } catch {
+    /* sessionStorage unavailable */
+  }
 }
 
 /**

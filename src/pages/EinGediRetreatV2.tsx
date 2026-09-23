@@ -8,6 +8,7 @@ import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd } from "@/components/retreat/hooks/useEventJsonLd";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import { X, ChevronRight, ChevronLeft, ChevronDown, Mail, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
@@ -598,7 +599,7 @@ const EinGediRetreatV2 = () => {
   const concluded = hasEnded("2026-06-06");
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
 
   const purchaseFiredRef = useRef(false);
   useEffect(() => {
@@ -654,10 +655,6 @@ const EinGediRetreatV2 = () => {
     trackMeta("Lead", room ? { content_name: room } : undefined);
     setPreselectedRoom(room);
     setModalOpen(true);
-  };
-
-  const closePaymentStatus = () => {
-    setSearchParams({}, { replace: true });
   };
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);

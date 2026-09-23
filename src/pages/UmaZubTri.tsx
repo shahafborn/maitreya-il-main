@@ -19,6 +19,7 @@
 
 import { useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import type { EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
@@ -191,7 +192,7 @@ const UmaZubTri = () => {
   /* The series' own end date, the one already declared to Google above, decides
      whether this page still sells. Nothing to switch off by hand. */
   const concluded = hasEnded(eventJsonLd.endDate);
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
 
@@ -199,8 +200,6 @@ const UmaZubTri = () => {
     window.gtag?.("event", "registration_modal_open", { page: "uma-zub-tri" });
     setModalOpen(true);
   };
-
-  const closePaymentStatus = () => setSearchParams({}, { replace: true });
 
   const goldBtn = {
     borderColor: RETREAT_THEME.GOLD_DARK,

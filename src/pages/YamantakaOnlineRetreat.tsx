@@ -24,6 +24,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
@@ -263,7 +264,7 @@ const scheduleNotes = [
 
 const YamantakaOnlineRetreat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
   const openDana = searchParams.get("dana") === OPEN_DANA_KEY;
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -277,16 +278,6 @@ const YamantakaOnlineRetreat = () => {
   useRetreatSEO(seo);
   useEventJsonLd(eventJsonLd);
 
-  // The payment happens inside an iframe on this same page, so Cardcom's
-  // redirect back lands *inside* that frame. Same origin, so we can climb out
-  // and show the result on the whole page instead of inside a small box.
-  useEffect(() => {
-    if (!paymentStatus) return;
-    if (window.top && window.top !== window.self) {
-      window.top.location.href = window.location.href;
-    }
-  }, [paymentStatus]);
-
   // Arriving on the open-dana link opens the form straight away - the person
   // was sent here to pay, not to read the page again. Suppressed while a
   // payment result is showing, so the two dialogs never fight.
@@ -298,8 +289,6 @@ const YamantakaOnlineRetreat = () => {
     window.gtag?.("event", "registration_modal_open", { page: "yamantaka-online-2026" });
     setModalOpen(true);
   };
-
-  const closePaymentStatus = () => setSearchParams({}, { replace: true });
 
   return (
     <RetreatLayout

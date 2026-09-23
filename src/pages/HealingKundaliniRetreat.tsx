@@ -47,6 +47,7 @@ import { RETREAT_THEME, RETREAT_FONTS } from "@/components/retreat/theme";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
 import { hasEnded } from "@/site/today";
 import {
@@ -259,7 +260,7 @@ const whatsIncluded = [
 
 const HealingKundaliniRetreat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
   const testMode = searchParams.get("test") === TEST_KEY;
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
@@ -282,22 +283,10 @@ const HealingKundaliniRetreat = () => {
     if (testMode && !paymentStatus) setModalOpen(true);
   }, [testMode, paymentStatus]);
 
-  // The payment happens inside an iframe on this same page, so Cardcom's
-  // redirect back lands inside that frame. Same origin, so we climb out and
-  // show the result on the whole page.
-  useEffect(() => {
-    if (!paymentStatus) return;
-    if (window.top && window.top !== window.self) {
-      window.top.location.href = window.location.href;
-    }
-  }, [paymentStatus]);
-
   const open = () => {
     window.gtag?.("event", "registration_modal_open", { page: "healing-kundalini-retreat" });
     setModalOpen(true);
   };
-
-  const closePaymentStatus = () => setSearchParams({}, { replace: true });
 
   const goldBtn = {
     borderColor: RETREAT_THEME.GOLD_DARK,

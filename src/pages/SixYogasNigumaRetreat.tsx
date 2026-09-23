@@ -24,6 +24,7 @@ declare global {
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { X, ChevronRight, ChevronLeft, Loader2, CheckCircle2, XCircle, Send } from "lucide-react";
@@ -401,19 +402,12 @@ const SixYogasNigumaRetreat = () => {
   const linkTier: RoomType = testMode ? TEST_TIER : teamLink ? TEAM_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
-  const paymentStatus = searchParams.get("payment") as "success" | "failed" | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
 
   // Meta pixel: InitiateCheckout is fired by the shared modal on submit; Purchase fires here on
   // return from Cardcom (the hook also logs payment_success / payment_failed to gtag) with the same
   // purchase-<reg_token> id that n8n sends server-side, so Meta dedupes the pair.
   useRetreatPurchaseTracking({ paymentStatus, contentName: registrationConfig.contentName, storagePrefix: registrationConfig.storagePrefix });
-
-  // The payment runs inside an iframe in the dialog, so Cardcom's redirect back
-  // lands inside that frame. Same origin, so climb out and show the result on the page.
-  useEffect(() => {
-    if (!paymentStatus) return;
-    if (window.top && window.top !== window.self) window.top.location.href = window.location.href;
-  }, [paymentStatus]);
 
   const trackEvent = (event: string, params?: Record<string, string>) => {
     window.gtag?.("event", event, params);
@@ -426,10 +420,6 @@ const SixYogasNigumaRetreat = () => {
     // option from the generic buttons, but a click on a specific card wins.
     setPreselectedRoom(testMode ? TEST_TIER : room || linkTier);
     setModalOpen(true);
-  };
-
-  const closePaymentStatus = () => {
-    setSearchParams({}, { replace: true });
   };
 
   // A private link opens the form straight away, locked on its hidden option.

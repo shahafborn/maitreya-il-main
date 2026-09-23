@@ -32,6 +32,7 @@ import { PaymentStatusModal } from "@/components/retreat/PaymentStatusModal";
 import { SectionFrame, SectionTitle } from "@/components/retreat/SectionFrame";
 import { MonitorPlay } from "lucide-react";
 import { useRetreatPurchaseTracking } from "@/components/retreat/hooks/useMetaPixelRetreat";
+import { usePaymentReturn } from "@/components/retreat/hooks/usePaymentReturn";
 import { useRetreatSEO } from "@/components/retreat/hooks/useRetreatSEO";
 import { useEventJsonLd, type EventJsonLdConfig } from "@/components/retreat/hooks/useEventJsonLd";
 import type { RegistrationConfig, SEOConfig } from "@/components/retreat/types";
@@ -201,10 +202,7 @@ const practices = [
 
 const EinGediHealingRetreatEN = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const paymentStatus = searchParams.get("payment") as
-    | "success"
-    | "failed"
-    | null;
+  const { paymentStatus, closePaymentStatus } = usePaymentReturn();
   const [modalOpen, setModalOpen] = useState(false);
   const ctaSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -225,9 +223,6 @@ const EinGediHealingRetreatEN = () => {
     });
     setModalOpen(true);
   };
-
-  const closePaymentStatus = () =>
-    setSearchParams({}, { replace: true });
 
   return (
     <RetreatLayout
