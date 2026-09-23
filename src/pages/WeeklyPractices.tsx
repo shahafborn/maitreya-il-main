@@ -114,18 +114,11 @@ const SCHEDULE: DayRow[] = [
       { time: "07-08", title: "אמיתאיוס", subtitle: "כולל טומו לריפוי", categories: ["healing", "tummo"] },
     ],
     afternoon: [],
-    evening: [
-      {
-        // The White Manjushri -> Vajrapani-Hayagriva-Garuda handover was CANCELLED,
-        // not rescheduled (Shahaf, 2026-08-12). White Manjushri continues open-ended
-        // until the Sangha says otherwise, so this cell carries no end note and no
-        // alternate. Do not re-add a handover without a confirmed date.
-        time: "20-21",
-        title: "מנג׳ושרי הלבן",
-        categories: ["basic"],
-        beginner: true,
-      },
-    ],
+    // White Manjushri (20-21) REMOVED "for now" from Wed 23.9, that evening
+    // included (Shahaf, 2026-09-23). To bring it back:
+    //   { time: "20-21", title: "מנג׳ושרי הלבן", categories: ["basic"], beginner: true }
+    // and re-open the calendar series (create_practice_calendar.py).
+    evening: [],
   },
   {
     day: "חמישי",
