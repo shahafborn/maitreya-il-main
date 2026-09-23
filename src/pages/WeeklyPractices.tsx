@@ -484,6 +484,25 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
+  {
+    // THIS THURSDAY ONLY (2026-09-24): no Death, Dying and Enlightenment
+    // clarification - Drupon Chongwol-la is flying (Shahaf, 2026-09-23). Listed
+    // AFTER the 17.9-22.10 clarification block so it wins the Thursday afternoon
+    // cell. The Tummo (Naropa) stays at 17:00, its time for the course weeks -
+    // Shahaf chose not to move it back to 16:00 a day before. Stops matching on
+    // 25.9 and the course block returns by itself. The calendar instance for
+    // 24.9 was deleted separately (series untouched).
+    from: "2026-09-23",
+    to: "2026-09-24",
+    note: "שימו לב: ביום חמישי הזה, 24.9, אין מפגש הבהרות עם דרופון צ׳ונגוואל-לה. תרגול הטומו (נארופה) מתקיים ב-17:00, כמו בשבועות האלה.",
+    days: {
+      "חמישי": {
+        afternoon: [
+          { time: "17-18", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
+        ],
+      },
+    },
+  },
 ];
 
 /** Local (viewer-timezone) ISO date, used to match override windows. */
