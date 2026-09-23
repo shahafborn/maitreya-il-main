@@ -160,8 +160,10 @@ const SCHEDULE: DayRow[] = [
  *   2. Under `days`, list each affected day; the periods you provide REPLACE
  *      that day's standing cells for the window (omit a period to keep it as-is,
  *      pass an empty array to clear it).
- *   3. Optional `note` says why, for the record. It is NOT shown on the page -
- *      the banners were dropped as redundant (Shahaf, 2026-09-23).
+ *   3. Optional `note` renders a highlighted banner while the override is active.
+ *      Write it WITHOUT a "שימו לב:" opener - the banner's colour already says
+ *      that, and several stacked banners each repeating it read as noise
+ *      (Shahaf, 2026-09-23).
  * Keep the Google Calendar in sync separately via
  * `sangha-gmail-api/scripts/create_practice_calendar.py` or a per-instance edit.
  * Past entries can be left in place (they simply stop matching) or pruned.
@@ -171,7 +173,7 @@ interface WeekOverride {
   from: string;
   /** Inclusive ISO date (YYYY-MM-DD) the override stops showing. */
   to: string;
-  /** Optional note on why - a record only, not rendered (since 2026-09-23). */
+  /** Optional highlighted banner shown while the override is active (no "שימו לב:" opener). */
   note?: string;
   /** Per-day period cells that replace the standing schedule for the window. */
   days: Partial<Record<string, Partial<Record<PeriodKey, Session[]>>>>;
@@ -191,7 +193,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // the same day; they return with the Q4 rebuild (they all expired 30.9).
     from: "2026-09-01",
     to: "2026-11-20",
-    note: "שימו לב: במהלך ריטריט היאמנטקה עם דרופון צ׳ונגוואל-לה, עד 20.11, לא מתקיימים תרגולי הבוקר של ימים שני עד רביעי. שאר התרגולים ממשיכים כרגיל.",
+    note: "במהלך ריטריט היאמנטקה עם דרופון צ׳ונגוואל-לה, עד 20.11, לא מתקיימים תרגולי הבוקר של ימים שני עד רביעי. שאר התרגולים ממשיכים כרגיל.",
     days: {
       "שני": { morning: [] },
       "שלישי": { morning: [] },
@@ -210,7 +212,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // own block below - it runs a week past this window, so it cannot ride here.
     from: "2026-09-13",
     to: "2026-10-18",
-    note: "שימו לב: בימי ראשון, מ-13.9 עד 18.10, מתקיימת ב-16:00 סדרת המפגשים \"מוות, לחיות לנוכח המוות, והארה\" עם לאמה גלן, ותרגול טארה הירוקה עובר ל-20:30.",
+    note: "בימי ראשון, מ-13.9 עד 18.10, מתקיימת ב-16:00 סדרת המפגשים \"מוות, לחיות לנוכח המוות, והארה\" עם לאמה גלן, ותרגול טארה הירוקה עובר ל-20:30.",
     days: {
       "ראשון": {
         afternoon: [
@@ -249,7 +251,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // left clear as headroom rather than claimed.
     from: "2026-09-17",
     to: "2026-10-22",
-    note: "שימו לב: בימי חמישי, מ-17.9 עד 22.10, מתקיים ב-15:00 מפגש הבהרות ותרגול מודרך עם דרופון צ׳ונגוואל-לה לנרשמי הסדרה \"מוות, לחיות לנוכח המוות, והארה\", בחדר זום אחר. בשבועות אלה תרגול הטומו (נארופה) עובר ל-17:00.",
+    note: "בימי חמישי, מ-17.9 עד 22.10, מתקיים ב-15:00 מפגש הבהרות ותרגול מודרך עם דרופון צ׳ונגוואל-לה לנרשמי הסדרה \"מוות, לחיות לנוכח המוות, והארה\", בחדר זום אחר. בשבועות אלה תרגול הטומו (נארופה) עובר ל-17:00.",
     days: {
       "חמישי": {
         afternoon: [
@@ -269,7 +271,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
     from: "2026-06-22",
     to: "2026-06-27",
-    note: "שימו לב: השבוע תרגולי הטומו של שבת מתקיימים אחר הצהריים, ולא בבוקר.",
+    note: "השבוע תרגולי הטומו של שבת מתקיימים אחר הצהריים, ולא בבוקר.",
     days: {
       "שבת": {
         morning: [],
@@ -286,7 +288,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // (re-listed below because a provided period REPLACES the standing cell).
     from: "2026-08-08",
     to: "2026-08-08",
-    note: "שימו לב: היום תרגול הטומו עם צ׳ונגוואל-לה מתקיים ב-14:00, ולא בבוקר.",
+    note: "היום תרגול הטומו עם צ׳ונגוואל-לה מתקיים ב-14:00, ולא בבוקר.",
     days: {
       "שבת": {
         morning: [
@@ -312,7 +314,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // untouched because an omitted period keeps its standing cell.
     from: "2026-08-12",
     to: "2026-08-13",
-    note: "שימו לב: השבוע תרגול הטומו (נארופה) מתקיים בחמישי ב-07:00 בבוקר, ולא אחר הצהריים.",
+    note: "השבוע תרגול הטומו (נארופה) מתקיים בחמישי ב-07:00 בבוקר, ולא אחר הצהריים.",
     days: {
       "חמישי": {
         morning: [{ time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
@@ -328,7 +330,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // they fall back to the standing 09-11 until Shahaf has checked with him.
     from: "2026-08-14",
     to: "2026-08-15",
-    note: "שימו לב: השבוע תרגול הטומו עם צ׳ונגוואל-לה מתקיים בשבת ב-14:00-15:30, ולא בבוקר.",
+    note: "השבוע תרגול הטומו עם צ׳ונגוואל-לה מתקיים בשבת ב-14:00-15:30, ולא בבוקר.",
     days: {
       "שבת": {
         morning: [
@@ -363,7 +365,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // Saturday afternoon is omitted so the standing Lama Glenn cell stays.
     from: "2026-08-22",
     to: "2026-08-23",
-    note: "שימו לב: השבוע תרגולי הטומו של שבת מתקיימים שעה מאוחר יותר - יסודות הטומו ב-9:00 והטומו עם צ׳ונגוואל-לה ב-10:00. ביום ראשון מתקיים מפגש הבהרות עם צ׳ונגוואל-לה ב-15:00 בחדר זום אחר, וטארה הירוקה עוברת ל-20:30.",
+    note: "השבוע תרגולי הטומו של שבת מתקיימים שעה מאוחר יותר - יסודות הטומו ב-9:00 והטומו עם צ׳ונגוואל-לה ב-10:00. ביום ראשון מתקיים מפגש הבהרות עם צ׳ונגוואל-לה ב-15:00 בחדר זום אחר, וטארה הירוקה עוברת ל-20:30.",
     days: {
       "שבת": {
         morning: [
@@ -395,7 +397,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // Google Calendar patched separately, per-instance, the same morning.
     from: "2026-09-06",
     to: "2026-09-06",
-    note: "שימו לב: היום ב-15:00 מתקיים מפגש ההבהרות האחרון של מהמודרה עם צ׳ונגוואל-לה, בחדר זום אחר. טארה הירוקה עוברת היום ל-17:00.",
+    note: "היום ב-15:00 מתקיים מפגש ההבהרות האחרון של מהמודרה עם צ׳ונגוואל-לה, בחדר זום אחר. טארה הירוקה עוברת היום ל-17:00.",
     days: {
       "ראשון": {
         afternoon: [
@@ -418,7 +420,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // because a provided period REPLACES the standing cell.
     from: "2026-08-29",
     to: "2026-08-29",
-    note: "שימו לב: היום תרגולי הטומו מתקיימים מאוחר יותר - יסודות הטומו ב-10:00 והטומו עם צ׳ונגוואל-לה ב-11:00. בנוסף, ב-13:00 מתקיים תרגול מנטרות למען נפאל והאנשים שנפגעו מהאסון.",
+    note: "היום תרגולי הטומו מתקיימים מאוחר יותר - יסודות הטומו ב-10:00 והטומו עם צ׳ונגוואל-לה ב-11:00. בנוסף, ב-13:00 מתקיים תרגול מנטרות למען נפאל והאנשים שנפגעו מהאסון.",
     days: {
       "שבת": {
         morning: [
@@ -476,7 +478,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     // itself, no redeploy needed. Google Calendar instance patched separately.
     from: "2026-09-18",
     to: "2026-09-19",
-    note: "שימו לב: בשבת הקרובה תרגול הטומו של הבוקר הוא טומו עם הסנגהה, ב-10:00-11:00, במקום יסודות הטומו ב-08:00.",
+    note: "בשבת הקרובה תרגול הטומו של הבוקר הוא טומו עם הסנגהה, ב-10:00-11:00, במקום יסודות הטומו ב-08:00.",
     days: {
       "שבת": {
         morning: [
@@ -690,7 +692,7 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
   const linked = variant === "sangha";
 
   // Standing schedule with any active per-week override applied (auto-reverts).
-  const { schedule } = effectiveSchedule(new Date());
+  const { schedule, notes } = effectiveSchedule(new Date());
 
   return (
     <div className="rounded-2xl p-6 shadow-sm md:p-10" style={{ background: COLORS.cardBg }}>
@@ -754,8 +756,16 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
             </p>
           </div>
 
-          {/* No "שימו לב" banners (Shahaf, 2026-09-23: redundant - the timetable
-              below already shows every override). Overrides' `note` is a record only. */}
+          {/* Active per-week override notice(s), if any (see WEEK_OVERRIDES). */}
+          {notes.map((n, i) => (
+            <div
+              key={i}
+              className="mt-4 rounded-xl px-4 py-3 text-sm font-semibold leading-snug md:text-base"
+              style={{ background: "#FBF3E2", border: "1px solid #E7D6AE", color: "#7A5A12" }}
+            >
+              {n}
+            </div>
+          ))}
 
           {/* Legend */}
           <div
