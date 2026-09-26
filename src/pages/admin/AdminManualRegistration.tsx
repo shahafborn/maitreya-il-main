@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,6 +51,155 @@ type Result = {
 const money = (n: number, currency: string) =>
   currency === "USD" ? `$${n.toLocaleString("en-US")}` : `${n.toLocaleString("he-IL")} ₪`;
 
+const langTag = (lang: "he" | "en") => (
+  <span
+    className={`rounded px-1.5 text-[11px] font-semibold ${
+      lang === "he" ? "bg-emerald-50 text-emerald-800" : "bg-blue-50 text-blue-800"
+    }`}
+  >
+    {lang === "he" ? "עברית" : "English"}
+  </span>
+);
+
+const monthOf = (ends: string) =>
+  new Date(`${ends}T12:00:00`).toLocaleDateString("he-IL", { month: "long", year: "numeric" });
+
+/*
+ * Event picker: one field; opens to a searchable list grouped by month, closes on choice to a
+ * single line with "change". Built for 6-10 events open at once (Shahaf, 26.9, option A).
+ * Ended events stay hidden unless the checkbox at the bottom of the list is ticked.
+ */
+function EventPicker({
+  events,
+  value,
+  onChoose,
+}: {
+  events: EventInfo[];
+  value: EventInfo | undefined;
+  onChoose: (e: EventInfo) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [showPast, setShowPast] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const away = (ev: MouseEvent) => {
+      if (box.current && !box.current.contains(ev.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", away);
+    return () => document.removeEventListener("mousedown", away);
+  }, [open]);
+
+  const pastCount = events.filter((e) => e.ended).length;
+  const q = query.trim().toLowerCase();
+  // Soonest first; ended events (only when asked for) at the bottom under their own heading.
+  const shown = events
+    .filter((e) => showPast || !e.ended)
+    .filter((e) => !q || `${e.label} ${e.dates} ${e.lang === "he" ? "עברית hebrew" : "english אנגלית"}`.toLowerCase().includes(q))
+    .sort((a, b) => (a.ended === b.ended ? a.ends.localeCompare(b.ends) : a.ended ? 1 : -1));
+  const groups: { title: string; items: EventInfo[] }[] = [];
+  for (const e of shown) {
+    const title = e.ended ? "הסתיימו" : monthOf(e.ends);
+    const g = groups.find((x) => x.title === title);
+    if (g) g.items.push(e);
+    else groups.push({ title, items: [e] });
+  }
+
+  const choose = (e: EventInfo) => {
+    onChoose(e);
+    setOpen(false);
+    setQuery("");
+  };
+
+  if (value && !open) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-primary bg-primary/5 px-4 py-3">
+        <div>
+          <div className="flex flex-wrap items-center gap-2 font-medium">
+            {value.label} {langTag(value.lang)}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {value.dates}
+            {value.ended && " · הסתיים"}
+          </div>
+        </div>
+        <button type="button" onClick={() => setOpen(true)} className="shrink-0 text-sm text-primary underline">
+          להחליף
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div ref={box} className="relative">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm"
+      >
+        <span className={value ? "" : "text-muted-foreground"}>{value ? value.label : "בחירת אירוע..."}</span>
+        <span aria-hidden>▾</span>
+      </button>
+      {open && (
+        <div className="absolute inset-x-0 top-full z-20 mt-1 overflow-hidden rounded-md border border-border bg-popover shadow-lg">
+          <input
+            type="search"
+            autoFocus
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setOpen(false);
+              if (e.key === "Enter" && shown.length === 1) choose(shown[0]);
+            }}
+            placeholder="חיפוש: ניגומה, זום, חניכה..."
+            aria-label="חיפוש אירוע"
+            className="w-full border-b border-border bg-transparent px-3 py-2 text-sm outline-none"
+          />
+          <div role="listbox" className="max-h-72 overflow-y-auto">
+            {groups.map((g) => (
+              <div key={g.title}>
+                <div className="px-3 pb-0.5 pt-2 text-xs font-semibold text-muted-foreground">{g.title}</div>
+                {g.items.map((e) => (
+                  <button
+                    key={e.key}
+                    type="button"
+                    role="option"
+                    aria-selected={e.key === value?.key}
+                    onClick={() => choose(e)}
+                    className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-right text-sm hover:bg-muted ${
+                      e.key === value?.key ? "bg-primary/10" : ""
+                    }`}
+                  >
+                    <span className="flex flex-wrap items-center gap-2">
+                      {e.label} {langTag(e.lang)}
+                    </span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{e.dates}</span>
+                  </button>
+                ))}
+              </div>
+            ))}
+            {shown.length === 0 && (
+              <p className="px-3 py-3 text-sm text-muted-foreground">
+                {q ? "לא נמצא אירוע כזה" : "אין כרגע אירועים פעילים"}
+              </p>
+            )}
+          </div>
+          {pastCount > 0 && (
+            <label className="flex items-center gap-2 border-t border-border px-3 py-2 text-sm text-muted-foreground">
+              <Checkbox checked={showPast} onCheckedChange={(v) => setShowPast(v === true)} />
+              להציג גם אירועים שהסתיימו ({pastCount})
+            </label>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 async function call(body: Record<string, unknown>) {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
@@ -84,7 +233,6 @@ const emptyForm = {
 const AdminManualRegistration = () => {
   const [events, setEvents] = useState<EventInfo[] | null>(null);
   const [loadError, setLoadError] = useState("");
-  const [showPast, setShowPast] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -96,16 +244,6 @@ const AdminManualRegistration = () => {
       .then((json) => setEvents(json.events || []))
       .catch((e: Error) => setLoadError(e.message));
   }, []);
-
-  // Soonest first; past events only when asked for (someone paying for something that already happened).
-  const visibleEvents = useMemo(
-    () =>
-      (events || [])
-        .filter((e) => showPast || !e.ended)
-        .sort((a, b) => (a.ended === b.ended ? a.ends.localeCompare(b.ends) : a.ended ? 1 : -1)),
-    [events, showPast],
-  );
-  const pastCount = (events || []).filter((e) => e.ended).length;
 
   const event = useMemo(() => events?.find((e) => e.key === form.eventKey), [events, form.eventKey]);
   const option = useMemo(() => event?.options.find((o) => o.code === form.code), [event, form.code]);
@@ -199,45 +337,7 @@ const AdminManualRegistration = () => {
         <div className="space-y-5 rounded-lg border border-border bg-card p-6">
           <div className="space-y-2">
             <Label>אירוע</Label>
-            <div role="radiogroup" className="divide-y divide-border rounded-lg border border-border">
-              {visibleEvents.length === 0 && (
-                <p className="p-4 text-sm text-muted-foreground">אין כרגע אירועים פעילים.</p>
-              )}
-              {visibleEvents.map((e) => {
-                const selected = e.key === form.eventKey;
-                return (
-                  <button
-                    key={e.key}
-                    type="button"
-                    role="radio"
-                    aria-checked={selected}
-                    onClick={() => chooseEvent(e)}
-                    className={`flex w-full items-center gap-3 px-4 py-3 text-right transition-colors ${
-                      selected ? "bg-primary/10" : "hover:bg-muted/50"
-                    }`}
-                  >
-                    <span
-                      className={`h-4 w-4 shrink-0 rounded-full border-2 ${
-                        selected ? "border-primary bg-primary" : "border-muted-foreground/50"
-                      }`}
-                    />
-                    <span className="flex-1">
-                      <span className="block font-medium">{e.label}</span>
-                      <span className="block text-xs text-muted-foreground">
-                        {e.dates}
-                        {e.ended && " · הסתיים"}
-                      </span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            {pastCount > 0 && (
-              <label className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Checkbox checked={showPast} onCheckedChange={(v) => setShowPast(v === true)} />
-                להציג גם אירועים שהסתיימו ({pastCount})
-              </label>
-            )}
+            <EventPicker events={events} value={event} onChoose={chooseEvent} />
           </div>
 
           {event && (
