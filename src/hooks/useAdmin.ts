@@ -2,15 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 
-export type AppRole = "super_admin" | "admin" | "editor";
+export type AppRole = "super_admin" | "admin" | "editor" | "registrar";
 
 const ROLE_PRIORITY: Record<AppRole, number> = {
   super_admin: 3,
   admin: 2,
   editor: 1,
+  // Registrar only registers people who paid directly (PayPal / cash) - see
+  // /admin/registrations. It is NOT an admin role anywhere else on the site.
+  registrar: 0,
 };
 
-/** Check the current user's admin/editor role (highest takes precedence). */
+/** Check the current user's admin/editor/registrar role (highest takes precedence). */
 export function useAdmin() {
   const { user } = useAuth();
 
@@ -22,7 +25,7 @@ export function useAdmin() {
         .from("user_roles")
         .select("role")
         .eq("user_id", user.id)
-        .in("role", ["super_admin", "admin", "editor"]);
+        .in("role", ["super_admin", "admin", "editor", "registrar"]);
       if (error) throw error;
       if (!data || data.length === 0) return null;
 
@@ -46,8 +49,11 @@ export function useAdmin() {
     isSuperAdmin: role === "super_admin",
     isAdminOrAbove: role === "super_admin" || role === "admin",
     isEditor: role === "editor",
-    /** True if user has any privileged role (super_admin, admin, or editor). */
-    isAdmin: role !== null,
+    /** True if user has an admin role (super_admin, admin, or editor). A registrar is NOT an admin. */
+    isAdmin: role !== null && role !== "registrar",
+    isRegistrar: role === "registrar",
+    /** May register people who paid directly (PayPal / cash): any staff role, including registrar. */
+    canRegisterPayments: role !== null,
     loading: query.isLoading,
   };
 }
