@@ -14,20 +14,32 @@ import {
 } from "@/components/ui/select";
 
 /*
- * Manual registration for people who paid directly (PayPal / cash) - not through the
- * website's registration form. Used by the Sangha team (role "registrar", or any admin).
+ * Manual registration for people who paid directly (credit card, Bit, Paybox, PayPal, bank
+ * transfer, cash) - not through the website's registration form. Used by the Sangha team
+ * (role "registrar", or any admin).
  * Spec: vault teachers-visit-nov-dec-2026/manual-registration-spec-2026-09-26.md
  *
- * Everything real happens in n8n (Manual_Register): it checks the signed-in user's role,
- * lists every event that is open for registration (read live from each event's own flow,
- * so a new event appears here without a site deploy), and hands the person to that event's
- * flows - the sheet row, the Mailchimp tags and the confirmation email are the same ones a
- * website payment gets.
+ * Everything real happens in n8n (Manual_Register): it checks the signed-in user's role, lists
+ * every event with its ticket options (read live from each event's own flow, so a new event appears
+ * here without a site deploy), its dates and its payment methods (by the event's language), and
+ * hands the person to that event's flows - the sheet row, the Mailchimp tags and the confirmation
+ * email are the same ones a website payment gets.
  */
 const ENDPOINT = "https://tknstk.app.n8n.cloud/webhook/manual-register";
 
 type Option = { code: string; ticket_type: string; price: number; open: boolean };
-type EventInfo = { key: string; label: string; lang: "he" | "en"; currency: "ILS" | "USD"; options: Option[] };
+type Method = { code: string; label: string };
+type EventInfo = {
+  key: string;
+  label: string;
+  dates: string;
+  ends: string;
+  ended: boolean;
+  lang: "he" | "en";
+  currency: "ILS" | "USD";
+  methods: Method[];
+  options: Option[];
+};
 type Duplicate = { status: string; name: string; ticket: string };
 type Result = {
   sheet_status?: string;
@@ -63,7 +75,7 @@ const emptyForm = {
   email: "",
   phone: "",
   amount: "",
-  method: "paypal" as "paypal" | "cash",
+  method: "",
   transactionId: "",
   note: "",
   sendEmail: true,
@@ -72,6 +84,7 @@ const emptyForm = {
 const AdminManualRegistration = () => {
   const [events, setEvents] = useState<EventInfo[] | null>(null);
   const [loadError, setLoadError] = useState("");
+  const [showPast, setShowPast] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -84,13 +97,26 @@ const AdminManualRegistration = () => {
       .catch((e: Error) => setLoadError(e.message));
   }, []);
 
+  // Soonest first; past events only when asked for (someone paying for something that already happened).
+  const visibleEvents = useMemo(
+    () =>
+      (events || [])
+        .filter((e) => showPast || !e.ended)
+        .sort((a, b) => (a.ended === b.ended ? a.ends.localeCompare(b.ends) : a.ended ? 1 : -1)),
+    [events, showPast],
+  );
+  const pastCount = (events || []).filter((e) => e.ended).length;
+
   const event = useMemo(() => events?.find((e) => e.key === form.eventKey), [events, form.eventKey]);
   const option = useMemo(() => event?.options.find((o) => o.code === form.code), [event, form.code]);
   const set = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) => setForm((f) => ({ ...f, [k]: v }));
 
+  const chooseEvent = (e: EventInfo) =>
+    setForm((f) => ({ ...f, eventKey: e.key, code: "", amount: "", method: e.methods[0]?.code || "", transactionId: "" }));
+
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
   const amountNum = Number(form.amount);
-  const ready = event && option && form.fullName.trim() && emailOk && amountNum > 0;
+  const ready = event && option && form.method && form.fullName.trim() && emailOk && amountNum > 0;
 
   const submit = async (force: boolean) => {
     if (!event || !option) return;
@@ -107,7 +133,7 @@ const AdminManualRegistration = () => {
         phone: form.phone.trim(),
         amount: amountNum,
         method: form.method,
-        transaction_id: form.method === "paypal" ? form.transactionId.trim() : "",
+        transaction_id: form.method === "cash" ? "" : form.transactionId.trim(),
         note: form.note.trim(),
         send_email: form.sendEmail,
       });
@@ -136,8 +162,9 @@ const AdminManualRegistration = () => {
       <div>
         <h2 className="font-heading text-2xl font-bold text-primary">רישום ידני - תשלום ישיר</h2>
         <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-          למי ששילם ישירות ב-PayPal או במזומן, ולא דרך טופס ההרשמה באתר. הרישום מוסיף אותו לגיליון ההרשמות
-          של האירוע, מתייג אותו ב-Mailchimp ושולח לו את אותו מייל אישור שמקבל מי שנרשם באתר.
+          למי ששילם ישירות - בכרטיס אשראי, Bit, Paybox, PayPal, בהעברה בנקאית או במזומן - ולא דרך טופס ההרשמה
+          באתר. הרישום מוסיף אותו לגיליון ההרשמות של האירוע, מתייג אותו ב-Mailchimp ושולח לו את אותו מייל אישור
+          שמקבל מי שנרשם באתר.
         </p>
       </div>
 
@@ -172,18 +199,45 @@ const AdminManualRegistration = () => {
         <div className="space-y-5 rounded-lg border border-border bg-card p-6">
           <div className="space-y-2">
             <Label>אירוע</Label>
-            <Select value={form.eventKey} onValueChange={(v) => setForm({ ...form, eventKey: v, code: "", amount: "" })}>
-              <SelectTrigger dir="rtl">
-                <SelectValue placeholder="בחרו אירוע" />
-              </SelectTrigger>
-              <SelectContent dir="rtl">
-                {events.map((e) => (
-                  <SelectItem key={e.key} value={e.key}>
-                    {e.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div role="radiogroup" className="divide-y divide-border rounded-lg border border-border">
+              {visibleEvents.length === 0 && (
+                <p className="p-4 text-sm text-muted-foreground">אין כרגע אירועים פעילים.</p>
+              )}
+              {visibleEvents.map((e) => {
+                const selected = e.key === form.eventKey;
+                return (
+                  <button
+                    key={e.key}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => chooseEvent(e)}
+                    className={`flex w-full items-center gap-3 px-4 py-3 text-right transition-colors ${
+                      selected ? "bg-primary/10" : "hover:bg-muted/50"
+                    }`}
+                  >
+                    <span
+                      className={`h-4 w-4 shrink-0 rounded-full border-2 ${
+                        selected ? "border-primary bg-primary" : "border-muted-foreground/50"
+                      }`}
+                    />
+                    <span className="flex-1">
+                      <span className="block font-medium">{e.label}</span>
+                      <span className="block text-xs text-muted-foreground">
+                        {e.dates}
+                        {e.ended && " · הסתיים"}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {pastCount > 0 && (
+              <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Checkbox checked={showPast} onCheckedChange={(v) => setShowPast(v === true)} />
+                להציג גם אירועים שהסתיימו ({pastCount})
+              </label>
+            )}
           </div>
 
           {event && (
@@ -258,27 +312,29 @@ const AdminManualRegistration = () => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>אמצעי תשלום</Label>
-            <div className="flex gap-3">
-              {(["paypal", "cash"] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => set("method", m)}
-                  className={`rounded-full border px-5 py-2 text-sm ${
-                    form.method === m ? "border-primary bg-primary text-primary-foreground" : "border-border"
-                  }`}
-                >
-                  {m === "paypal" ? "PayPal" : "מזומן"}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {form.method === "paypal" && (
+          {event && (
             <div className="space-y-2">
-              <Label htmlFor="mr-tx">מספר העסקה ב-PayPal (לא חובה, עוזר להתאים מול הדוח)</Label>
+              <Label>אמצעי תשלום</Label>
+              <div className="flex flex-wrap gap-2">
+                {event.methods.map((m) => (
+                  <button
+                    key={m.code}
+                    type="button"
+                    onClick={() => set("method", m.code)}
+                    className={`rounded-full border px-5 py-2 text-sm ${
+                      form.method === m.code ? "border-primary bg-primary text-primary-foreground" : "border-border"
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {event && form.method && form.method !== "cash" && (
+            <div className="space-y-2">
+              <Label htmlFor="mr-tx">מספר אסמכתא / עסקה (לא חובה, עוזר להתאים מול הדוח)</Label>
               <Input
                 id="mr-tx"
                 dir="ltr"
