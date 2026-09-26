@@ -224,10 +224,11 @@ const initiations = [
   },
 ];
 
+/** `yam` = the Yamantaka-retreat price, shown only when the page is opened through the private link. */
 const prices = [
-  { tierId: "LGI_2026_WD", title: "חניכת הדאקיני הלבנה", note: "שישי 2.10", price: "150" },
-  { tierId: "LGI_2026_YAM", title: "חניכת יאמנטקה", note: "שני מפגשים, 3-4.10", price: "150" },
-  { tierId: "LGI_2026_Both", title: "שתי החניכות", note: "שלושת המפגשים", price: "250" },
+  { tierId: "LGI_2026_WD", title: "חניכת הדאקיני הלבנה", note: "שישי 2.10", price: "150", yam: "108" },
+  { tierId: "LGI_2026_YAM", title: "חניכת יאמנטקה", note: "שני מפגשים, 3-4.10", price: "150", yam: "108" },
+  { tierId: "LGI_2026_Both", title: "שתי החניכות", note: "שלושת המפגשים", price: "250", yam: "150" },
 ];
 
 /* ── Component ── */
@@ -380,16 +381,37 @@ const LgInitiations2026 = () => {
       {/* ── Prices ── */}
       {!concluded && (
         <SectionFrame tone="stone" maxWidth="lg">
-          <SectionTitle className="text-center mb-10">הרשמה ומחירים</SectionTitle>
+          <SectionTitle className="text-center mb-4">
+            {yamLink ? "הרשמה במחיר משתתפי ריטריט יאמנטקה" : "הרשמה ומחירים"}
+          </SectionTitle>
+          {yamLink ? (
+            <div className="max-w-2xl mx-auto mb-10 rounded-2xl px-6 py-4 text-center"
+              style={{ backgroundColor: "rgba(201,169,97,0.16)", border: `1px solid ${RETREAT_THEME.GOLD_DARK}` }}>
+              <p className="text-lg font-bold" style={{ color: RETREAT_THEME.DARK }}>
+                🌺 מחיר מיוחד למשתתפי ריטריט יאמנטקה
+              </p>
+              <p className="text-base mt-1" style={{ color: RETREAT_THEME.BODY }}>
+                108 ש״ח לחניכה, או 150 ש״ח לשתי החניכות - דרך הקישור הזה בלבד.
+              </p>
+            </div>
+          ) : (
+            <div className="mb-6" />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
             {prices.map((p) => {
               const closed = !isOpen(p.tierId);
               return (
-                <div key={p.tierId} className="rounded-2xl p-7 text-center bg-white/80 shadow-sm flex flex-col">
+                <div key={p.tierId} className="rounded-2xl p-7 text-center bg-white/80 shadow-sm flex flex-col"
+                  style={yamLink ? { boxShadow: `0 0 0 2px ${RETREAT_THEME.GOLD_DARK}` } : undefined}>
                   <p className="text-xl font-bold mb-1" style={{ color: RETREAT_THEME.DARK }}>{p.title}</p>
                   <p className="text-sm mb-4" style={{ color: RETREAT_THEME.WARM_GRAY }}>{p.note}</p>
+                  {yamLink && (
+                    <p className="text-lg line-through mb-0" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                      {p.price} ₪
+                    </p>
+                  )}
                   <p className="text-4xl font-bold mb-6" style={{ color: RETREAT_THEME.GOLD_DARK }}>
-                    {p.price} <span className="text-2xl">₪</span>
+                    {yamLink ? p.yam : p.price} <span className="text-2xl">₪</span>
                   </p>
                   <button type="button" disabled={closed} onClick={() => open(p.tierId)}
                     onMouseEnter={closed ? undefined : hoverIn} onMouseLeave={closed ? undefined : hoverOut}
