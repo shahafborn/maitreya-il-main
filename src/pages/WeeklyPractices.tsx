@@ -174,6 +174,21 @@ interface WeekOverride {
 
 const WEEK_OVERRIDES: WeekOverride[] = [
   {
+    // SATURDAY 2026-09-26 only (Shahaf, the same morning): Tummo with
+    // Chongwol-la moves to 10-12 and there is no Tummo foundations session.
+    // Calendar: the 26.9 instances were retimed / removed the same morning.
+    from: "2026-09-26",
+    to: "2026-09-26",
+    note: "היום, שבת 26.9, הטומו עם צ׳ונגוואל-לה מתקיים ב-10:00-12:00, ויסודות הטומו לא מתקיימים.",
+    days: {
+      "שבת": {
+        morning: [
+          { time: "10-12", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+        ],
+      },
+    },
+  },
+  {
     // YAMANTAKA RETREAT, 2026-09-01 to 2026-11-20 (Drupon Chongwol-la, three
     // months, Mon-Fri, four online sessions a day). For its duration the
     // Monday-to-Wednesday MORNING practices do not run. Sunday morning was
