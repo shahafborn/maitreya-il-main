@@ -111,6 +111,7 @@ export function getRoutes() {
     routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.9, changefreq: "monthly", kind: "event" });
   }
   retreat("/events/death-dying-enlightenment", null, 0.9);
+  retreat("/events/white-dakini-yamantaka-initiations", null, 0.9);
   retreat("/events/yamantaka-online-2026", null, 0.9);
   retreat("/events/uma-zub-tri", null, 0.7);
   retreat("/events/ein-gedi-healing-retreat", "/events/en/ein-gedi-healing-retreat", 0.7);
