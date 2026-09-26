@@ -15,6 +15,7 @@ const AdminStaffManagement = lazy(() => import("./AdminStaffManagement"));
 const AdminPromotions = lazy(() => import("./AdminPromotions"));
 const AdminSiteContent = lazy(() => import("./AdminSiteContent"));
 const AdminSiteContentEditor = lazy(() => import("./AdminSiteContentEditor"));
+const AdminManualRegistration = lazy(() => import("./AdminManualRegistration"));
 
 const AdminLogin = () => {
   const { signIn, signInWithGoogle } = useAuth();
@@ -118,7 +119,7 @@ const LazyFallback = () => (
 const AdminDashboard = () => {
   useDocumentTitle("Admin | Maitreya");
   const { user, loading: authLoading, signOut } = useAuth();
-  const { isAdmin, isAdminOrAbove, isSuperAdmin, loading: adminLoading } = useAdmin();
+  const { isAdmin, isAdminOrAbove, isSuperAdmin, isRegistrar, loading: adminLoading } = useAdmin();
   const location = useLocation();
 
   if (authLoading || adminLoading) {
@@ -134,8 +135,9 @@ const AdminDashboard = () => {
     return <AdminLogin />;
   }
 
-  // Logged in but not admin/editor → access denied
-  if (!isAdmin) {
+  // Logged in but no staff role → access denied. A registrar gets in, but sees only
+  // the manual-registration page (people who paid by PayPal / cash).
+  if (!isAdmin && !isRegistrar) {
     return (
       <div dir="ltr" className="min-h-screen flex items-center justify-center bg-background font-body">
         <div className="text-center space-y-4">
@@ -166,9 +168,10 @@ const AdminDashboard = () => {
         <div className="flex items-center gap-6">
           <h1 className="font-heading text-lg font-bold text-primary">Admin</h1>
           <nav className="flex gap-4 text-sm">
-            {navLink("/admin/courses", "Courses")}
-            {navLink("/admin/site-content", "Site Content")}
-            {navLink("/admin/promotions", "Promotions")}
+            {isAdmin && navLink("/admin/courses", "Courses")}
+            {isAdmin && navLink("/admin/site-content", "Site Content")}
+            {isAdmin && navLink("/admin/promotions", "Promotions")}
+            {navLink("/admin/registrations", "Registrations")}
             {isAdminOrAbove && navLink("/admin/analytics", "Analytics")}
             {isAdminOrAbove && navLink("/admin/users", "Users")}
             {isSuperAdmin && navLink("/admin/staff", "Staff")}
@@ -186,13 +189,15 @@ const AdminDashboard = () => {
       <main className="container mx-auto px-6 py-8 max-w-5xl">
         <Suspense fallback={<LazyFallback />}>
           <Routes>
-            <Route index element={<Navigate to="courses" replace />} />
-            <Route path="courses" element={<AdminCourseList />} />
-            <Route path="courses/:courseId" element={<AdminCourseEditor />} />
-            <Route path="site-content" element={<AdminSiteContent />} />
-            <Route path="site-content/edit" element={<AdminSiteContentEditor />} />
-            <Route path="site-content/new" element={<AdminSiteContentEditor />} />
-            <Route path="promotions" element={<AdminPromotions />} />
+            <Route index element={<Navigate to={isAdmin ? "courses" : "registrations"} replace />} />
+            <Route path="registrations" element={<AdminManualRegistration />} />
+            {isAdmin && <Route path="courses" element={<AdminCourseList />} />}
+            {isAdmin && <Route path="courses/:courseId" element={<AdminCourseEditor />} />}
+            {isAdmin && <Route path="site-content" element={<AdminSiteContent />} />}
+            {isAdmin && <Route path="site-content/edit" element={<AdminSiteContentEditor />} />}
+            {isAdmin && <Route path="site-content/new" element={<AdminSiteContentEditor />} />}
+            {isAdmin && <Route path="promotions" element={<AdminPromotions />} />}
+            <Route path="*" element={<Navigate to={isAdmin ? "courses" : "registrations"} replace />} />
             {isAdminOrAbove && (
               <Route path="analytics" element={<AdminAnalytics />} />
             )}
