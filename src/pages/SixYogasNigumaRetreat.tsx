@@ -32,7 +32,7 @@ import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
-import { hasEnded } from "@/site/today";
+import { hasEnded, todayInIsrael } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import type { RegistrationConfig } from "@/components/retreat/types";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
@@ -102,6 +102,59 @@ const eventJsonLd: EventJsonLdConfig = {
     { name: "ללא לינה, כל הריטריט", price: 1950, validFrom: "2026-09-12" },
   ],
 };
+
+/*
+ * Early-bird countdown badge on the hero (Shahaf, 27.9, option A: the same navy-and-gold badge as
+ * the early-bird poster and newsletter). The end date is the early-bird offer's `validThrough`
+ * above, so the badge moves with it: the last seven days "השבוע האחרון", the last day
+ * "היום האחרון", then it is gone. Nothing to switch off by hand.
+ */
+const EARLY_BIRD_ENDS = eventJsonLd.offers?.find((o) => o.validThrough)?.validThrough ?? "";
+
+export const earlyBirdPhase = (today = todayInIsrael(), ends = EARLY_BIRD_ENDS): "week" | "day" | null => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ends)) return null;
+  if (today === ends) return "day";
+  if (today > ends) return null;
+  const daysLeft = (Date.parse(ends) - Date.parse(today)) / 86_400_000;
+  return daysLeft <= 7 ? "week" : null;
+};
+
+// "יום ראשון, 4.10" - the weekday and day.month of the end date.
+const earlyBirdDeadline = (ends = EARLY_BIRD_ENDS) => {
+  const d = new Date(`${ends}T12:00:00Z`);
+  const weekday = new Intl.DateTimeFormat("he-IL", { weekday: "long", timeZone: "UTC" }).format(d);
+  return `${weekday}, ${d.getUTCDate()}.${d.getUTCMonth() + 1}`;
+};
+
+const EarlyBirdBadge = ({ phase, onClick }: { phase: "week" | "day"; onClick: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    aria-label={`${phase === "week" ? "השבוע האחרון" : "היום האחרון"} למחיר המוקדם - להרשמה`}
+    className="absolute top-2 left-3 md:top-8 md:left-8 z-10 flex h-[112px] w-[112px] md:h-[150px] md:w-[150px] flex-col items-center justify-center rounded-full text-center text-white transition-transform duration-200 hover:scale-105"
+    style={{
+      backgroundColor: "#14234A",
+      border: `2px solid ${GOLD}`,
+      boxShadow: `0 6px 18px rgba(0,0,0,0.35), inset 0 0 0 5px #14234A, inset 0 0 0 6px rgba(201,169,97,0.7)`,
+      lineHeight: 1.15,
+    }}
+  >
+    <span className="text-[10px] md:text-sm font-bold">{phase === "week" ? "השבוע האחרון" : "היום האחרון"}</span>
+    <span
+      className="my-0.5 text-lg md:text-2xl font-bold"
+      style={{ color: GOLD, fontFamily: "'Frank Ruhl Libre', serif" }}
+    >
+      למחיר
+      <br />
+      המוקדם
+    </span>
+    <span className="whitespace-nowrap border-t pt-0.5 md:pt-1 text-[10px] md:text-xs" style={{ borderColor: "rgba(201,169,97,0.6)" }}>
+      {/* Phones: the short date, so the badge stays small and clear of the title. */}
+      <span className="md:hidden">{phase === "week" ? `עד ${earlyBirdDeadline().split(", ")[1]}` : earlyBirdDeadline().split(", ")[1]}</span>
+      <span className="hidden md:inline">{phase === "week" ? `עד ${earlyBirdDeadline()}` : earlyBirdDeadline()}</span>
+    </span>
+  </button>
+);
 
 // Exported so the test suite can assert on the hidden tiers - see src/test/he-team-tier.test.tsx.
 export const registrationConfig: RegistrationConfig = {
@@ -396,6 +449,7 @@ const SixYogasNigumaRetreat = () => {
      the registration form goes and the upcoming-events cards take the place of
      the first CTA, under the hero. Nothing to switch off by hand. */
   const concluded = hasEnded(eventJsonLd.endDate);
+  const earlyBird = concluded ? null : earlyBirdPhase();
   const testMode = searchParams.get("test") === TEST_KEY;
   const teamLink = searchParams.get("ticket") === TEAM_KEY;
   // A tier reached by private link: the test ticket, or the team offer.
@@ -562,6 +616,7 @@ const SixYogasNigumaRetreat = () => {
           style={{ objectPosition: "center 32%" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 md:from-black/70 via-black/35 md:via-black/40 via-[75%] to-transparent" />
+        {earlyBird && <EarlyBirdBadge phase={earlyBird} onClick={() => openRegistration("EGN_2026_Quad")} />}
         <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
           <div className="max-w-4xl mx-auto text-center md:text-start" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}>
             <h1 className="text-[2.6rem] md:text-5xl lg:text-6xl font-bold text-white leading-none md:leading-tight mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
