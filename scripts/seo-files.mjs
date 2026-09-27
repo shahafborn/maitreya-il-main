@@ -8,18 +8,21 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DIST, ORIGIN, getRoutes, describeRoute } from "./site-routes.mjs";
+import { lastmodByRoute } from "./lastmod.mjs";
 
 const esc = (s = "") => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const abs = (p) => `${ORIGIN}${p === "/" ? "/" : p}`;
 
-export function buildSitemap(allRoutes) {
+/** `lastmod` = route path -> YYYY-MM-DD from git (lastmod.mjs); articles keep their frontmatter date. */
+export function buildSitemap(allRoutes, lastmod = new Map()) {
   const routes = allRoutes.filter((r) => !r.noindex);
   const L = ['<?xml version="1.0" encoding="UTF-8"?>'];
   L.push('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">');
   for (const r of routes) {
     L.push("  <url>");
     L.push(`    <loc>${esc(abs(r.path))}</loc>`);
-    if (r.date && /^\d{4}-\d{2}-\d{2}$/.test(r.date)) L.push(`    <lastmod>${r.date}</lastmod>`);
+    const mod = r.date && /^\d{4}-\d{2}-\d{2}$/.test(r.date) ? r.date : lastmod.get(r.path);
+    if (mod) L.push(`    <lastmod>${mod}</lastmod>`);
     L.push(`    <changefreq>${r.changefreq}</changefreq>`);
     L.push(`    <priority>${r.priority.toFixed(1)}</priority>`);
     const alt = r.alternates || {};
@@ -90,7 +93,7 @@ export function buildLlms(allRoutes, captured) {
 
 export function writeSeoFiles(captured = new Map()) {
   const routes = getRoutes();
-  fs.writeFileSync(path.join(DIST, "sitemap.xml"), buildSitemap(routes));
+  fs.writeFileSync(path.join(DIST, "sitemap.xml"), buildSitemap(routes, lastmodByRoute(routes)));
   fs.writeFileSync(path.join(DIST, "robots.txt"), buildRobots());
   fs.writeFileSync(path.join(DIST, "llms.txt"), buildLlms(routes, captured));
   console.log(`sitemap.xml (${routes.length} urls), robots.txt, llms.txt written`);
