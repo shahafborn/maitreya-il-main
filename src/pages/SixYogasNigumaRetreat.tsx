@@ -1176,8 +1176,8 @@ const SixYogasNigumaRetreat = () => {
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>מדיניות ביטול</h3>
             <ul className="space-y-2 text-lg" style={{ color: WARM_GRAY }}>
               <li className="flex items-start gap-3"><GoldDot /><span>ביטול עד 60 יום לפני הריטריט - החזר מלא</span></li>
-              <li className="flex items-start gap-3"><GoldDot /><span>ביטול עד חודש לפני הריטריט - החזר של 50%</span></li>
-              <li className="flex items-start gap-3"><GoldDot /><span>ביטול פחות מחודש לפני הריטריט - ללא החזר</span></li>
+              <li className="flex items-start gap-3"><GoldDot /><span>ביטול 30-60 יום לפני - החזר של 50%</span></li>
+              <li className="flex items-start gap-3"><GoldDot /><span>ביטול פחות מ-30 יום לפני - ללא החזר</span></li>
             </ul>
           </div>
 
