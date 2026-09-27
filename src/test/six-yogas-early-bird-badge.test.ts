@@ -3,8 +3,14 @@
  * (4.10.2026, the offer's validThrough): the last seven days "week", the day itself "day",
  * otherwise nothing.
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { earlyBirdPhase } from "@/pages/SixYogasNigumaRetreat";
+
+// The page module pulls in lib/supabase, which throws at import time when the
+// Supabase env vars are absent (they are absent in CI), so stub it.
+vi.mock("@/lib/supabase", () => ({
+  supabase: { from: () => ({ insert: async () => ({ error: null }) }) },
+}));
 
 describe("earlyBirdPhase", () => {
   it("is off more than a week before the end", () => {
