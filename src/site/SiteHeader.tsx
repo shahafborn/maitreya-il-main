@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { sitePath, type SiteLang } from "./content";
+import { otherLangPath, rememberLang } from "./langSwitch";
 import logo from "@/assets/maitreya-logo.png";
 
 interface NavItem {
@@ -47,8 +48,12 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const items = NAV[lang];
-  const otherLang: { label: string; to: string } =
-    lang === "he" ? { label: "English", to: sitePath("en") } : { label: "עברית", to: sitePath("he") };
+  // The switch leads to the same page in the other language when it has one
+  const otherLang = {
+    label: lang === "he" ? "English" : "עברית",
+    code: (lang === "he" ? "en" : "he") as SiteLang,
+    to: otherLangPath(lang, pathname),
+  };
 
   const linkClass = (to: string) =>
     `font-body text-sm transition-colors hover:text-accent ${
@@ -59,8 +64,9 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="container flex items-center justify-between py-3">
         {/* The logo image already carries the bilingual name - no text beside it */}
+        {/* Smaller on phones so the language button beside the menu icon has room (2026-09-29) */}
         <Link to={sitePath(lang)} className="flex items-center">
-          <img src={logo} alt="מאיטרייה סנגהה ישראל" className="h-14 w-auto" />
+          <img src={logo} alt="מאיטרייה סנגהה ישראל" className="h-9 min-[350px]:h-10 min-[375px]:h-11 lg:h-14 w-auto" />
         </Link>
 
         {/* Desktop nav */}
@@ -72,21 +78,33 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
           ))}
           <Link
             to={otherLang.to}
+            onClick={() => rememberLang(otherLang.code)}
+            lang={otherLang.code}
             className="font-body text-sm border border-border rounded-full px-3 py-1 text-muted-foreground hover:text-accent hover:border-accent transition-colors"
           >
             {otherLang.label}
           </Link>
         </nav>
 
-        {/* Mobile menu button */}
-        <button
-          className="lg:hidden p-2 text-primary"
-          onClick={() => setOpen(!open)}
-          aria-label={lang === "he" ? "תפריט" : "Menu"}
-          aria-expanded={open}
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        {/* Mobile: the language button sits in the header beside the menu icon, not inside the menu (2026-09-29) */}
+        <div className="lg:hidden flex items-center gap-1.5">
+          <Link
+            to={otherLang.to}
+            onClick={() => rememberLang(otherLang.code)}
+            lang={otherLang.code}
+            className="font-body text-[12.5px] font-medium leading-none rounded-full border border-[hsl(220_15%_85%)] bg-white px-[11px] py-[7px] text-[hsl(220_40%_30%)] hover:text-accent hover:border-accent transition-colors whitespace-nowrap"
+          >
+            {otherLang.label}
+          </Link>
+          <button
+            className="p-2 text-primary"
+            onClick={() => setOpen(!open)}
+            aria-label={lang === "he" ? "תפריט" : "Menu"}
+            aria-expanded={open}
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile nav */}
@@ -103,13 +121,6 @@ export const SiteHeader = ({ lang }: { lang: SiteLang }) => {
                 {item.label}
               </Link>
             ))}
-            <Link
-              to={otherLang.to}
-              className="font-body text-sm text-muted-foreground"
-              onClick={() => setOpen(false)}
-            >
-              {otherLang.label}
-            </Link>
           </div>
         </nav>
       )}
