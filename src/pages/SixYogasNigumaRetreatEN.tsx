@@ -100,7 +100,7 @@ const seo: SEOConfig = {
   title:
     "The Six Yogas of Niguma: Retreat with Lama Glenn | December 6-12, 2026 | Maitreya Sangha Israel",
   description:
-    "Six days of teaching and practice of the Six Yogas of Niguma - the profound path to enlightenment of the wisdom dakini - with Lama Glenn Mullin, including the Vajrayogini empowerment. Dead Sea, Israel or live on Zoom. December 6-12, 2026.",
+    "Seven days of teaching and practice of the Six Yogas of Niguma - the profound path to enlightenment of the wisdom dakini - with Lama Glenn Mullin, including the Vajrayogini empowerment. Dead Sea, Israel or live on Zoom. December 6-12, 2026.",
   keywords:
     "Six Yogas of Niguma, Niguma, tummo, Vajrayogini, retreat, Ein Gedi, Dead Sea, Hanukkah, Lama Glenn, Tibetan Buddhism, tantra, Zoom, Maitreya Sangha",
   url: "https://maitreya.org.il/events/en/six-yogas-niguma-retreat",
@@ -338,7 +338,7 @@ const registrationCopy = {
 };
 
 const whatsIncluded = [
-  "Six days of teaching and practice with Lama Glenn Mullin, in Ein Gedi or live on Zoom",
+  "Seven days of teaching and practice with Lama Glenn Mullin, in Ein Gedi or live on Zoom",
   "The Vajrayogini empowerment",
   "Recordings of all sessions, to watch or review in your own time",
   "Yoga and meditation sessions",
@@ -838,7 +838,7 @@ const SixYogasNigumaRetreatEN = () => {
       <FinalCTA
         bgImage={venuePhoto4}
         title="Join the Retreat"
-        body="Six days of the Six Yogas of Niguma, with the Vajrayogini empowerment, on the shore of the Dead Sea during Hanukkah - in person or live on Zoom"
+        body="Seven days of the Six Yogas of Niguma, with the Vajrayogini empowerment, on the shore of the Dead Sea during Hanukkah - in person or live on Zoom"
         ctaLabel="Register for the Retreat"
         onCtaClick={() => open()}
         footnote="Very few beds available"
