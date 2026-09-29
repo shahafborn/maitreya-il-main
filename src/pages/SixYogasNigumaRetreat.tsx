@@ -84,7 +84,7 @@ const TEAM_TIER: RoomType = "EGN_2026_Team";
 const eventJsonLd: EventJsonLdConfig = {
   name: "שש היוגות של ניגומה",
   description:
-    "שישה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - עם לאמה גלן מולין, כולל העצמת ואג׳ראיוגיני. בית ספר שדה עין גדי, ים המלח, בחנוכה, 6-12 בדצמבר 2026.",
+    "שבעה ימי לימוד ותרגול של שש היוגות של ניגומה - הדרך הנשגבת להארה של דאקיני החוכמה - עם לאמה גלן מולין, כולל העצמת ואג׳ראיוגיני. בית ספר שדה עין גדי, ים המלח, בחנוכה, 6-12 בדצמבר 2026.",
   url: "https://maitreya.org.il/events/six-yogas-niguma-retreat",
   image: "https://maitreya.org.il/og-six-yogas-niguma.jpg",
   startDate: "2026-12-06T12:00:00+02:00",
@@ -951,7 +951,7 @@ const SixYogasNigumaRetreat = () => {
             <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
               לינה בחדר ל-4
             </h3>
-            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | ששת ימי הלימוד, ארוחות מלאות וכל השיעורים והתרגולים</p>
+            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | שבעת ימי הלימוד, ארוחות מלאות וכל השיעורים והתרגולים</p>
             <p className="text-sm font-bold mb-2" style={{ color: GOLD }}>
               מחיר מוקדם מיוחד עד תום החגים - 4 באוקטובר 2026
             </p>
@@ -968,7 +968,7 @@ const SixYogasNigumaRetreat = () => {
             <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
               ללא לינה, כל הריטריט
             </h3>
-            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>ששת ימי הלימוד, כולל ארוחת צהריים וכיבוד</p>
+            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>שבעת ימי הלימוד, כולל ארוחת צהריים וכיבוד</p>
             <p className="text-3xl font-bold mb-1">
               1,950
               <span className="text-lg font-normal mr-1">₪</span>
@@ -1161,7 +1161,7 @@ const SixYogasNigumaRetreat = () => {
             הצטרפו לריטריט
           </h2>
           <p className="text-xl text-white/70 mb-10 leading-relaxed drop-shadow-md">
-            שישה ימים של שש היוגות של ניגומה, עם העצמת ואג׳ראיוגיני, על שפת ים המלח בחנוכה
+            שבעה ימים של שש היוגות של ניגומה, עם העצמת ואג׳ראיוגיני, על שפת ים המלח בחנוכה
           </p>
           <CTAButton className="drop-shadow-lg" onClick={() => openRegistration()}>להרשמה לריטריט</CTAButton>
           <p className="text-sm text-white/40 mt-8 drop-shadow-sm">מספר המקומות מוגבל</p>
