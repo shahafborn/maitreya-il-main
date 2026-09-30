@@ -19,8 +19,8 @@ const NOW = new Date("2026-10-03T12:00:00+03:00");
 const LATER_TODAY = "2026-10-03T20:00:00+03:00"; // still open
 const THIS_MORNING = "2026-10-03T09:00:00+03:00"; // already closed
 
-const HE_NOTE = "ההקלטה הייתה זמינה ל-24 שעות בלבד.";
-const EN_NOTE = "The recording was available for 24 hours only.";
+const HE_NOTE = "ההקלטה הייתה זמינה ל-72 שעות בלבד.";
+const EN_NOTE = "The recording was available for 72 hours only.";
 
 const recording = (availableUntil: string | null | undefined): CourseRecording =>
   ({

@@ -63,11 +63,11 @@ const RecordingItem = ({
         <div className="bg-muted rounded-lg px-6 py-8 text-center text-muted-foreground">
           {dir === "rtl" && (
             <p dir="rtl" className="text-sm">
-              ההקלטה הייתה זמינה ל-24 שעות בלבד.
+              ההקלטה הייתה זמינה ל-72 שעות בלבד.
             </p>
           )}
           <p dir="ltr" className={dir === "rtl" ? "mt-1 text-xs" : "text-sm"}>
-            The recording was available for 24 hours only.
+            The recording was available for 72 hours only.
           </p>
         </div>
       ) : (
