@@ -24,6 +24,7 @@ const recording = (n: number, week: number | null): CourseRecording => ({
   embed_type: "bunny",
   embed_url: `https://iframe.mediadelivery.net/embed/718352/video-${n}`,
   sort_order: n,
+  available_until: null,
 });
 
 function iframesOf(container: HTMLElement) {
@@ -34,13 +35,13 @@ describe("CourseRecordings keeps its players across re-renders", () => {
   it("weekly (accordion) layout: same iframe nodes after a re-render", () => {
     const recs = [recording(1, 1), recording(2, 1), recording(3, 2)];
     const { container, rerender } = render(
-      <CourseRecordings recordings={recs} courseId="course-1" />
+      <CourseRecordings recordings={recs} courseId="course-1" dir="ltr" />
     );
     const before = iframesOf(container);
     expect(before).toHaveLength(3);
 
     // Equal props, new array identity - what a refetch or a context update produces
-    rerender(<CourseRecordings recordings={[...recs]} courseId="course-1" />);
+    rerender(<CourseRecordings recordings={[...recs]} courseId="course-1" dir="ltr" />);
 
     const after = iframesOf(container);
     expect(after).toHaveLength(3);
@@ -50,12 +51,12 @@ describe("CourseRecordings keeps its players across re-renders", () => {
   it("ungrouped (plain list) layout: same iframe nodes after a re-render", () => {
     const recs = [recording(1, null), recording(2, null)];
     const { container, rerender } = render(
-      <CourseRecordings recordings={recs} courseId="course-1" />
+      <CourseRecordings recordings={recs} courseId="course-1" dir="ltr" />
     );
     const before = iframesOf(container);
     expect(before).toHaveLength(2);
 
-    rerender(<CourseRecordings recordings={[...recs]} courseId="course-1" />);
+    rerender(<CourseRecordings recordings={[...recs]} courseId="course-1" dir="ltr" />);
 
     const after = iframesOf(container);
     after.forEach((node, i) => expect(node).toBe(before[i]));

@@ -8,10 +8,14 @@ import {
 import type { CourseRecording } from "@/hooks/useCourseContent";
 import VideoEmbed from "@/components/course/VideoEmbed";
 import { trackVideoView } from "@/lib/analytics";
+import { useNow } from "@/hooks/useNow";
+import { formatAvailableUntil, isRecordingClosed } from "@/lib/recordingWindow";
 
 interface CourseRecordingsProps {
   recordings: CourseRecording[];
   courseId: string;
+  /** The course's text direction (course.default_dir) - picks Hebrew or English notes. */
+  dir: "ltr" | "rtl";
 }
 
 const SESSION_LABELS: Record<string, string> = {
@@ -31,30 +35,66 @@ const SESSION_LABELS: Record<string, string> = {
  */
 const RecordingItem = ({
   rec,
+  dir,
+  now,
   onLoad,
 }: {
   rec: CourseRecording;
+  dir: "ltr" | "rtl";
+  now: number;
   onLoad: (recordingId: string) => void;
-}) => (
-  <div>
-    <h4 className="text-sm font-medium text-foreground mb-2">
-      {rec.title}
-      {rec.session_type && (
-        <span className="ml-2 text-xs text-muted-foreground">
-          ({SESSION_LABELS[rec.session_type] ?? rec.session_type})
-        </span>
-      )}
-    </h4>
-    <VideoEmbed
-      embedType={rec.embed_type}
-      embedUrl={rec.embed_url}
-      title={rec.title}
-      onLoad={() => onLoad(rec.id)}
-    />
-  </div>
-);
+}) => {
+  // Availability window (available_until). NULL/undefined = no limit.
+  const availableUntil = rec.available_until ?? null;
+  const closed = isRecordingClosed(availableUntil, now);
 
-const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
+  return (
+    <div>
+      <h4 className="text-sm font-medium text-foreground mb-2">
+        {rec.title}
+        {rec.session_type && (
+          <span className="ml-2 text-xs text-muted-foreground">
+            ({SESSION_LABELS[rec.session_type] ?? rec.session_type})
+          </span>
+        )}
+      </h4>
+      {closed ? (
+        // Window closed: no player (and so no iframe, no view tracked).
+        <div className="bg-muted rounded-lg px-6 py-8 text-center text-muted-foreground">
+          {dir === "rtl" && (
+            <p dir="rtl" className="text-sm">
+              ההקלטה הייתה זמינה ל-24 שעות בלבד.
+            </p>
+          )}
+          <p dir="ltr" className={dir === "rtl" ? "mt-1 text-xs" : "text-sm"}>
+            The recording was available for 24 hours only.
+          </p>
+        </div>
+      ) : (
+        <>
+          {availableUntil && (
+            <p className="-mt-1 mb-2 text-xs text-muted-foreground">
+              {formatAvailableUntil(availableUntil, dir)}
+            </p>
+          )}
+          <VideoEmbed
+            embedType={rec.embed_type}
+            embedUrl={rec.embed_url}
+            title={rec.title}
+            onLoad={() => onLoad(rec.id)}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+const CourseRecordings = ({ recordings, courseId, dir }: CourseRecordingsProps) => {
+  // Only tick the clock when some recording actually has a window, so an open
+  // page flips to the note when it closes without a reload.
+  const hasWindow = recordings.some((r) => !!r.available_until);
+  const now = useNow(hasWindow);
+
   // Deduplicate tracking per session (prevent re-renders from spamming)
   const trackedRef = useRef<Set<string>>(new Set());
 
@@ -99,7 +139,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
         ) : ungrouped ? (
           <div className="space-y-8">
             {grouped.get(null)!.map((rec) => (
-              <RecordingItem key={rec.id} rec={rec} onLoad={handleVideoLoad} />
+              <RecordingItem key={rec.id} rec={rec} dir={dir} now={now} onLoad={handleVideoLoad} />
             ))}
           </div>
         ) : (
@@ -117,7 +157,7 @@ const CourseRecordings = ({ recordings, courseId }: CourseRecordingsProps) => {
                 <AccordionContent>
                   <div className="space-y-6 pt-2">
                     {recs.map((rec) => (
-                      <RecordingItem key={rec.id} rec={rec} onLoad={handleVideoLoad} />
+                      <RecordingItem key={rec.id} rec={rec} dir={dir} now={now} onLoad={handleVideoLoad} />
                     ))}
                   </div>
                 </AccordionContent>

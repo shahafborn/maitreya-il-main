@@ -97,7 +97,7 @@ const CoursePage = ({ course }: CoursePageProps) => {
       <CoursePromoSection promotions={promotions} />
 
       {/* Recordings (always rendered; component shows an empty state when no recordings) */}
-      <CourseRecordings recordings={recordings} courseId={course.id} />
+      <CourseRecordings recordings={recordings} courseId={course.id} dir={course.default_dir} />
 
       {/* Footer content blocks (anything that isn't about / schedule / practice) */}
       {visibleBlocks

@@ -50,6 +50,13 @@ export interface CourseRecording {
   embed_type: "bunny" | "youtube" | "iframe";
   embed_url: string;
   sort_order: number;
+  /**
+   * When set, the recording stops being watchable at this moment (ISO
+   * timestamptz); the course page then shows a note instead of the player.
+   * NULL = no limit. Always null (never undefined) once through
+   * useCourseRecordings, even on a database that does not have the column yet.
+   */
+  available_until: string | null;
 }
 
 // ---- Hooks ----
@@ -112,7 +119,12 @@ export function useCourseRecordings(courseId: string | undefined) {
         .eq("course_id", courseId!)
         .order("sort_order");
       if (error) throw error;
-      return (data ?? []) as CourseRecording[];
+      // available_until may be missing entirely (column not added on this
+      // database yet) - normalise undefined to null = no limit.
+      return (data ?? []).map((row) => ({
+        ...row,
+        available_until: row.available_until ?? null,
+      })) as CourseRecording[];
     },
     enabled: !!courseId,
   });
