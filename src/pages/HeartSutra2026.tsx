@@ -10,8 +10,11 @@
  * the real offer at that hour.
  *
  * Content source (vault): the-system/W-work/ventures/maitreya-sangha/projects/
- *   heart-sutra-2026/event-spec-and-copy.md (built 28.9.2026, not yet approved;
- *   the open questions there - price, translation, recordings - are Shahaf's)
+ *   heart-sutra-2026/event-spec-and-copy.md (built 28.9.2026) and
+ *   launch-as-recordings-series.md (Shahaf's go, 4.10.2026): launched AFTER
+ *   session 1, so the page says the series has started and session 1 is on the
+ *   course page (/courses/heart-sutra). The recordings carry no Hebrew channel -
+ *   English with Korean interpretation - and the page says so plainly.
  *
  * Registration and payment follow the Death, Dying and Enlightenment page: the
  * form posts to n8n `HSU_Register` (sheet row + a Cardcom page for this
@@ -210,8 +213,9 @@ const sessionDates = [
 ];
 
 const whatsIncluded = [
-  "חמישה מפגשי לימוד בשידור חי עם לאמה גלן מולין, יחד עם הסנגהה העולמית",
+  "חמישה מפגשי לימוד עם לאמה גלן מולין - בשידור חי עם הסנגהה העולמית, או בהקלטה",
   "הקלטות של כל המפגשים בדף הקורס, לצפייה בשעה שנוחה לכם",
+  "הלימוד באנגלית, עם תרגום לקוריאנית (ללא תרגום לעברית)",
 ];
 
 /* ── Component ── */
@@ -268,7 +272,7 @@ const HeartSutra2026 = () => {
         title="סוטרת הלב"
         subtitle="סדרת לימוד אונליין עם לאמה גלן מולין"
         accent="פרג׳נאפרמיטה - שלמות החוכמה"
-        dateLine="5 מפגשים בימי ראשון, החל מ-4 באוקטובר 2026 | בזום, מוקלט"
+        dateLine="5 מפגשים בימי ראשון, 4.10-1.11.2026 | בזום ובהקלטות"
         objectPosition="center 30%"
       />
 
@@ -289,12 +293,18 @@ const HeartSutra2026 = () => {
           className="text-sm font-semibold uppercase tracking-wide text-center mb-4"
           style={{ color: RETREAT_THEME.GOLD_DARK }}
         >
-          סדרת לימוד חדשה | <span dir="ltr">Discussions on the Heart Sutra</span>
+          הסדרה התחילה - אפשר להצטרף | <span dir="ltr">Discussions on the Heart Sutra</span>
         </p>
         <p className="text-lg md:text-xl leading-[1.9] text-center mb-8" style={{ color: RETREAT_THEME.BODY }}>
           סוטרת הלב היא תמצית תורתו של הבודהה על הריקות ועל טבעה האמיתי של המציאות. בכמה עשרות שורות בלבד
           היא מכילה את לב החוכמה של המהאיאנה, והיא מדוקלמת עד היום במנזרים בכל העולם הבודהיסטי. לאמה גלן מולין
           ילמד את הסוטרה בחמישה מפגשים שבועיים, בהמשך לסדרת הלימוד הקודמת שלו, יחד עם מאיטרייה סנגהה ברחבי העולם.
+          {!concluded && (
+            <>
+              {" "}המפגש הראשון כבר התקיים, וההקלטה שלו מחכה לנרשמים בדף הקורס. אפשר להצטרף עכשיו, לצפות בה
+              ולהמשיך איתנו.
+            </>
+          )}
         </p>
         {!concluded && (
           <div className="text-center">
@@ -372,11 +382,17 @@ const HeartSutra2026 = () => {
             השעות לפי שעון ישראל. מ-25 באוקטובר, עם המעבר לשעון חורף, המפגשים מתחילים ב-03:00.
           </p>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+            המפגש הראשון (4.10) כבר התקיים - ההקלטה שלו בדף הקורס.
+          </p>
+          <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+            <strong style={{ color: RETREAT_THEME.DARK }}>הלימוד באנגלית, עם תרגום לקוריאנית, ללא תרגום לעברית.</strong>
+          </p>
+          <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
             <strong style={{ color: RETREAT_THEME.DARK }}>כל המפגשים מוקלטים</strong>, וההקלטות עולות לדף הקורס
             לנרשמים - אפשר להצטרף בשידור החי, או לצפות בהקלטה בשעה שנוחה לכם.
           </p>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
-            קישור הזום וקישור דף ההקלטות יישלחו לנרשמים לפני המפגש הראשון.
+            קישור הזום וקישור דף ההקלטות נשלחים במייל האישור, מיד עם ההרשמה.
           </p>
         </div>
       </SectionFrame>
@@ -457,12 +473,13 @@ const HeartSutra2026 = () => {
           status={paymentStatus}
           dir="rtl"
           successTitle="ההרשמה בוצעה בהצלחה!"
-          successBody="תודה שנרשמתם לסדרת הלימוד על סוטרת הלב עם לאמה גלן מולין. אישור הרשמה יישלח אליכם במייל, וקישור הזום וקישור דף ההקלטות לפני המפגש הראשון."
+          successBody="תודה שנרשמתם לסדרת הלימוד על סוטרת הלב עם לאמה גלן מולין. אישור הרשמה יישלח אליכם במייל, ובו קישור הזום וקישור דף ההקלטות."
           successDetails={{
             heading: "מועדי המפגשים",
             lines: [
-              "ימי ראשון 4.10, 11.10, 18.10 בשעה 04:00",
+              "ימי ראשון 11.10, 18.10 בשעה 04:00",
               "ימי ראשון 25.10, 1.11 בשעה 03:00 (שעון ישראל)",
+              "המפגש הראשון (4.10) - בהקלטה בדף הקורס",
             ],
           }}
           failedTitle="אירעה שגיאה בתשלום"
