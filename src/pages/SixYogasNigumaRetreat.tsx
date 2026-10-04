@@ -77,9 +77,9 @@ const TEAM_TIER: RoomType = "EGN_2026_Team";
 /**
  * The machine-readable twin of the page: start and end from the arrival block
  * ("מתחיל ביום ראשון... בשעה 12:00, ומסתיים ביום שבת... בשעה 15:00"), venue from
- * the location section, prices from the tiers above. The early-bird `validThrough`
- * is the 4.10.2026 flip, which also lives in the n8n EGN_Register options -
- * change both together (task `six-yogas-end-early-bird-price`).
+ * the location section, prices from the tiers above. Prices also live in the n8n
+ * EGN_Register options - change both together. The early bird (3,700 until 4.10.2026)
+ * ended on 5.10.2026 at 08:00 (task `six-yogas-end-early-bird-price`).
  */
 const eventJsonLd: EventJsonLdConfig = {
   name: "שש היוגות של ניגומה",
@@ -98,7 +98,7 @@ const eventJsonLd: EventJsonLdConfig = {
   performers: ["לאמה גלן מולין", "דרופון צ׳ונגוואל-לה"],
   // validFrom = the day this page went live with its registration open.
   offers: [
-    { name: "לינה בחדר ל-4 (מחיר מוקדם)", price: 3700, validFrom: "2026-09-12", validThrough: "2026-10-04" },
+    { name: "לינה בחדר ל-4, כל הריטריט", price: 3950, validFrom: "2026-10-05" },
     { name: "ללא לינה, כל הריטריט", price: 1950, validFrom: "2026-09-12" },
   ],
 };
@@ -167,7 +167,7 @@ export const registrationConfig: RegistrationConfig = {
   dir: "rtl",
   // Tier ids are the codes n8n charges by; amounts and installment caps live in EGN_Register.
   tiers: [
-    { id: "EGN_2026_Quad", title: "לינה בחדר ל-4 (מחיר מוקדם)", note: "מחיר מוקדם עד 4.10.2026 | 6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,700", priceValue: 3700, currencySymbol: "₪" },
+    { id: "EGN_2026_Quad", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     // Operations-team ticket: a room for TWO, full board, team price. Link only.
     { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-2", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
@@ -952,14 +952,10 @@ const SixYogasNigumaRetreat = () => {
               לינה בחדר ל-4
             </h3>
             <p className="text-base mb-6" style={{ color: WARM_GRAY }}>חדר משותף לארבעה | שבעת ימי הלימוד, ארוחות מלאות וכל השיעורים והתרגולים</p>
-            <p className="text-sm font-bold mb-2" style={{ color: GOLD }}>
-              מחיר מוקדם מיוחד עד תום החגים - 4 באוקטובר 2026
-            </p>
             <p className="text-4xl font-bold mb-1">
-              3,700
+              3,950
               <span className="text-lg font-normal mr-1">₪</span>
             </p>
-            <p className="text-sm mb-1" style={{ color: WARM_GRAY }}>במקום 3,950 ₪</p>
             <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>לאדם | הכל כלול | עד 5 תשלומים</p>
             <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_Quad")}>להרשמה לריטריט</CTAButton>
           </div>
