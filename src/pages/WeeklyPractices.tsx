@@ -87,55 +87,33 @@ type PeriodKey = (typeof PERIODS)[number]["key"];
 type DayRow = { day: string } & Record<PeriodKey, Session[]>;
 
 const SCHEDULE: DayRow[] = [
+  // From October 2026 until the teachers' December visit (Shahaf, WhatsApp to the
+  // Sangha group 2026-10-05): the community's own practices are only three Tummo
+  // sessions, next to the teachers' courses and the Yamantaka retreat (which have
+  // their own pages). A new schedule after the visit. The full schedule that ran
+  // until September is in git history (commit before this one) - Green Tara, White
+  // Tara, Yamantaka, Amitayus, Vajrayogini, Tummo foundations.
   {
     day: "ראשון",
-    // Tummo (Naropa), facilitated by Shahaf, replaced חמשת הבודהות in this cell
-    // permanently on 2026-09-10. It runs through the Yamantaka retreat window -
-    // see the retreat override below, which no longer clears Sunday morning.
+    // Tummo (Naropa), facilitated by Shahaf.
     morning: [{ time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
-    afternoon: [{ time: "16-17", title: "טארה הירוקה", categories: ["basic"], beginner: true }],
+    afternoon: [],
     evening: [],
   },
-  {
-    day: "שני",
-    morning: [{ time: "07-08", title: "טארה הלבנה", categories: ["healing"], beginner: true }],
-    afternoon: [],
-    evening: [{ time: "20-21", title: "טארה הלבנה", categories: ["healing"], beginner: true }],
-  },
-  {
-    day: "שלישי",
-    morning: [{ time: "07-08", title: "יאמנטקה", categories: ["tantra"] }],
-    afternoon: [],
-    evening: [{ time: "20-21", title: "טארה הלבנה", categories: ["healing"], beginner: true }],
-  },
-  {
-    day: "רביעי",
-    morning: [
-      { time: "07-08", title: "אמיתאיוס", subtitle: "כולל טומו לריפוי", categories: ["healing", "tummo"] },
-    ],
-    afternoon: [],
-    // White Manjushri (20-21) REMOVED "for now" from Wed 23.9, that evening
-    // included (Shahaf, 2026-09-23). To bring it back:
-    //   { time: "20-21", title: "מנג׳ושרי הלבן", categories: ["basic"], beginner: true }
-    // and re-open the calendar series (create_practice_calendar.py).
-    evening: [],
-  },
+  { day: "שני", morning: [], afternoon: [], evening: [] },
+  { day: "שלישי", morning: [], afternoon: [], evening: [] },
+  { day: "רביעי", morning: [], afternoon: [], evening: [] },
   {
     day: "חמישי",
     morning: [],
-    afternoon: [{ time: "16-17", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
-    evening: [{ time: "20-21", title: "וג׳ראיוגיני", categories: ["tantra"] }],
+    afternoon: [{ time: "17-18", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+    evening: [],
   },
   {
     day: "שבת",
     morning: [
-      { time: "08-09", title: "יסודות הטומו", categories: ["tummo"], beginner: true },
-      { time: "09-11", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+      { time: "10-12", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
     ],
-    // Lama Glenn's Mahamudra course (Uma Zub Tri, Saturdays 16-17:30) ran its
-    // six sessions and ended 2026-09-05. Removed from the standing schedule
-    // 2026-09-07 (Shahaf). The old WEEK_OVERRIDES below still re-list it for
-    // their own past windows, which is harmless - they no longer match.
     afternoon: [],
     evening: [],
   },
@@ -188,26 +166,8 @@ const WEEK_OVERRIDES: WeekOverride[] = [
       },
     },
   },
-  {
-    // YAMANTAKA RETREAT, 2026-09-01 to 2026-11-20 (Drupon Chongwol-la, three
-    // months, Mon-Fri, four online sessions a day). For its duration the
-    // Monday-to-Wednesday MORNING practices do not run. Sunday morning was
-    // cleared too until 2026-09-10, when Shahaf added the 07-08 Tummo (Naropa)
-    // session he facilitates himself - the retreat is Mon-Fri, so his Sundays
-    // are free and that cell now runs straight through the retreat window.
-    // Only `morning` is provided, so every afternoon/evening cell and the whole
-    // of Thursday and Saturday keep their standing schedule. Auto-reverts on
-    // 2026-11-21. The Google Calendar's four morning series were ended early
-    // the same day; they return with the Q4 rebuild (they all expired 30.9).
-    from: "2026-09-01",
-    to: "2026-11-20",
-    note: "במהלך ריטריט היאמנטקה עם דרופון צ׳ונגוואל-לה, עד 20.11, לא מתקיימים תרגולי הבוקר של ימים שני עד רביעי. שאר התרגולים ממשיכים כרגיל.",
-    days: {
-      "שני": { morning: [] },
-      "שלישי": { morning: [] },
-      "רביעי": { morning: [] },
-    },
-  },
+  // (The Yamantaka retreat override - no Mon-Wed morning practices until 20.11 -
+  // was removed 2026-10-05: those practices are not on the schedule at all now.)
   {
     // DEATH, DYING AND ENLIGHTENMENT - Lama Glenn's six-Sunday online series,
     // 2026-09-13 to 2026-10-18 at 16:00 Israel (own event page + own Zoom, sent
@@ -232,7 +192,7 @@ const WEEK_OVERRIDES: WeekOverride[] = [
             url: "/events/death-dying-enlightenment",
           },
         ],
-        evening: [{ time: "20:30-21:30", title: "טארה הירוקה", categories: ["basic"], beginner: true }],
+        // Green Tara (moved here to 20:30 for the series) is off the schedule from 5.10.
       },
     },
   },
@@ -525,6 +485,9 @@ function localISODate(d: Date): string {
 }
 
 /** Apply any active overrides on top of the standing schedule for `today`. */
+// A day with no session at all is left out of the timetable (Oct 2026: Mon-Wed are empty).
+const hasSessions = (row: DayRow) => PERIODS.some((p) => row[p.key].length > 0);
+
 function effectiveSchedule(today: Date): { schedule: DayRow[]; notes: string[] } {
   const iso = localISODate(today);
   const active = WEEK_OVERRIDES.filter((o) => iso >= o.from && iso <= o.to);
@@ -730,7 +693,7 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
             >
               לוח תרגולים קבועים בזום
               <br />
-              יוני - ספטמבר 2026
+              אוקטובר - נובמבר 2026
             </div>
           </header>
 
@@ -819,7 +782,7 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
             </div>
 
             {/* Day rows */}
-            {schedule.map((row) => (
+            {schedule.filter(hasSessions).map((row) => (
               <div
                 key={row.day}
                 className="grid items-stretch gap-3 border-t py-3"
@@ -840,7 +803,7 @@ const ScheduleCard = ({ variant }: { variant: PracticesVariant }) => {
 
           {/* Timetable — mobile stacked by day */}
           <div className="mt-8 lg:hidden">
-            {schedule.map((row) => (
+            {schedule.filter(hasSessions).map((row) => (
               <div key={row.day} className="border-t py-4" style={{ borderColor: COLORS.border }}>
                 <h2 className="mb-3 font-heading text-2xl font-semibold" style={{ color: COLORS.ink }}>
                   {row.day}
