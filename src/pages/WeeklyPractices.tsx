@@ -236,6 +236,49 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     },
   },
   {
+    // THE HEART SUTRA - Lama Glenn's five-Sunday online series with the worldwide
+    // sangha (Shahaf, 2026-10-05), 10:00 Korea = 04:00 Israel until winter time
+    // (25.10), then 03:00. Session 1 ran 1:28, so 1.5 h is shown. Registrants get
+    // the Zoom link in their confirmation email; the cell links to the event page.
+    from: "2026-10-04",
+    to: "2026-10-24",
+    days: {
+      "ראשון": {
+        // A provided period replaces the standing cell, so the Tummo is re-listed.
+        morning: [
+          {
+            time: "04-05:30",
+            title: "סוטרת הלב",
+            subtitle: "סדרה עם לאמה גלן, 4.10-1.11",
+            categories: ["basic"],
+            url: "/events/heart-sutra",
+          },
+          { time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
+        ],
+      },
+    },
+  },
+  {
+    // THE HEART SUTRA - the last two Sundays, after Israel's move to winter time.
+    from: "2026-10-25",
+    to: "2026-11-01",
+    days: {
+      "ראשון": {
+        // A provided period replaces the standing cell, so the Tummo is re-listed.
+        morning: [
+          {
+            time: "03-04:30",
+            title: "סוטרת הלב",
+            subtitle: "סדרה עם לאמה גלן, 4.10-1.11",
+            categories: ["basic"],
+            url: "/events/heart-sutra",
+          },
+          { time: "07-08", title: "טומו (נארופה)", categories: ["tummo", "tantra"] },
+        ],
+      },
+    },
+  },
+  {
     // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
     from: "2026-06-22",
     to: "2026-06-27",
@@ -611,15 +654,15 @@ export type PracticesVariant = "sangha" | "public";
 const PUBLIC_SEO = {
   title: "תרגולים שבועיים בזום - מאיטרייה סנגהה ישראל",
   description:
-    "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - טומו, טארה הלבנה והירוקה, אמיתאיוס ותרגולים נוספים בהנחיית דרופון צ׳ונגוואל-לה. פתוח למצטרפים חדשים - השאירו פרטים ונחזור אליכם.",
+    "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - תרגולי הקהילה ומפגשי לימוד עם המורים. פתוח למצטרפים חדשים - השאירו פרטים ונחזור אליכם.",
 };
 
 /** The members' page (with Zoom links) - unlisted. */
 const SanghaSchedule = () => {
   useRetreatSEO({
     title: "מאיטרייה סנגהה ישראל | לו״ז תרגולים",
-    description: "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - טומו, מהמודרה, טארה הירוקה ותרגולים נוספים עם דרופון צ׳ונגוואל-לה ולאמה גלן מולין.",
-    keywords: "תרגול שבועי, זום, טומו, מהמודרה, מאיטרייה סנגהה ישראל",
+    description: "לוח מפגשי התרגול השבועיים בזום של מאיטרייה סנגהה ישראל - תרגולי הקהילה ומפגשי לימוד עם המורים.",
+    keywords: "תרגול שבועי, זום, טומו, מאיטרייה סנגהה ישראל",
     url: "https://maitreya.org.il/practices",
     ogImage: "https://maitreya.org.il/og-default.png",
     locale: "he_IL",
