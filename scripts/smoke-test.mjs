@@ -70,11 +70,14 @@ for (const route of routes) {
   const hasContent = /<div id="root">\s*<\S/.test(html);
   const title = html.match(/<title>([^<]*)<\/title>/)?.[1] || "";
   const canonical = html.includes('rel="canonical"');
+  // Pages kept out of Google on purpose (registration terms) carry noindex and
+  // need no canonical.
+  const noindex = /<meta name="robots" content="[^"]*noindex/.test(html);
   const desc = /<meta name="description" content="[^"]{20,}"/.test(html);
   ok(
     `page ${route.path}`,
-    r.status === 200 && hasContent && title.length > 5 && canonical && desc,
-    `status ${r.status}, content ${hasContent}, title "${title.slice(0, 40)}", canonical ${canonical}, description ${desc}`,
+    r.status === 200 && hasContent && title.length > 5 && (canonical || noindex) && desc,
+    `status ${r.status}, content ${hasContent}, title "${title.slice(0, 40)}", canonical ${canonical}, noindex ${noindex}, description ${desc}`,
   );
 }
 
