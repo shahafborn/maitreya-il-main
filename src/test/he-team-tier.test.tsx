@@ -30,6 +30,6 @@ describe("Hebrew hidden operations-team tier", () => {
 
   it("is not one of the tiers the public page offers", () => {
     const publicIds = registrationConfig.tiers.filter((t) => !t.hidden).map((t) => t.id);
-    expect(publicIds).toEqual(["EGN_2026_Quad", "EGN_2026_NoLodging"]);
+    expect(publicIds).toEqual(["EGN_2026_Quad"]);
   });
 });

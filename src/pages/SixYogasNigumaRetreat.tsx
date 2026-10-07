@@ -99,7 +99,6 @@ const eventJsonLd: EventJsonLdConfig = {
   // validFrom = the day this page went live with its registration open.
   offers: [
     { name: "לינה בחדר ל-4, כל הריטריט", price: 3950, validFrom: "2026-10-05" },
-    { name: "ללא לינה, כל הריטריט", price: 1950, validFrom: "2026-09-12" },
   ],
 };
 
@@ -168,7 +167,8 @@ export const registrationConfig: RegistrationConfig = {
   // Tier ids are the codes n8n charges by; amounts and installment caps live in EGN_Register.
   tiers: [
     { id: "EGN_2026_Quad", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
-    { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
+    // No-lodging ticket: hidden from the public page and the form since 7.10 (Shahaf). Kept as a hidden tier so its id stays valid in n8n.
+    { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", hidden: true, priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     // Operations-team ticket: a room for TWO, full board, team price. Link only.
     { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-2", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
     {
@@ -942,8 +942,7 @@ const SixYogasNigumaRetreat = () => {
             המחיר כולל לינה ל-6 לילות, ארוחות מלאות והשתתפות בכל השיעורים והתרגולים
           </p>
 
-          {/* Full lodging is the retreat; the no-lodging ticket is the alternative -
-              so the cards stack, the first wide and prominent, the second compact. */}
+          {/* One card: full lodging. The no-lodging ticket is hidden (7.10, Shahaf). */}
           <div className="max-w-2xl mx-auto bg-white rounded-lg p-8 md:p-10 text-center shadow-lg" style={{ boxShadow: `0 0 0 2px ${GOLD}` }}>
             <span className="inline-block px-3 py-1 text-xs font-bold text-white rounded-full mb-4" style={{ backgroundColor: GOLD }}>
               לינה מלאה
@@ -960,18 +959,6 @@ const SixYogasNigumaRetreat = () => {
             <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_Quad")}>להרשמה לריטריט</CTAButton>
           </div>
 
-          <div className="max-w-2xl mx-auto mt-6 bg-white rounded-lg p-8 md:p-10 text-center shadow-sm">
-            <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>
-              ללא לינה, כל הריטריט
-            </h3>
-            <p className="text-base mb-6" style={{ color: WARM_GRAY }}>שבעת ימי הלימוד, כולל ארוחת צהריים וכיבוד</p>
-            <p className="text-3xl font-bold mb-1">
-              1,950
-              <span className="text-lg font-normal mr-1">₪</span>
-            </p>
-            <p className="text-sm mb-6" style={{ color: WARM_GRAY }}>לאדם | עד 3 תשלומים</p>
-            <CTAButton className="!text-base !px-10 !py-3" onClick={() => openRegistration("EGN_2026_NoLodging")}>להרשמה ללא לינה</CTAButton>
-          </div>
           <p className="text-base md:text-lg mt-8 text-center" style={{ color: WARM_GRAY }}>
             מספר המקומות מוגבל מאוד - מומלץ להירשם בהקדם
           </p>
