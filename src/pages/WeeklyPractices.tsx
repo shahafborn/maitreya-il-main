@@ -279,6 +279,29 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     },
   },
   {
+    // THURSDAY 2026-10-08 only (Shahaf, WhatsApp to the group the same day): the
+    // Tummo (Naropa) moves from 17-18 to 20-21. Sits AFTER the Death-and-Dying
+    // block so its Thursday afternoon cell wins; the clarification is re-listed.
+    // Calendar: the 8.10 instance was retimed the same day.
+    from: "2026-10-08",
+    to: "2026-10-08",
+    note: "היום, חמישי 8.10, תרגול הטומו (נארופה) מתקיים ב-20:00, ולא ב-17:00.",
+    days: {
+      "חמישי": {
+        afternoon: [
+          {
+            time: "15-16",
+            title: "הבהרות ותרגול - מוות, לחיות לנוכח המוות, והארה",
+            subtitle: "עם דרופון צ׳ונגוואל-לה, לנרשמי הסדרה, 17.9-22.10",
+            categories: ["basic"],
+            url: "/events/death-dying-enlightenment",
+          },
+        ],
+        evening: [{ time: "20-21", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+      },
+    },
+  },
+  {
     // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
     from: "2026-06-22",
     to: "2026-06-27",
