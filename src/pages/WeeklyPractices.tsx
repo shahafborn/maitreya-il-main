@@ -280,24 +280,31 @@ const WEEK_OVERRIDES: WeekOverride[] = [
   },
   {
     // THURSDAY 2026-10-08 only (Shahaf, WhatsApp to the group the same day): the
-    // Tummo (Naropa) moves from 17-18 to 20-21. Sits AFTER the Death-and-Dying
-    // block so its Thursday afternoon cell wins; the clarification is re-listed.
-    // Calendar: the 8.10 instance was retimed the same day.
+    // Tummo (Naropa) moves from 17-18 to 20-21. Chongwol-la is away 8.10-11.10, so
+    // the Death-and-Dying clarification is cancelled (Shahaf, 14:34). Sits AFTER
+    // the Death-and-Dying block so its empty Thursday afternoon cell wins.
+    // Calendar: the 8.10 Tummo instance retimed, the clarification instance deleted.
     from: "2026-10-08",
     to: "2026-10-08",
-    note: "היום, חמישי 8.10, תרגול הטומו (נארופה) מתקיים ב-20:00, ולא ב-17:00.",
+    note: "היום, חמישי 8.10, אין מפגש הבהרות עם דרופון צ׳ונגוואל-לה, ותרגול הטומו (נארופה) מתקיים ב-20:00, ולא ב-17:00.",
     days: {
       "חמישי": {
-        afternoon: [
-          {
-            time: "15-16",
-            title: "הבהרות ותרגול - מוות, לחיות לנוכח המוות, והארה",
-            subtitle: "עם דרופון צ׳ונגוואל-לה, לנרשמי הסדרה, 17.9-22.10",
-            categories: ["basic"],
-            url: "/events/death-dying-enlightenment",
-          },
-        ],
+        afternoon: [],
         evening: [{ time: "20-21", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+      },
+    },
+  },
+  {
+    // SATURDAY 2026-10-10 (Shahaf, 2026-10-08): Chongwol-la is away, so no Tummo
+    // with him; the sangha holds its own Tummo (Naropa) at 09:00 instead. He gave
+    // the start only - one hour shown, like the other sangha Tummo sessions.
+    // Calendar: the 10.10 instance retitled and retimed to 09-10.
+    from: "2026-10-08",
+    to: "2026-10-10",
+    note: "בשבת 10.10 אין טומו עם צ׳ונגוואל-לה. במקומו מתקיים תרגול טומו (נארופה) ב-09:00.",
+    days: {
+      "שבת": {
+        morning: [{ time: "09-10", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
       },
     },
   },
