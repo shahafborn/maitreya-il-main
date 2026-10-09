@@ -24,6 +24,9 @@ function inIframe(): boolean {
  *   seconds after the page has loaded. GTM / the Meta pixel load late and may
  *   read the URL, so they get to see it first; a later reload, a phone
  *   restoring the tab, or a shared link no longer replays a "payment success".
+ *   That address change is also what GA4 counts as the page view of a payment
+ *   return: index.html deliberately skips its first-load page_view when the
+ *   URL carries `payment=`, so keep the strip (or move the page view) together.
  */
 export function usePaymentReturn() {
   const [searchParams, setSearchParams] = useSearchParams();

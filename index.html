@@ -23,7 +23,15 @@
     })(window,document,'script','dataLayer','GTM-W84DD38X');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js)
+         Page views, exactly one per page seen:
+         - the first page of a visit: the inline script at the top of <body>
+           (not here, because the language redirect at the end of <head> may
+           still send the visitor elsewhere);
+         - every later in-app page: GA4's own enhanced measurement ("page
+           changes based on browser history events"), which reads the new URL
+           and title on each history change. Do NOT add a page_view call to
+           React route changes - it would double-count them. -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=GT-PJ79XDGL"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -47,6 +55,17 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W84DD38X"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <!-- The first page view of the load (see the Google tag comment in <head>).
+         Skipped when the language redirect is already leaving this page, inside
+         the Cardcom payment iframe (the page climbs out and counts on the full
+         page), on a payment return (?payment=...: usePaymentReturn strips the
+         marker a few seconds after load, and GA4 counts that address change as
+         the page view - counting here too would double it), and on the admin. -->
+    <script>
+      if (!window.__LANG_REDIRECT__ && window.top === window.self && !/[?&]payment=/.test(location.search) && location.pathname.indexOf('/admin') !== 0) {
+        gtag('event', 'page_view');
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -54,7 +54,9 @@ try{var p=null;try{p=localStorage.getItem(LANG_PREF_KEY)}catch(e){}
 var t=englishTarget({path:location.pathname,search:location.search,hash:location.hash,twins:${he2en},
 languages:navigator.languages||[navigator.language],timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,
 userAgent:navigator.userAgent,webdriver:navigator.webdriver,pref:p});
-if(t&&t!==location.pathname+location.search+location.hash)location.replace(t);}catch(e){}})();`;
+if(t&&t!==location.pathname+location.search+location.hash){window.__LANG_REDIRECT__=t;location.replace(t);}}catch(e){}})();`;
+      // window.__LANG_REDIRECT__ tells the page_view script at the top of <body>
+      // (index.html) not to count the Hebrew page the visitor is leaving.
       // End of <head>: still runs before the body paints, and keeps <meta charset>
       // within the first 1024 bytes where browsers look for it.
       return [{ tag: "script", children: code, injectTo: "head" }];

@@ -10,7 +10,6 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import CourseEnrollmentGate from "./components/CourseEnrollmentGate";
-import { usePageTracking } from "@/hooks/usePageTracking";
 import { takePrerendered, releasePrerendered } from "./prerendered";
 
 // Lazy-load course registration + admin + public event pages (code-split)
@@ -75,7 +74,6 @@ const Loading = () => {
 };
 
 const AuthGate = () => {
-  usePageTracking();
   const { user, loading } = useAuth();
 
   if (loading) {
