@@ -309,6 +309,34 @@ const WEEK_OVERRIDES: WeekOverride[] = [
     },
   },
   {
+    // THIS WEEK, 2026-10-15 to 2026-10-17 (Chongwol-la, relayed by Shahaf 13.10;
+    // applied 15.10): the Death-and-Dying clarification moves from Thursday 15:00
+    // to Saturday 11:00-12:30, and his Saturday Tummo shrinks to 10-11 to make
+    // room. Sits AFTER the Death-and-Dying block so its Thursday afternoon cell
+    // (Tummo only) wins. Calendar: the 15.10 instance deleted, the 17.10 Tummo
+    // instance retimed to 10-11, a one-off 17.10 11:00-12:30 clarification event.
+    from: "2026-10-15",
+    to: "2026-10-17",
+    note: "השבוע מפגש ההבהרות עם דרופון צ׳ונגוואל-לה עובר מחמישי לשבת 17.10, 11:00-12:30 (הקישור נשלח לנרשמים), והטומו איתו בשבת מתקיים ב-10:00-11:00.",
+    days: {
+      "חמישי": {
+        afternoon: [{ time: "17-18", title: "טומו (נארופה)", categories: ["tummo", "tantra"] }],
+      },
+      "שבת": {
+        morning: [
+          { time: "10-11", title: "טומו עם צ׳ונגוואל-לה", categories: ["tummo"], beginner: true },
+          {
+            time: "11-12:30",
+            title: "הבהרות ותרגול - מוות, לחיות לנוכח המוות, והארה",
+            subtitle: "עם דרופון צ׳ונגוואל-לה, לנרשמי הסדרה",
+            categories: ["basic"],
+            url: "/events/death-dying-enlightenment",
+          },
+        ],
+      },
+    },
+  },
+  {
     // This Saturday (2026-06-27) only: both Tummo sessions move to the afternoon.
     from: "2026-06-22",
     to: "2026-06-27",
