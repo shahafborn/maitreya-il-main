@@ -35,7 +35,32 @@ const RETREAT_PROMO_RE = /^\[\[retreat-promo\]\]$/;
 const YT_RE =
   /^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=([\w-]{6,})(?:[&?]\S*)?|youtu\.be\/([\w-]{6,})(?:\?\S*)?)$/;
 
-const flattenText = (children: ReactNode): string =>
+/**
+ * Same rule for a Bunny Stream video: a paragraph that is nothing but its embed
+ * link (https://iframe.mediadelivery.net/embed/<library>/<video>) becomes the
+ * Bunny player. Used for our own uploads, e.g. interviews with Hebrew subtitles.
+ */
+const BUNNY_RE =
+  /^https:\/\/iframe\.mediadelivery\.net\/embed\/(\d+)\/([0-9a-f-]{36})(?:\?\S*)?$/;
+
+const BunnyEmbed = ({ url }: { url: string }) => {
+  const m = url.match(BUNNY_RE);
+  if (!m) return null;
+  return (
+    <div className="aspect-video my-8 rounded-lg overflow-hidden shadow-md not-prose">
+      <iframe
+        src={`https://iframe.mediadelivery.net/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true`}
+        title="Video"
+        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+        allowFullScreen
+        loading="lazy"
+        className="w-full h-full border-0"
+      />
+    </div>
+  );
+};
+
+const flattenText =(children: ReactNode): string =>
   Children.toArray(children)
     .map((c) =>
       typeof c === "string" || typeof c === "number"
@@ -73,6 +98,7 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
         p: ({ children: pChildren }) => {
           const text = flattenText(pChildren).trim();
           if (YT_RE.test(text)) return <YouTubeEmbed url={text} />;
+          if (BUNNY_RE.test(text)) return <BunnyEmbed url={text} />;
           if (VISIT_PROMO_RE.test(text)) return <VisitPromo lang={lang} />;
           if (RETREAT_PROMO_RE.test(text)) return <RetreatPromo lang={lang} />;
           return <p>{pChildren}</p>;
