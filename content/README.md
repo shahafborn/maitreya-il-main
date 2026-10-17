@@ -74,6 +74,8 @@ The article appears automatically in the articles index (newest first) and gets 
 
 **Embedding a YouTube video:** put the video's link alone on its own line (nothing else on that line) and it renders as an embedded player. A `t=`/`start=` seconds parameter in the link is respected. A link inside a sentence stays a normal link.
 
+**Promo boxes inside an article:** a line that is only `[[visit-promo]]` shows the current visit's text box (from `pages/visit-promo.md`); a line that is only `[[retreat-promo]]` shows the photo card for one retreat (from `pages/retreat-promo.md` - eyebrow, heading, photo, button, short text). Each box lives in ONE file, so pointing it at the next retreat is one edit, never a hunt through articles. Both hide themselves after their `until` date. Use real photos only in the card.
+
 ## How to edit an existing page
 
 Open the page's file under `pages/`, edit, save. `home.md` is special: its frontmatter fields are the homepage's text blocks (hero, section titles, newsletter copy) - edit the field values, keep the field names.

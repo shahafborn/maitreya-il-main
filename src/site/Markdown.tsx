@@ -6,6 +6,7 @@
 import { Children, isValidElement, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import { VisitPromo } from "./VisitPromo";
+import { RetreatPromo } from "./RetreatPromo";
 import type { SiteLang } from "./content";
 
 /**
@@ -27,6 +28,9 @@ const resolveSrc = (src?: string) =>
  * visit is over. Articles carry the marker, never the promo text.
  */
 const VISIT_PROMO_RE = /^\[\[visit-promo\]\]$/;
+
+/** Same idea for [[retreat-promo]]: the photo card for one retreat (RetreatPromo). */
+const RETREAT_PROMO_RE = /^\[\[retreat-promo\]\]$/;
 
 const YT_RE =
   /^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=([\w-]{6,})(?:[&?]\S*)?|youtu\.be\/([\w-]{6,})(?:\?\S*)?)$/;
@@ -70,6 +74,7 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
           const text = flattenText(pChildren).trim();
           if (YT_RE.test(text)) return <YouTubeEmbed url={text} />;
           if (VISIT_PROMO_RE.test(text)) return <VisitPromo lang={lang} />;
+          if (RETREAT_PROMO_RE.test(text)) return <RetreatPromo lang={lang} />;
           return <p>{pChildren}</p>;
         },
       }}
