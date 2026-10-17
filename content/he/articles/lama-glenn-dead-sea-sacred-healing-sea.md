@@ -28,7 +28,7 @@ https://iframe.mediadelivery.net/embed/782699/a7e40be4-d7d8-422b-b5e6-d4b76318eb
 
 ### ים הריפוי הגדול של ישראל
 
-![לאמה גלן מולין מלמד בריטריט בעין גדי](/media/articles/lama-glenn-ein-gedi-2026-crop.jpg)
+![לאמה גלן מולין מלמד בריטריט בעין גדי](/media/articles/ein-gedi-teaching-class-2026.jpg)
 
 *לאמה גלן מלמד בריטריט בעין גדי, יוני 2026*
 
