@@ -32,6 +32,10 @@ const VISIT_PROMO_RE = /^\[\[visit-promo\]\]$/;
 /** Same idea for [[retreat-promo]]: the photo card for one retreat (RetreatPromo). */
 const RETREAT_PROMO_RE = /^\[\[retreat-promo\]\]$/;
 
+/** An absolute http(s) link to a site other than maitreya.org.il. */
+const isExternal = (href?: string) =>
+  !!href && /^https?:\/\//i.test(href) && !/^https?:\/\/(www\.)?maitreya\.org\.il(\/|$)/i.test(href);
+
 const YT_RE =
   /^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=([\w-]{6,})(?:[&?]\S*)?|youtu\.be\/([\w-]{6,})(?:\?\S*)?)$/;
 
@@ -95,6 +99,16 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
     <ReactMarkdown
       components={{
         img: ({ src, alt }) => <img src={resolveSrc(src)} alt={alt ?? ""} loading="lazy" />,
+        // Links to other websites open in a new tab, so the reader keeps the
+        // article; links within maitreya.org.il stay in the same tab.
+        a: ({ href, children: aChildren }) =>
+          isExternal(href) ? (
+            <a href={href} target="_blank" rel="noopener noreferrer">
+              {aChildren}
+            </a>
+          ) : (
+            <a href={href}>{aChildren}</a>
+          ),
         p: ({ children: pChildren }) => {
           const text = flattenText(pChildren).trim();
           if (YT_RE.test(text)) return <YouTubeEmbed url={text} />;
