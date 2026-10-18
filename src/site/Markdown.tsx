@@ -58,7 +58,7 @@ const BUNNY_RE =
 
 const BunnyEmbed = ({ url }: { url: string }) => {
   const m = url.match(BUNNY_RE);
-  // Play / 50% watched -> Meta + GA4 events (src/lib/videoTracking.ts)
+  // Play / minutes watched -> Meta + GA4 events (src/lib/videoTracking.ts)
   const frameRef = useRef<HTMLIFrameElement>(null);
   useBunnyVideoTracking(frameRef, m?.[2] ?? "");
   if (!m) return null;

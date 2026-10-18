@@ -1,5 +1,5 @@
 /**
- * Interview video events (src/lib/videoTracking.ts): the play / 50% logic, and
+ * Interview video events (src/lib/videoTracking.ts): the play / minutes-watched logic, and
  * the wiring from Bunny's player.js postMessages to fbq + gtag.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -10,35 +10,38 @@ import { BUNNY_ORIGIN, createWatchTracker, resetVideoTrackingForTests } from "@/
 const GUID = "0b3a6f1e-2c4d-4e5f-8a9b-1c2d3e4f5a6b";
 
 describe("createWatchTracker", () => {
-  it("fires play once and 50% once watched time reaches half", () => {
+  const run = (t: ReturnType<typeof createWatchTracker>, from: number, to: number) => {
+    for (let x = from; x <= to; x += 0.25) t.time(x);
+  };
+
+  it("fires play once, then 2, 5 and 15 minutes once each", () => {
     const onPlay = vi.fn();
-    const onHalf = vi.fn();
-    const t = createWatchTracker({ onPlay, onHalf });
-    for (let s = 0; s <= 49; s += 0.25) t.time(s, 100);
+    const onMark = vi.fn();
+    const t = createWatchTracker({ onPlay, onMark });
+    run(t, 0, 119);
     expect(onPlay).toHaveBeenCalledTimes(1);
-    expect(onHalf).not.toHaveBeenCalled();
-    for (let s = 49; s <= 52; s += 0.25) t.time(s, 100);
-    expect(onHalf).toHaveBeenCalledTimes(1);
-    for (let s = 52; s <= 60; s += 0.25) t.time(s, 100);
-    expect(onHalf).toHaveBeenCalledTimes(1);
+    expect(onMark).not.toHaveBeenCalled();
+    run(t, 119, 121);
+    expect(onMark.mock.calls).toEqual([["InterviewVideo2Min"]]);
+    run(t, 121, 1000);
+    expect(onMark.mock.calls).toEqual([["InterviewVideo2Min"], ["InterviewVideo5Min"], ["InterviewVideo15Min"]]);
+    expect(onPlay).toHaveBeenCalledTimes(1);
   });
 
   it("does not count a seek ahead as watching", () => {
-    const onHalf = vi.fn();
-    const t = createWatchTracker({ onPlay: () => {}, onHalf });
-    t.time(0, 100);
-    t.time(80, 100);
-    t.time(80.25, 100);
-    expect(onHalf).not.toHaveBeenCalled();
+    const onMark = vi.fn();
+    const t = createWatchTracker({ onPlay: () => {}, onMark });
+    t.time(0);
+    t.time(1000);
+    run(t, 1000, 1010);
+    expect(onMark).not.toHaveBeenCalled();
   });
 
-  it("measures half of what is left when the video opens mid-way (t=)", () => {
-    const onHalf = vi.fn();
-    const t = createWatchTracker({ onPlay: () => {}, onHalf });
-    for (let s = 60; s <= 79; s += 0.25) t.time(s, 100);
-    expect(onHalf).not.toHaveBeenCalled();
-    for (let s = 79; s <= 81; s += 0.25) t.time(s, 100);
-    expect(onHalf).toHaveBeenCalledTimes(1);
+  it("counts from where a t= link starts", () => {
+    const onMark = vi.fn();
+    const t = createWatchTracker({ onPlay: () => {}, onMark });
+    run(t, 2067, 2067 + 121);
+    expect(onMark.mock.calls).toEqual([["InterviewVideo2Min"]]);
   });
 });
 
@@ -65,24 +68,24 @@ describe("Bunny embed events", () => {
       );
     });
 
-  it("subscribes on ready and reports play and 50% once each", () => {
+  it("subscribes on ready and reports play and 2 minutes once each", () => {
     const { container } = render(<Markdown>{`https://iframe.mediadelivery.net/embed/782699/${GUID}`}</Markdown>);
     const frame = container.querySelector("iframe")!;
     const sent = vi.spyOn(frame.contentWindow!, "postMessage");
     post(frame, { context: "player.js", event: "ready", value: {} });
     expect(sent.mock.calls.map((c) => JSON.parse(c[0] as string).value)).toEqual(["play", "timeupdate"]);
 
-    for (let s = 0; s <= 60; s += 0.25) post(frame, { context: "player.js", event: "timeupdate", value: { seconds: s, duration: 100 } });
+    for (let s = 0; s <= 130; s += 0.25) post(frame, { context: "player.js", event: "timeupdate", value: { seconds: s, duration: 4000 } });
     post(frame, { context: "player.js", event: "play" });
 
     const params = { content_name: "six-yogas-naropa", video_id: GUID };
     expect(fbq.mock.calls).toEqual([
       ["trackCustom", "InterviewVideoPlay", params],
-      ["trackCustom", "InterviewVideo50", params],
+      ["trackCustom", "InterviewVideo2Min", params],
     ]);
     expect(gtag.mock.calls).toEqual([
       ["event", "interview_video_play", params],
-      ["event", "interview_video_50", params],
+      ["event", "interview_video_2min", params],
     ]);
   });
 

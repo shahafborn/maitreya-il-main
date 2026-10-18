@@ -33,7 +33,7 @@ export function trackMeta(event: MetaEventName, params?: MetaEventParams, eventI
  * under Custom Conversions / Custom Audiences by its name ("trackCustom").
  * Same rule as trackMeta: a no-op until GTM has installed the pixel.
  *
- * @example trackMetaCustom("InterviewVideo50", { content_name: "six-yogas", video_id: "2e70..." });
+ * @example trackMetaCustom("InterviewVideo2Min", { content_name: "six-yogas", video_id: "2e70..." });
  */
 export function trackMetaCustom(event: string, params?: MetaEventParams): void {
   if (typeof window === "undefined" || typeof window.fbq !== "function") return;
