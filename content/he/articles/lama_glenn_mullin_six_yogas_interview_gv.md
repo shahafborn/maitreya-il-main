@@ -8,7 +8,7 @@ original_url: https://maitreya.org.il/he/articles/lama_glenn_mullin_six_yogas_in
 ---
 ראיון מעמיק של לאמה גלן מולין, עם סטיב ג׳יימס מפודקסט Guru Viking.
 
-**את החלק הראשון של השיחה, בדבריו של לאמה גלן ובתרגום לעברית, אפשר לקרוא [כאן](/articles/lama-glenn-dharamsala-teachers-earthquake-of-insight).**
+**את השיחה, בדבריו של לאמה גלן ובתרגום לעברית, אפשר לקרוא בשני חלקים: [החלק הראשון](/articles/lama-glenn-dharamsala-teachers-earthquake-of-insight), על שנות הלימוד בדהרמסלה, ו[החלק השני](/articles/six-yogas-naropa-tantric-theater-inner-fire), על שש היוגות של נארופה.**
 
 בראיון זה לאמה גלן מספר על ההתעניינות המוקדמת שלו בטיבט, עשרות שנות לימודיו המעמיקים בהודו עם שני המורים האישיים של הדלאי למה, חוויות המדיטציה משנות החיים, ואנו צולל לתוך שש היוגות של נרופה - מערכת טנטרית מלאה בטכניקות מרתקות כמו יוגת היישות השמימית (Deity Yoga), טומו - האש הפנימית, יוגת חלומות ועוד…
 

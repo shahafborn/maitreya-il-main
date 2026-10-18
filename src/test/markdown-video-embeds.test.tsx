@@ -24,6 +24,15 @@ describe("Markdown video embeds", () => {
     );
   });
 
+  it("keeps a t=<seconds> start time", () => {
+    const { container } = render(
+      <Markdown>{`https://iframe.mediadelivery.net/embed/782699/${GUID}?captions=he&t=2067`}</Markdown>,
+    );
+    expect(container.querySelector("iframe")?.getAttribute("src")).toBe(
+      `https://iframe.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true&captions=he&t=2067`,
+    );
+  });
+
   it("leaves a Bunny link inside a sentence as text", () => {
     const { container } = render(
       <Markdown>{`ראו https://iframe.mediadelivery.net/embed/782699/${GUID} כאן`}</Markdown>,

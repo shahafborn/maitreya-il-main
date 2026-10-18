@@ -46,6 +46,7 @@ const YT_RE =
  * It carries id="video", so a link to <article>#video lands on the player (newsletters, 18.10).
  * A `captions=<lang>` in the link is kept, so the player opens with that caption track on
  * (e.g. `...?captions=he` for a video whose Hebrew subtitles are a Bunny caption track, Ep9 18.10).
+ * A `t=<seconds>` is kept too, so the player starts there (e.g. the second half of an interview).
  * Other query parameters are dropped; the player options below are fixed.
  */
 const BUNNY_RE =
@@ -55,10 +56,11 @@ const BunnyEmbed = ({ url }: { url: string }) => {
   const m = url.match(BUNNY_RE);
   if (!m) return null;
   const captions = url.match(/[?&]captions=([a-z]{2,3})\b/)?.[1];
+  const start = url.match(/[?&]t=(\d+)\b/)?.[1];
   return (
     <div id="video" className="aspect-video my-8 rounded-lg overflow-hidden shadow-md not-prose scroll-mt-24">
       <iframe
-        src={`https://iframe.mediadelivery.net/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true${captions ? `&captions=${captions}` : ""}`}
+        src={`https://iframe.mediadelivery.net/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true${captions ? `&captions=${captions}` : ""}${start ? `&t=${start}` : ""}`}
         title="Video"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
         allowFullScreen
