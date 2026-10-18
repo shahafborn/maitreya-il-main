@@ -6,7 +6,7 @@
 import { Children, isValidElement, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import { VisitPromo } from "./VisitPromo";
-import { RetreatPromo } from "./RetreatPromo";
+import { RetreatPromo, RetreatReminder } from "./RetreatPromo";
 import type { SiteLang } from "./content";
 
 /**
@@ -31,6 +31,9 @@ const VISIT_PROMO_RE = /^\[\[visit-promo\]\]$/;
 
 /** Same idea for [[retreat-promo]]: the photo card for one retreat (RetreatPromo). */
 const RETREAT_PROMO_RE = /^\[\[retreat-promo\]\]$/;
+
+/** [[retreat-reminder]]: the smaller sister card for the end of an article (RetreatReminder). */
+const RETREAT_REMINDER_RE = /^\[\[retreat-reminder\]\]$/;
 
 /** An absolute http(s) link to a site other than maitreya.org.il. */
 const isExternal = (href?: string) =>
@@ -122,6 +125,7 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
           if (BUNNY_RE.test(text)) return <BunnyEmbed url={text} />;
           if (VISIT_PROMO_RE.test(text)) return <VisitPromo lang={lang} />;
           if (RETREAT_PROMO_RE.test(text)) return <RetreatPromo lang={lang} />;
+          if (RETREAT_REMINDER_RE.test(text)) return <RetreatReminder lang={lang} />;
           return <p>{pChildren}</p>;
         },
       }}
