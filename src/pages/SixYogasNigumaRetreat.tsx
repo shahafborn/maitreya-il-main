@@ -73,6 +73,13 @@ const TEST_TIER: RoomType = "EGN_2026_Test";
  */
 const TEAM_KEY = "tzevet-m8k2";
 const TEAM_TIER: RoomType = "EGN_2026_Team";
+/**
+ * Split payment (Shahaf, 18.10): room for 4 paid as 2,000 NIS by Bit (to the Sangha by hand)
+ * + the 1,950 NIS balance by card, up to 5 payments. Link only: `?ticket=<SPLIT_KEY>`.
+ * The Bit part is added to the paid row in the sheet by hand when it arrives.
+ */
+const SPLIT_KEY = "yitra-q4n7";
+const SPLIT_TIER: RoomType = "EGN_2026_Quad_Split";
 
 /**
  * The machine-readable twin of the page: start and end from the arrival block
@@ -171,6 +178,8 @@ export const registrationConfig: RegistrationConfig = {
     { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", hidden: true, priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     // Operations-team ticket: a room for TWO, full board, team price. Link only.
     { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-2", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
+    // Split payment: the card balance of a room for 4 after 2,000 NIS by Bit. Link only.
+    { id: "EGN_2026_Quad_Split", title: "לינה בחדר ל-4 - יתרת תשלום באשראי", note: "אחרי 2,000 ₪ ב-Bit | עד 5 תשלומים", hidden: true, priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
       title: "בדיקת תשלום",
@@ -261,7 +270,7 @@ const registrationCopy = {
 };
 
 
-type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Test" | "";
+type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Quad_Split" | "EGN_2026_Test" | "";
 
 
 
@@ -451,9 +460,9 @@ const SixYogasNigumaRetreat = () => {
   const concluded = hasEnded(eventJsonLd.endDate);
   const earlyBird = concluded ? null : earlyBirdPhase();
   const testMode = searchParams.get("test") === TEST_KEY;
-  const teamLink = searchParams.get("ticket") === TEAM_KEY;
-  // A tier reached by private link: the test ticket, or the team offer.
-  const linkTier: RoomType = testMode ? TEST_TIER : teamLink ? TEAM_TIER : "";
+  const ticketKey = searchParams.get("ticket");
+  // A tier reached by private link: the test ticket, the team offer, or the split-payment balance.
+  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   const { paymentStatus, closePaymentStatus } = usePaymentReturn();

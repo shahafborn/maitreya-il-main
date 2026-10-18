@@ -33,3 +33,15 @@ describe("Hebrew hidden operations-team tier", () => {
     expect(publicIds).toEqual(["EGN_2026_Quad"]);
   });
 });
+
+describe("Hebrew hidden split-payment tier", () => {
+  const tier = registrationConfig.tiers.find((t) => t.id === "EGN_2026_Quad_Split");
+
+  it("exists, is hidden, and is the fixed 1,950 NIS card balance", () => {
+    expect(tier).toBeTruthy();
+    expect(tier!.hidden).toBe(true);
+    expect(tier!.priceValue).toBe(1950);
+    expect(tier!.priceDisplay).toBe("1,950");
+    expect(tier!.openAmount).toBeFalsy();
+  });
+});
