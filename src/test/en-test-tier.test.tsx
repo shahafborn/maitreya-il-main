@@ -12,6 +12,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { registrationConfig as sixYogasConfig } from "@/pages/SixYogasNigumaRetreatEN";
+import { captureAttribution } from "@/lib/attribution";
 
 // Importing the page module pulls in MailingListSignup -> lib/supabase, which
 // throws at import time when the Supabase env vars are absent. They are absent
@@ -85,6 +86,8 @@ describe("English hidden test tier", () => {
   });
 
   it("sends the typed amount to the webhook", async () => {
+    localStorage.clear();
+    captureAttribution("?utm_source=facebook&utm_medium=paid&utm_campaign=c1&utm_content=ad%201&fbclid=X");
     renderModal();
     // The modal's <label>s are not tied to their inputs with htmlFor/id, so
     // getByLabelText cannot reach them. The data-field wrappers are stable.
@@ -121,5 +124,10 @@ describe("English hidden test tier", () => {
     const body = JSON.parse((globalThis.fetch as any).mock.calls[0][1].body);
     expect(body.field_event).toBe(TEST_TIER_ID);
     expect(body.amount).toBe(0.01);
+    // Registration source rides along (src/lib/attribution.ts)
+    expect(body.utm_source).toBe("facebook");
+    expect(body.utm_content).toBe("ad 1");
+    expect(body.fbclid).toBe("yes");
+    expect(body.first_utm_campaign).toBe("c1");
   });
 });

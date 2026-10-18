@@ -92,6 +92,8 @@ Sets direction, fonts, colors, sticky nav, footer, and calls `useRetreatSEO(seo)
 ```
 The `config` (`RegistrationConfig`) declares tiers, webhook URL, which fields to ask (gender/food/prevExp), terms URL, sessionStorage prefix and optional extra payload. The `copy` holds every visible string.
 
+Every submission also carries the registrant's source - `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `fbclid` (yes/no) for the last tagged visit and `first_utm_*`, `first_fbclid`, `first_touch_at` for the first - from `src/lib/attribution.ts` (captured on landing in `src/main.tsx`). Empty strings when the visitor never arrived through a tagged link.
+
 ### `PricingGrid` / `DanaSection`
 Pick one per page depending on payment model. `PricingGrid` is for fixed tiers (Ein Gedi). `DanaSection` is for dana-based retreats (Heart of Wisdom) with a single suggested-amount line and a CTA.
 

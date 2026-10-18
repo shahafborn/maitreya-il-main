@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
 import { fireInitiateCheckout } from "./hooks/useMetaPixelRetreat";
+import { attributionPayload } from "@/lib/attribution";
 import type { RegistrationConfig } from "./types";
 
 declare global {
@@ -352,6 +353,8 @@ export const RegistrationModal = ({
           ...(config.askCity && { city }),
           ...(config.askRideShare && { can_offer_ride: canOfferRide }),
           message,
+          // Where the registrant came from: utm_* / fbclid, last and first touch (src/lib/attribution.ts)
+          ...attributionPayload(),
           ...(config.extraPayload ?? {}),
         }),
       });

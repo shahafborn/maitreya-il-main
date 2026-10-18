@@ -3,11 +3,12 @@
  * Thin wrapper over react-markdown with the site's typography classes.
  * Direction/alignment comes from the surrounding SiteLayout (dir attribute).
  */
-import { Children, isValidElement, type ReactNode } from "react";
+import { Children, isValidElement, useRef, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import { VisitPromo } from "./VisitPromo";
 import { RetreatPromo, RetreatReminder } from "./RetreatPromo";
 import type { SiteLang } from "./content";
+import { useBunnyVideoTracking } from "@/lib/videoTracking";
 
 /**
  * Content files reference images as clean "/media/..." paths (editor-friendly,
@@ -57,12 +58,16 @@ const BUNNY_RE =
 
 const BunnyEmbed = ({ url }: { url: string }) => {
   const m = url.match(BUNNY_RE);
+  // Play / 50% watched -> Meta + GA4 events (src/lib/videoTracking.ts)
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  useBunnyVideoTracking(frameRef, m?.[2] ?? "");
   if (!m) return null;
   const captions = url.match(/[?&]captions=([a-z]{2,3})\b/)?.[1];
   const start = url.match(/[?&]t=(\d+)\b/)?.[1];
   return (
     <div id="video" className="aspect-video my-8 rounded-lg overflow-hidden shadow-md not-prose scroll-mt-24">
       <iframe
+        ref={frameRef}
         src={`https://iframe.mediadelivery.net/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true${captions ? `&captions=${captions}` : ""}${start ? `&t=${start}` : ""}`}
         title="Video"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"

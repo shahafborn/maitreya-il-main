@@ -12,6 +12,8 @@ interface MetaEventParams {
   content_category?: string;
   content_ids?: string[];
   num_items?: number;
+  /** Custom events only (trackMetaCustom), e.g. the Bunny video id. */
+  video_id?: string;
 }
 
 declare global {
@@ -24,6 +26,18 @@ export function trackMeta(event: MetaEventName, params?: MetaEventParams, eventI
   if (typeof window === "undefined" || typeof window.fbq !== "function") return;
   if (eventID) window.fbq("track", event, params, { eventID });
   else window.fbq("track", event, params);
+}
+
+/**
+ * A custom (non-standard) pixel event, e.g. `InterviewVideoPlay`. Meta lists it
+ * under Custom Conversions / Custom Audiences by its name ("trackCustom").
+ * Same rule as trackMeta: a no-op until GTM has installed the pixel.
+ *
+ * @example trackMetaCustom("InterviewVideo50", { content_name: "six-yogas", video_id: "2e70..." });
+ */
+export function trackMetaCustom(event: string, params?: MetaEventParams): void {
+  if (typeof window === "undefined" || typeof window.fbq !== "function") return;
+  window.fbq("trackCustom", event, params);
 }
 
 export function generateEventId(): string {

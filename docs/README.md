@@ -21,6 +21,12 @@ Single entry point for developers (and coding agents) landing in this repo. All 
 - [`src/components/retreat/`](../src/components/retreat/README.md) — shared retreat landing page components (layout, hero, teacher card, schedule, pricing, dana, gallery carousel, registration + Cardcom flow, Meta pixel dedup). Used by all retreat pages.
   - **Event structured data:** `hooks/useEventJsonLd.ts` emits the schema.org `Event` block (dates, venue, teachers, prices) into `<head>`; the pre-renderer copies it into the static HTML. **Mandatory on every page with a date** - it is what makes Google eligible to show dates and venue inside the search result, and what lets AI crawlers read the facts instead of inferring them from Hebrew prose. Added 2026-09-16 and now on **all 11 event pages** (7 Hebrew, 4 English). Pages using `RetreatLayout` pass it as the `eventJsonLd` prop; pages that call `useRetreatSEO` directly call the hook next to it. Past events carry no `offers` - registration is closed, and an in-stock price on a finished retreat would be a false statement on a page Google still indexes.
 
+## Tracking (Meta pixel + GA4)
+
+- `src/lib/metaPixel.ts` - `trackMeta` (standard events) and `trackMetaCustom` (custom events). The pixel itself is installed by GTM.
+- `src/lib/videoTracking.ts` - **interview video events** (added 2026-10-18): the Bunny players in articles report `InterviewVideoPlay` / `InterviewVideo50` to Meta (GA4: `interview_video_play` / `interview_video_50`), params `content_name` (article slug) and `video_id`, once per video per page view. Feeds the retargeting audiences "Played interview video" / "Watched interview video 50%". How the Bunny player.js protocol works and its `preload=false` quirk are in the file header.
+- `src/lib/attribution.ts` - **registration source capture** (added 2026-10-18): utm_source / medium / campaign / content and fbclid yes/no from the landing URL, first touch (90 days) and last touch (30 days) in localStorage; the retreat registration form sends them to n8n as `utm_*`, `fbclid`, `first_utm_*`, `first_fbclid`, `first_touch_at`. The n8n `*_Register` flows write them to sheet columns of the same names.
+
 ## Landing pages
 
 ### Ein Gedi Healing Retreat (Hebrew) — frozen monolith
