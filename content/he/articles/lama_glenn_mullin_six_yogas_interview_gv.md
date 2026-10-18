@@ -14,7 +14,7 @@ original_url: https://maitreya.org.il/he/articles/lama_glenn_mullin_six_yogas_in
 
 https://youtu.be/3IXnCg56vQU
 
-[[visit-promo]]
+[[retreat-promo]]
 
 ### **נושאים מרכזיים בפרק:**
 

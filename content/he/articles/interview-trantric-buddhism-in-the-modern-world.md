@@ -12,7 +12,7 @@ original_url: https://maitreya.org.il/he/articles/interview-trantric-buddhism-in
 
 https://www.youtube.com/watch?v=1ivzMFAOemE&t=882s
 
-[[visit-promo]]
+[[retreat-promo]]
 
 ### **נושאים מרכזיים בפרק:**
 

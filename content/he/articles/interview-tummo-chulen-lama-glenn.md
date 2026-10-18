@@ -12,7 +12,7 @@ original_url: https://maitreya.org.il/he/articles/interview-tummo-chulen-lama-gl
 
 https://youtu.be/8ensvZAqM6c
 
-[[visit-promo]]
+[[retreat-promo]]
 
 ### **נושאים מרכזיים בפרק:**
 

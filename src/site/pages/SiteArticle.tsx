@@ -8,6 +8,7 @@ import { getArticle, sitePath, SITE_ORIGIN, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
 import { VisitPromo } from "../VisitPromo";
+import { RetreatReminder } from "../RetreatPromo";
 import { useScrollToHash } from "../useScrollToHash";
 
 export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
@@ -77,6 +78,12 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
           VisitPromo hides itself once the visit is over, so this stays correct
           without anyone revisiting the articles.
         */}
+        {/*
+          Same for the retreat's end card: every article gets it after the last
+          paragraph unless it places [[retreat-reminder]] itself. It hides itself
+          after the retreat's first day (retreat-promo.md `until`).
+        */}
+        {!/^\[\[retreat-reminder\]\]$/m.test(article.body) && <RetreatReminder lang={lang} />}
         {!/^\[\[visit-promo\]\]$/m.test(article.body) && <VisitPromo lang={lang} />}
       </article>
     </SiteLayout>
