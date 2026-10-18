@@ -43,6 +43,7 @@ const YT_RE =
  * Same rule for a Bunny Stream video: a paragraph that is nothing but its embed
  * link (https://iframe.mediadelivery.net/embed/<library>/<video>) becomes the
  * Bunny player. Used for our own uploads, e.g. interviews with Hebrew subtitles.
+ * It carries id="video", so a link to <article>#video lands on the player (newsletters, 18.10).
  */
 const BUNNY_RE =
   /^https:\/\/iframe\.mediadelivery\.net\/embed\/(\d+)\/([0-9a-f-]{36})(?:\?\S*)?$/;
@@ -51,7 +52,7 @@ const BunnyEmbed = ({ url }: { url: string }) => {
   const m = url.match(BUNNY_RE);
   if (!m) return null;
   return (
-    <div className="aspect-video my-8 rounded-lg overflow-hidden shadow-md not-prose">
+    <div id="video" className="aspect-video my-8 rounded-lg overflow-hidden shadow-md not-prose scroll-mt-24">
       <iframe
         src={`https://iframe.mediadelivery.net/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true`}
         title="Video"

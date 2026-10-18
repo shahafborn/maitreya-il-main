@@ -8,9 +8,11 @@ import { getArticle, sitePath, SITE_ORIGIN, type SiteLang } from "../content";
 import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
 import { VisitPromo } from "../VisitPromo";
+import { useScrollToHash } from "../useScrollToHash";
 
 export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
   const { slug = "" } = useParams();
+  useScrollToHash();
   const article = getArticle(lang, slug);
   const he = lang === "he";
   const Arrow = he ? ArrowRight : ArrowLeft;
