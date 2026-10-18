@@ -32,6 +32,8 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
   }
 
   const path = sitePath(lang, `/articles/${slug}`);
+  // Share image: the post's own `image` (absolute for og:image), else SiteLayout's site-wide card.
+  const ogImage = article.image ? (article.image.startsWith("http") ? article.image : `${SITE_ORIGIN}${article.image}`) : undefined;
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -40,11 +42,21 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
     datePublished: article.date,
     inLanguage: lang,
     mainEntityOfPage: `${SITE_ORIGIN}${path}`,
+    ...(ogImage ? { image: ogImage } : {}),
     author: { "@type": "Organization", name: "Maitreya Sangha Israel" },
     publisher: { "@type": "Organization", name: "Maitreya Sangha Israel", url: `${SITE_ORIGIN}/` },
   };
   return (
-    <SiteLayout lang={lang} title={article.title} description={article.description} path={path} jsonLd={[articleJsonLd]}>
+    <SiteLayout
+      lang={lang}
+      title={article.title}
+      description={article.description}
+      path={path}
+      ogImage={ogImage}
+      ogImageAlt={article.imageAlt || undefined}
+      ogType="article"
+      jsonLd={[articleJsonLd]}
+    >
       <article className="container max-w-3xl py-16">
         <Link
           to={sitePath(lang, "/articles")}

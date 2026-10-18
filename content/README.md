@@ -66,9 +66,13 @@ slug: my-article-slug
 date: 2026-08-14
 lang: he
 description: "תקציר קצר למנועי חיפוש ולתצוגת הרשימה."
+image: /media/articles/share/my-article-slug.jpg
+image_alt: "תיאור קצר של התמונה"
 ---
 גוף המאמר במרקדאון...
 ```
+
+**Share image (`image`, `image_alt`):** every article gets its own social-share picture, 1200x630: the post's own photo or artwork with a white strip under it holding the article's name (the title up to the first " - ") and the Sangha logo (Shahaf, 18.10). Make it with `node scripts/share-image.mjs <slug> <picture, path from the repo root> [focus-y 0-100]` - it writes `public/media/articles/share/<slug>.jpg`; look at it, move the crop with focus-y if a head is cut. Set `image` to that path and `image_alt` to a short description of the picture. They become og:image (+ alt), twitter:image and the Article JSON-LD image; without `image` the post shares the site-wide card. The link checker fails the build if the file is missing.
 
 The article appears automatically in the articles index (newest first) and gets its own page at `/he/articles/<filename-without-.md>`. Images: put files in `public/media/articles/` and embed with `![תיאור](/media/articles/file.jpg)`.
 

@@ -4,6 +4,8 @@ slug: six-yogas-naropa-tantric-theater-inner-fire
 date: 2026-10-18
 lang: he
 description: "לאמה גלן מולין מסביר מהן שש היוגות של נארופה, איך רואים את העולם כתיאטרון טנטרי, מה עושה תרגול הטומו, האש הפנימית, ואיך מתחילים."
+image: /media/articles/share/six-yogas-naropa-tantric-theater-inner-fire.jpg
+image_alt: "ציור קיר טיבטי של יוגי בתרגול טומו, האש הפנימית"
 ---
 
 *הדברים הבאים נערכו ותורגמו מתוך דבריו של לאמה גלן מולין בשיחה עם סטיב ג׳יימס בפודקאסט Guru Viking (פרק 9). זה החלק השני של השיחה, ואת החלק הראשון, על שנות הלימוד בדהרמסלה, אפשר לקרוא [כאן](/articles/lama-glenn-dharamsala-teachers-earthquake-of-insight). את השיחה המלאה, עם כתוביות בעברית, אפשר לראות כאן (הסרטון מתחיל מהחלק השני):*

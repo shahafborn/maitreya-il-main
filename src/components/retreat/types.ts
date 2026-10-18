@@ -104,6 +104,10 @@ export interface SEOConfig {
   url: string;
   /** Absolute or public-relative image URL for og:image. */
   ogImage: string;
+  /** Text description of the og:image (og:image:alt / twitter:image:alt); omitted when empty. */
+  ogImageAlt?: string;
+  /** og:type; defaults to "website" ("article" for blog posts). */
+  ogType?: string;
   /** e.g. "he_IL" or "en_US". */
   locale: string;
   /** Set false when the page manages its own canonical link (SiteLayout does). Defaults to true. */

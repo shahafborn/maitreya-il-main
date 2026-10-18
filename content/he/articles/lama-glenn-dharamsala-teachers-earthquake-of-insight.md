@@ -4,6 +4,8 @@ slug: lama-glenn-dharamsala-teachers-earthquake-of-insight
 date: 2026-10-18
 lang: he
 description: "לאמה גלן מולין על שנות הלימוד בדהרמסלה, על הדרך לבחור מורה, ועל החוויה שמטלטלת את תחושת העצמי ועל הדרך להביא אותה אל חיי היומיום."
+image: /media/articles/share/lama-glenn-dharamsala-teachers-earthquake-of-insight.jpg
+image_alt: "דיוקן של לאמה גלן מולין בגלימה טיבטית"
 ---
 
 *הדברים הבאים נערכו ותורגמו מתוך דבריו של לאמה גלן מולין בשיחה עם סטיב ג׳יימס בפודקאסט Guru Viking (פרק 9). זה החלק הראשון של השיחה, ואת החלק השני, על שש היוגות של נארופה, אפשר לקרוא [כאן](/articles/six-yogas-naropa-tantric-theater-inner-fire). את השיחה המלאה, עם כתוביות בעברית, אפשר לראות כאן:*

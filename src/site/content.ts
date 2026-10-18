@@ -56,6 +56,10 @@ export interface ArticleItem extends PageContent {
   title: string;
   date: string;
   description: string;
+  /** Social-share image (frontmatter `image`), a public path like /media/articles/share/<slug>.jpg, 1200x630. "" = the site-wide card. */
+  image: string;
+  /** Description of the share image (frontmatter `image_alt`). */
+  imageAlt: string;
 }
 
 export interface EventItem {
@@ -108,6 +112,8 @@ export function getArticles(lang: SiteLang): ArticleItem[] {
       title: content.meta.title ?? "",
       date: content.meta.date ?? "",
       description: content.meta.description ?? "",
+      image: content.meta.image ?? "",
+      imageAlt: content.meta.image_alt ?? "",
     }))
     .sort((a, b) => b.date.localeCompare(a.date));
 }

@@ -45,13 +45,18 @@ export function useRetreatSEO(seo: SEOConfig) {
     setMeta("og:description", seo.description);
     setMeta("og:url", seo.url);
     setMeta("og:image", seo.ogImage);
-    setMeta("og:type", "website");
+    setMeta("og:type", seo.ogType ?? "website");
     setMeta("og:locale", seo.locale);
     setMeta("og:site_name", SITE_NAME);
     setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", seo.title);
     setMeta("twitter:description", seo.description);
     setMeta("twitter:image", seo.ogImage);
+    // Image alt text: set when given, removed otherwise (a previous page may have left one).
+    for (const name of ["og:image:alt", "twitter:image:alt"]) {
+      if (seo.ogImageAlt) setMeta(name, seo.ogImageAlt);
+      else document.head.querySelector(`meta[name="${name}"], meta[property="${name}"]`)?.remove();
+    }
 
     if (seo.canonical === false) return;
     let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"][data-seo-canonical]');
@@ -65,5 +70,5 @@ export function useRetreatSEO(seo: SEOConfig) {
     return () => {
       link?.remove();
     };
-  }, [seo.title, seo.description, seo.keywords, seo.url, seo.ogImage, seo.locale, seo.canonical]);
+  }, [seo.title, seo.description, seo.keywords, seo.url, seo.ogImage, seo.ogImageAlt, seo.ogType, seo.locale, seo.canonical]);
 }

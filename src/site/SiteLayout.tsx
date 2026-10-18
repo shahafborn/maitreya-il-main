@@ -24,6 +24,10 @@ interface SiteLayoutProps {
   path?: string;
   /** Absolute og:image URL; defaults to the site-wide card. */
   ogImage?: string;
+  /** Alt text for ogImage (og:image:alt). */
+  ogImageAlt?: string;
+  /** og:type; "website" unless given (articles pass "article"). */
+  ogType?: string;
   /** Extra JSON-LD objects for this page (e.g. Article, Event list). */
   jsonLd?: Array<Record<string, unknown>>;
   /** Error pages: no canonical/alternates, robots noindex. */
@@ -39,6 +43,8 @@ export const SiteLayout = ({
   description = "",
   path = "/",
   ogImage,
+  ogImageAlt,
+  ogType,
   jsonLd = [],
   noindex = false,
   children,
@@ -67,6 +73,8 @@ export const SiteLayout = ({
       : "Tibetan Buddhism, Buddhist tantra, Lama Glenn Mullin, Maitreya Sangha, retreat, meditation",
     url: canonical,
     ogImage: ogImage ?? `${SITE_ORIGIN}/og-default.png`,
+    ogImageAlt,
+    ogType,
     locale: he ? "he_IL" : "en_US",
     canonical: false, // useSiteHead below owns the canonical link
   });

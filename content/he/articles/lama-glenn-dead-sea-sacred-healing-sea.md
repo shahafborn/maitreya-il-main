@@ -4,6 +4,8 @@ slug: lama-glenn-dead-sea-sacred-healing-sea
 date: 2026-10-16
 lang: he
 description: "לאמה גלן מולין על מה שהופך מקום לקדוש, על המערות שמעל ים המלח, על איזון ארבעת היסודות ועל כוח הריפוי של הים הנמוך בעולם."
+image: /media/articles/share/lama-glenn-dead-sea-sacred-healing-sea.jpg
+image_alt: "נוף ים המלח מבית ספר שדה עין גדי"
 ---
 
 *הדברים הבאים נערכו ותורגמו מתוך דבריו של לאמה גלן מולין בשיחה עם עודד רהב, מייסד [שומרי ים המלח](https://deadseaguardians.org), בפודקאסט Guru Viking. את השיחה בגרסה ערוכה אפשר לקרוא [כאן](/articles/dead-sea-magic-lama-glenn-oded-rahav), ואת השיחה המלאה, עם כתוביות בעברית, אפשר לראות כאן:*
