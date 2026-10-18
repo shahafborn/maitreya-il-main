@@ -27,15 +27,26 @@ export const isVisitPromoLive = (lang: SiteLang, today = todayInIsrael()) => {
  * same file as the box, under the same `until` date, so it disappears with the
  * visit instead of becoming a sentence about a visit that already happened.
  *
- * It is a sentence rather than the section's heading on purpose: the cards show
- * everything that is coming up, and not everything coming up belongs to a visit
- * (the Death and Dying course runs online, outside it). A heading naming the
- * visit would be making a claim about the cards underneath it.
+ * While a visit runs the cards show only its events (visitEventUrls), so the
+ * sentence sits right on top of them.
  */
 export const visitBlurb = (lang: SiteLang): string | null => {
   if (!isVisitPromoLive(lang)) return null;
   const blurb = String(getPage(lang, "visit-promo").meta.blurb ?? "").trim();
   return blurb || null;
+};
+
+/**
+ * The event pages the running visit links to (the links in visit-promo.md's
+ * list, e.g. "/events/six-yogas-niguma-retreat"), or null when no visit is
+ * running. While a visit runs, the upcoming-events cards on every retreat and
+ * course page show only these (Shahaf, 18.10: the December events, not the
+ * online courses); once it ends, null puts everything upcoming back.
+ */
+export const visitEventUrls = (lang: SiteLang): Set<string> | null => {
+  if (!isVisitPromoLive(lang)) return null;
+  const urls = [...getPage(lang, "visit-promo").body.matchAll(/\]\((\/events\/[^)\s#?]+)\)/g)].map((m) => m[1]);
+  return urls.length ? new Set(urls) : null;
 };
 
 export const VisitPromo = ({ lang }: { lang: SiteLang }) => {

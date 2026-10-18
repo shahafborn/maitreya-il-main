@@ -21,7 +21,7 @@ import { SectionFrame, SectionTitle } from "./SectionFrame";
 import { RETREAT_THEME } from "./theme";
 import { Link } from "react-router-dom";
 import { getEvents, formatEventDates, type SiteLang } from "@/site/content";
-import { visitBlurb } from "@/site/VisitPromo";
+import { visitBlurb, visitEventUrls } from "@/site/VisitPromo";
 
 const COPY = {
   he: {
@@ -55,8 +55,11 @@ export const UpcomingEvents = ({ lang, currentUrl, ended, tone }: UpcomingEvents
 
   // A card needs somewhere to go and something to show; an entry missing either
   // is an archive row, not a promotable event.
+  // While a visit runs, only its events (the list in visit-promo.md); between
+  // visits, everything upcoming.
+  const visit = visitEventUrls(lang);
   const events: OtherEvent[] = getEvents(lang)
-    .upcoming.filter((ev) => ev.url && ev.image && ev.url !== currentUrl)
+    .upcoming.filter((ev) => ev.url && ev.image && ev.url !== currentUrl && (!visit || visit.has(ev.url)))
     .map((ev) => ({
       image: ev.image,
       imageAlt: ev.title,
