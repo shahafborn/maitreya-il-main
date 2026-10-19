@@ -34,6 +34,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { hasEnded, todayInIsrael } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
+import { InquirySection, type InquiryQuestion } from "@/components/retreat/InquirySection";
 import type { RegistrationConfig } from "@/components/retreat/types";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/healing-kundalini-2026/hero-niguma.jpg";
@@ -288,6 +289,16 @@ const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery
    - Multiple CTA touchpoints
    - Calm, premium, unhurried feel
    ============================================================ */
+
+/** "What to know" list beside the call-back form. Every answer restates
+ *  something the page already says - keep them in step if the page changes. */
+const INQUIRY_QUESTIONS: InquiryQuestion[] = [
+  { q: "מה לומדים בריטריט?", a: "את שש היוגות של ניגומה, מהתרגולים החשובים ביותר בבודהיזם הטנטרי, שמתורגלים ברציפות כבר יותר מאלף שנה. לאמה גלן מלמד אותן שלב אחר שלב: לימוד, הדרכה מעשית ותרגול מודרך." },
+  { q: "זה מתאים לי אם אין לי ניסיון?", a: "כן. הריטריט מתאים למתרגלים מתחילים ומתקדמים, וכל הלימוד מתורגם לעברית." },
+  { q: "איך נראה יום בריטריט?", a: "לימוד, תרגול מודרך, יוגה ומדיטציה בבוקר ואחר הצהריים, עם הפסקת צהריים ארוכה באמצע. למעוניינים יש גם מדיטציה מוקדמת בבוקר ופעילויות ערב." },
+  { q: "איפה ישנים ומה אוכלים?", a: "בחדרים לארבעה בבית ספר שדה עין גדי, עם שירותים, מקלחת ומזגן בכל חדר. שלוש ארוחות ביום כלולות, ואפשר לבקש ארוחה צמחונית." },
+  { q: "אפשר לשלם בתשלומים?", a: "כן, עד 5 תשלומים." },
+];
 
 const GOLD = "#C9A961";
 const DARK = "#1A1A1A";
@@ -976,6 +987,21 @@ const SixYogasNigumaRetreat = () => {
           </p>
         </div>
       </section>
+      )}
+
+      {/* ── Want to know more? ── common questions + call-back form for the
+           visitor who is not ready to register yet (Shahaf, 19.10). ── */}
+      {!concluded && (
+        <InquirySection
+          webhookUrl="https://tknstk.app.n8n.cloud/webhook/EGN_Inquiry"
+          pageId="six-yogas-niguma-retreat"
+          questions={INQUIRY_QUESTIONS}
+          photo={`${import.meta.env.BASE_URL}media/articles/ein-gedi-teaching-class-2026.jpg`}
+          photoAlt="לאמה גלן מלמד בריטריט בעין גדי"
+          whatsapp="972544905031"
+          whatsappDisplay="054-4905031"
+          whatsappText="שלום, יש לי שאלה על ריטריט שש היוגות של ניגומה בעין גדי"
+        />
       )}
 
       {/* ── Venue (photo background + text overlay, Esalen "Campus Features" style) ── */}

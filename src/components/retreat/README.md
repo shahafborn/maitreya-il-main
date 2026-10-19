@@ -28,6 +28,7 @@ src/components/retreat/
   DanaSection.tsx               Dana-based contribution section
   GalleryCarousel.tsx           Infinite gallery carousel (uses useRetreatCarousel + Lightbox)
   Lightbox.tsx                  Fullscreen image viewer with swipe
+  InquirySection.tsx            "Want to know more?" - common questions + call-back form (n8n webhook, Meta Lead)
   VideoSection.tsx              Responsive YouTube embed
   FinalCTA.tsx                  Closing photo-bg section with CTA
   InfoFooter.tsx                Cancellation policy + contact info
