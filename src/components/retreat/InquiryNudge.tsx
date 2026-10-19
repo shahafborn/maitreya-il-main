@@ -9,7 +9,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
-import { WhatsAppIcon, whatsappHref, type InquiryConfig } from "./InquiryForm";
+import { WhatsAppIcon, whatsappHref, trackWhatsAppClick, type InquiryConfig } from "./InquiryForm";
 
 const SEEN_KEY = "inquiry-nudge-seen";
 
@@ -78,6 +78,7 @@ export const InquiryNudge = ({ show, config, onAsk, onClose }: InquiryNudgeProps
           href={whatsappHref(config)}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsAppClick(config, "corner-card")}
           className="inline-flex items-center justify-center gap-1.5 rounded-full border-[1.5px] bg-white px-4 text-[15px]"
           style={{ borderColor: RETREAT_THEME.GOLD, color: RETREAT_THEME.DARK }}
         >

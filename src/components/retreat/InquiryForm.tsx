@@ -18,7 +18,7 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
-import { trackMeta, generateEventId } from "@/lib/metaPixel";
+import { trackMeta, trackMetaCustom, generateEventId } from "@/lib/metaPixel";
 import { attributionPayload } from "@/lib/attribution";
 
 export interface InquiryConfig {
@@ -45,6 +45,12 @@ const field =
 
 export const whatsappHref = (cfg: InquiryConfig) =>
   `https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(cfg.whatsappText)}`;
+
+/** A WhatsApp tap is a lead the form never sees - count it (GA4 + a Meta custom event). */
+export const trackWhatsAppClick = (cfg: InquiryConfig, from: InquirySource) => {
+  window.gtag?.("event", "whatsapp_click", { from, page: cfg.pageId });
+  trackMetaCustom("WhatsAppClick", { content_name: cfg.pageId, content_category: from });
+};
 
 export const WhatsAppIcon = ({ className = "h-5 w-5" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#25D366" aria-hidden="true">
@@ -148,6 +154,7 @@ export const InquiryForm = ({ config, source, intro, onSent }: InquiryFormProps)
         href={whatsappHref(config)}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsAppClick(config, source)}
         className="mt-3 flex items-center justify-center gap-1.5 py-1.5 text-[15px] hover:underline underline-offset-4"
         style={{ color: WARM_GRAY }}
       >

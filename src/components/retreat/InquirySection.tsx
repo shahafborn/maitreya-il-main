@@ -43,7 +43,14 @@ export const InquirySection = ({ inquiry, questions, photo, photoAlt }: InquiryS
           <div>
             {questions.map((item, i) => (
               <details key={item.q} open={i === 0} className="group border-b border-[#ECE4D5] py-4">
-                <summary className="flex cursor-pointer list-none items-center gap-3.5 text-lg font-medium [&::-webkit-details-marker]:hidden">
+                <summary
+                  // Which questions people open = what they worry about before registering.
+                  // Counted on the click that opens one, not on the first one starting open.
+                  onClick={(e) => {
+                    if (!(e.currentTarget.parentElement as HTMLDetailsElement).open)
+                      window.gtag?.("event", "faq_open", { question: item.q, position: i + 1, page: inquiry.pageId });
+                  }}
+                  className="flex cursor-pointer list-none items-center gap-3.5 text-lg font-medium [&::-webkit-details-marker]:hidden">
                   <span
                     className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full text-sm font-bold"
                     style={{ border: `1.5px solid ${GOLD}`, color: "#A88A45" }}
