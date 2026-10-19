@@ -35,6 +35,8 @@ import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
 import { hasEnded, todayInIsrael } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { InquirySection, type InquiryQuestion } from "@/components/retreat/InquirySection";
+import type { InquiryConfig } from "@/components/retreat/InquiryForm";
+import { InquiryNudge, nudgeAlreadySeen } from "@/components/retreat/InquiryNudge";
 import type { RegistrationConfig } from "@/components/retreat/types";
 import maitreyaLogo from "@/assets/maitreya-logo.png";
 import heroImage from "@/assets/healing-kundalini-2026/hero-niguma.jpg";
@@ -290,6 +292,18 @@ const galleryImages = [gallery4, gallery1, gallery3, gallery8, gallery2, gallery
    - Calm, premium, unhurried feel
    ============================================================ */
 
+/** Where call-back requests go (n8n EGN_Inquiry: sheet + sangha inbox, cc Dorit)
+ *  and the WhatsApp line. Shared by the questions section, the box in the
+ *  registration form and the corner card. A module constant on purpose: the
+ *  form keeps its view only while this object stays the same. */
+const INQUIRY: InquiryConfig = {
+  webhookUrl: "https://tknstk.app.n8n.cloud/webhook/EGN_Inquiry",
+  pageId: "six-yogas-niguma-retreat",
+  whatsapp: "972544905031",
+  whatsappDisplay: "054-4905031",
+  whatsappText: "שלום, יש לי שאלה על ריטריט שש היוגות של ניגומה בעין גדי",
+};
+
 /** "What to know" list beside the call-back form. Every answer restates
  *  something the page already says - keep them in step if the page changes. */
 const INQUIRY_QUESTIONS: InquiryQuestion[] = [
@@ -476,6 +490,10 @@ const SixYogasNigumaRetreat = () => {
   const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
+  /** The form opens on the call-back view when the corner card sends people there. */
+  const [modalView, setModalView] = useState<"form" | "inquiry">("form");
+  /** Corner card: once per visit, after the form was closed with nothing sent. */
+  const [nudge, setNudge] = useState(false);
   const { paymentStatus, closePaymentStatus } = usePaymentReturn();
 
   // Meta pixel: InitiateCheckout is fired by the shared modal on submit; Purchase fires here on
@@ -493,6 +511,8 @@ const SixYogasNigumaRetreat = () => {
     // The test link always locks on the test ticket. The team link opens on its
     // option from the generic buttons, but a click on a specific card wins.
     setPreselectedRoom(testMode ? TEST_TIER : room || linkTier);
+    setModalView("form");
+    setNudge(false);
     setModalOpen(true);
   };
 
@@ -993,14 +1013,10 @@ const SixYogasNigumaRetreat = () => {
            visitor who is not ready to register yet (Shahaf, 19.10). ── */}
       {!concluded && (
         <InquirySection
-          webhookUrl="https://tknstk.app.n8n.cloud/webhook/EGN_Inquiry"
-          pageId="six-yogas-niguma-retreat"
+          inquiry={INQUIRY}
           questions={INQUIRY_QUESTIONS}
           photo={`${import.meta.env.BASE_URL}media/articles/ein-gedi-teaching-class-2026.jpg`}
           photoAlt="לאמה גלן מלמד בריטריט בעין גדי"
-          whatsapp="972544905031"
-          whatsappDisplay="054-4905031"
-          whatsappText="שלום, יש לי שאלה על ריטריט שש היוגות של ניגומה בעין גדי"
         />
       )}
 
@@ -1232,7 +1248,27 @@ const SixYogasNigumaRetreat = () => {
       {/* ── Registration Modal ── not rendered at all once the retreat is over,
            so no ?ticket= or stale payment return can open the form. ── */}
       {!concluded && (
-        <RegistrationModal open={modalOpen} onOpenChange={setModalOpen} preselectedTierId={preselectedRoom || undefined} config={registrationConfig} copy={registrationCopy} />
+        <RegistrationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          preselectedTierId={preselectedRoom || undefined}
+          config={registrationConfig}
+          copy={registrationCopy}
+          inquiry={INQUIRY}
+          initialView={modalView}
+          // Private links (test / team / split) are for people already decided.
+          onClosedEarly={() => { if (!linkTier && !nudgeAlreadySeen()) setNudge(true); }}
+        />
+      )}
+
+      {/* ── Corner card ── a question before you go, after the form was closed with nothing sent. ── */}
+      {!concluded && (
+        <InquiryNudge
+          show={nudge}
+          config={INQUIRY}
+          onClose={() => setNudge(false)}
+          onAsk={() => { setNudge(false); setModalView("inquiry"); setModalOpen(true); }}
+        />
       )}
 
       {/* ── Payment Status Modal ── */}

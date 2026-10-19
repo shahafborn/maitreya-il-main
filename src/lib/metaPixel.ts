@@ -3,7 +3,7 @@
  * Pixel ID 775211235282836 is loaded via GTM (container GTM-W84DD38X),
  * so this file only fires events; it does NOT install the base pixel.
  */
-type MetaEventName = "PageView" | "InitiateCheckout" | "Purchase" | "Lead" | "CompleteRegistration";
+type MetaEventName = "PageView" | "InitiateCheckout" | "Purchase" | "Lead" | "CompleteRegistration" | "Contact";
 
 interface MetaEventParams {
   value?: number;

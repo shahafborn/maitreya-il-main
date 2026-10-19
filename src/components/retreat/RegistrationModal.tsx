@@ -11,6 +11,7 @@ import { RETREAT_THEME, RETREAT_FONTS } from "./theme";
 import { fireInitiateCheckout } from "./hooks/useMetaPixelRetreat";
 import { attributionPayload } from "@/lib/attribution";
 import type { RegistrationConfig } from "./types";
+import { InquiryForm, WhatsAppIcon, type InquiryConfig } from "./InquiryForm";
 
 declare global {
   interface Window {
@@ -117,6 +118,20 @@ interface RegistrationModalProps {
   tierGroup?: string;
   config: RegistrationConfig;
   copy: RegistrationModalCopy;
+  /**
+   * Optional "have a question?" door (Hebrew page only for now): a box at the
+   * top of the form that swaps it for the short call-back form, in the same
+   * window. Without it the form is exactly as before.
+   */
+  inquiry?: InquiryConfig;
+  /** Open straight on the call-back form (the corner card's button). */
+  initialView?: "form" | "inquiry";
+  /**
+   * Called when the dialog is closed before anything was sent - no
+   * registration submitted, no question sent. The page uses it for the
+   * corner card.
+   */
+  onClosedEarly?: () => void;
 }
 
 /**
@@ -139,6 +154,9 @@ export const RegistrationModal = ({
   tierGroup,
   config,
   copy,
+  inquiry,
+  initialView,
+  onClosedEarly,
 }: RegistrationModalProps) => {
   // Tiers marked `variantOf` are follow-up choices, not top-level ones, and
   // `hidden` ones are not offered at all - they arrive preselected from a link,
@@ -186,6 +204,25 @@ export const RegistrationModal = ({
   const formRef = useRef<HTMLFormElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const paymentScrollRef = useRef<HTMLDivElement>(null);
+  /** The registration form, or the short call-back form in its place. */
+  const [view, setView] = useState<"form" | "inquiry">("form");
+  const [inquirySent, setInquirySent] = useState(false);
+
+  const hasInquiry = Boolean(inquiry);
+  useEffect(() => {
+    if (open) setView(hasInquiry && initialView === "inquiry" ? "inquiry" : "form");
+  }, [open, initialView, hasInquiry]);
+
+  /** Closing before anything was sent is what the page's corner card waits for. */
+  const handleOpenChange = (next: boolean) => {
+    if (!next && !paymentUrl && !submitting && !inquirySent) onClosedEarly?.();
+    onOpenChange(next);
+  };
+
+  const openInquiry = () => {
+    setView("inquiry");
+    window.gtag?.("event", "inquiry_open", { from: "registration-form" });
+  };
 
   useEffect(() => {
     if (!open) {
@@ -405,7 +442,7 @@ export const RegistrationModal = ({
   const selectedTier = effectiveTier;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         dir={config.dir}
         className="max-w-lg md:max-w-2xl max-h-[90vh] p-0 gap-0 rounded-xl border-0 overflow-hidden"
@@ -490,6 +527,45 @@ export const RegistrationModal = ({
               </p>
             )}
           </div>
+        ) : view === "inquiry" && inquiry ? (
+          <div className="max-h-[90vh] overflow-y-auto bg-white">
+            <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
+              <DialogHeader className="text-center sm:text-center">
+                <DialogTitle
+                  className="text-2xl md:text-3xl font-bold"
+                  style={{ fontFamily: RETREAT_FONTS.serif, color: RETREAT_THEME.DARK }}
+                >
+                  נשמח לחזור אליכם
+                </DialogTitle>
+                <DialogDescription
+                  className="text-lg md:text-xl font-semibold mt-1.5 leading-snug"
+                  style={{ color: RETREAT_THEME.GOLD_DARK, fontFamily: RETREAT_FONTS.serif }}
+                >
+                  {config.subtitle}
+                </DialogDescription>
+              </DialogHeader>
+            </div>
+            <div className="px-6 py-5">
+              <InquiryForm
+                config={inquiry}
+                source={initialView === "inquiry" ? "corner-card" : "registration-form"}
+                onSent={() => setInquirySent(true)}
+                intro={
+                  <p className="mb-4 text-base leading-relaxed" style={{ color: RETREAT_THEME.WARM_GRAY }}>
+                    השאירו פרטים ונחזור אליכם לשיחה קצרה ואישית, לפני שמחליטים.
+                  </p>
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setView("form")}
+                className="mt-3 block w-full text-center text-[15px] underline underline-offset-4"
+                style={{ color: RETREAT_THEME.WARM_GRAY }}
+              >
+                {inquirySent ? "רוצים בכל זאת להירשם? לטופס ההרשמה" : "חזרה לטופס ההרשמה"}
+              </button>
+            </div>
+          </div>
         ) : (
         <div ref={scrollContainerRef} className="max-h-[90vh] overflow-y-auto">
           <div className="px-6 pt-6 pb-4 border-b border-stone-200 sticky top-0 bg-white z-10 rounded-t-xl">
@@ -510,6 +586,34 @@ export const RegistrationModal = ({
               </DialogDescription>
             </DialogHeader>
           </div>
+
+          {/* The "have a question?" door: the whole box opens the call-back form. */}
+          {inquiry && (
+            <div className="px-6 pt-5">
+              <button
+                type="button"
+                onClick={openInquiry}
+                className="flex w-full items-center gap-3 rounded-xl border px-3.5 py-2.5 text-start text-[15px] leading-relaxed transition-colors hover:border-[#C9A961] hover:bg-[#F7EDD5]"
+                style={{ backgroundColor: "#FBF6EA", borderColor: "#EFE2C2", color: RETREAT_THEME.DARK }}
+              >
+                <span
+                  className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full text-lg font-bold text-white"
+                  style={{ backgroundColor: RETREAT_THEME.GOLD, fontFamily: RETREAT_FONTS.serif }}
+                  aria-hidden="true"
+                >
+                  ?
+                </span>
+                <span>
+                  יש לכם שאלות? נשמח לענות.
+                  <br />
+                  <span className="font-bold underline decoration-[#C9A961] underline-offset-[3px]">השאירו פרטים ונחזור אליכם</span>
+                  , או כתבו לנו{" "}
+                  <WhatsAppIcon className="inline h-[15px] w-[15px] align-[-2px]" />
+                  {" "}בוואטסאפ
+                </span>
+              </button>
+            </div>
+          )}
 
           <form ref={formRef} onSubmit={handleSubmit} noValidate className="px-6 py-5 space-y-4">
             {config.showTierSelect && (

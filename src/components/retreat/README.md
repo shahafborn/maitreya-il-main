@@ -28,7 +28,9 @@ src/components/retreat/
   DanaSection.tsx               Dana-based contribution section
   GalleryCarousel.tsx           Infinite gallery carousel (uses useRetreatCarousel + Lightbox)
   Lightbox.tsx                  Fullscreen image viewer with swipe
-  InquirySection.tsx            "Want to know more?" - common questions + call-back form (n8n webhook, Meta Lead)
+  InquirySection.tsx            "Want to know more?" - common questions beside the call-back form in a photo card
+  InquiryForm.tsx               The call-back form (name + phone or email + question -> n8n webhook, Meta Contact, GA4 generate_lead); also inside RegistrationModal via its `inquiry` prop
+  InquiryNudge.tsx              Corner card after the registration form is closed with nothing sent (once per visit)
   VideoSection.tsx              Responsive YouTube embed
   FinalCTA.tsx                  Closing photo-bg section with CTA
   InfoFooter.tsx                Cancellation policy + contact info
