@@ -102,16 +102,18 @@ export const InquirySection = ({
 
   return (
     <section className="py-16 md:py-24 px-4" style={{ background: `linear-gradient(180deg, #FFFFFF 0%, ${CREAM} 100%)` }}>
+      <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+        <p className="text-sm font-bold" style={{ color: "#A88A45" }}>לפני שנרשמים</p>
+        <h2 className="text-2xl md:text-3xl font-bold mt-2 mb-4" style={{ fontFamily: RETREAT_FONTS.serif }}>
+          יש לכם שאלות?
+        </h2>
+        <p className="text-base md:text-lg leading-[1.7]" style={{ color: WARM_GRAY }}>
+          ריכזנו כאן את השאלות שאנשים שואלים אותנו הכי הרבה. ואם נשארה לכם שאלה, נשמח לדבר.
+        </p>
+      </div>
       <div className="max-w-5xl mx-auto grid gap-10 md:gap-14 md:grid-cols-[1.05fr_1fr] items-start">
         {/* Questions */}
         <div>
-          <p className="text-sm font-bold" style={{ color: "#A88A45" }}>שאלות לפני שנרשמים</p>
-          <h2 className="text-2xl md:text-3xl font-bold mt-2 mb-3" style={{ fontFamily: RETREAT_FONTS.serif }}>
-            מה כדאי לדעת
-          </h2>
-          <p className="text-base md:text-lg leading-[1.7] mb-5" style={{ color: WARM_GRAY }}>
-            אלה השאלות שאנשים שואלים אותנו הכי הרבה. לא מצאתם תשובה? אנחנו כאן.
-          </p>
           <div>
             {questions.map((item, i) => (
               <details key={item.q} open={i === 0} className="group border-b border-[#ECE4D5] py-4">
