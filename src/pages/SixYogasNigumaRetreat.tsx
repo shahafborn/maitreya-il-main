@@ -83,6 +83,9 @@ const TEAM_TIER: RoomType = "EGN_2026_Team";
  */
 const SPLIT_KEY = "yitra-q4n7";
 const SPLIT_TIER: RoomType = "EGN_2026_Quad_Split";
+/** Room for 4 at the full price with up to 8 payments (Shahaf, 21.10). Link only: `?ticket=<QUAD8_KEY>`. */
+const QUAD8_KEY = "shmone-k7d4";
+const QUAD8_TIER: RoomType = "EGN_2026_Quad_8";
 
 /**
  * The machine-readable twin of the page: start and end from the arrival block
@@ -183,6 +186,8 @@ export const registrationConfig: RegistrationConfig = {
     { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-2", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
     // Split payment: the card balance of a room for 4 after 2,000 NIS by Bit. Link only.
     { id: "EGN_2026_Quad_Split", title: "לינה בחדר ל-4 - יתרת תשלום באשראי", note: "אחרי 2,000 ₪ ב-Bit | עד 5 תשלומים", hidden: true, priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
+    // Room for 4, full price, up to 8 payments. Link only.
+    { id: "EGN_2026_Quad_8", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 8 תשלומים", hidden: true, priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
       title: "בדיקת תשלום",
@@ -273,7 +278,7 @@ const registrationCopy = {
 };
 
 
-type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Quad_Split" | "EGN_2026_Test" | "";
+type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Quad_Split" | "EGN_2026_Quad_8" | "EGN_2026_Test" | "";
 
 
 
@@ -487,7 +492,7 @@ const SixYogasNigumaRetreat = () => {
   const testMode = searchParams.get("test") === TEST_KEY;
   const ticketKey = searchParams.get("ticket");
   // A tier reached by private link: the test ticket, the team offer, or the split-payment balance.
-  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : "";
+  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : ticketKey === QUAD8_KEY ? QUAD8_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   /** The form opens on the call-back view when the corner card sends people there. */
