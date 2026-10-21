@@ -850,9 +850,9 @@ const SixYogasNigumaRetreatEN = () => {
         policy={{
           heading: "Cancellation Policy",
           bullets: [
-            "Cancellation up to 60 days before the retreat - full refund",
-            "Cancellation 30-60 days before - 50% refund",
-            "Cancellation less than 30 days before - no refund",
+            "Cancellation up to 30 days before the retreat - full refund",
+            "Cancellation between 30 days and two weeks before - 50% refund",
+            "Cancellation less than two weeks before - no refund",
           ],
         }}
         contact={{
