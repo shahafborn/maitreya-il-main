@@ -14,6 +14,7 @@
 import ReactMarkdown from "react-markdown";
 import { getPage, type SiteLang } from "./content";
 import { todayInIsrael } from "./today";
+import { trackBoxClick, useBoxFrom, withFrom } from "@/lib/boxTracking";
 
 export const isVisitPromoLive = (lang: SiteLang, today = todayInIsrael()) => {
   const until = String(getPage(lang, "visit-promo").meta.until ?? "").trim();
@@ -51,6 +52,7 @@ export const visitEventUrls = (lang: SiteLang): Set<string> | null => {
 
 export const VisitPromo = ({ lang }: { lang: SiteLang }) => {
   const { meta, body } = getPage(lang, "visit-promo");
+  const from = useBoxFrom("visit");
   if (!isVisitPromoLive(lang) || !body.trim()) return null;
   return (
     <aside className="not-prose my-10 rounded-xl border border-accent/30 bg-accent/[0.06] p-6 md:p-7 shadow-sm">
@@ -67,7 +69,18 @@ export const VisitPromo = ({ lang }: { lang: SiteLang }) => {
         clickable at all.
       */}
       <div className="font-body text-lg leading-relaxed text-foreground/90 [&_p]:my-2 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:ps-5 [&_li]:my-1 [&_li]:marker:text-accent [&_a]:text-accent [&_a]:underline [&_a]:decoration-accent/50 [&_a]:underline-offset-4 [&_a:hover]:text-secondary [&_a:hover]:decoration-secondary">
-        <ReactMarkdown>{body}</ReactMarkdown>
+        <ReactMarkdown
+          components={{
+            // Each link carries the box marker and reports the click (boxTracking.ts).
+            a: ({ href = "", children }) => (
+              <a href={withFrom(href, from)} onClick={() => trackBoxClick("visit", href)}>
+                {children}
+              </a>
+            ),
+          }}
+        >
+          {body}
+        </ReactMarkdown>
       </div>
     </aside>
   );

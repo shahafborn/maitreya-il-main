@@ -38,6 +38,7 @@
 import ReactMarkdown from "react-markdown";
 import { getPage, type SiteLang } from "./content";
 import { todayInIsrael } from "./today";
+import { trackBoxClick, useBoxFrom, withFrom } from "@/lib/boxTracking";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -84,6 +85,8 @@ const buttonClass =
 
 export const RetreatPromo = ({ lang }: { lang: SiteLang }) => {
   const { meta, body } = getPage(lang, "retreat-promo");
+  // Hooks before the early returns; the marker says which box sent the reader (boxTracking.ts).
+  const from = useBoxFrom("top");
   if (!isRetreatPromoLive(lang)) return null;
   const s = (k: string) => String(meta[k] ?? "").trim();
   const href = s("href");
@@ -126,7 +129,7 @@ export const RetreatPromo = ({ lang }: { lang: SiteLang }) => {
           <ReactMarkdown>{keepRangesTogether(body)}</ReactMarkdown>
         </div>
         {s("note") && <p className="font-body text-sm font-medium text-[hsl(0_60%_42%)] mb-4">{s("note")}</p>}
-        <a href={href} className={buttonClass}>
+        <a href={withFrom(href, from)} onClick={() => trackBoxClick("top", href)} className={buttonClass}>
           {cta || href}
         </a>
       </div>
@@ -142,6 +145,7 @@ export const RetreatPromo = ({ lang }: { lang: SiteLang }) => {
  */
 export const RetreatReminder = ({ lang }: { lang: SiteLang }) => {
   const { meta } = getPage(lang, "retreat-promo");
+  const from = useBoxFrom("end");
   if (!isRetreatPromoLive(lang)) return null;
   const s = (k: string) => String(meta[k] ?? "").trim();
   const href = s("href");
@@ -166,7 +170,10 @@ export const RetreatReminder = ({ lang }: { lang: SiteLang }) => {
         {s("reminderText") && (
           <p className="font-body text-base text-foreground/90 mb-2">{keepRangesTogether(s("reminderText"))}</p>
         )}
-        <a href={href} className={buttonClass.replace("px-6 py-3", "px-5 py-2.5").replace(" md:text-lg", "")}>
+        <a
+          href={withFrom(href, from)}
+          onClick={() => trackBoxClick("end", href)}
+          className={buttonClass.replace("px-6 py-3", "px-5 py-2.5").replace(" md:text-lg", "")}>
           {s("cta") || href}
         </a>
       </div>
