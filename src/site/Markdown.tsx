@@ -30,6 +30,16 @@ const resolveSrc = (src?: string) =>
  */
 const VISIT_PROMO_RE = /^\[\[visit-promo\]\]$/;
 
+/**
+ * A smaller picture beside the text: give the image the title "float-left" or
+ * "float-right" - ![תיאור](/media/articles/x.jpg "float-left") - and put it just
+ * before the paragraph it should sit beside. Physical sides, not start/end.
+ */
+const FLOAT_CLASS: Record<string, string> = {
+  "float-left": "float-left w-[44%] sm:w-[38%] !mt-1 !mb-4 mr-5 md:mr-7",
+  "float-right": "float-right w-[44%] sm:w-[38%] !mt-1 !mb-4 ml-5 md:ml-7",
+};
+
 /** Same idea for [[retreat-promo]]: the photo card for one retreat (RetreatPromo). */
 const RETREAT_PROMO_RE = /^\[\[retreat-promo\]\]$/;
 
@@ -113,7 +123,9 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
   <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary prose-img:rounded-lg prose-img:shadow-md">
     <ReactMarkdown
       components={{
-        img: ({ src, alt }) => <img src={resolveSrc(src)} alt={alt ?? ""} loading="lazy" />,
+        img: ({ src, alt, title }) => (
+          <img src={resolveSrc(src)} alt={alt ?? ""} loading="lazy" className={FLOAT_CLASS[title ?? ""]} />
+        ),
         // Links to other websites open in a new tab, so the reader keeps the
         // article; links within maitreya.org.il stay in the same tab.
         a: ({ href, children: aChildren }) =>
