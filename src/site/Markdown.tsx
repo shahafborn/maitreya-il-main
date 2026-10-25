@@ -31,13 +31,20 @@ const resolveSrc = (src?: string) =>
 const VISIT_PROMO_RE = /^\[\[visit-promo\]\]$/;
 
 /**
- * A smaller picture beside the text: give the image the title "float-left" or
- * "float-right" - ![תיאור](/media/articles/x.jpg "float-left") - and put it just
+ * An image's title is its caption, shown under it:
+ *   ![תיאור](/media/articles/x.jpg "מילארפה, ציור טיבטי")
+ * A smaller picture beside the text: start the title with "float-left |" or
+ * "float-right |" (or just the side, for no caption) and put the image just
  * before the paragraph it should sit beside. Physical sides, not start/end.
  */
 const FLOAT_CLASS: Record<string, string> = {
   "float-left": "float-left w-[44%] sm:w-[38%] !mt-1 !mb-4 mr-5 md:mr-7",
   "float-right": "float-right w-[44%] sm:w-[38%] !mt-1 !mb-4 ml-5 md:ml-7",
+};
+
+const parseImageTitle = (title = "") => {
+  const [first, ...rest] = title.split("|").map((s) => s.trim());
+  return FLOAT_CLASS[first] ? { float: FLOAT_CLASS[first], caption: rest.join(" | ") } : { float: "", caption: title.trim() };
 };
 
 /** Same idea for [[retreat-promo]]: the photo card for one retreat (RetreatPromo). */
@@ -123,9 +130,17 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
   <div className="prose prose-lg max-w-none font-body prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-secondary prose-img:rounded-lg prose-img:shadow-md">
     <ReactMarkdown
       components={{
-        img: ({ src, alt, title }) => (
-          <img src={resolveSrc(src)} alt={alt ?? ""} loading="lazy" className={FLOAT_CLASS[title ?? ""]} />
-        ),
+        img: ({ src, alt, title }) => {
+          const { float, caption } = parseImageTitle(title);
+          const img = <img src={resolveSrc(src)} alt={alt ?? ""} loading="lazy" className={caption ? "!my-0" : float} />;
+          if (!caption) return img;
+          return (
+            <figure className={float || "my-8"}>
+              {img}
+              <figcaption className="mt-2 text-center text-sm text-foreground/70">{caption}</figcaption>
+            </figure>
+          );
+        },
         // Links to other websites open in a new tab, so the reader keeps the
         // article; links within maitreya.org.il stay in the same tab.
         a: ({ href, children: aChildren }) =>
@@ -136,7 +151,11 @@ export const Markdown = ({ children, lang = "he" }: { children: string; lang?: S
           ) : (
             <a href={href}>{aChildren}</a>
           ),
-        p: ({ children: pChildren }) => {
+        p: ({ node, children: pChildren }) => {
+          // A paragraph that is only an image: no <p> around it, so a captioned
+          // image can be a <figure> (a block, which <p> may not contain).
+          if (node?.children.length === 1 && "tagName" in node.children[0] && node.children[0].tagName === "img")
+            return <>{pChildren}</>;
           const text = flattenText(pChildren).trim();
           if (YT_RE.test(text)) return <YouTubeEmbed url={text} />;
           if (BUNNY_RE.test(text)) return <BunnyEmbed url={text} />;
