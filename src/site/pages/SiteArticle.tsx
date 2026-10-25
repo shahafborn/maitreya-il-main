@@ -53,6 +53,7 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
       title={article.title}
       description={article.description}
       path={path}
+      canonicalPath={article.canonical || undefined}
       ogImage={ogImage}
       ogImageAlt={article.imageAlt || undefined}
       ogType="article"

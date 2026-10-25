@@ -22,6 +22,8 @@ interface SiteLayoutProps {
   description?: string;
   /** Public path of the page (e.g. "/about", "/en/about"); drives canonical, og:url and hreflang. */
   path?: string;
+  /** Another page's path to name as canonical instead of `path` (a post superseded by a fuller one); drops the hreflang alternates. */
+  canonicalPath?: string;
   /** Absolute og:image URL; defaults to the site-wide card. */
   ogImage?: string;
   /** Alt text for ogImage (og:image:alt). */
@@ -42,6 +44,7 @@ export const SiteLayout = ({
   title,
   description = "",
   path = "/",
+  canonicalPath,
   ogImage,
   ogImageAlt,
   ogType,
@@ -108,7 +111,9 @@ export const SiteLayout = ({
   useSiteHead(
     noindex
       ? { noindex: true }
-      : { canonical, alternates, jsonLd: [...structured, ...jsonLd] },
+      : canonicalPath
+        ? { canonical: absolute(canonicalPath), jsonLd: [...structured, ...jsonLd] }
+        : { canonical, alternates, jsonLd: [...structured, ...jsonLd] },
   );
 
   return (

@@ -60,6 +60,8 @@ export interface ArticleItem extends PageContent {
   image: string;
   /** Description of the share image (frontmatter `image_alt`). */
   imageAlt: string;
+  /** Frontmatter `canonical`: the site path of the post Google should index instead of this one (a fuller version of the same talk). "" = this post itself. */
+  canonical: string;
 }
 
 export interface EventItem {
@@ -114,6 +116,7 @@ export function getArticles(lang: SiteLang): ArticleItem[] {
       description: content.meta.description ?? "",
       image: content.meta.image ?? "",
       imageAlt: content.meta.image_alt ?? "",
+      canonical: content.meta.canonical ?? "",
     }))
     .sort((a, b) => b.date.localeCompare(a.date));
 }

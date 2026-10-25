@@ -83,6 +83,8 @@ export function getRoutes() {
         title: a.meta.title,
         description: a.meta.description,
         date: a.meta.date,
+        // A post whose `canonical` names another post stays live but out of the sitemap.
+        ...(a.meta.canonical ? { noindex: true } : {}),
       });
     }
   }

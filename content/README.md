@@ -74,6 +74,10 @@ image_alt: "תיאור קצר של התמונה"
 
 **Share image (`image`, `image_alt`):** every article gets its own social-share picture, 1200x630: the post's own photo or artwork with a white strip under it holding the article's name and the Sangha logo (Shahaf, 18.10). The name is the title up to the first " - ", or an optional `share_title` field when you want different wording; a long name wraps to two lines (up to about 12 words). Make it with `node scripts/share-image.mjs <slug> <picture, path from the repo root> [focus-y 0-100]` - it writes `public/media/articles/share/<slug>.jpg`; look at it, move the crop with focus-y if a head is cut. Set `image` to that path and `image_alt` to a short description of the picture. They become og:image (+ alt), twitter:image and the Article JSON-LD image; without `image` the post shares the site-wide card. The link checker fails the build if the file is missing.
 
+**Images:** an image's title becomes its caption - `![תיאור](/media/articles/x.jpg "כיתוב")`; start the title with `float-left |` or `float-right |` for a smaller picture beside the next paragraph.
+
+**Superseded post (`canonical`):** when a newer post covers the same talk more fully, add `canonical: /articles/<new-slug>` to the OLD post: its canonical link points to the new post and it leaves the sitemap, but stays readable at its address.
+
 The article appears automatically in the articles index (newest first) and gets its own page at `/he/articles/<filename-without-.md>`. Images: put files in `public/media/articles/` and embed with `![תיאור](/media/articles/file.jpg)`.
 
 **Embedding a YouTube video:** put the video's link alone on its own line (nothing else on that line) and it renders as an embedded player. A `t=`/`start=` seconds parameter in the link is respected. A link inside a sentence stays a normal link.

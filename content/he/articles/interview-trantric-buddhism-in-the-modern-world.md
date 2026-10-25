@@ -7,7 +7,10 @@ description: "בראיון זה, לאמה גלן נותן מבוא לבודהי�
 original_url: https://maitreya.org.il/he/articles/interview-trantric-buddhism-in-the-modern-world/
 image: /media/articles/share/interview-trantric-buddhism-in-the-modern-world.jpg
 image_alt: "לאמה גלן מולין צוחק בחדר העבודה שלו, מול מדף ספרים"
+canonical: /articles/tantric-buddhism-modern-world-lama-glenn
 ---
+*את דבריו של לאמה גלן בראיון הזה, ערוכים ומתורגמים לעברית במלואם, אפשר לקרוא כאן: [טנטרה בעולם המודרני - ראיון עם לאמה גלן](/articles/tantric-buddhism-modern-world-lama-glenn)*
+
 ראיון מעמיק של לאמה גלן מולין, עם גושה אובר מקהילת הלימוד הבינ״ל Vajra Mandala .
 
 בראיון זה, לאמה גלן נותן מבוא לבודהיזם טנטרי והרלוונטיות שלו לאנשים מודרניים בעולם המערבי. הוא מסביר את השלבים בדרך להארה כפי שלימד הבודהה, מהו בודהיזם טנטרי, ומה נדרש כדי לתרגל אותו.
