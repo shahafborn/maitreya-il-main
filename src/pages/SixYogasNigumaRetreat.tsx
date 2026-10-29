@@ -86,6 +86,9 @@ const SPLIT_TIER: RoomType = "EGN_2026_Quad_Split";
 /** Room for 4 at the full price with up to 8 payments (Shahaf, 21.10). Link only: `?ticket=<QUAD8_KEY>`. */
 const QUAD8_KEY = "shmone-k7d4";
 const QUAD8_TIER: RoomType = "EGN_2026_Quad_8";
+/** No lodging, the whole retreat (hidden from the page since 7.10). Link only: `?ticket=<NOLODGING_KEY>` (Shahaf, 29.10). */
+const NOLODGING_KEY = "bli-lina-p3x9";
+const NOLODGING_TIER: RoomType = "EGN_2026_NoLodging";
 
 /**
  * The machine-readable twin of the page: start and end from the arrival block
@@ -492,7 +495,7 @@ const SixYogasNigumaRetreat = () => {
   const testMode = searchParams.get("test") === TEST_KEY;
   const ticketKey = searchParams.get("ticket");
   // A tier reached by private link: the test ticket, the team offer, or the split-payment balance.
-  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : ticketKey === QUAD8_KEY ? QUAD8_TIER : "";
+  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : ticketKey === QUAD8_KEY ? QUAD8_TIER : ticketKey === NOLODGING_KEY ? NOLODGING_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   /** The form opens on the call-back view when the corner card sends people there. */

@@ -56,3 +56,14 @@ describe("Hebrew hidden 8-payment room-for-4 tier", () => {
     expect(tier!.openAmount).toBeFalsy();
   });
 });
+
+describe("Hebrew hidden no-lodging tier", () => {
+  const tier = registrationConfig.tiers.find((t) => t.id === "EGN_2026_NoLodging");
+
+  it("exists, is hidden, and is the fixed 1,950 NIS no-lodging price", () => {
+    expect(tier).toBeTruthy();
+    expect(tier!.hidden).toBe(true);
+    expect(tier!.priceValue).toBe(1950);
+    expect(tier!.openAmount).toBeFalsy();
+  });
+});
