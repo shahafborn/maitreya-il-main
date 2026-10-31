@@ -11,7 +11,7 @@ describe("Markdown video embeds", () => {
     );
     const iframe = container.querySelector("iframe");
     expect(iframe?.getAttribute("src")).toBe(
-      `https://iframe.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true`,
+      `https://player.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true`,
     );
   });
 
@@ -20,7 +20,7 @@ describe("Markdown video embeds", () => {
       <Markdown>{`https://iframe.mediadelivery.net/embed/782699/${GUID}?captions=he&autoplay=true`}</Markdown>,
     );
     expect(container.querySelector("iframe")?.getAttribute("src")).toBe(
-      `https://iframe.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true&captions=he`,
+      `https://player.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true&captions=he`,
     );
   });
 
@@ -29,7 +29,14 @@ describe("Markdown video embeds", () => {
       <Markdown>{`https://iframe.mediadelivery.net/embed/782699/${GUID}?captions=he&t=2067`}</Markdown>,
     );
     expect(container.querySelector("iframe")?.getAttribute("src")).toBe(
-      `https://iframe.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true&captions=he&t=2067`,
+      `https://player.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true&captions=he&t=2067`,
+    );
+  });
+
+  it("accepts a link on the new player host too", () => {
+    const { container } = render(<Markdown>{`https://player.mediadelivery.net/embed/782699/${GUID}?captions=he`}</Markdown>);
+    expect(container.querySelector("iframe")?.getAttribute("src")).toBe(
+      `https://player.mediadelivery.net/embed/782699/${GUID}?autoplay=false&preload=false&responsive=true&captions=he`,
     );
   });
 

@@ -35,7 +35,14 @@
 import { useEffect, type RefObject } from "react";
 import { trackMetaCustom } from "./metaPixel";
 
-export const BUNNY_ORIGIN = "https://iframe.mediadelivery.net";
+/**
+ * The Bunny player we embed: the new player (library setting PlayerVersion 2).
+ * Not the legacy `iframe.mediadelivery.net` one - that player (Plyr + hls.js)
+ * wipes the caption track's lines when it starts if the VTT loaded first, so
+ * Hebrew subtitles went missing on most loads (found and switched 31.10.2026).
+ * Same player.js postMessage protocol on both.
+ */
+export const BUNNY_ORIGIN = "https://player.mediadelivery.net";
 
 /** False where analytics must stay silent (see the file header). */
 export function videoTrackingAllowed(): boolean {

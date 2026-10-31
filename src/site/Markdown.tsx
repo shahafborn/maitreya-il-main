@@ -8,7 +8,7 @@ import ReactMarkdown from "react-markdown";
 import { VisitPromo } from "./VisitPromo";
 import { RetreatPromo, RetreatReminder } from "./RetreatPromo";
 import type { SiteLang } from "./content";
-import { useBunnyVideoTracking } from "@/lib/videoTracking";
+import { BUNNY_ORIGIN, useBunnyVideoTracking } from "@/lib/videoTracking";
 
 /**
  * Content files reference images as clean "/media/..." paths (editor-friendly,
@@ -69,9 +69,11 @@ const YT_RE =
  * (e.g. `...?captions=he` for a video whose Hebrew subtitles are a Bunny caption track, Ep9 18.10).
  * A `t=<seconds>` is kept too, so the player starts there (e.g. the second half of an interview).
  * Other query parameters are dropped; the player options below are fixed.
+ * The link may name either Bunny host; the page always loads the new player
+ * (BUNNY_ORIGIN - the legacy one lost the subtitles on most loads, 31.10.2026).
  */
 const BUNNY_RE =
-  /^https:\/\/iframe\.mediadelivery\.net\/embed\/(\d+)\/([0-9a-f-]{36})(?:\?\S*)?$/;
+  /^https:\/\/(?:iframe|player)\.mediadelivery\.net\/embed\/(\d+)\/([0-9a-f-]{36})(?:\?\S*)?$/;
 
 const BunnyEmbed = ({ url }: { url: string }) => {
   const m = url.match(BUNNY_RE);
@@ -85,7 +87,7 @@ const BunnyEmbed = ({ url }: { url: string }) => {
     <div id="video" className="aspect-video my-8 rounded-lg overflow-hidden shadow-md not-prose scroll-mt-24">
       <iframe
         ref={frameRef}
-        src={`https://iframe.mediadelivery.net/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true${captions ? `&captions=${captions}` : ""}${start ? `&t=${start}` : ""}`}
+        src={`${BUNNY_ORIGIN}/embed/${m[1]}/${m[2]}?autoplay=false&preload=false&responsive=true${captions ? `&captions=${captions}` : ""}${start ? `&t=${start}` : ""}`}
         title="Video"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
         allowFullScreen
