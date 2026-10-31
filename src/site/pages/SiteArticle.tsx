@@ -9,6 +9,7 @@ import { SiteLayout } from "../SiteLayout";
 import { Markdown } from "../Markdown";
 import { VisitPromo } from "../VisitPromo";
 import { RetreatReminder } from "../RetreatPromo";
+import { RelatedArticles } from "../RelatedArticles";
 import { useScrollToHash } from "../useScrollToHash";
 
 export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
@@ -86,6 +87,7 @@ export const SiteArticle = ({ lang }: { lang: SiteLang }) => {
         */}
         {!/^\[\[retreat-reminder\]\]$/m.test(article.body) && <RetreatReminder lang={lang} />}
         {!/^\[\[visit-promo\]\]$/m.test(article.body) && <VisitPromo lang={lang} />}
+        <RelatedArticles lang={lang} slug={slug} />
       </article>
     </SiteLayout>
   );
