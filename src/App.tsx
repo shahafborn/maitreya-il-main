@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import CourseEnrollmentGate from "./components/CourseEnrollmentGate";
 import { takePrerendered, releasePrerendered } from "./prerendered";
+import { ScrollToTop } from "./site/ScrollToTop";
 
 // Lazy-load course registration + admin + public event pages (code-split)
 const CourseRegister = lazy(() => import("./pages/CourseRegister"));
@@ -206,6 +207,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+        <ScrollToTop />
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
