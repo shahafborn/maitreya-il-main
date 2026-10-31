@@ -15,13 +15,15 @@ interface RetreatHeroProps {
   objectPosition?: string;
   /** Separate image shown on mobile only (hidden md+). Desktop still uses `image`. */
   mobileImage?: string;
+  /** Optional overlay on the picture, e.g. a CountdownBadge. */
+  badge?: ReactNode;
 }
 
 /**
  * Full-width hero image with gradient overlay and stacked title/subtitle/date.
  * Extracted from EinGediRetreatV2 hero section.
  */
-export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine, objectPosition, mobileImage }: RetreatHeroProps) => (
+export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine, objectPosition, mobileImage, badge }: RetreatHeroProps) => (
   <section className="relative overflow-hidden">
     {mobileImage ? (
       <>
@@ -32,6 +34,7 @@ export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine
       <img src={image} alt={imageAlt} className="w-full h-[57vh] md:h-[62vh] object-cover" style={objectPosition ? { objectPosition } : undefined} />
     )}
     <div className="absolute inset-0 bg-gradient-to-t from-black/70 md:from-black/70 via-black/45 md:via-black/40 via-[75%] to-black/20" />
+    {badge}
     <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
       <div
         className="max-w-4xl mx-auto text-center md:text-start"

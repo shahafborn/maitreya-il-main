@@ -25,6 +25,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { MapPin, MonitorPlay } from "lucide-react";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
+import { CountdownBadge } from "@/components/retreat/CountdownBadge";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
@@ -389,6 +390,7 @@ const HealingKundaliniRetreatEN = () => {
       footerText={`© ${new Date().getFullYear()} Maitreya Sangha Israel. All rights reserved.`}
     >
       <RetreatHero
+        badge={concluded ? null : <CountdownBadge startDate={eventJsonLd.startDate} lang="en" onClick={() => open()} />}
         image={hkrHero}
         mobileImage={hkrHeroMobile}
         imageAlt="Tibetan mural of yogis in meditation"

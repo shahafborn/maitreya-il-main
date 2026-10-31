@@ -27,6 +27,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { RetreatLayout } from "@/components/retreat/RetreatLayout";
+import { CountdownBadge } from "@/components/retreat/CountdownBadge";
 import { RetreatHero } from "@/components/retreat/RetreatHero";
 import { AboutSection } from "@/components/retreat/AboutSection";
 import { TeacherCard } from "@/components/retreat/TeacherCard";
@@ -313,6 +314,7 @@ const HealingKundaliniRetreat = () => {
       footerText={`© ${new Date().getFullYear()} מאיטרייה סנגהה ישראל. כל הזכויות שמורות.`}
     >
       <RetreatHero
+        badge={concluded ? null : <CountdownBadge startDate={eventJsonLd.startDate} lang="he" onClick={open} />}
         image={hkrHero}
         mobileImage={hkrHeroMobile}
         imageAlt="ציור קיר טיבטי של יוגים במדיטציה"

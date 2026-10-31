@@ -32,6 +32,7 @@ import { supabase } from "@/lib/supabase";
 import { trackMeta, generateEventId } from "@/lib/metaPixel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { UpcomingEvents } from "@/components/retreat/UpcomingEvents";
+import { CountdownBadge } from "@/components/retreat/CountdownBadge";
 import { hasEnded, todayInIsrael } from "@/site/today";
 import { RegistrationModal } from "@/components/retreat/RegistrationModal";
 import { InquirySection, type InquiryQuestion } from "@/components/retreat/InquirySection";
@@ -665,6 +666,8 @@ const SixYogasNigumaRetreat = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 md:from-black/70 via-black/35 md:via-black/40 via-[75%] to-transparent" />
         {earlyBird && <EarlyBirdBadge phase={earlyBird} onClick={() => openRegistration("EGN_2026_Quad")} />}
+        {/* Countdown to the first day; the early-bird badge owns this corner while it runs. */}
+        {!concluded && !earlyBird && <CountdownBadge startDate={eventJsonLd.startDate} lang="he" onClick={() => openRegistration()} />}
         <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
           <div className="max-w-4xl mx-auto text-center md:text-start" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}>
             <h1 className="text-[2.6rem] md:text-5xl lg:text-6xl font-bold text-white leading-none md:leading-tight mb-4" style={{ fontFamily: "'Playfair Display', 'Frank Ruhl Libre', serif" }}>

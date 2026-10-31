@@ -15,7 +15,8 @@ src/components/retreat/
   theme.ts                      Shared design tokens (colors, fonts)
   types.ts                      Shared TS types (Teacher, ScheduleDay, PricingTier, SEOConfig, RegistrationConfig)
   RetreatLayout.tsx             Outer wrapper: sticky nav, fonts, dir/lang, footer, SEO hook
-  RetreatHero.tsx               Full-width hero image + overlay + title/subtitle/date
+  RetreatHero.tsx               Full-width hero image + overlay + title/subtitle/date (optional `badge` overlay)
+  CountdownBadge.tsx            Round navy-and-gold "N days to the retreat" badge for the hero; hides itself from the first day
   SectionFrame.tsx              Cream/stone section wrapper + SectionTitle/SectionEyebrow helpers
   AboutSection.tsx              Frosted panel over bg photo with paragraphs
   TeacherCard.tsx               Photo + bio block (with `reversed` prop for alternating sides)
