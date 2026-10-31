@@ -22,20 +22,31 @@ interface RetreatHeroProps {
 /**
  * Full-width hero image with gradient overlay and stacked title/subtitle/date.
  * Extracted from EinGediRetreatV2 hero section.
+ *
+ * The picture is a minimum height, not a fixed one: the text sits at the bottom
+ * in normal flow, so a long title (the English Healing Kundalini page on a
+ * phone runs to five lines) grows the hero instead of spilling up under the
+ * site header. With a `badge`, phones keep the top clear for it (the badge is
+ * 108px tall at top-2); from md up the title is narrower than the picture and
+ * never reaches the corner.
  */
 export const RetreatHero = ({ image, imageAlt, title, subtitle, accent, dateLine, objectPosition, mobileImage, badge }: RetreatHeroProps) => (
-  <section className="relative overflow-hidden">
+  <section
+    className={`relative overflow-hidden flex flex-col justify-end ${
+      mobileImage ? "min-h-[60vh] md:min-h-[65vh]" : "min-h-[57vh] md:min-h-[62vh]"
+    }`}
+  >
     {mobileImage ? (
       <>
-        <img src={mobileImage} alt={imageAlt} className="w-full h-[60vh] object-cover md:hidden" />
-        <img src={image} alt={imageAlt} className="w-full h-[65vh] object-cover hidden md:block" style={objectPosition ? { objectPosition } : undefined} />
+        <img src={mobileImage} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover md:hidden" />
+        <img src={image} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover hidden md:block" style={objectPosition ? { objectPosition } : undefined} />
       </>
     ) : (
-      <img src={image} alt={imageAlt} className="w-full h-[57vh] md:h-[62vh] object-cover" style={objectPosition ? { objectPosition } : undefined} />
+      <img src={image} alt={imageAlt} className="absolute inset-0 w-full h-full object-cover" style={objectPosition ? { objectPosition } : undefined} />
     )}
     <div className="absolute inset-0 bg-gradient-to-t from-black/70 md:from-black/70 via-black/45 md:via-black/40 via-[75%] to-black/20" />
     {badge}
-    <div className="absolute bottom-0 inset-x-0 p-8 md:p-16">
+    <div className={`relative p-8 md:p-16 ${badge ? "pt-32 md:pt-16" : ""}`}>
       <div
         className="max-w-4xl mx-auto text-center md:text-start"
         style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}
