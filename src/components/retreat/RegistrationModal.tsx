@@ -388,7 +388,7 @@ export const RegistrationModal = ({
           ...(askFoodPref && { food_pref: foodPref }),
           ...(config.askPrevExp && { prev_exp: prevExp }),
           ...(config.askCity && { city }),
-          ...(config.askRideShare && { can_offer_ride: canOfferRide }),
+          ...(config.askRideShare && residential && { can_offer_ride: canOfferRide }),
           message,
           // Where the registrant came from: utm_* / fbclid, last and first touch (src/lib/attribution.ts)
           ...attributionPayload(),
@@ -931,7 +931,7 @@ export const RegistrationModal = ({
               </div>
             )}
 
-            {config.askRideShare && (
+            {config.askRideShare && residential && (
               <label className="flex items-start gap-3 cursor-pointer p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors">
                 <input
                   type="checkbox"
