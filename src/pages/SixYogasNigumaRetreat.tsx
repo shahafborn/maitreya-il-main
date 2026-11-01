@@ -185,7 +185,7 @@ export const registrationConfig: RegistrationConfig = {
   tiers: [
     { id: "EGN_2026_Quad", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 5 תשלומים", priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     // No-lodging ticket: hidden from the public page and the form since 7.10 (Shahaf). Kept as a hidden tier so its id stays valid in n8n.
-    { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 3 תשלומים", hidden: true, priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
+    { id: "EGN_2026_NoLodging", title: "ללא לינה, כל הריטריט", note: "כולל ארוחת צהריים וכיבוד - עד 4 תשלומים", hidden: true, priceDisplay: "1,950", priceValue: 1950, currencySymbol: "₪" },
     // Operations-team ticket: a room for TWO, full board, team price. Link only.
     { id: "EGN_2026_Team", title: "צוות תפעול הביקור - לינה בחדר ל-2", note: "6 לילות, ארוחות מלאות וכל השיעורים והתרגולים | עד 10 תשלומים", hidden: true, priceDisplay: "3,000", priceValue: 3000, currencySymbol: "₪" },
     // Split payment: the card balance of a room for 4 after 2,000 NIS by Bit. Link only.
