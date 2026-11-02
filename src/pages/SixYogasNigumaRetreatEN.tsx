@@ -636,8 +636,7 @@ const SixYogasNigumaRetreatEN = () => {
               <p>
                 During the retreat Lama Glenn will give the Vajrayogini
                 empowerment to the participants, and teach a short sadhana of
-                the Eleven Yogas of Vajrayogini - the daily practice that
-                accompanies the practitioner after the retreat.
+                the Eleven Yogas of Vajrayogini.
               </p>
             </div>
           </div>
