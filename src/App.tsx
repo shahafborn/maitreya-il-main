@@ -29,6 +29,7 @@ const UmaZubTri = lazy(() => import("./pages/UmaZubTri"));
 const YamantakaOnlineRetreat = lazy(() => import("./pages/YamantakaOnlineRetreat"));
 const DeathDyingEnlightenment = lazy(() => import("./pages/DeathDyingEnlightenment"));
 const LgInitiations2026 = lazy(() => import("./pages/LgInitiations2026"));
+const WhiteDakiniChulen2026 = lazy(() => import("./pages/WhiteDakiniChulen2026"));
 const HeartSutra2026 = lazy(() => import("./pages/HeartSutra2026"));
 const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 const SupportVisitDec2026 = lazy(() => import("./pages/SupportVisitDec2026"));
@@ -147,6 +148,7 @@ const AppRoutes = () => (
       <Route path="/events/death-dying-enlightenment" element={<DeathDyingEnlightenment />} />
       {/* Online initiations with Lama Glenn, White Dakini + Yamantaka, 2-4 Oct 2026 (Hebrew, public) */}
       <Route path="/events/white-dakini-yamantaka-initiations" element={<LgInitiations2026 />} />
+      <Route path="/events/white-dakini-chulen-practice" element={<WhiteDakiniChulen2026 />} />
       {/* The Heart Sutra with Lama Glenn - five-week online course, 4 Oct - 1 Nov 2026 (Hebrew, public) */}
       <Route path="/events/heart-sutra" element={<HeartSutra2026 />} />
 
