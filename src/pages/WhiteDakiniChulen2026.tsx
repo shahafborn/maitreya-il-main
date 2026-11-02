@@ -1,10 +1,11 @@
 /**
- * White Dakini Chulen practice with Drupon Chongwol-la (Hebrew / Zoom)
- * ====================================================================
+ * White Dakini Chulen practice - a teaching session with Drupon Chongwol-la (Hebrew / Zoom)
+ * ======================================================================================
  *
  * One session: Sat 7 Nov 2026, 13:00 Israel (20:00 Korea), on the Korean sangha's
  * Zoom, with Hebrew interpretation in a dedicated Zoom channel. A practice, not an
- * initiation - open to everyone. Recording available to registrants.
+ * initiation - open to everyone. Shahaf (2.11): a TEACHING session, in which
+ * Chongwol-la teaches the practice and gives the instructions for practising it. Recording available to registrants.
  *
  * Shahaf's calls (2.11.2026): free donation with 108 NIS suggested - one open-amount
  * option, prefilled with 108; every registration goes through payment.
@@ -59,7 +60,7 @@ const isOpen = () => israelNow() < CLOSES;
 const seo: SEOConfig = {
   title: "תרגול הצ׳ולן של הדאקיני הלבנה עם דרופון צ׳ונגוואל-לה | שבת 7.11.2026 | מאיטרייה סנגהה ישראל",
   description:
-    "מפגש תרגול אונליין של הצ׳ולן של הדאקיני הלבנה עם דרופון צ׳ונגוואל-לה, שבת 7 בנובמבר 2026, 13:00 שעון ישראל, כולל תרגום עברי בערוץ ייעודי בזום. פתוח לכולם, בדאנא.",
+    "מפגש לימוד אונליין עם דרופון צ׳ונגוואל-לה, שבו ילמד את תרגול הצ׳ולן של הדאקיני הלבנה וייתן הנחיות איך לתרגל אותו. שבת 7 בנובמבר 2026, 13:00 שעון ישראל, כולל תרגום עברי בערוץ ייעודי בזום. פתוח לכולם, בדאנא.",
   keywords:
     "צ׳ולן, הדאקיני הלבנה, דרופון צ׳ונגוואל-לה, תרגול, מיצוי התמצית, טנטרת היוגה העליונה, בודהיזם טיבטי, אונליין, זום, מאיטרייה סנגהה",
   url: PAGE_URL,
@@ -114,7 +115,7 @@ const ALL_TIERS: PricingTier[] = [
 ];
 
 const buildConfig = (): RegistrationConfig => ({
-  title: "הרשמה לתרגול",
+  title: "הרשמה למפגש הלימוד",
   subtitle: "תרגול הצ׳ולן של הדאקיני הלבנה | שבת 7.11.2026",
   webhookUrl: N8N_WEBHOOK_URL,
   contentName: "White Dakini Chulen Practice Nov 2026",
@@ -256,7 +257,7 @@ const WhiteDakiniChulen2026 = () => {
         mobileImage={whiteDakiniHeroMobile}
         imageAlt="הדאקיני הלבנה"
         title="תרגול הצ׳ולן של הדאקיני הלבנה"
-        subtitle="עם דרופון צ׳ונגוואל-לה"
+        subtitle="מפגש לימוד עם דרופון צ׳ונגוואל-לה"
         accent="אונליין | כולל תרגום עברי בערוץ ייעודי בזום"
         dateLine="שבת, 7 בנובמבר 2026 | 13:00 שעון ישראל"
         objectPosition="center 12%"
@@ -266,22 +267,22 @@ const WhiteDakiniChulen2026 = () => {
         <UpcomingEvents
           lang="he"
           currentUrl={PAGE_PATH}
-          ended={{ eyebrow: "התרגול התקיים", line: "מפגש התרגול התקיים בשבת, 7 בנובמבר 2026, וההרשמה סגורה." }}
+          ended={{ eyebrow: "המפגש התקיים", line: "מפגש הלימוד התקיים בשבת, 7 בנובמבר 2026, וההרשמה סגורה." }}
         />
       )}
 
       {/* ── Opening ── */}
       <SectionFrame tone="cream" maxWidth="md" size="md">
         <p className="text-lg md:text-xl leading-[1.9] text-center mb-8" style={{ color: RETREAT_THEME.BODY }}>
-          דרופון צ׳ונגוואל-לה מזמין את חברי מאיטרייה סנגהה ברחבי העולם למפגש תרגול אחד של הצ׳ולן של הדאקיני
-          הלבנה - אונליין, בזום של הסנגהה שלו, עם תרגום לעברית.
+          דרופון צ׳ונגוואל-לה מזמין את חברי מאיטרייה סנגהה ברחבי העולם למפגש לימוד של הצ׳ולן של הדאקיני הלבנה,
+          שבו ילמד את התרגול וייתן הנחיות איך לתרגל אותו - אונליין, בזום של הסנגהה שלו, עם תרגום לעברית.
         </p>
         {!concluded && <div className="text-center">{registerButton("להרשמה")}</div>}
       </SectionFrame>
 
       {/* ── The practice ── */}
       <SectionFrame tone="stone" maxWidth="lg">
-        <SectionTitle className="text-center mb-10">התרגול</SectionTitle>
+        <SectionTitle className="text-center mb-10">הלימוד</SectionTitle>
         <article className="rounded-2xl p-7 md:p-10 border shadow-sm max-w-3xl mx-auto"
           style={{ backgroundColor: RETREAT_THEME.CREAM, borderColor: "rgba(201,169,97,0.35)" }}>
           <h3 className="text-2xl md:text-3xl font-bold mb-2"
@@ -296,7 +297,8 @@ const WhiteDakiniChulen2026 = () => {
             הימים. במסורת הדאלאי לאמות, תרגול הדאקיני הלבנה מאפשר את תרגול הצ׳ולן - תרגול מיצוי התמצית האנרגטית.
           </p>
           <p className="text-base md:text-lg leading-[1.85] mb-8" style={{ color: RETREAT_THEME.BODY }}>
-            זהו מפגש תרגול, לא חניכה, והוא פתוח לכולם.
+            זהו מפגש לימוד, לא חניכה, והוא פתוח לכולם: דרופון צ׳ונגוואל-לה ילמד את תרגול הצ׳ולן של הדאקיני הלבנה וייתן
+            הנחיות מעשיות איך לתרגל אותו בעצמכם.
           </p>
           {/* What Chulen is - drawn from Lama Glenn's Chulen article on the site, linked below. */}
           <h4 className="text-xl md:text-2xl font-bold mb-3"
@@ -325,7 +327,7 @@ const WhiteDakiniChulen2026 = () => {
         <TeacherCard
           name="דרופון צ׳ונגוואל-לה"
           photo={druponPhoto}
-          bio="דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה בהדרכת מורה השורש שלו, לאמה גלן. התרגול מתקיים בזום של הסנגהה שלו."
+          bio="דרופון צ׳ונגוואל-לה הוא מדריך הריטריטים של לאמה גלן ומורה מיומן לטנטרה בודהיסטית וטומו. הוא נולד בדרום קוריאה וגדל בארה״ב, ושימש כנזיר במסורת הזן במשך 16 שנה. מאז 2007 הוא מתרגל טנטרה מהאיאנה בהדרכת מורה השורש שלו, לאמה גלן. הלימוד מתקיים בזום של הסנגהה שלו."
           size="lg"
         />
       </SectionFrame>
@@ -355,8 +357,8 @@ const WhiteDakiniChulen2026 = () => {
       {!concluded && open && (
         <FinalCTA
           bgImage={whiteDakiniHero}
-          title="הצטרפו לתרגול"
-          body="תרגול הצ׳ולן של הדאקיני הלבנה עם דרופון צ׳ונגוואל-לה, שבת 7 בנובמבר, 13:00 שעון ישראל, אונליין, כולל תרגום עברי בערוץ ייעודי בזום."
+          title="הצטרפו למפגש הלימוד"
+          body="מפגש לימוד עם דרופון צ׳ונגוואל-לה - תרגול הצ׳ולן של הדאקיני הלבנה והנחיות איך לתרגל אותו. שבת 7 בנובמבר, 13:00 שעון ישראל, אונליין, כולל תרגום עברי בערוץ ייעודי בזום."
           ctaLabel="להרשמה"
           onCtaClick={openForm}
         />
@@ -401,9 +403,9 @@ const WhiteDakiniChulen2026 = () => {
           status={paymentStatus}
           dir="rtl"
           successTitle="ההרשמה בוצעה בהצלחה!"
-          successBody="תודה שנרשמתם לתרגול הצ׳ולן של הדאקיני הלבנה. אישור הרשמה יישלח אליכם במייל, וקישור הזום לפני המפגש."
+          successBody="תודה שנרשמתם למפגש הלימוד של תרגול הצ׳ולן של הדאקיני הלבנה. אישור הרשמה יישלח אליכם במייל, וקישור הזום לפני המפגש."
           successDetails={{
-            heading: "פרטי התרגול",
+            heading: "פרטי המפגש",
             lines: [
               "שבת, 7 בנובמבר 2026 | 13:00 שעון ישראל",
               "בזום, בתרגום לעברית",
@@ -412,7 +414,7 @@ const WhiteDakiniChulen2026 = () => {
           failedTitle="אירעה שגיאה בתשלום"
           failedBody="התשלום לא הושלם. ניתן לנסות שוב או ליצור קשר איתנו."
           closeLabel="סגור"
-          failedReturnLabel="חזרה לדף התרגול"
+          failedReturnLabel="חזרה לדף המפגש"
           contactEmail={CONTACT_EMAIL}
           onClose={closePaymentStatus}
         />
