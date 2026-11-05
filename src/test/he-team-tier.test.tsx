@@ -67,3 +67,14 @@ describe("Hebrew hidden no-lodging tier", () => {
     expect(tier!.openAmount).toBeFalsy();
   });
 });
+
+describe("Hebrew hidden professional-training room-for-4 tier", () => {
+  const tier = registrationConfig.tiers.find((t) => t.id === "EGN_2026_Quad_Training");
+
+  it("exists, is hidden, and is the fixed 3,950 NIS room-for-4 price", () => {
+    expect(tier).toBeTruthy();
+    expect(tier!.hidden).toBe(true);
+    expect(tier!.priceValue).toBe(3950);
+    expect(tier!.openAmount).toBeFalsy();
+  });
+});

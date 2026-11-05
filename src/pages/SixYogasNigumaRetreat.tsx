@@ -93,6 +93,9 @@ const NOLODGING_TIER: RoomType = "EGN_2026_NoLodging";
 /** Zoom, the whole retreat, 650 NIS, up to 5 payments (Shahaf, 1.11). Link only: `?ticket=<ZOOM_KEY>`. */
 const ZOOM_KEY = "zoom-h6t2";
 const ZOOM_TIER: RoomType = "EGN_2026_Zoom";
+/** Room for 4, full price, 5 payments, invoice line "השתלמות מקצועית" (Shahaf, 5.11). Link only: `?ticket=<TRAINING_KEY>`. */
+const TRAINING_KEY = "hishtalmut-v5c8";
+const TRAINING_TIER: RoomType = "EGN_2026_Quad_Training";
 
 /**
  * The machine-readable twin of the page: start and end from the arrival block
@@ -196,6 +199,8 @@ export const registrationConfig: RegistrationConfig = {
     // Room for 4, full price, up to 8 payments. Link only.
     { id: "EGN_2026_Quad_8", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 8 תשלומים", hidden: true, priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     // Zoom, the whole retreat (Hebrew). Link only.
+    // Room for 4 with the invoice reading "השתלמות מקצועית" (employer / training-fund reimbursement). Link only.
+    { id: "EGN_2026_Quad_Training", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 5 תשלומים", hidden: true, priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     { id: "EGN_2026_Zoom", title: "השתתפות בזום, כל הריטריט", note: "כל המפגשים בשידור חי, כולל ההקלטות | עד 5 תשלומים", hidden: true, priceDisplay: "650", priceValue: 650, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
@@ -220,7 +225,7 @@ export const registrationConfig: RegistrationConfig = {
   askGender: true,
   askFoodPref: true,
   // Everyone but the Zoom ticket comes to Ein Gedi: only they get the room, meal and ride questions.
-  residentialTierIds: ["EGN_2026_Quad", "EGN_2026_NoLodging", "EGN_2026_Team", "EGN_2026_Quad_Split", "EGN_2026_Quad_8", "EGN_2026_Test"],
+  residentialTierIds: ["EGN_2026_Quad", "EGN_2026_NoLodging", "EGN_2026_Team", "EGN_2026_Quad_Split", "EGN_2026_Quad_8", "EGN_2026_Quad_Training", "EGN_2026_Test"],
   askPrevExp: true,
   // Ein Gedi is a two-hour drive for most people: ask where they live and who
   // can offer a ride, and the organisers build the ride list from the sheet.
@@ -289,7 +294,7 @@ const registrationCopy = {
 };
 
 
-type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Quad_Split" | "EGN_2026_Quad_8" | "EGN_2026_Zoom" | "EGN_2026_Test" | "";
+type RoomType = "EGN_2026_Quad" | "EGN_2026_NoLodging" | "EGN_2026_Team" | "EGN_2026_Quad_Split" | "EGN_2026_Quad_8" | "EGN_2026_Quad_Training" | "EGN_2026_Zoom" | "EGN_2026_Test" | "";
 
 
 
@@ -503,7 +508,7 @@ const SixYogasNigumaRetreat = () => {
   const testMode = searchParams.get("test") === TEST_KEY;
   const ticketKey = searchParams.get("ticket");
   // A tier reached by private link: the test ticket, the team offer, or the split-payment balance.
-  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : ticketKey === QUAD8_KEY ? QUAD8_TIER : ticketKey === NOLODGING_KEY ? NOLODGING_TIER : ticketKey === ZOOM_KEY ? ZOOM_TIER : "";
+  const linkTier: RoomType = testMode ? TEST_TIER : ticketKey === TEAM_KEY ? TEAM_TIER : ticketKey === SPLIT_KEY ? SPLIT_TIER : ticketKey === QUAD8_KEY ? QUAD8_TIER : ticketKey === NOLODGING_KEY ? NOLODGING_TIER : ticketKey === ZOOM_KEY ? ZOOM_TIER : ticketKey === TRAINING_KEY ? TRAINING_TIER : "";
   const [modalOpen, setModalOpen] = useState(false);
   const [preselectedRoom, setPreselectedRoom] = useState<RoomType>("");
   /** The form opens on the call-back view when the corner card sends people there. */
