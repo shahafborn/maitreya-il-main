@@ -63,6 +63,8 @@ export interface PricingTier {
    * for scholarship recipients and board members).
    */
   hidden?: boolean;
+  /** A line shown prominently under a link-locked hidden tier, e.g. what the receipt will say. */
+  lockedHighlight?: string;
   /**
    * Puts a hidden tier in a named group (a key of RegistrationConfig.tierGroups).
    * A link that opens the form on that group offers its tiers as a choice among

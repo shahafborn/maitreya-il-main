@@ -653,6 +653,11 @@ export const RegistrationModal = ({
                     {!lockedTier.openAmount && lockedTier.note && (
                       <p className="text-xs mt-1 text-muted-foreground">{lockedTier.note}</p>
                     )}
+                    {lockedTier.lockedHighlight && (
+                      <p className="text-sm font-semibold mt-2" style={{ color: RETREAT_THEME.GOLD_DARK }}>
+                        {lockedTier.lockedHighlight}
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <SelectWrapper>

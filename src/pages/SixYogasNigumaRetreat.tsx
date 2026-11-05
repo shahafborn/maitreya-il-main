@@ -200,7 +200,7 @@ export const registrationConfig: RegistrationConfig = {
     { id: "EGN_2026_Quad_8", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 8 תשלומים", hidden: true, priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     // Zoom, the whole retreat (Hebrew). Link only.
     // Room for 4 with the invoice reading "השתלמות מקצועית" (employer / training-fund reimbursement). Link only.
-    { id: "EGN_2026_Quad_Training", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 5 תשלומים", hidden: true, priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
+    { id: "EGN_2026_Quad_Training", title: "לינה בחדר ל-4, כל הריטריט", note: "6 לילות, ארוחות מלאות | עד 5 תשלומים", lockedHighlight: "בקבלה ייכתב: השתלמות מקצועית", hidden: true, priceDisplay: "3,950", priceValue: 3950, currencySymbol: "₪" },
     { id: "EGN_2026_Zoom", title: "השתתפות בזום, כל הריטריט", note: "כל המפגשים בשידור חי, כולל ההקלטות | עד 5 תשלומים", hidden: true, priceDisplay: "650", priceValue: 650, currencySymbol: "₪" },
     {
       id: "EGN_2026_Test",
