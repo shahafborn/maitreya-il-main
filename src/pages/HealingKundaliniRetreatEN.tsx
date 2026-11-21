@@ -86,7 +86,7 @@ const seo: SEOConfig = {
   keywords:
     "retreat, healing, kundalini, tummo, Amitayus, Hayagriva, Buddhism, tantra, Lama Glenn, Palden Lhamo, meditation, Zoom, Maitreya Sangha",
   url: "https://maitreya.org.il/events/en/healing-kundalini-retreat",
-  ogImage: "https://maitreya.org.il/og-healing-kundalini-retreat.jpg", // the Hebrew card is visual only
+  ogImage: "https://maitreya.org.il/og-healing-kundalini-retreat-en.jpg", // English Amitayus poster card (21.11.2026)
   locale: "en_US",
 };
 
@@ -319,7 +319,7 @@ const whatsIncluded = [
   "The Palden Lhamo empowerment",
   "Practical guidance and guided practice",
   "Recordings of all sessions, to watch or review in your own time",
-  "Live translation on Zoom into Russian, Spanish and Portuguese",
+  "Live translation on Zoom into Russian and Spanish",
   "Opportunity to continue practicing in a weekly practice group after the retreat",
 ];
 
@@ -567,7 +567,7 @@ const HealingKundaliniRetreatEN = () => {
           </div>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>
             The retreat is taught in English, with live translation on Zoom
-            into Russian, Spanish and Portuguese. It is suitable for beginners
+            into Russian and Spanish. It is suitable for beginners
             and advanced practitioners alike.
           </p>
           <p className="text-base" style={{ color: RETREAT_THEME.WARM_GRAY }}>

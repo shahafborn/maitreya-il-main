@@ -343,7 +343,7 @@ const whatsIncluded = [
   "The Vajrayogini empowerment",
   "Recordings of all sessions, to watch or review in your own time",
   "Yoga and meditation sessions",
-  "Teaching in English, with live translation on Zoom into Russian, Spanish and Portuguese (and Hebrew for local participants)",
+  "Teaching in English, with live translation on Zoom into Russian and Spanish (and Hebrew for local participants)",
   "For guests at Ein Gedi: 6 nights in a shared 4-bed room and full board - breakfast, lunch and dinner",
 ];
 
@@ -769,7 +769,7 @@ const SixYogasNigumaRetreatEN = () => {
 
           <p className="text-base" style={{ color: "#8C8279" }}>
             The retreat is taught in English, with live translation on Zoom
-            into Russian, Spanish and Portuguese.
+            into Russian and Spanish.
           </p>
           <p className="text-base" style={{ color: "#8C8279" }}>
             A Zoom link will be sent after registration. A detailed schedule
