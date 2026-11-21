@@ -82,9 +82,9 @@ const seo: SEOConfig = {
   title:
     "Tantric Meditations and Kundalini Practices for Healing with Lama Glenn | December 2-4, 2026 | Maitreya Sangha Israel",
   description:
-    "Three days of teaching and practice of the healing methods of Tantric Buddhism with Lama Glenn Mullin, including the Palden Lhamo empowerment. In person in Tel Aviv or live on Zoom, December 2-4, 2026.",
+    "Three days of the Amitayus-Hayagriva tummo practice for healing and the Palden Lhamo empowerment, with Lama Glenn Mullin. In person in Tel Aviv or live on Zoom, December 2-4, 2026.",
   keywords:
-    "retreat, healing, kundalini, tummo, Buddhism, tantra, Lama Glenn, Palden Lhamo, meditation, Zoom, Maitreya Sangha",
+    "retreat, healing, kundalini, tummo, Amitayus, Hayagriva, Buddhism, tantra, Lama Glenn, Palden Lhamo, meditation, Zoom, Maitreya Sangha",
   url: "https://maitreya.org.il/events/en/healing-kundalini-retreat",
   ogImage: "https://maitreya.org.il/og-healing-kundalini-retreat.jpg", // the Hebrew card is visual only
   locale: "en_US",
@@ -315,8 +315,9 @@ const sessionRows = [
 
 const whatsIncluded = [
   "Three days of teaching and practice with Lama Glenn Mullin, in person in Tel Aviv or live on Zoom",
+  "The Amitayus-Hayagriva tummo practice for healing",
   "The Palden Lhamo empowerment",
-  "Practical guidance for the healing and kundalini (tummo) practices",
+  "Practical guidance and guided practice",
   "Recordings of all sessions, to watch or review in your own time",
   "Live translation on Zoom into Russian, Spanish and Portuguese",
   "Opportunity to continue practicing in a weekly practice group after the retreat",
@@ -395,7 +396,7 @@ const HealingKundaliniRetreatEN = () => {
         mobileImage={hkrHeroMobile}
         imageAlt="Tibetan mural of yogis in meditation"
         title="Tantric Meditations and Kundalini Practices for Healing"
-        subtitle="Three days of teaching and practice of the healing methods of Tantric Buddhism, including the Palden Lhamo empowerment"
+        subtitle="Three days of the Amitayus-Hayagriva tummo practice for healing and the Palden Lhamo empowerment"
         accent="with Lama Glenn"
         dateLine="December 2-4, 2026 | Antakarana Center, Tel Aviv | In Person or Live on Zoom"
         objectPosition="62% 40%"
@@ -421,7 +422,7 @@ const HealingKundaliniRetreatEN = () => {
           "The Buddhist tradition is rich in knowledge and in profound meditation practices for healing body and mind. Buddhism recognizes the deep relationship between body and mind, and between a person and their environment - and the ways these inter-relations contribute to health or to illness.",
           "Over the generations in Asia, practitioners, physicians and healers have used the Buddhist healing methods to heal themselves and others: healing the mind of negative emotions and harmful tendencies, and healing the body through deep yogic work with the body's inner energetic systems.",
           "In Tibetan Buddhism, many traditions of these yogic practices are still taught today. They are known as Tummo or Chandali. In these practices one learns to work directly with the energies of the body (the prana, or chi) and with its essences (the bindu, or ojas): to balance and purify the nervous system and the hormonal system, to release patterns that do not serve us, and to reach deep, healing states of mind.",
-          "In this retreat Lama Glenn will teach the yogic and meditative practices of Buddhist healing, as they have been taught for more than a thousand years in the Tibetan tradition and especially in the tradition of the Dalai Lamas. The three days will include teaching, practical guidance, guided practice, and the Palden Lhamo empowerment.",
+          "In this retreat Lama Glenn will teach the Amitayus-Hayagriva tummo practice for healing - Amitayus, the Buddha of long life, joined with the inner-heat yoga of the Tibetan tradition - as these practices have been taught for more than a thousand years, especially in the tradition of the Dalai Lamas. The three days will include teaching, practical guidance, guided practice, and the Palden Lhamo empowerment.",
           "The retreat is suitable for beginners and advanced practitioners alike, and is taught in English. You can join in person at the Antakarana Center in Tel Aviv, or live on Zoom from anywhere in the world.",
         ]}
       />
@@ -618,7 +619,7 @@ const HealingKundaliniRetreatEN = () => {
       <FinalCTA
         bgImage={prayerFlagsBg}
         title="Join the Retreat"
-        body="Three days of deep teaching and practice of the healing methods of Tantric Buddhism, with the Palden Lhamo empowerment - in person in Tel Aviv or live on Zoom"
+        body="Three days of the Amitayus-Hayagriva tummo practice for healing and the Palden Lhamo empowerment - in person in Tel Aviv or live on Zoom"
         ctaLabel="Register for the Retreat"
         onCtaClick={() => open()}
         footnote="Recordings included"
