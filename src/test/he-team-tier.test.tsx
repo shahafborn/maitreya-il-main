@@ -78,3 +78,15 @@ describe("Hebrew hidden professional-training room-for-4 tier", () => {
     expect(tier!.openAmount).toBeFalsy();
   });
 });
+
+describe("Hebrew hidden day-visitor tier (Sun-Wed, no room, lunch and dinner)", () => {
+  const tier = registrationConfig.tiers.find((t) => t.id === "EGN_2026_DayVisit_4");
+
+  it("exists, is hidden, is the fixed 800 NIS price, and comes to Ein Gedi", () => {
+    expect(tier).toBeTruthy();
+    expect(tier!.hidden).toBe(true);
+    expect(tier!.priceValue).toBe(800);
+    expect(tier!.openAmount).toBeFalsy();
+    expect(registrationConfig.residentialTierIds).toContain("EGN_2026_DayVisit_4");
+  });
+});
