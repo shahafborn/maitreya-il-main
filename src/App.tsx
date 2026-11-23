@@ -34,6 +34,7 @@ const HeartSutra2026 = lazy(() => import("./pages/HeartSutra2026"));
 const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 const SupportVisitDec2026 = lazy(() => import("./pages/SupportVisitDec2026"));
 const SupportVisitDec2026EN = lazy(() => import("./pages/SupportVisitDec2026EN"));
+const RideOfferTelAviv = lazy(() => import("./pages/RideOfferTelAviv"));
 
 // Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
 const SiteHome = lazy(() => import("./site/pages/SiteHome"));
@@ -160,6 +161,8 @@ const AppRoutes = () => (
       {/* Support the December 2026 visit: volunteering + dana for the visit itself. */}
       <Route path="/support-visit-dec-2026" element={<SupportVisitDec2026 />} />
       <Route path="/en/support-visit-dec-2026" element={<SupportVisitDec2026EN />} />
+      {/* Hidden ride-offer form for the Tel Aviv retreat (2-4.12.2026) - link shared only in the participants' WhatsApp group */}
+      <Route path="/tremp-tlv-k7q3" element={<RideOfferTelAviv />} />
 
       {/* Terms pages (migrated from WordPress): linked from the registration forms.
           All of them are noindex - they are legal small print reached from a form,

@@ -98,6 +98,9 @@ export function getRoutes() {
   // (Shahaf, 2026-09-16), and tied to this visit rather than standing, so it retires with it.
   // English twin since 2026-09-21: donations only (USD), linked from the English newsletter.
   routes.push({ path: "/support-visit-dec-2026", lang: "he", alternates: { he: "/support-visit-dec-2026", en: "/en/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
+  // Hidden ride-offer form for the Tel Aviv retreat (2-4.12.2026): pre-rendered so the link works,
+  // but noindex and out of the sitemap - shared only in the participants' WhatsApp group. Retire after 4.12.
+  routes.push({ path: "/tremp-tlv-k7q3", lang: "he", alternates: { he: "/tremp-tlv-k7q3" }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
   routes.push({ path: "/en/support-visit-dec-2026", lang: "en", alternates: { he: "/support-visit-dec-2026", en: "/en/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
   const retreat = (he, en, priority = 0.8) => {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
