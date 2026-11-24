@@ -35,6 +35,7 @@ const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 const SupportVisitDec2026 = lazy(() => import("./pages/SupportVisitDec2026"));
 const SupportVisitDec2026EN = lazy(() => import("./pages/SupportVisitDec2026EN"));
 const RideOfferTelAviv = lazy(() => import("./pages/RideOfferTelAviv"));
+const TablePay = lazy(() => import("./pages/TablePay"));
 
 // Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
 const SiteHome = lazy(() => import("./site/pages/SiteHome"));
@@ -163,6 +164,17 @@ const AppRoutes = () => (
       <Route path="/en/support-visit-dec-2026" element={<SupportVisitDec2026EN />} />
       {/* Hidden ride-offer form for the Tel Aviv retreat (2-4.12.2026) - link shared only in the participants' WhatsApp group */}
       <Route path="/tremp-tlv-k7q3" element={<RideOfferTelAviv />} />
+      {/* QR signs at the December retreats: donation per retreat + book table (hidden, noindex). Retire after 12.12. */}
+      <Route path="/qr/dana-antakarana" element={<TablePay slug="dana-antakarana" lang="he" />} />
+      <Route path="/en/qr/dana-antakarana" element={<TablePay slug="dana-antakarana" lang="en" />} />
+      <Route path="/qr/dana-ein-gedi" element={<TablePay slug="dana-ein-gedi" lang="he" />} />
+      <Route path="/en/qr/dana-ein-gedi" element={<TablePay slug="dana-ein-gedi" lang="en" />} />
+      <Route path="/qr/book-buddhism" element={<TablePay slug="book-buddhism" lang="he" />} />
+      <Route path="/en/qr/book-buddhism" element={<TablePay slug="book-buddhism" lang="en" />} />
+      <Route path="/qr/book-tantra-he" element={<TablePay slug="book-tantra-he" lang="he" />} />
+      <Route path="/en/qr/book-tantra-he" element={<TablePay slug="book-tantra-he" lang="en" />} />
+      <Route path="/qr/book-tantra-en" element={<TablePay slug="book-tantra-en" lang="he" />} />
+      <Route path="/en/qr/book-tantra-en" element={<TablePay slug="book-tantra-en" lang="en" />} />
 
       {/* Terms pages (migrated from WordPress): linked from the registration forms.
           All of them are noindex - they are legal small print reached from a form,

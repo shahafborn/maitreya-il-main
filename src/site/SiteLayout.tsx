@@ -34,6 +34,8 @@ interface SiteLayoutProps {
   jsonLd?: Array<Record<string, unknown>>;
   /** Error pages: no canonical/alternates, robots noindex. */
   noindex?: boolean;
+  /** Standalone pages (the QR payment pages at the retreats): no site header or footer. */
+  bare?: boolean;
   children: ReactNode;
 }
 
@@ -50,6 +52,7 @@ export const SiteLayout = ({
   ogType,
   jsonLd = [],
   noindex = false,
+  bare = false,
   children,
 }: SiteLayoutProps) => {
   const dir = lang === "he" ? "rtl" : "ltr";
@@ -118,9 +121,9 @@ export const SiteLayout = ({
 
   return (
     <div dir={dir} lang={lang} className="min-h-screen flex flex-col bg-background text-foreground font-body">
-      <SiteHeader lang={lang} />
+      {!bare && <SiteHeader lang={lang} />}
       <main className="flex-1">{children}</main>
-      <SiteFooter lang={lang} />
+      {!bare && <SiteFooter lang={lang} />}
     </div>
   );
 };

@@ -101,6 +101,13 @@ export function getRoutes() {
   // Hidden ride-offer form for the Tel Aviv retreat (2-4.12.2026): pre-rendered so the link works,
   // but noindex and out of the sitemap - shared only in the participants' WhatsApp group. Retire after 4.12.
   routes.push({ path: "/tremp-tlv-k7q3", lang: "he", alternates: { he: "/tremp-tlv-k7q3" }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
+  // QR signs at the December retreats (Shahaf, 2026-11-24): donation per retreat + the book table.
+  // Pre-rendered so the printed QR codes work; noindex, out of the sitemap. Retire after 12.12.2026.
+  for (const slug of ["dana-antakarana", "dana-ein-gedi", "book-buddhism", "book-tantra-he", "book-tantra-en"]) {
+    const he = `/qr/${slug}`, en = `/en/qr/${slug}`;
+    routes.push({ path: he, lang: "he", alternates: { he, en }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
+    routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
+  }
   routes.push({ path: "/en/support-visit-dec-2026", lang: "en", alternates: { he: "/support-visit-dec-2026", en: "/en/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
   const retreat = (he, en, priority = 0.8) => {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
