@@ -6,7 +6,7 @@
  *   - a donation per retreat (open amount): Antakarana Tel Aviv 2-4.12, Ein Gedi 6-12.12
  *   - the book table (same signs at both retreats), with a copies count:
  *     How to Find the Buddha within You (Louis Hebert) 45, Introduction to Tantra
- *     Hebrew 75, Introduction to Tantra English 75.
+ *     Hebrew 65, Introduction to Tantra English 65 (was 75 until 26.11.2026).
  * Each page in Hebrew (/qr/<slug>) and English (/en/qr/<slug>). Hidden: noindex,
  * out of the sitemap, linked from nowhere but the signs.
  *
@@ -84,7 +84,7 @@ export const TABLE_ITEMS: TableItem[] = [
   {
     slug: "book-tantra-he",
     code: "TABLE_BOOK_TANTRA_HE",
-    price: 75,
+    price: 65,
     kicker: BOOK_KICKER,
     title: { he: "מבוא לטנטרה", en: "Introduction to Tantra" },
     lines: [{ he: "לאמה גלן מולין · הספר בעברית", en: "Lama Glenn Mullin · Hebrew edition" }],
@@ -92,7 +92,7 @@ export const TABLE_ITEMS: TableItem[] = [
   {
     slug: "book-tantra-en",
     code: "TABLE_BOOK_TANTRA_EN",
-    price: 75,
+    price: 65,
     kicker: BOOK_KICKER,
     title: { he: "Introduction to Tantra", en: "Introduction to Tantra" },
     lines: [{ he: "לאמה גלן מולין · הספר באנגלית", en: "Lama Glenn Mullin · English edition" }],

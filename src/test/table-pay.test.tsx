@@ -45,11 +45,11 @@ describe("TablePay", () => {
     );
     page("book-tantra-he", "he");
     expect(screen.getByText("מבוא לטנטרה")).toBeTruthy();
-    expect(screen.getByTestId("total").textContent).toBe("75 ₪");
+    expect(screen.getByTestId("total").textContent).toBe("65 ₪");
     fireEvent.click(screen.getByLabelText("+"));
     fireEvent.click(screen.getByLabelText("+"));
     expect(screen.getByTestId("copies").textContent).toBe("3");
-    expect(screen.getByTestId("total").textContent).toBe("225 ₪");
+    expect(screen.getByTestId("total").textContent).toBe("195 ₪");
     fill("Test Person", "t@example.com");
     fireEvent.submit(document.querySelector("form")!);
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
