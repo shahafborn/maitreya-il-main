@@ -35,6 +35,7 @@ const WeeklyPractices = lazy(() => import("./pages/WeeklyPractices"));
 const SupportVisitDec2026 = lazy(() => import("./pages/SupportVisitDec2026"));
 const SupportVisitDec2026EN = lazy(() => import("./pages/SupportVisitDec2026EN"));
 const RideOfferTelAviv = lazy(() => import("./pages/RideOfferTelAviv"));
+const RideOfferEinGedi = lazy(() => import("./pages/RideOfferEinGedi"));
 const TablePay = lazy(() => import("./pages/TablePay"));
 
 // Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
@@ -164,6 +165,8 @@ const AppRoutes = () => (
       <Route path="/en/support-visit-dec-2026" element={<SupportVisitDec2026EN />} />
       {/* Hidden ride-offer form for the Tel Aviv retreat (2-4.12.2026) - link shared only in the participants' WhatsApp group */}
       <Route path="/tremp-tlv-k7q3" element={<RideOfferTelAviv />} />
+      {/* Hidden ride-offer form for the Ein Gedi retreat (6-12.12.2026) - link shared only with the participants */}
+      <Route path="/tremp-egn-w6r9" element={<RideOfferEinGedi />} />
       {/* QR signs at the December retreats: donation per retreat + book table (hidden, noindex). Retire after 12.12. */}
       <Route path="/qr/dana-antakarana" element={<TablePay slug="dana-antakarana" lang="he" />} />
       <Route path="/en/qr/dana-antakarana" element={<TablePay slug="dana-antakarana" lang="en" />} />
