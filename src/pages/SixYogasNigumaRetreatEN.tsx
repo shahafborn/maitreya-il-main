@@ -383,7 +383,7 @@ const scheduleBlocks = [
   {
     days: "Saturday, December 12",
     practice: "Closing",
-    times: "Morning: 9:30 AM-12:30 PM | Retreat ends: 3:00 PM",
+    times: "Morning: 9:30 AM-12:30 PM | Closing session: 1:30-3:00 PM | Retreat ends: 3:00 PM",
   },
 ];
 
@@ -753,8 +753,11 @@ const SixYogasNigumaRetreatEN = () => {
             <p className="mb-2">
               Morning: 02:30 EST (New York) / 07:30 GMT (London) / 09:30 IST (Israel) / 16:30 KST (Korea)
             </p>
-            <p>
+            <p className="mb-2">
               Afternoon: 07:30 EST (New York) / 12:30 GMT (London) / 14:30 IST (Israel) / 21:30 KST (Korea)
+            </p>
+            <p>
+              Saturday closing session: 06:30 EST (New York) / 11:30 GMT (London) / 13:30 IST (Israel) / 20:30 KST (Korea), ending 15:00 IST
             </p>
           </div>
 
