@@ -37,6 +37,8 @@ const SupportVisitDec2026EN = lazy(() => import("./pages/SupportVisitDec2026EN")
 const RideOfferTelAviv = lazy(() => import("./pages/RideOfferTelAviv"));
 const RideOfferEinGedi = lazy(() => import("./pages/RideOfferEinGedi"));
 const TablePay = lazy(() => import("./pages/TablePay"));
+const QrCheckin = lazy(() => import("./pages/QrCheckin"));
+const QrForward = lazy(() => import("./pages/QrForward"));
 
 // Site pages (WordPress-replacement, /he + /en trees) - see content/README.md
 const SiteHome = lazy(() => import("./site/pages/SiteHome"));
@@ -178,6 +180,11 @@ const AppRoutes = () => (
       <Route path="/en/qr/book-tantra-he" element={<TablePay slug="book-tantra-he" lang="en" />} />
       <Route path="/qr/book-tantra-en" element={<TablePay slug="book-tantra-en" lang="he" />} />
       <Route path="/en/qr/book-tantra-en" element={<TablePay slug="book-tantra-en" lang="en" />} />
+      {/* QR check-in + forward links at the December retreats (27.11.2026). Retire after 12.12. */}
+      <Route path="/qr/checkin-antakarana" element={<QrCheckin slug="checkin-antakarana" />} />
+      <Route path="/qr/checkin-ein-gedi" element={<QrCheckin slug="checkin-ein-gedi" />} />
+      <Route path="/qr/register-ein-gedi" element={<QrForward slug="register-ein-gedi" />} />
+      <Route path="/qr/whatsapp-antakarana" element={<QrForward slug="whatsapp-antakarana" />} />
 
       {/* Terms pages (migrated from WordPress): linked from the registration forms.
           All of them are noindex - they are legal small print reached from a form,

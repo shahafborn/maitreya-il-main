@@ -110,6 +110,10 @@ export function getRoutes() {
     routes.push({ path: he, lang: "he", alternates: { he, en }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
     routes.push({ path: en, lang: "en", alternates: { he, en }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
   }
+  // QR check-in + forward links at the December retreats (Shahaf, 2026-11-27). Hebrew only. Retire after 12.12.2026.
+  for (const slug of ["checkin-antakarana", "checkin-ein-gedi", "register-ein-gedi", "whatsapp-antakarana"]) {
+    routes.push({ path: `/qr/${slug}`, lang: "he", alternates: { he: `/qr/${slug}` }, priority: 0.1, changefreq: "yearly", kind: "page", noindex: true });
+  }
   routes.push({ path: "/en/support-visit-dec-2026", lang: "en", alternates: { he: "/support-visit-dec-2026", en: "/en/support-visit-dec-2026" }, priority: 0.7, changefreq: "monthly", kind: "page" });
   const retreat = (he, en, priority = 0.8) => {
     routes.push({ path: he, lang: "he", alternates: { he, ...(en ? { en } : {}) }, priority, changefreq: "monthly", kind: "event" });
